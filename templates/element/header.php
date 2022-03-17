@@ -40,11 +40,10 @@ $session = $this->request->getSession()->read('Auth'); //read session data
                                 <li class="menu-item"><a href="<?php echo SITEURL;?>register" class="menu-link">Register</a></li>
                                 <?php } ?>
                             </ul>
-                            <?php if(isset($session['User']['first_name']) && !empty($session['User']['first_name']) ){?>
                             <ul class="menu-btns">
                                 <li><a href="<?php echo SITEURL;?>connect-wallet" class="btn btn-dark">Connect Wallet</a></li>
                             </ul>
-                            <?php }?>
+                            
                         </nav><!-- .header-menu -->
                         <div class="header-overlay"></div>
                     </div><!-- .header-warp-->

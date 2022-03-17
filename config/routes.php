@@ -54,6 +54,8 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/register/*', ['controller' => 'Users', 'action' => 'register']);
     $builder->connect('/sign-in/*', ['controller' => 'Users', 'action' => 'login']);
+    $builder->connect('/forget-password/*', ['controller' => 'Users', 'action' => 'forget_password']);
+    
     $builder->connect('/connect-wallet/*', ['controller' => 'Users', 'action' => 'connect_wallet']);
 
     $builder->connect('/dashboard/*', ['controller' => 'Users', 'action' => 'dashboard']);
@@ -69,13 +71,6 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/explore/*', ['controller' => 'Homes', 'action' => 'explore']);
     $builder->connect('/project-details/*', ['controller' => 'Homes', 'action' => 'project_details']);
     
-    
-
-    
-    
-    
-    
-
 
     $builder->connect('/backend/*', ['controller' => 'users', 'action' => 'backend']);
     $builder->connect('/backend_reset_password/*', ['controller' => 'users', 'action' => 'backendRestPassword']);

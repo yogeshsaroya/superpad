@@ -45,7 +45,7 @@ class UsersController extends AppController
         parent::beforeFilter($event);
 
         /* https://book.cakephp.org/4/en/controllers/components/authentication.html#AuthComponent::allow */
-        $this->Auth->allow(['login','register','backend','backendRestPassword','logout','check','gAuth']);
+        $this->Auth->allow(['login','register','backend','backendRestPassword','logout','check','gAuth','forgetPassword','connectWallet']);
 
         // Form helper https://codethepixel.com/tutorial/cakephp/cakephp-4-common-helpers
         /* https://codethepixel.com/tutorial/cakephp/cakephp-4-find-sort-count */
@@ -311,7 +311,47 @@ class UsersController extends AppController
             exit;
         }
     }
+    
+    public function forgetPassword(){
+        $user_data = null;
+        $this->set(compact('user_data'));
+        if ($this->Auth->User('id') != "") {
+            if ($this->request->is('ajax')) {
+                $u = SITEURL . "dashboard";
+                echo "<script>window.location.href ='" . $u . "'; </script>";
+                exit;
+            } else {
+                $this->redirect('/dashboard');
+            }
+        }
 
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $post_data = $this->request->getData();
+            if (empty($post_data['email'])) {
+                echo '<div class="alert alert-danger">Please enter email id.</div>';
+            }else {
+                $password = rand(123456,987654);
+
+                $verify = $this->Users->find('all')
+                    ->where(['Users.status' => 1, 'Users.role' => 2, 'Users.email' => trim(strtolower($post_data['email']))])
+                    ->first();
+                    if (!empty($verify)) {
+                        $this->Data->AppMail($verify->email,4, ['NAME'=>$verify->first_name,'PWD'=>$password]);
+                        $up_arr = ['id' => $verify->id, 'password' => $password];
+                        $user1 = $this->Users->newEntity($up_arr, ['validate' => false]);
+                        $this->Users->save($user1);
+                        echo '<script>$("#e_frm")[0].reset();</script>';
+                        echo '<div class="alert alert-success">Change password request has been send to registered email address.</div>';
+                        exit;
+                    } else {
+                        echo '<div class="alert alert-danger">This email address is not registered </div>';
+                    }
+                }
+            
+            exit;
+        }
+
+    }
     /**
      * Admin password reset page
      */
