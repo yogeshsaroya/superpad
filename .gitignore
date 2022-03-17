@@ -1,6 +1,7 @@
 # CakePHP specific files #
 ##########################
-
+/log/*
+/tmp/*
 /webroot/cache/*
 /webroot/html
 

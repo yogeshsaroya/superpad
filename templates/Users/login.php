@@ -55,7 +55,7 @@ if (!empty($Setting['google_client_id']) && !empty($Setting['google_client_secre
                     <span class="d-block my-4">— or login with —</span>
                     <ul class="btns-group d-flex">
                         <?php if ($is_google == 1) { ?><li class="flex-grow-1"><a href="<?php echo SITEURL; ?>users/g_auth" class="btn d-block bg-red-100 text-red g-btn"><em class="ni ni-google"></em> Google</a></li><?php } ?>
-                        <?php if ($is_fb == 1) { ?><li class="flex-grow-1"><a href="https://www.facebook.com/dialog/oauth?client_id=<?php echo $Setting['fb_app_id']; ?>&redirect_uri=<?php echo SITEURL; ?>users/check?facebook=true&state=<?php echo md5(uniqid(rand(), TRUE)) ?>&scope=public_profile,email" class="btn d-block bg-blue-100 text-blue f-btn"><em class="ni ni-facebook-f"></em> Facebook</a></li><?php } ?>
+                        <?php if ($is_fb == 1) { ?><li class="flex-grow-1"><a href="https://www.facebook.com/dialog/oauth?client_id=<?php echo $Setting['fb_app_id']; ?>&redirect_uri=<?php echo SITEURL; ?>users/check?facebook=true" class="btn d-block bg-blue-100 text-blue f-btn"><em class="ni ni-facebook-f"></em> Facebook</a></li><?php } ?>
                     </ul>
                 <?php } ?>
                 <p class="mt-3 form-text">Don't have an account <a href="<?php echo SITEURL; ?>register" class="btn-link">Sign Up</a></p>

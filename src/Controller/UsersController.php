@@ -420,7 +420,7 @@ class UsersController extends AppController
             $fbappsecret = $this->SiteSetting['fb_app_secret'];
             $fbcode = $q['code'];
             $getToken = $this->_getFbToken($fbappid, $fbappsecret, SITEURL . 'check?facebook=true', $fbcode);
-
+            
             if (isset($getToken['access_token']) && !empty($getToken['access_token'])) {
                 $fb_user = $this->_parseFbInfo($getToken['access_token']);
                 /* Check if user exists */
@@ -480,7 +480,7 @@ class UsersController extends AppController
     public function _parseFbInfo($access_token)
     {
         $url = "https://graph.facebook.com/me?fields=id,email,first_name,last_name,verified&access_token=" . $access_token;
-        $user = json_decode($this->DATA->fetch($url));
+        $user = json_decode($this->Data->fetch($url));
         if ($user != null && isset($user->email)) {
             return $user;
         }

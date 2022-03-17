@@ -1,0 +1,236 @@
+2022-03-17 13:07:10 Error: [Cake\Http\Exception\MissingControllerException] Controller class Assets could not be found. in /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Controller/ControllerFactory.php on line 226
+Exception Attributes: array (
+  'class' => 'Assets',
+  'plugin' => NULL,
+  'prefix' => NULL,
+  '_ext' => NULL,
+)
+Stack Trace:
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Controller/ControllerFactory.php:65
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/BaseApplication.php:311
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:77
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Middleware/CsrfProtectionMiddleware.php:169
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Middleware/BodyParserMiddleware.php:159
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php:161
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php:77
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php:126
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:58
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Server.php:90
+- /Applications/MAMP/htdocs/cake/superpad/webroot/index.php:40
+
+Request URL: /assets/js/swiper-bundle.min.js.map;
+
+
+2022-03-17 13:07:10 Warning: Warning (512): Unable to emit headers. Headers sent in file=/Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Error/Debugger.php line=970 in [/Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 71]
+Request URL: /assets/js/swiper-bundle.min.js.map;
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 188
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 71
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 128
+[main] - ROOT/webroot/index.php, line 40
+
+2022-03-17 13:07:10 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Error/Debugger.php:970) in [/Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 168]
+Request URL: /assets/js/swiper-bundle.min.js.map;
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 188
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitStatusLine() - CORE/src/Http/ResponseEmitter.php, line 168
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 74
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 128
+[main] - ROOT/webroot/index.php, line 40
+
+2022-03-17 13:07:10 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Error/Debugger.php:970) in [/Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 197]
+Request URL: /assets/js/swiper-bundle.min.js.map;
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 188
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitHeaders() - CORE/src/Http/ResponseEmitter.php, line 197
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 75
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 128
+[main] - ROOT/webroot/index.php, line 40
+
+2022-03-17 13:15:29 Error: [Cake\Controller\Exception\MissingActionException] Action UsersController::images() could not be found, or is not accessible. in /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Controller/Controller.php on line 510
+Exception Attributes: array (
+  'controller' => 'UsersController',
+  'action' => 'images',
+  'prefix' => '',
+  'plugin' => NULL,
+)
+Stack Trace:
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Controller/ControllerFactory.php:100
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/BaseApplication.php:313
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:77
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Middleware/CsrfProtectionMiddleware.php:169
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Middleware/BodyParserMiddleware.php:159
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php:161
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php:77
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php:126
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:58
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Server.php:90
+- /Applications/MAMP/htdocs/cake/superpad/webroot/index.php:40
+
+Request URL: /users/images/logo-white.png
+Referer URL: http://localhost:8888/cake/superpad/users/check?facebook=true&code=AQAJwyOR6jV_UEiP3yEf6RB7RUpW13QMsPYpbK3rhN5KuD4arEoIccn5WGPnG95yhnmqzqx7I8sP9JIvwkaWFmP1F_VihHtlD3leAkRAlwdpxj-fp7Hl1tWS516Dqpr68cvPlclj016j4QRJHY8EEbS_2f2xdxZckcFDW7YkJaZXmFyyM_8x-l6CkETxJ0bwut2sZ7rkU1GgvXoIsaLBPfnhXmO1cwLPywwLbDYEaaksZnryR1wfGyBQhoVp8t5qIM7qK3Tk1X4qpDJKmnAlc1GZfGjNclAILSU1p_wxAfB-lXyBxag6DNkitOUgpZtjXAM4pE_X8ayrykEtNTFMkW5jlFU8clba2Gq8CgOlya_s-wT0zvD4l19OhT-ohA1r1uDRwZUSvSh4ZSP-w9sGqcvSiynvW92-7zBSQvFPyZ83vA&state=f2c1f0a116995d06588e80b168c44846
+
+
+2022-03-17 13:15:29 Warning: Warning (512): Unable to emit headers. Headers sent in file=/Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Error/Debugger.php line=970 in [/Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 71]
+Request URL: /users/images/logo-white.png
+Referer URL: http://localhost:8888/cake/superpad/users/check?facebook=true&code=AQAJwyOR6jV_UEiP3yEf6RB7RUpW13QMsPYpbK3rhN5KuD4arEoIccn5WGPnG95yhnmqzqx7I8sP9JIvwkaWFmP1F_VihHtlD3leAkRAlwdpxj-fp7Hl1tWS516Dqpr68cvPlclj016j4QRJHY8EEbS_2f2xdxZckcFDW7YkJaZXmFyyM_8x-l6CkETxJ0bwut2sZ7rkU1GgvXoIsaLBPfnhXmO1cwLPywwLbDYEaaksZnryR1wfGyBQhoVp8t5qIM7qK3Tk1X4qpDJKmnAlc1GZfGjNclAILSU1p_wxAfB-lXyBxag6DNkitOUgpZtjXAM4pE_X8ayrykEtNTFMkW5jlFU8clba2Gq8CgOlya_s-wT0zvD4l19OhT-ohA1r1uDRwZUSvSh4ZSP-w9sGqcvSiynvW92-7zBSQvFPyZ83vA&state=f2c1f0a116995d06588e80b168c44846
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 188
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 71
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 128
+[main] - ROOT/webroot/index.php, line 40
+
+2022-03-17 13:15:29 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Error/Debugger.php:970) in [/Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 168]
+Request URL: /users/images/logo-white.png
+Referer URL: http://localhost:8888/cake/superpad/users/check?facebook=true&code=AQAJwyOR6jV_UEiP3yEf6RB7RUpW13QMsPYpbK3rhN5KuD4arEoIccn5WGPnG95yhnmqzqx7I8sP9JIvwkaWFmP1F_VihHtlD3leAkRAlwdpxj-fp7Hl1tWS516Dqpr68cvPlclj016j4QRJHY8EEbS_2f2xdxZckcFDW7YkJaZXmFyyM_8x-l6CkETxJ0bwut2sZ7rkU1GgvXoIsaLBPfnhXmO1cwLPywwLbDYEaaksZnryR1wfGyBQhoVp8t5qIM7qK3Tk1X4qpDJKmnAlc1GZfGjNclAILSU1p_wxAfB-lXyBxag6DNkitOUgpZtjXAM4pE_X8ayrykEtNTFMkW5jlFU8clba2Gq8CgOlya_s-wT0zvD4l19OhT-ohA1r1uDRwZUSvSh4ZSP-w9sGqcvSiynvW92-7zBSQvFPyZ83vA&state=f2c1f0a116995d06588e80b168c44846
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 188
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitStatusLine() - CORE/src/Http/ResponseEmitter.php, line 168
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 74
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 128
+[main] - ROOT/webroot/index.php, line 40
+
+2022-03-17 13:15:29 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Error/Debugger.php:970) in [/Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 197]
+Request URL: /users/images/logo-white.png
+Referer URL: http://localhost:8888/cake/superpad/users/check?facebook=true&code=AQAJwyOR6jV_UEiP3yEf6RB7RUpW13QMsPYpbK3rhN5KuD4arEoIccn5WGPnG95yhnmqzqx7I8sP9JIvwkaWFmP1F_VihHtlD3leAkRAlwdpxj-fp7Hl1tWS516Dqpr68cvPlclj016j4QRJHY8EEbS_2f2xdxZckcFDW7YkJaZXmFyyM_8x-l6CkETxJ0bwut2sZ7rkU1GgvXoIsaLBPfnhXmO1cwLPywwLbDYEaaksZnryR1wfGyBQhoVp8t5qIM7qK3Tk1X4qpDJKmnAlc1GZfGjNclAILSU1p_wxAfB-lXyBxag6DNkitOUgpZtjXAM4pE_X8ayrykEtNTFMkW5jlFU8clba2Gq8CgOlya_s-wT0zvD4l19OhT-ohA1r1uDRwZUSvSh4ZSP-w9sGqcvSiynvW92-7zBSQvFPyZ83vA&state=f2c1f0a116995d06588e80b168c44846
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 188
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitHeaders() - CORE/src/Http/ResponseEmitter.php, line 197
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 75
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 128
+[main] - ROOT/webroot/index.php, line 40
+
+2022-03-17 13:15:29 Error: [Cake\Controller\Exception\MissingActionException] Action UsersController::images() could not be found, or is not accessible. in /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Controller/Controller.php on line 510
+Exception Attributes: array (
+  'controller' => 'UsersController',
+  'action' => 'images',
+  'prefix' => '',
+  'plugin' => NULL,
+)
+Stack Trace:
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Controller/ControllerFactory.php:100
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/BaseApplication.php:313
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:77
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Middleware/CsrfProtectionMiddleware.php:169
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Middleware/BodyParserMiddleware.php:159
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php:161
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php:77
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php:126
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:58
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Server.php:90
+- /Applications/MAMP/htdocs/cake/superpad/webroot/index.php:40
+
+Request URL: /users/images/logo.png
+Referer URL: http://localhost:8888/cake/superpad/users/check?facebook=true&code=AQAJwyOR6jV_UEiP3yEf6RB7RUpW13QMsPYpbK3rhN5KuD4arEoIccn5WGPnG95yhnmqzqx7I8sP9JIvwkaWFmP1F_VihHtlD3leAkRAlwdpxj-fp7Hl1tWS516Dqpr68cvPlclj016j4QRJHY8EEbS_2f2xdxZckcFDW7YkJaZXmFyyM_8x-l6CkETxJ0bwut2sZ7rkU1GgvXoIsaLBPfnhXmO1cwLPywwLbDYEaaksZnryR1wfGyBQhoVp8t5qIM7qK3Tk1X4qpDJKmnAlc1GZfGjNclAILSU1p_wxAfB-lXyBxag6DNkitOUgpZtjXAM4pE_X8ayrykEtNTFMkW5jlFU8clba2Gq8CgOlya_s-wT0zvD4l19OhT-ohA1r1uDRwZUSvSh4ZSP-w9sGqcvSiynvW92-7zBSQvFPyZ83vA&state=f2c1f0a116995d06588e80b168c44846
+
+
+2022-03-17 13:15:29 Warning: Warning (512): Unable to emit headers. Headers sent in file=/Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Error/Debugger.php line=970 in [/Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 71]
+Request URL: /users/images/logo.png
+Referer URL: http://localhost:8888/cake/superpad/users/check?facebook=true&code=AQAJwyOR6jV_UEiP3yEf6RB7RUpW13QMsPYpbK3rhN5KuD4arEoIccn5WGPnG95yhnmqzqx7I8sP9JIvwkaWFmP1F_VihHtlD3leAkRAlwdpxj-fp7Hl1tWS516Dqpr68cvPlclj016j4QRJHY8EEbS_2f2xdxZckcFDW7YkJaZXmFyyM_8x-l6CkETxJ0bwut2sZ7rkU1GgvXoIsaLBPfnhXmO1cwLPywwLbDYEaaksZnryR1wfGyBQhoVp8t5qIM7qK3Tk1X4qpDJKmnAlc1GZfGjNclAILSU1p_wxAfB-lXyBxag6DNkitOUgpZtjXAM4pE_X8ayrykEtNTFMkW5jlFU8clba2Gq8CgOlya_s-wT0zvD4l19OhT-ohA1r1uDRwZUSvSh4ZSP-w9sGqcvSiynvW92-7zBSQvFPyZ83vA&state=f2c1f0a116995d06588e80b168c44846
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 188
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 71
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 128
+[main] - ROOT/webroot/index.php, line 40
+
+2022-03-17 13:15:29 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Error/Debugger.php:970) in [/Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 168]
+Request URL: /users/images/logo.png
+Referer URL: http://localhost:8888/cake/superpad/users/check?facebook=true&code=AQAJwyOR6jV_UEiP3yEf6RB7RUpW13QMsPYpbK3rhN5KuD4arEoIccn5WGPnG95yhnmqzqx7I8sP9JIvwkaWFmP1F_VihHtlD3leAkRAlwdpxj-fp7Hl1tWS516Dqpr68cvPlclj016j4QRJHY8EEbS_2f2xdxZckcFDW7YkJaZXmFyyM_8x-l6CkETxJ0bwut2sZ7rkU1GgvXoIsaLBPfnhXmO1cwLPywwLbDYEaaksZnryR1wfGyBQhoVp8t5qIM7qK3Tk1X4qpDJKmnAlc1GZfGjNclAILSU1p_wxAfB-lXyBxag6DNkitOUgpZtjXAM4pE_X8ayrykEtNTFMkW5jlFU8clba2Gq8CgOlya_s-wT0zvD4l19OhT-ohA1r1uDRwZUSvSh4ZSP-w9sGqcvSiynvW92-7zBSQvFPyZ83vA&state=f2c1f0a116995d06588e80b168c44846
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 188
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitStatusLine() - CORE/src/Http/ResponseEmitter.php, line 168
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 74
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 128
+[main] - ROOT/webroot/index.php, line 40
+
+2022-03-17 13:15:29 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Error/Debugger.php:970) in [/Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 197]
+Request URL: /users/images/logo.png
+Referer URL: http://localhost:8888/cake/superpad/users/check?facebook=true&code=AQAJwyOR6jV_UEiP3yEf6RB7RUpW13QMsPYpbK3rhN5KuD4arEoIccn5WGPnG95yhnmqzqx7I8sP9JIvwkaWFmP1F_VihHtlD3leAkRAlwdpxj-fp7Hl1tWS516Dqpr68cvPlclj016j4QRJHY8EEbS_2f2xdxZckcFDW7YkJaZXmFyyM_8x-l6CkETxJ0bwut2sZ7rkU1GgvXoIsaLBPfnhXmO1cwLPywwLbDYEaaksZnryR1wfGyBQhoVp8t5qIM7qK3Tk1X4qpDJKmnAlc1GZfGjNclAILSU1p_wxAfB-lXyBxag6DNkitOUgpZtjXAM4pE_X8ayrykEtNTFMkW5jlFU8clba2Gq8CgOlya_s-wT0zvD4l19OhT-ohA1r1uDRwZUSvSh4ZSP-w9sGqcvSiynvW92-7zBSQvFPyZ83vA&state=f2c1f0a116995d06588e80b168c44846
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 188
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitHeaders() - CORE/src/Http/ResponseEmitter.php, line 197
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 75
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 128
+[main] - ROOT/webroot/index.php, line 40
+
+2022-03-17 13:15:29 Error: [Cake\Controller\Exception\MissingActionException] Action UsersController::images() could not be found, or is not accessible. in /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Controller/Controller.php on line 510
+Exception Attributes: array (
+  'controller' => 'UsersController',
+  'action' => 'images',
+  'prefix' => '',
+  'plugin' => NULL,
+)
+Stack Trace:
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Controller/ControllerFactory.php:100
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/BaseApplication.php:313
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:77
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Middleware/CsrfProtectionMiddleware.php:169
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Middleware/BodyParserMiddleware.php:159
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Routing/Middleware/RoutingMiddleware.php:161
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Routing/Middleware/AssetMiddleware.php:77
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Error/Middleware/ErrorHandlerMiddleware.php:126
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:73
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Runner.php:58
+- /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/Server.php:90
+- /Applications/MAMP/htdocs/cake/superpad/webroot/index.php:40
+
+Request URL: /users/images/logo-black.png
+Referer URL: http://localhost:8888/cake/superpad/users/check?facebook=true&code=AQAJwyOR6jV_UEiP3yEf6RB7RUpW13QMsPYpbK3rhN5KuD4arEoIccn5WGPnG95yhnmqzqx7I8sP9JIvwkaWFmP1F_VihHtlD3leAkRAlwdpxj-fp7Hl1tWS516Dqpr68cvPlclj016j4QRJHY8EEbS_2f2xdxZckcFDW7YkJaZXmFyyM_8x-l6CkETxJ0bwut2sZ7rkU1GgvXoIsaLBPfnhXmO1cwLPywwLbDYEaaksZnryR1wfGyBQhoVp8t5qIM7qK3Tk1X4qpDJKmnAlc1GZfGjNclAILSU1p_wxAfB-lXyBxag6DNkitOUgpZtjXAM4pE_X8ayrykEtNTFMkW5jlFU8clba2Gq8CgOlya_s-wT0zvD4l19OhT-ohA1r1uDRwZUSvSh4ZSP-w9sGqcvSiynvW92-7zBSQvFPyZ83vA&state=f2c1f0a116995d06588e80b168c44846
+
+
+2022-03-17 13:15:29 Warning: Warning (512): Unable to emit headers. Headers sent in file=/Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Error/Debugger.php line=970 in [/Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 71]
+Request URL: /users/images/logo-black.png
+Referer URL: http://localhost:8888/cake/superpad/users/check?facebook=true&code=AQAJwyOR6jV_UEiP3yEf6RB7RUpW13QMsPYpbK3rhN5KuD4arEoIccn5WGPnG95yhnmqzqx7I8sP9JIvwkaWFmP1F_VihHtlD3leAkRAlwdpxj-fp7Hl1tWS516Dqpr68cvPlclj016j4QRJHY8EEbS_2f2xdxZckcFDW7YkJaZXmFyyM_8x-l6CkETxJ0bwut2sZ7rkU1GgvXoIsaLBPfnhXmO1cwLPywwLbDYEaaksZnryR1wfGyBQhoVp8t5qIM7qK3Tk1X4qpDJKmnAlc1GZfGjNclAILSU1p_wxAfB-lXyBxag6DNkitOUgpZtjXAM4pE_X8ayrykEtNTFMkW5jlFU8clba2Gq8CgOlya_s-wT0zvD4l19OhT-ohA1r1uDRwZUSvSh4ZSP-w9sGqcvSiynvW92-7zBSQvFPyZ83vA&state=f2c1f0a116995d06588e80b168c44846
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 188
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 71
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 128
+[main] - ROOT/webroot/index.php, line 40
+
+2022-03-17 13:15:29 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Error/Debugger.php:970) in [/Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 168]
+Request URL: /users/images/logo-black.png
+Referer URL: http://localhost:8888/cake/superpad/users/check?facebook=true&code=AQAJwyOR6jV_UEiP3yEf6RB7RUpW13QMsPYpbK3rhN5KuD4arEoIccn5WGPnG95yhnmqzqx7I8sP9JIvwkaWFmP1F_VihHtlD3leAkRAlwdpxj-fp7Hl1tWS516Dqpr68cvPlclj016j4QRJHY8EEbS_2f2xdxZckcFDW7YkJaZXmFyyM_8x-l6CkETxJ0bwut2sZ7rkU1GgvXoIsaLBPfnhXmO1cwLPywwLbDYEaaksZnryR1wfGyBQhoVp8t5qIM7qK3Tk1X4qpDJKmnAlc1GZfGjNclAILSU1p_wxAfB-lXyBxag6DNkitOUgpZtjXAM4pE_X8ayrykEtNTFMkW5jlFU8clba2Gq8CgOlya_s-wT0zvD4l19OhT-ohA1r1uDRwZUSvSh4ZSP-w9sGqcvSiynvW92-7zBSQvFPyZ83vA&state=f2c1f0a116995d06588e80b168c44846
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 188
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitStatusLine() - CORE/src/Http/ResponseEmitter.php, line 168
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 74
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 128
+[main] - ROOT/webroot/index.php, line 40
+
+2022-03-17 13:15:29 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at /Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Error/Debugger.php:970) in [/Applications/MAMP/htdocs/cake/superpad/vendor/cakephp/cakephp/src/Http/ResponseEmitter.php, line 197]
+Request URL: /users/images/logo-black.png
+Referer URL: http://localhost:8888/cake/superpad/users/check?facebook=true&code=AQAJwyOR6jV_UEiP3yEf6RB7RUpW13QMsPYpbK3rhN5KuD4arEoIccn5WGPnG95yhnmqzqx7I8sP9JIvwkaWFmP1F_VihHtlD3leAkRAlwdpxj-fp7Hl1tWS516Dqpr68cvPlclj016j4QRJHY8EEbS_2f2xdxZckcFDW7YkJaZXmFyyM_8x-l6CkETxJ0bwut2sZ7rkU1GgvXoIsaLBPfnhXmO1cwLPywwLbDYEaaksZnryR1wfGyBQhoVp8t5qIM7qK3Tk1X4qpDJKmnAlc1GZfGjNclAILSU1p_wxAfB-lXyBxag6DNkitOUgpZtjXAM4pE_X8ayrykEtNTFMkW5jlFU8clba2Gq8CgOlya_s-wT0zvD4l19OhT-ohA1r1uDRwZUSvSh4ZSP-w9sGqcvSiynvW92-7zBSQvFPyZ83vA&state=f2c1f0a116995d06588e80b168c44846
+Trace:
+Cake\Error\BaseErrorHandler::handleError() - CORE/src/Error/BaseErrorHandler.php, line 188
+header - [internal], line ??
+Cake\Http\ResponseEmitter::emitHeaders() - CORE/src/Http/ResponseEmitter.php, line 197
+Cake\Http\ResponseEmitter::emit() - CORE/src/Http/ResponseEmitter.php, line 75
+Cake\Http\Server::emit() - CORE/src/Http/Server.php, line 128
+[main] - ROOT/webroot/index.php, line 40
+
