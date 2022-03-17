@@ -132,79 +132,42 @@ class PagesController extends AppController
         }
     }
 
-    public function blogs()
-    {
-        $this->set('menu_act', 'blogs');
-        if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
-            $blog_del = $this->Blogs->findById($this->request->getQuery('del'))->firstOrFail();
-            if ($this->Blogs->delete($blog_del)) {
-            }
-            $this->redirect('/pages/blogs');
+    public function emailTemplates(){
+        $this->set('menu_act', 'email_templates');
+
+        if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
+            $getData = $this->EmailTemplates->findById($this->request->getQuery('st'))->firstOrFail();
+            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2:1) ];
+            $saveData = $this->EmailTemplates->newEntity($upData, ['validate' => false]);
+            $this->EmailTemplates->save($saveData);
+            $this->redirect('/pages/email_templates');
         }
 
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
-        $data = $this->paginate($this->Blogs->find('all'));
+        $data = $this->paginate($this->EmailTemplates->find('all'));
         $this->set(compact('data'));
     }
 
-    public function manageBlog($id = null)
+    public function editEmailTemplates($id = null)
     {
-        $this->set('menu_act', 'blogs');
+        $this->set('menu_act', 'email_templates');
         $blog_data = null;
 
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $file_name = null;
             $postData = $this->request->getData();
-            $uploadPath = 'cdn/blogs/';
-            if (!file_exists($uploadPath)) {
-                mkdir($uploadPath, 0777, true);
-            }
-
-            $tags = null;
-            if (isset($postData['tags']) && !empty($postData['tags'])) {
-                $tags = implode(',', $postData['tags']);
-            }
-            if (isset($postData['title']) && !empty($postData['title'])) {
-                $sluggedTitle = Text::slug($postData['title']);
-                $url = strtolower(substr($sluggedTitle, 0, 191));
-            }
-
-            if (!empty($postData['img'])) {
-                if (in_array($postData['img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg'])) {
-                    $fileobject = $postData['img'];
-                    $file_name = $fileobject->getClientFilename();
-                    //$imgExt = strtolower( pathinfo($file_name, PATHINFO_EXTENSION));
-                    $destination = $uploadPath . $file_name;
-                    try {
-                        $fileobject->moveTo($destination);
-                    } catch (Exception $e) {
-                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
-                        exit;
-                    }
-                }
-            }
-
+            
             if (isset($postData['id']) && !empty($postData['id'])) {
-                $getBlog = $this->Blogs->get($postData['id']);
-                $postData['tags'] = $tags;
-                $postData['url'] = $url;
-                if (!empty($file_name)) {
-                    $postData['image'] = $file_name;
-                }
-                $chkBlog = $this->Blogs->patchEntity($getBlog, $postData, ['validate' => true]);
+                $getData = $this->EmailTemplates->findById($postData['id'])->firstOrFail();;
+                $chkData = $this->EmailTemplates->patchEntity($getData, $postData, ['validate' => true]);
             } else {
-                $getBlog = $this->Blogs->newEmptyEntity();
-                $postData['tags'] = $tags;
-                $postData['url'] = $url;
-                if (!empty($file_name)) {
-                    $postData['image'] = $file_name;
-                }
-                $chkBlog = $this->Blogs->patchEntity($getBlog, $postData, ['validate' => true]);
+                $getData = $this->EmailTemplates->newEmptyEntity();
+                $chkData = $this->EmailTemplates->patchEntity($getData, $postData, ['validate' => true]);
             }
 
-            if ($chkBlog->getErrors()) {
+            if ($chkData->getErrors()) {
                 $st = null;
-                foreach ($chkBlog->getErrors() as $elist) {
+                foreach ($chkData->getErrors() as $elist) {
                     foreach ($elist as $k => $v); {
                         $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
                     }
@@ -212,8 +175,8 @@ class PagesController extends AppController
                 echo $st;
                 exit;
             } else {
-                if ($this->Blogs->save($chkBlog)) {
-                    $u = SITEURL . "pages/blogs";
+                if ($this->EmailTemplates->save($chkData)) {
+                    $u = SITEURL . "pages/email_templates";
                     echo '<div class="alert alert-success" role="alert"> Blog post saved.</div>';
                     echo "<script>window.location.href ='" . $u . "'; </script>";
                 } else {
@@ -224,9 +187,9 @@ class PagesController extends AppController
         }
 
         if (!empty($id)) {
-            $blog_data = $this->Blogs->findById($id)->firstOrFail();
+            $data = $this->EmailTemplates->findById($id)->firstOrFail();
         }
-        $this->set(compact('blog_data'));
+        $this->set(compact('data'));
     }
 
     public function consultants()

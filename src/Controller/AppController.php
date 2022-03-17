@@ -58,6 +58,7 @@ class AppController extends Controller
         parent::beforeFilter($event);
         $this->loadModel('Users');
         $this->loadModel('Settings');
+        $this->loadModel('EmailTemplates');
 
         $Setting = $this->Data->get_settings();
         $session = $this->getRequest()->getSession();
@@ -68,11 +69,6 @@ class AppController extends Controller
     function beforeRender(\Cake\Event\EventInterface $event) {
         // store user data to Auth variable.
         // we will use this Auth variable to get user data
-        
-        if( $this->Auth->user('id') ){
-        $this->set("Auth", $this->Auth->user());
-        }
-        
-    
+        if( $this->Auth->user() !== null ){ $this->set("Auth", $this->Auth->user()); }
     }
 }

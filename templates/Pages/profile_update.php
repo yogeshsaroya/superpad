@@ -1,6 +1,6 @@
 <?= $this->Html->css(['/app-assets/css/pages/page-blog'], ['block' => 'css']) ?>
 
-<?php $this->assign('title', 'Settings');
+<?php $this->assign('title', 'Update Profile');
 ?>
 <!-- BEGIN: Content-->
 <div class="app-content content ">

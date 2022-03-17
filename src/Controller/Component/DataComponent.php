@@ -81,7 +81,7 @@ class DataComponent extends Component
                 $tbl->save($entity);
                 $msg = 1;
             } catch (\Throwable $th) {
-                ec($th);die;
+                ec($th);die;    
                 $msg = 0;
             }
         }
