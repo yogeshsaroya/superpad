@@ -182,7 +182,6 @@ class UsersController extends AppController
     {
         $user_data = null;
         $this->set(compact('user_data'));
-
         if ($this->Auth->User('id') != "") {
             if ($this->request->is('ajax')) {
                 $u = SITEURL . "dashboard";
