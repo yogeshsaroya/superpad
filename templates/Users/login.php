@@ -46,7 +46,7 @@ if (!empty($Setting['google_client_id']) && !empty($Setting['google_client_secre
                         <input class="form-check-input" type="checkbox" value="" id="logMeIn">
                         <label class="form-check-label form-check-label-s1" for="logMeIn"> Remember me </label>
                     </div>
-                    <?php echo $this->html->link('Forgot Password','/forget-password',['class'=>'btn-link form-forget-password']);?>
+                    <?php echo $this->Html->link('Forgot Password','/forget-password',['class'=>'btn-link form-forget-password']);?>
                     
                 </div>
                 <div id="f_err"></div>
