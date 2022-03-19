@@ -212,7 +212,6 @@ class UsersController extends AppController
                     if (!empty($verify)) {
                         if (password_verify($pwd, $verify->password)) {
                             $this->Auth->setUser($verify);
-
                             $up_arr = ['id' => $verify->id, 'last_activity' => DATE];
                             $user1 = $this->Users->newEntity($up_arr, ['validate' => false]);
                             if ($this->Users->save($user1)) {
