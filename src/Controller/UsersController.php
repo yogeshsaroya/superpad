@@ -194,7 +194,6 @@ class UsersController extends AppController
         }
 
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
-
             $post_data = $this->request->getData();
             $s = "<script>s();</script>";
             if (empty($post_data['email'])) {
