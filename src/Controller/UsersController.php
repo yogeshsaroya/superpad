@@ -131,7 +131,7 @@ class UsersController extends AppController
 
     public function dashboard()
     {
-         ec($this->Auth->user());
+         //ec($this->Auth->user());
     }
     /**
      * Admin password reset page
