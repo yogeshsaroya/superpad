@@ -457,9 +457,11 @@ class UsersController extends AppController
             $fbappsecret = $this->SiteSetting['fb_app_secret'];
             $fbcode = $q['code'];
             $getToken = $this->_getFbToken($fbappid, $fbappsecret, SITEURL . 'check?facebook=true', $fbcode);
+            ec($getToken);die;
             
             if (isset($getToken['access_token']) && !empty($getToken['access_token'])) {
                 $fb_user = $this->_parseFbInfo($getToken['access_token']);
+                ec($fb_user);die;
                 /* Check if user exists */
                 $verify = $this->Users->find('all')
                     ->where(['Users.status' => 1, 'Users.role' => 2, 'Users.fb_id' => $fb_user->id])
