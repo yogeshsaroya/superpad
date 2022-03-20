@@ -50,7 +50,7 @@ class CronsController extends AppController
 
     public function sendEmail()
     {
-
+/*
         TransportFactory::setConfig('Manual', [
             'className' => 'Smtp',
             //'className' => 'Debug',
@@ -60,10 +60,10 @@ class CronsController extends AppController
             'password' => 'super@1234!',
             'tls' => true
             
-        ]);
+        ]);*/
 
         $mailer = new Mailer('default');
-        $mailer->setTransport('Manual');
+        //$mailer->setTransport('Manual');
 
         try {
             $res = $mailer->setFrom(['support@superpad.finance' => 'My Site'])
