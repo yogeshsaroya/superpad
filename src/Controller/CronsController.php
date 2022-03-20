@@ -58,7 +58,7 @@ class CronsController extends AppController
             'port' => 465,
             'username' => 'support@superpad.finance',
             'password' => 'super@1234!',
-            'tls' => true, 'auth' => true 
+            'tls' => true
             
         ]);
 
