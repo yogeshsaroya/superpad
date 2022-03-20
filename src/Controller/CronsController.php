@@ -58,9 +58,8 @@ class CronsController extends AppController
             'port' => 465,
             'username' => 'support@superpad.finance',
             'password' => 'super@1234!',
-            'SMTPSecure' => 'starttls', 'tls' => true, 'auth' => true 
-
-            //'tls' => true
+            'tls' => true, 'auth' => true 
+            
         ]);
 
         $mailer = new Mailer('default');
