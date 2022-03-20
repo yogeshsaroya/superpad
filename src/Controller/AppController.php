@@ -57,6 +57,7 @@ class AppController extends Controller
     public function beforeFilter(\Cake\Event\EventInterface $event){
         parent::beforeFilter($event);
         $this->loadModel('Users');
+        $this->loadModel('Pages');
         $this->loadModel('Settings');
         $this->loadModel('EmailTemplates');
 

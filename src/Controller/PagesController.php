@@ -30,73 +30,49 @@ class PagesController extends AppController
         //$this->redirect('/pages/properties');
     }
 
-    public function properties()
+    public function staticPages()
     {
-        $this->set('menu_act', 'properties');
+        $this->set('menu_act', 'static_pages');
         if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
-            $blog_del = $this->Properties->findById($this->request->getQuery('del'))->firstOrFail();
-            if ($this->Properties->delete($blog_del)) {
+            $blog_del = $this->Pages->findById($this->request->getQuery('del'))->firstOrFail();
+            if ($this->Pages->delete($blog_del)) {
             }
-            $this->redirect('/pages/properties');
+            $this->redirect('/pages/static_pages');
         }
+
+        if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
+            $getData = $this->Pages->findById($this->request->getQuery('st'))->firstOrFail();
+            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2:1) ];
+            $saveData = $this->Pages->newEntity($upData, ['validate' => false]);
+            $this->Pages->save($saveData);
+            $this->redirect('/pages/static_pages');
+        }
+
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
-        $data = $this->paginate($this->Properties->find('all'));
+        $data = $this->paginate($this->Pages->find('all'));
         $this->set(compact('data'));
     }
 
-    public function manageProperty($type = null, $id = null)
+    public function editStaticPages($id = null)
     {
-        $this->set('menu_act', 'properties');
+        $this->set('menu_act', 'static_pages');
         $post_data = null;
 
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $file_name = null;
             $postData = $this->request->getData();
-            $uploadPath = 'cdn/property/';
-            if (!file_exists($uploadPath)) {
-                mkdir($uploadPath, 0777, true);
-            }
-
-            $amenities = $hero_img = null;
-            $imgs = [];
-            if (isset($postData['amenities']) && !empty($postData['amenities'])) {
-                $amenities = implode(',', $postData['amenities']);
-            }
             if (isset($postData['title']) && !empty($postData['title'])) {
                 $sluggedTitle = Text::slug($postData['title']);
                 $url = strtolower(substr($sluggedTitle, 0, 191));
             }
-
-            if (!empty($postData['img'][0])) {
-                foreach ($postData['img'] as $img_list) {
-                    if (in_array($img_list->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg'])) {
-                        $fileobject = $img_list;
-                        $file_name = $fileobject->getClientFilename();
-                        //$imgExt = strtolower( pathinfo($file_name, PATHINFO_EXTENSION));
-                        $destination = $uploadPath . $file_name;
-                        try {
-                            $fileobject->moveTo($destination);
-                            $imgs[] = $file_name;
-                        } catch (Exception $e) {
-                        }
-                    }
-                }
-            }
-            if (!empty($imgs)) {
-                $hero_img = implode(',', $imgs);
-            }
-            $postData['amenities'] = $amenities;
-            $postData['url'] = $url;
-            if (!empty($hero_img)) {
-                $postData['images'] = $hero_img;
-            }
-
+            $postData['slug'] = $url;
+            
             if (isset($postData['id']) && !empty($postData['id'])) {
-                $getBlog = $this->Properties->get($postData['id']);
-                $chkBlog = $this->Properties->patchEntity($getBlog, $postData, ['validate' => true]);
+                $getBlog = $this->Pages->get($postData['id']);
+                $chkBlog = $this->Pages->patchEntity($getBlog, $postData, ['validate' => true]);
             } else {
-                $getBlog = $this->Properties->newEmptyEntity();
-                $chkBlog = $this->Properties->patchEntity($getBlog, $postData, ['validate' => true]);
+                $getBlog = $this->Pages->newEmptyEntity();
+                $chkBlog = $this->Pages->patchEntity($getBlog, $postData, ['validate' => true]);
             }
 
             if ($chkBlog->getErrors()) {
@@ -109,8 +85,8 @@ class PagesController extends AppController
                 echo $st;
                 exit;
             } else {
-                if ($this->Properties->save($chkBlog)) {
-                    $u = SITEURL . "pages/properties";
+                if ($this->Pages->save($chkBlog)) {
+                    $u = SITEURL . "pages/static_pages";
                     echo '<div class="alert alert-success" role="alert">Saved.</div>';
                     echo "<script>window.location.href ='" . $u . "'; </script>";
                 } else {
@@ -119,16 +95,12 @@ class PagesController extends AppController
             }
             exit;
         }
-        $consultant_list = [];
-        $query = $this->Consultants->find('list', ['keyField' => 'id', 'valueField' => 'name'])->order(['Consultants.name' => 'ASC']);
-        $consultant_list = $query->toArray();
+        
         if ($this->request->is('get')) {
-            if (!in_array($type, ['rent', 'sell'])) {
-                $this->viewBuilder()->setLayout('not_found');
-            } elseif (!empty($type) && !empty($id)) {
-                $post_data = $this->Properties->findById($id)->firstOrFail();
+            if(!empty($id)) {
+                $post_data = $this->Pages->findById($id)->firstOrFail();
             }
-            $this->set(compact('post_data', 'consultant_list', 'type'));
+            $this->set(compact('post_data'));
         }
     }
 

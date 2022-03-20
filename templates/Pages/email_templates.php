@@ -36,7 +36,6 @@
                                                 <td><?php 
                                                 if($list->status == 1){ echo $this->Html->link('Active',SITEURL . "pages/email_templates?st=".$list->id,['class'=>'text-success'] );  }
                                                 else{ echo $this->Html->link('Inactive',SITEURL . "pages/email_templates?st=".$list->id,['class'=>'text-danger'] );  }
-                                                
                                                 ?></td>
                                                 <td>
                                                     <div class="dropdown">

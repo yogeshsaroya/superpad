@@ -89,26 +89,6 @@ function set_tooltip($pos = 'top', $title = null)
     return '<i class="fa fa-question-circle" data-animation="false" data-toggle="tooltip" data-html="true" data-placement="' . $pos . '" title="' . $title . '"></i>';
 }
 
-function blog_type()
-{
-    return ['1' => 'Immigration', '2' => 'Property'];
-}
-
-function getPropertyType()
-{
-    return ['1' => 'Sell', '2' => 'Rent'];
-}
-
-function getLocations()
-{
-    return [
-        'Bangkok' => ['City Centre - Bangkok' => 'City Centre', 'City Fringe - Bangkok' => 'City Fringe', 'Suburbs - Bangkok' => 'Suburbs'],
-        'Chiang Mai' => ['City Centre - Chiang Mai' => 'City Centre', 'City Fringe - Chiang Mai' => 'City Fringe', 'Suburbs - Chiang Mai' => 'Suburbs'],
-        'Hua Hin' => ['City Centre - Hua Hin' => 'City Centre', 'City Fringe - Hua Hin' => 'City Fringe', 'Suburbs - Hua Hin' => 'Suburbs'],
-        'Pattaya' => ['City Centre - Hua Hin' => 'City Centre', 'City Fringe - Hua Hin' => 'City Fringe', 'Suburbs - Hua Hin' => 'Suburbs'],
-    ];
-}
-
 function getNum($st = 1, $end = 10)
 {
     $arr = [];
@@ -123,41 +103,8 @@ function YesOrNo()
     return ['1' => 'Yes', '2' => 'No'];
 }
 
-function property_type()
+function getStatus()
 {
-    return [
-        'Commercial' => ['Commercial' => 'Commercial'],
-        'Residential' => [
-            'Condo' => 'Condo',
-            'Detached House' => 'Detached House',
-            'Townhouse' => 'Townhouse',
-            'Land' => 'Land',
-            'Apartment' => 'Apartment'
-        ]
-    ];
+    return ['1' => 'Active', '2' => 'Inactive'];
 }
 
-function furnishing()
-{
-    return ['Unfurnished' => 'Unfurnished', 'Partially Furnished' => 'Partially Furnished', 'Fully Furnished' => 'Fully Furnished'];
-}
-
-function tenure()
-{
-    return [
-        'Freehold' => 'Freehold',
-        'Leasehold' => 'Leasehold',
-        '30-year Leasehold' => '30-year Leasehold',
-        '60-year Leasehold' => '60-year Leasehold',
-        '90-year Leasehold' => '90-year Leasehold',
-        '99-year Leasehold' => '99-year Leasehold'
-    ];
-}
-
-function phone_mask($str = null){
-    return str_pad(substr($str, -7), strlen($str), '*', STR_PAD_RIGHT);
-}
-
-function emal_mask($str = null){
-    return str_pad(substr($str, 4), strlen($str), '*', STR_PAD_LEFT);
-}
