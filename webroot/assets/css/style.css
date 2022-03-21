@@ -1744,7 +1744,7 @@ hr {
 @media (min-width: 992px) {
     .section-head {
         padding-bottom: 45px;
-        max-width: 600px;
+        /*max-width: 600px;*/
     }
     .section-head.text-center {
         margin-left: auto;
