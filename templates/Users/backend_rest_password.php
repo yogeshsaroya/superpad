@@ -14,7 +14,7 @@
                         <!-- /Brand logo-->
                         <!-- Left Text-->
                         <div class="d-none d-lg-flex col-lg-8 align-items-center p-5">
-                            <div class="w-100 d-lg-flex align-items-center justify-content-center px-5"><img class="img-fluid" src="app-assets/images/pages/forgot-password-v2.svg" alt="Forgot password V2" /></div>
+                            <div class="w-100 d-lg-flex align-items-center justify-content-center px-5"><img class="img-fluid" src="<?php echo SITEURL;?>app-assets/images/pages/forgot-password-v2.svg" alt="Forgot password V2" /></div>
                         </div>
                         <!-- /Left Text-->
                         <!-- Forgot password-->

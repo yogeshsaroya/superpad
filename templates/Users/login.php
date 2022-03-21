@@ -11,7 +11,7 @@ if (!empty($Setting['google_client_id']) && !empty($Setting['google_client_secre
     <div class="container">
         <div class="row align-items-center justify-content-center">
             <div class="col-lg-6 mb-5 mb-lg-0 d-none d-lg-block">
-                <img src="images/thumb/remote.png" alt="" class="img-fluid">
+                <img src="<?php echo SITEURL;?>images/thumb/remote.png" alt="" class="img-fluid">
             </div><!-- end col-lg-6 -->
             <div class="col-lg-6 col-md-9">
                 <div class="section-head-sm">

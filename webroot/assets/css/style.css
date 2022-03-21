@@ -5492,3 +5492,20 @@ textarea.form-control {
 .with-errors ul li {
     color: firebrick;
 }
+
+.text-dark-gray {
+    color: #5b6678 !important;
+    margin: 0 0 10px 0;
+}
+
+.text-dark-gray .text-black {
+    padding-right: 10px;
+}
+
+#project_list .badge {
+    position: absolute;
+    right: 0;
+    border-radius: 0 !important;
+    padding: 10px;
+    font-size: 15px;
+}

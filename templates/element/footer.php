@@ -5,8 +5,8 @@
                         <div class="col-lg-3 col-md-9 me-auto">
                             <div class="footer-item mb-5 mb-lg-0">
                                 <a href="index.html" class="footer-logo-link logo-link">
-                                    <img class="logo-dark logo-img" src="images/logo-black.png" alt="logo">
-                                    <img class="logo-light logo-img" src="images/logo-white.png" alt="logo">
+                                    <img class="logo-dark logo-img" src="<?php echo SITEURL;?>images/logo.png" alt="logo">
+                                    <img class="logo-light logo-img" src="<?php echo SITEURL;?>images/logo.png" alt="logo">
                                 </a>
                                 <p class="my-4 footer-para">The world's first and largest digital marketplace for crypto collectibles and non-fungible tokens (NFTs).</p>
                                 <ul class="styled-icon">

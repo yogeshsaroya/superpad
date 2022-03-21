@@ -8,8 +8,8 @@ $session = $this->request->getSession()->read('Auth'); //read session data
                     <div class="header-wrap">
                         <div class="header-logo">
                             <a href="<?php echo SITEURL;?>" class="logo-link">
-                                <img class="logo-dark logo-img" src="images/logo.png" alt="logo">
-                                <img class="logo-light logo-img" src="images/logo.png" alt="logo">
+                                <img class="logo-dark logo-img" src="<?php echo SITEURL;?>images/logo.png" alt="logo">
+                                <img class="logo-light logo-img" src="<?php echo SITEURL;?>images/logo.png" alt="logo">
                             </a>
                         </div><!-- .header-logo -->
                         <div class="header-mobile-action">
