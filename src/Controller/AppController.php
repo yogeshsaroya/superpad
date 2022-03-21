@@ -60,6 +60,7 @@ class AppController extends Controller
         $this->loadModel('Pages');
         $this->loadModel('Settings');
         $this->loadModel('EmailTemplates');
+        $this->loadModel('EmailServers');
 
         $Setting = $this->Data->get_settings();
         $session = $this->getRequest()->getSession();

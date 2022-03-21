@@ -50,30 +50,43 @@ class CronsController extends AppController
 
     public function sendEmail()
     {
+        $setting = $this->Data->get_settings();
+        if (isset($setting['email_sender']) && isset($setting['email_address']) && isset($setting['email_password']) && isset($setting['email_host'])) {
+            TransportFactory::setConfig('Manual', [
+                'className' => 'Smtp', //'Debug',
+                'tls' => true,
+                'port' => 587, 'host' => $setting['email_host'], 'username' => $setting['email_address'], 'password' => $setting['email_password']
+            ]);
+            $mailer = new Mailer('default');
+            $mailer->setTransport('Manual');
 
-        TransportFactory::setConfig('Manual', [
-            'className' => 'Smtp',
-            //'className' => 'Debug',
-            'host' => 'mail.superpad.finance',
-            'port' => 587,
-            'username' => 'support@superpad.finance',
-            'password' => 'super@1234!',
-            'tls' => true
-            
-        ]);
-
-        $mailer = new Mailer('default');
-        $mailer->setTransport('Manual');
-
-        try {
-            $res = $mailer->setFrom(['support@superpad.finance' => 'My Site'])
-            ->setTo('yogeshsaroya@gmail.com')
-            ->setSubject('About')
-            ->deliver('My message');
-        ec($res);
-        } catch (\Throwable $th) {
-            ec($th);
+            $query = $this->EmailServers->find('all')->where(['EmailServers.status' => 0])->limit(10);
+            $data = $query->all()->toArray();
+            if (!empty($data)) {
+                foreach ($data as $list) {
+                    try {
+                        $res = $mailer
+                        ->setEmailFormat('both')
+                        ->setFrom([$setting['email_address'] => $setting['email_sender']])
+                        ->setTo($list->email_to)
+                        ->setSubject($list->subject)
+                        ->deliver($list->message);
+                        $mailer->reset();
+                        
+                        $up_arr = ['id' => $list->id, 'status' => 1];
+                        $saveData = $this->EmailServers->newEntity($up_arr, ['validate' => false]);
+                        $this->EmailServers->save($saveData);
+                        ec($res);
+                    } catch (\Throwable $th) {
+                        $mailer->reset();
+                        $up_arr = ['id' => $list->id, 'status' => 3];
+                        $saveData = $this->EmailServers->newEntity($up_arr, ['validate' => false]);
+                        $this->EmailServers->save($saveData);
+                        ec($th);
+                    }
+                }
+            }
         }
-        
+        exit;
     }
 }

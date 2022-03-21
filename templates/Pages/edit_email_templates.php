@@ -98,6 +98,7 @@
         'use strict';
         var $ckfield1 = CKEDITOR.replace('editor');
         $ckfield1.config.height = 300;
+        
         $ckfield1.on('change', function() {
             $ckfield1.updateElement();
         });
