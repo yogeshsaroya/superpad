@@ -4,7 +4,7 @@
                     <div class="row">
                         <div class="col-lg-3 col-md-9 me-auto">
                             <div class="footer-item mb-5 mb-lg-0">
-                                <a href="index.html" class="footer-logo-link logo-link">
+                                <a href="index.html" class="footer-logo-link logo-link" style="display: none;">
                                     <img class="logo-dark logo-img" src="<?php echo SITEURL;?>images/logo.png" alt="logo">
                                     <img class="logo-light logo-img" src="<?php echo SITEURL;?>images/logo.png" alt="logo">
                                 </a>
