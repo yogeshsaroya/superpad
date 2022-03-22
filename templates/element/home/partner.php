@@ -5,8 +5,6 @@ $data = $this->Data->getPartners();
     .partdiv {
         width: 200px;
     }
-
-
     #partners_list .partners_logo img {
         height: 100px;
     }
@@ -22,7 +20,8 @@ $data = $this->Data->getPartners();
                 foreach ($data as $list) { ?>
                     <div class="partdiv col-6 col-md-3 col-sm-4">
                         <div class="client-logo-item1 text-center partners_logo">
-                            <img src="<?php echo SITEURL . "cdn/partners/" . $list->logo; ?>" alt="" class="img-fluid">
+                            <a href="<?php echo $list->url; ?>">
+                                <img src="<?php echo SITEURL . "cdn/partners/" . $list->logo; ?>" alt="" class="img-fluid">
                         </div>
                     </div>
 
