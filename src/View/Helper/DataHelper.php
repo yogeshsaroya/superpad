@@ -7,5 +7,26 @@ use Cake\ORM\TableRegistry;
 
 class DataHelper extends Helper{
 
+    public function getBlockchains()
+    {
+        $tbl = TableRegistry::get('Blockchains');
+        try {
+            $query = $tbl->find('all', ['conditions' => ['Blockchains.status'=> 1],'limit' => 50]);
+            return $row = $query->all();
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
+
+    public function getPartners()
+    {
+        $tbl = TableRegistry::get('Partners');
+        try {
+            $query = $tbl->find('all', ['conditions' => ['Partners.status'=> 1],'limit' => 50]);
+            return $row = $query->all();
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
 
 }

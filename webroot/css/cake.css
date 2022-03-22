@@ -274,3 +274,7 @@ form .required label:after {
     border: none;
     padding: 15px;
 }
+
+.header-navbar .navbar-container ul.navbar-nav li>a.nav-link {
+    color: #2f85ae;
+}

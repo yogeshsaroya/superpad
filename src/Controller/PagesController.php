@@ -30,8 +30,7 @@ class PagesController extends AppController
         //$this->redirect('/pages/properties');
     }
 
-    public function staticPages()
-    {
+    public function staticPages(){
         $this->set('menu_act', 'static_pages');
         if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
             $blog_del = $this->Pages->findById($this->request->getQuery('del'))->firstOrFail();
@@ -164,62 +163,79 @@ class PagesController extends AppController
         $this->set(compact('data'));
     }
 
-    public function consultants()
-    {
-        $this->set('menu_act', 'consultants');
+    public function blockchain() {
+        $menu_act = 'blockchain';
+        $pro_menu = 'top_menu';
+        $this->set(compact('menu_act','pro_menu'));
         if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
-            $blog_del = $this->Consultants->findById($this->request->getQuery('del'))->firstOrFail();
-            if ($this->Consultants->delete($blog_del)) {
+            $blog_del = $this->Blockchains->findById($this->request->getQuery('del'))->firstOrFail();
+            if ($this->Blockchains->delete($blog_del)) {
             }
-            $this->redirect('/pages/consultants');
+            $this->redirect('/pages/blockchain');
         }
+        if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
+            $getData = $this->Blockchains->findById($this->request->getQuery('st'))->firstOrFail();
+            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2:1) ];
+            $saveData = $this->Blockchains->newEntity($upData, ['validate' => false]);
+            $this->Blockchains->save($saveData);
+            $this->redirect('/pages/blockchain');
+        }
+
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
-        $data = $this->paginate($this->Consultants->find('all'));
+        $data = $this->paginate($this->Blockchains->find('all'));
         $this->set(compact('data'));
     }
 
-    public function manageConsultant($id = null)
-    {
-        $this->set('menu_act', 'consultants');
-        $blog_data = null;
+    public function manageBlockchain($id = null){
+        $menu_act = 'blockchain';
+        $pro_menu = 'top_menu';
+        $this->set(compact('menu_act','pro_menu'));
+        $get_data = null;
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
-            $file_name = null;
+            $file_name = $file_name_img = null;
             $postData = $this->request->getData();
-            $uploadPath = 'cdn/consultant/';
-            if (!file_exists($uploadPath)) {
-                mkdir($uploadPath, 0777, true);
+            $uploadPath = 'cdn/blockchains/';
+            $uploadImg = 'cdn/blockchains_img/';
+            if (!file_exists($uploadPath)) { mkdir($uploadPath, 0777, true); }
+            if (!file_exists($uploadImg)) { mkdir($uploadImg, 0777, true); }
+            /*For hero image*/
+            if (!empty($postData['hero_img'])) {
+                if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg','image/svg+xml'])) {
+                    $fileobject1 = $postData['hero_img'];
+                    $file_name_img = $fileobject1->getClientFilename();
+                    $destination1 = $uploadImg . $file_name_img;
+                    try {
+                        $fileobject1->moveTo($destination1);
+                    } catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
+                }
             }
 
-            if (!empty($postData['img'])) {
-                if (in_array($postData['img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg'])) {
-                    $fileobject = $postData['img'];
+            /* For logo */ 
+            if (!empty($postData['logo_img'])) {
+                if (in_array($postData['logo_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg','image/svg+xml'])) {
+                    $fileobject = $postData['logo_img'];
                     $file_name = $fileobject->getClientFilename();
                     $destination = $uploadPath . $file_name;
                     try {
                         $fileobject->moveTo($destination);
-                    } catch (Exception $e) {
-                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
-                        exit;
-                    }
+                    } catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
                 }
             }
 
             if (isset($postData['id']) && !empty($postData['id'])) {
-                $getBlog = $this->Consultants->get($postData['id']);
-                if (!empty($file_name)) {
-                    $postData['image'] = $file_name;
-                }
-                $chkBlog = $this->Consultants->patchEntity($getBlog, $postData, ['validate' => true]);
+                $getData = $this->Blockchains->get($postData['id']);
+                if (!empty($file_name)) { $postData['logo'] = $file_name; }
+                if (!empty($file_name_img)) { $postData['img'] = $file_name_img; }
+                $chkData = $this->Blockchains->patchEntity($getData, $postData, ['validate' => true]);
             } else {
-                $getBlog = $this->Consultants->newEmptyEntity();
-                if (!empty($file_name)) {
-                    $postData['image'] = $file_name;
-                }
-                $chkBlog = $this->Consultants->patchEntity($getBlog, $postData, ['validate' => true]);
+                $getData = $this->Blockchains->newEmptyEntity();
+                if (!empty($file_name)) { $postData['logo'] = $file_name; }
+                if (!empty($file_name_img)) { $postData['img'] = $file_name_img; }
+                $chkData = $this->Blockchains->patchEntity($getData, $postData, ['validate' => true]);
             }
-            if ($chkBlog->getErrors()) {
+            if ($chkData->getErrors()) {
                 $st = null;
-                foreach ($chkBlog->getErrors() as $elist) {
+                foreach ($chkData->getErrors() as $elist) {
                     foreach ($elist as $k => $v); {
                         $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
                     }
@@ -227,8 +243,8 @@ class PagesController extends AppController
                 echo $st;
                 exit;
             } else {
-                if ($this->Consultants->save($chkBlog)) {
-                    $u = SITEURL . "pages/consultants";
+                if ($this->Blockchains->save($chkData)) {
+                    $u = SITEURL . "pages/blockchain";
                     echo '<div class="alert alert-success" role="alert"> Saved.</div>';
                     echo "<script>window.location.href ='" . $u . "'; </script>";
                 } else {
@@ -239,15 +255,96 @@ class PagesController extends AppController
         }
 
         if (!empty($id)) {
-            $blog_data = $this->Consultants->findById($id)->firstOrFail();
+            $get_data = $this->Blockchains->findById($id)->firstOrFail();
         }
-        $this->set(compact('blog_data'));
+        $this->set(compact('get_data'));
+    }
+
+    public function partners() {
+        $menu_act = 'partners';
+        $pro_menu = 'top_menu';
+        $this->set(compact('menu_act','pro_menu'));
+        if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
+            $blog_del = $this->Partners->findById($this->request->getQuery('del'))->firstOrFail();
+            if ($this->Partners->delete($blog_del)) {
+            }
+            $this->redirect('/pages/partners');
+        }
+        if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
+            $getData = $this->Partners->findById($this->request->getQuery('st'))->firstOrFail();
+            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2:1) ];
+            $saveData = $this->Partners->newEntity($upData, ['validate' => false]);
+            $this->Partners->save($saveData);
+            $this->redirect('/pages/partners');
+        }
+
+        $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
+        $data = $this->paginate($this->Partners->find('all'));
+        $this->set(compact('data'));
+    }
+
+    public function managePartners($id = null){
+        $menu_act = 'partners';
+        $pro_menu = 'top_menu';
+        $this->set(compact('menu_act','pro_menu'));
+        $get_data = null;
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $file_name = $file_name_img = null;
+            $postData = $this->request->getData();
+            $uploadPath = 'cdn/partners/';
+            if (!file_exists($uploadPath)) { mkdir($uploadPath, 0777, true); }
+            /* For logo */ 
+            
+            if (!empty($postData['hero_img'])) {
+                if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg','image/svg+xml'])) {
+                    $fileobject = $postData['hero_img'];
+                    $file_name = $fileobject->getClientFilename();
+                    $destination = $uploadPath . $file_name;
+                    try {
+                        $fileobject->moveTo($destination);
+                    } catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
+                }
+            }
+
+            if (isset($postData['id']) && !empty($postData['id'])) {
+                $getData = $this->Partners->get($postData['id']);
+                if (!empty($file_name)) { $postData['logo'] = $file_name; }
+                $chkData = $this->Partners->patchEntity($getData, $postData, ['validate' => true]);
+            } else {
+                $getData = $this->Partners->newEmptyEntity();
+                if (!empty($file_name)) { $postData['logo'] = $file_name; }
+                
+                $chkData = $this->Partners->patchEntity($getData, $postData, ['validate' => true]);
+            }
+            if ($chkData->getErrors()) {
+                $st = null;
+                foreach ($chkData->getErrors() as $elist) {
+                    foreach ($elist as $k => $v); {
+                        $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                    }
+                }
+                echo $st;
+                exit;
+            } else {
+                if ($this->Partners->save($chkData)) {
+                    $u = SITEURL . "pages/partners";
+                    echo '<div class="alert alert-success" role="alert"> Saved.</div>';
+                    echo "<script>window.location.href ='" . $u . "'; </script>";
+                } else {
+                    echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                }
+            }
+            exit;
+        }
+
+        if (!empty($id)) {
+            $get_data = $this->Partners->findById($id)->firstOrFail();
+        }
+        $this->set(compact('get_data'));
     }
 
 
-
-    public function settings()
-    {
+    public function settings(){
         $this->set('menu_act', 'settings');
         $postData = $this->request->getData();
         $tbl_data = null;
@@ -281,8 +378,7 @@ class PagesController extends AppController
         $this->set(compact('tbl_data'));
     }
 
-    public function profileUpdate()
-    {
+    public function profileUpdate(){
         $this->set('menu_act', 'profile_update');
         $postData = $this->request->getData();
         $tbl_data = null;

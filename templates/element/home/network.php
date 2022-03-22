@@ -1,13 +1,28 @@
 <style>
-    .pdiv{width: 200px;}
+    .pdiv {
+        width: 300px;
+    }
+
     .auto-slide-wrap {
         overflow-x: hidden
     }
 
-    ul.share-box{display:inline-flex;}
-.share-box > li{padding:30px;}
+    ul.share-box {
+        display: inline-flex;
+    }
+
+    .share-box>li {
+        padding: 30px;
+    }
+
+    #networks_list .network_log img {
+        height: 100px;
+    }
 </style>
-<section class="brand-section section-space <?php echo (isset($bg_color) ?  $bg_color : null); ?>">
+<section id="networks_list" class="brand-section section-space <?php echo (isset($bg_color) ?  $bg_color : null); ?>">
+    <?php
+    $data = $this->Data->getBlockchains();
+    ?>
     <div class="container">
         <div class="section-head text-center">
             <h2 class="mb-3">All main BlockChain Network on SuperPAD</h2>
@@ -15,19 +30,20 @@
         <div class="slide_1 auto-slide-wrap">
             <div class="row g-gs marquee-with-options">
                 <ul class="share-box">
-
-                    <?php for ($i = 0; $i < 20; $i++) { ?>
-                        <li>
-                            <div class="pdiv col-6col-md-3col-sm-4">
-                                <div class="client-logo-item text-center">
-                                    <img src="images/brand/brand.png" alt="" class="img-fluid">
+                    <?php
+                    if (!empty($data)) {
+                        foreach ($data as $list) { ?>
+                            <li>
+                                <div class="pdiv col-6col-md-3col-sm-4">
+                                    <div class="text-center network_log">
+                                        <img src="<?php echo SITEURL . "cdn/blockchains_img/" . $list->img; ?>" alt="<?php echo $list->name; ?>" title="<?php echo $list->name; ?>" class="img-fluid">
+                                    </div>
                                 </div>
-                            </div><!-- end col -->
-                        </li>
-                    <?php } ?>
+                            </li>
+                    <?php }
+                    }
+                    ?>
                 </ul>
-
-
             </div><!-- end d-flex -->
         </div>
     </div><!-- end container -->
@@ -42,7 +58,7 @@ $(document).ready(function(){
 
 
 $('.marquee-with-options').marquee({
-speed: 100,
+speed: 200,
 gap: 0,
 delayBeforeStart: 0,
 direction: 'left',

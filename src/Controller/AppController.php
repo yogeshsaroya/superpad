@@ -61,6 +61,9 @@ class AppController extends Controller
         $this->loadModel('Settings');
         $this->loadModel('EmailTemplates');
         $this->loadModel('EmailServers');
+        $this->loadModel('Blockchains');
+        $this->loadModel('Partners');
+        
 
         $Setting = $this->Data->get_settings();
         $session = $this->getRequest()->getSession();
