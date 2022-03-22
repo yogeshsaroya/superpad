@@ -29,7 +29,8 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th><?php echo $this->Paginator->sort('date','Date <small>(YYYY-MM-DD)</small>',['escape' => false]); ?></th>
+                                        <th><?php echo $this->Paginator->sort('year'); ?></th>
+                                        <th><?php echo $this->Paginator->sort('title'); ?></th>
                                         <th><?php echo $this->Paginator->sort('description'); ?></th>
                                         <th><?php echo $this->Paginator->sort('status') ?></th>
                                         <th>Actions</th>
@@ -40,7 +41,8 @@
                                     if (!empty($data)) {
                                         foreach ($data as $list) { ?>
                                             <tr>
-                                                <td><?php echo $list->date->format('m-d-Y'); ?></td>
+                                                <td><?php echo $list->year; ?></td>
+                                                <td><?php echo $list->title; ?></td>
                                                 <td><?php echo $list->description; ?></td>
                                                 <td><?php
                                                     if ($list->status == 1) {

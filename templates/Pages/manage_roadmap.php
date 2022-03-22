@@ -41,7 +41,7 @@ $getStatus = getStatus();
                                     <div class="col-md-6 col-12 form-group mb-2"><?php echo $this->Form->control('year', ['class' => 'form-control','required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-md-6 col-12 form-group mb-2"><?php echo $this->Form->control('title', ['class' => 'form-control','required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-md-6 col-12 form-group mb-2"><?php echo $this->Form->control('status', ['options' => $getStatus,'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('description', ['type'=>'textarea','rows'=>3, 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('description', ['type'=>'textarea','rows'=>4, 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     
 
                                     <div class="col-12 mt-50">
