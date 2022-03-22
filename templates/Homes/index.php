@@ -25,7 +25,6 @@
 <?php echo $this->element('home/sales',['bg_color' => 'bg-white' ]); ?>
 <?php echo $this->element('home/features',['bg_color' => 'bg-gray' ]); ?>
 <?php echo $this->element('home/timeline',['bg_color' => 'bg-white' ]); ?>
-<?php echo $this->element('home/timeline2',['bg_color' => 'bg-white' ]); ?>
 <?php echo $this->element('home/partner',['bg_color' => 'bg-gray' ]); ?>
 <?php echo $this->element('home/banner',['bg_color' => 'bg-white' ]); ?>
 <?php echo $this->element('home/network',['bg_color' => 'bg-gray' ]); ?>

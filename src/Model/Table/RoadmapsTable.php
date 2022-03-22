@@ -12,9 +12,12 @@ class RoadmapsTable extends Table{
     public function validationDefault(Validator $validator): Validator {
         $validator
 
-        ->requirePresence("date")
-        ->notEmptyString("date", "Date is required")
-        ->add("date", ['unique' => ['rule' => 'validateUnique', 'provider' => 'table', 'message' => 'Date is already in use']])
+        ->requirePresence("year")
+        ->notEmptyString("year", "Title is required")
+
+        ->requirePresence("title")
+        ->notEmptyString("title", "Title is required")
+        
 
         ->requirePresence("description")
         ->notEmptyString("description", "Description is required");

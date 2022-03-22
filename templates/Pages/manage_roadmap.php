@@ -38,7 +38,8 @@ $getStatus = getStatus();
                                 ?>
 
                                 <div class="row">
-                                    <div class="col-md-6 col-12 form-group mb-2"><?php echo $this->Form->control('date', ['label'=>['escape' => false, 'text'=>'Date <small>(YYYY-MM-DD)</small>'], 'class' => 'form-control date-mask','placeholder'=>'YYYY-MM-DD', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-6 col-12 form-group mb-2"><?php echo $this->Form->control('year', ['class' => 'form-control','required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-6 col-12 form-group mb-2"><?php echo $this->Form->control('title', ['class' => 'form-control','required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-md-6 col-12 form-group mb-2"><?php echo $this->Form->control('status', ['options' => $getStatus,'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('description', ['type'=>'textarea','rows'=>3, 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     
