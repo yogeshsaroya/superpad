@@ -1,92 +1,62 @@
-<?php echo $this->Html->css(['/assets/css/roadmap']); ?>
-<section class="brand-section section-space <?php echo (isset($bg_color) ?  $bg_color : null);?>">
-            <div class="container">
-                <div class="section-head text-center">
-                    <h2 class="mb-3">Road Map</h2>
-                </div><!-- end section-head -->
-<div class="container1">
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card1">
-                <div class="body">
-                    <div class="cd-horizontal-timeline loaded">
-                        <div class="timeline">
-                            <div class="events-wrapper">
-                                <div class="events" style="width: 1800px;">
-                                    <ol>
-                                        <li><a href="#0" data-date="16/01/2017" class="older-event" style="left: 120px;">16 Jan</a></li>
-                                        <li><a href="#0" data-date="28/02/2017" style="left: 300px;" class="older-event">28 Feb</a></li>
-                                        <li><a href="#0" data-date="20/04/2017" style="left: 480px;" class="selected">20 Mar</a></li>
-                                        <li><a href="#0" data-date="20/05/2017" style="left: 600px;">20 May</a></li>
-                                        <li><a href="#0" data-date="09/07/2017" style="left: 780px;">09 Jul</a></li>
-                                        <li><a href="#0" data-date="30/08/2017" style="left: 960px;">30 Aug</a></li>
-                                        <li><a href="#0" data-date="15/09/2017" style="left: 1020px;">15 Sep</a></li>
-                                        <li><a href="#0" data-date="01/11/2017" style="left: 1200px;">01 Nov</a></li>
-                                        <li><a href="#0" data-date="10/12/2017" style="left: 1380px;">10 Dec</a></li>
-                                        <li><a href="#0" data-date="19/01/2018" style="left: 1500px;">29 Jan</a></li>
-                                        <li><a href="#0" data-date="03/03/2018" style="left: 1680px;">3 Mar</a></li>
-                                    </ol>
-                                    <span class="filling-line" aria-hidden="true" style="transform: scaleX(0.281506);"></span>
-                                </div>
-                                <!-- .events -->
-                            </div>
-                            <!-- .events-wrapper -->
-                            <ul class="cd-timeline-navigation">
-                                <li><a href="#0" class="prev inactive">Prev</a></li>
-                                <li><a href="#0" class="next">Next</a></li>
-                            </ul>
-                            <!-- .cd-timeline-navigation -->
-                        </div>
-                        <!-- .timeline -->
-                        <div class="events-content" style="height: 225px;">
-                            <ol>
-                                <li class="" data-date="16/01/2017">
-                                    <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors infancy.</p>
-                                </li>
-                                <li data-date="28/02/2017" class="">
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors infancy.</p>
-                                </li>
-                                <li data-date="20/04/2017" class="selected">
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors infancy.</p>
-                                </li>
-                                <li data-date="20/05/2017">
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors infancy.</p>
-                                </li>
-                                <li data-date="09/07/2017">
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors infancy.</p>
-                                </li>
-                                <li data-date="30/08/2017">
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors infancy.</p>
-                                </li>
-                                <li data-date="15/09/2017">
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors infancy.</p>
-                                </li>
-                                <li data-date="01/11/2017">
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors infancy.</p>
-                                </li>
-                                <li data-date="10/12/2017">
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors infancy.</p>
-                                </li>
-                                <li data-date="19/01/2018">
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors infancy.</p>
-                                </li>
-                                <li data-date="03/03/2018">
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors infancy.</p>
-                                </li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-</div>
+<?php echo $this->Html->css(['/assets/css/roadmap']);
+$data = $this->Data->getRoadmaps();
+?>
+<section class="brand-section section-space <?php echo (isset($bg_color) ?  $bg_color : null); ?>">
+	<div class="container">
+		<div class="section-head text-center">
+			<h2 class="mb-3">Road Map</h2>
+		</div><!-- end section-head -->
+		
+				<section class="cd-horizontal-timeline">
+					<div class="timeline">
+						<div class="events-wrapper">
+							<div class="events">
+								<ol>
+									<?php if (!empty($data)) {
+										$s = 1;
+										foreach ($data as $list) { ?>
+											<li><a class="<?php echo ($s == 1 ? 'selected' : 'not_selected'); ?>" href="#0" data-date="<?php echo $list->date->format('d/m/Y'); ?>"><?php echo $list->date->format('d M'); ?></a></li>
+									<?php $s++;
+										}
+									} ?>
 
-<?php $this->Html->scriptStart(array('block' => 'scriptBottom')); ?>
-jQuery(document).ready(function($){
-    var timelines = $('.cd-horizontal-timeline'),
+								</ol>
+
+								<span class="filling-line" aria-hidden="true"></span>
+							</div> <!-- .events -->
+						</div> <!-- .events-wrapper -->
+
+						<ul class="cd-timeline-navigation">
+							<li><a href="#0" class="prev inactive">Prev</a></li>
+							<li><a href="#0" class="next">Next</a></li>
+						</ul> <!-- .cd-timeline-navigation -->
+					</div> <!-- .timeline -->
+
+					<div class="events-content">
+						<ol>
+							<?php if (!empty($data)) {
+								$a = 1;
+								foreach ($data as $list) { ?>
+									<li class="<?php echo ($a == 1 ? 'selected' : 'not_selected'); ?>" data-date="<?php echo $list->date->format('d/m/Y'); ?>">
+										<p><?php echo $list->description; ?></p>
+									</li>
+
+
+							<?php $a++;
+								}
+							} ?>
+
+
+						</ol>
+					</div> <!-- .events-content -->
+				</section>
+			
+	</div>
+	</div>
+
+	<?php $this->Html->scriptStart(array('block' => 'scriptBottom')); ?>
+	jQuery(document).ready(function($){
+	var timelines = $('.cd-horizontal-timeline'),
 		eventsMinDistance = 60;
 
 	(timelines.length > 0) && initTimeline(timelines);
@@ -177,11 +147,11 @@ jQuery(document).ready(function($){
 			newEvent.addClass('selected');
 			selectedDate.removeClass('selected');
 			updateOlderEvents(newEvent);
-			updateTimelinePosition(string, newEvent, timelineComponents);
+			updateTimelinePosition(string, newEvent, timelineComponents, timelineTotWidth);
 		}
 	}
 
-	function updateTimelinePosition(string, event, timelineComponents) {
+	function updateTimelinePosition(string, event, timelineComponents, timelineTotWidth) {
 		//translate timeline to the left/right according to the position of the selected event
 		var eventStyle = window.getComputedStyle(event.get(0), null),
 			eventLeft = Number(eventStyle.getPropertyValue("left").replace('px', '')),
@@ -228,8 +198,7 @@ jQuery(document).ready(function($){
 			timeSpanNorm = Math.round(timeSpanNorm) + 4,
 			totalWidth = timeSpanNorm*width;
 		timelineComponents['eventsWrapper'].css('width', totalWidth+'px');
-		updateFilling(timelineComponents['eventsWrapper'].find('a.selected'), timelineComponents['fillingLine'], totalWidth);
-		updateTimelinePosition('next', timelineComponents['eventsWrapper'].find('a.selected'), timelineComponents);
+		updateFilling(timelineComponents['timelineEvents'].eq(0), timelineComponents['fillingLine'], totalWidth);
 	
 		return totalWidth;
 	}
@@ -290,6 +259,16 @@ jQuery(document).ready(function($){
 
 	//based on http://stackoverflow.com/questions/542938/how-do-i-get-the-number-of-days-between-two-dates-in-javascript
 	function parseDate(events) {
+		var dateArrays = [];
+		events.each(function(){
+			var dateComp = $(this).data('date').split('/'),
+				newDate = new Date(dateComp[2], dateComp[1]-1, dateComp[0]);
+			dateArrays.push(newDate);
+		});
+	    return dateArrays;
+	}
+
+	function parseDate2(events) {
 		var dateArrays = [];
 		events.each(function(){
 			var singleDate = $(this),
@@ -353,4 +332,4 @@ jQuery(document).ready(function($){
 		return window.getComputedStyle(document.querySelector('.cd-horizontal-timeline'), '::before').getPropertyValue('content').replace(/'/g, "").replace(/"/g, "");
 	}
 });
-<?php $this->Html->scriptEnd(); ?>
+				<?php $this->Html->scriptEnd(); ?>
