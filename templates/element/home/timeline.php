@@ -1,5 +1,8 @@
-<?php echo $this->Html->css(['/assets/css/roadmap']);
+<?php 
 $data = $this->Data->getRoadmaps();
+if(!empty($data)){
+echo $this->Html->css(['/assets/css/roadmap']);
+
 ?>
 <section class="brand-section section-space <?php echo (isset($bg_color) ?  $bg_color : null); ?>">
 	<div class="container">
@@ -332,4 +335,6 @@ $data = $this->Data->getRoadmaps();
 		return window.getComputedStyle(document.querySelector('.cd-horizontal-timeline'), '::before').getPropertyValue('content').replace(/'/g, "").replace(/"/g, "");
 	}
 });
-				<?php $this->Html->scriptEnd(); ?>
+<?php $this->Html->scriptEnd();
+}
+?>
