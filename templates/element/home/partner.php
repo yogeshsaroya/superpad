@@ -5,9 +5,7 @@ $data = $this->Data->getPartners();
     .partdiv {
         width: 200px;
     }
-    #partners_list .partners_logo img {
-        height: 100px;
-    }
+    
 </style>
 <section id="partners_list" class="brand-section section-space <?php echo (isset($bg_color) ?  $bg_color : null); ?>">
     <div class="container">
