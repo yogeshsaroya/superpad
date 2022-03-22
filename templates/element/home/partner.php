@@ -1,5 +1,6 @@
 <?php
 $data = $this->Data->getPartners();
+if( !empty($data) ){
 ?>
 <style>
     .partdiv {
@@ -35,3 +36,4 @@ $data = $this->Data->getPartners();
         </div><!-- end d-flex -->
     </div><!-- end container -->
 </section>
+<?php }?>

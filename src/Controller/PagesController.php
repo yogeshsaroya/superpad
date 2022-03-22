@@ -407,7 +407,7 @@ class PagesController extends AppController
         }
 
         if (!empty($id)) {
-            $get_data = $this->Partners->findById($id)->firstOrFail();
+            $get_data = $this->Roadmaps->findById($id)->firstOrFail();
         }
         $this->set(compact('get_data'));
     }
