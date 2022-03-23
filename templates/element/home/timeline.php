@@ -11,7 +11,7 @@ if (!empty($data)) {
             </div><!-- end section-head -->
             <div class="row">
                 <div class="col-md-12">
-                    <div class="main-timeline3">+
+                    <div class="main-timeline3">
                         <?php foreach ($data as $list) { ?>
                             <div class="timeline">
                                 <div class="timeline-content">
