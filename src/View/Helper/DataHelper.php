@@ -36,6 +36,7 @@ class DataHelper extends Helper
             ]);
             return $query->all();
         } catch (\Throwable $th) {
+            return false;
         }
     }
 
@@ -47,6 +48,7 @@ class DataHelper extends Helper
                 'conditions' => ['Projects.is_featured'=>1, 'Projects.status' => 1]]);
             return $query->first();
         } catch (\Throwable $th) {
+            return false;
         }
     }
 
