@@ -7,6 +7,7 @@ namespace App\Controller;
 use Cake\Utility\Text;
 use PhpParser\Node\Stmt\TryCatch;
 
+
 class PagesController extends AppController
 {
 
@@ -430,6 +431,17 @@ class PagesController extends AppController
             $this->Projects->save($saveData);
             $this->redirect('/pages/projects');
         }
+        if ($this->request->getQuery('featured')  && !empty($this->request->getQuery('featured'))) {
+            $getData = $this->Projects->findById($this->request->getQuery('featured'))->firstOrFail();
+
+            $this->Projects->updateAll(['is_featured' => null],['is_featured' => 1]);
+
+            $upData = ['id' => $getData->id, 'is_featured' => 1 ];
+            $saveData = $this->Projects->newEntity($upData, ['validate' => false]);
+            $this->Projects->save($saveData);
+            $this->redirect('/pages/projects');
+        }
+        
 
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Projects->find('all'));
@@ -444,15 +456,43 @@ class PagesController extends AppController
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $file_name = $file_name_img = null;
             $postData = $this->request->getData();
+            $uploadPath = 'cdn/project_logo/';
+            $uploadImg = 'cdn/project_img/';
+            if (!file_exists($uploadPath)) { mkdir($uploadPath, 0777, true); }
+            if (!file_exists($uploadImg)) { mkdir($uploadImg, 0777, true); }
+            /*For hero image*/
+            if (!empty($postData['hero_img'])) {
+                if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg','image/svg+xml'])) {
+                    $fileobject1 = $postData['hero_img'];
+                    $file_name_img = $fileobject1->getClientFilename();
+                    $destination1 = $uploadImg . $file_name_img;
+                    try {
+                        $fileobject1->moveTo($destination1);
+                    } catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
+                }
+            }
+
+            /* For logo */ 
+            if (!empty($postData['logo_img'])) {
+                if (in_array($postData['logo_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg','image/svg+xml'])) {
+                    $fileobject = $postData['logo_img'];
+                    $file_name = $fileobject->getClientFilename();
+                    $destination = $uploadPath . $file_name;
+                    try {
+                        $fileobject->moveTo($destination);
+                    } catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
+                }
+            }
             
             if (isset($postData['id']) && !empty($postData['id'])) {
                 $getData = $this->Projects->get($postData['id']);
                 if (!empty($file_name)) { $postData['logo'] = $file_name; }
+                if (!empty($file_name_img)) { $postData['hero_image'] = $file_name_img; }
                 $chkData = $this->Projects->patchEntity($getData, $postData, ['validate' => true]);
             } else {
                 $getData = $this->Projects->newEmptyEntity();
                 if (!empty($file_name)) { $postData['logo'] = $file_name; }
-                
+                if (!empty($file_name_img)) { $postData['hero_image'] = $file_name_img; }
                 $chkData = $this->Projects->patchEntity($getData, $postData, ['validate' => true]);
             }
             if ($chkData->getErrors()) {

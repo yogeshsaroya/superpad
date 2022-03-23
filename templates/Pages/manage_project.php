@@ -45,10 +45,11 @@ $this->assign('title', 'Manage Projects'); ?>
 
                                 <div class="row">
                                     <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('title', ['label'=>['escape' => false, 'text'=>'Title <small>(unique project title)</small>'],'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('type', ['options' => $type,'empty'=>'Select Type', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('slug', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('heading', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('tiker', ['label'=>['escape' => false, 'text'=>'Tiker <small>(unique tiker name)</small>'],'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('status', ['options' => $status, 'empty'=>'Select Status','class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('type', ['options' => $type,'empty'=>'Select Type', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('ticker', ['label'=>['escape' => false, 'text'=>'Tiker <small>(unique tiker name)</small>'],'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('product_status', ['options' => $status, 'empty'=>'Select Status','class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('blockchain_id', ['options' => $this->Data->getBlockchains('list'),'empty'=>'Select Blockchain Network','class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
 
                                     <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('total_raise', ['class' => 'form-control amt','placeholder'=>'00.00', 'required' => true]); ?><div class="help-block with-errors"></div></div>
@@ -59,8 +60,9 @@ $this->assign('title', 'Manage Projects'); ?>
                                     <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('end_date', ['label'=>['escape' => false, 'text'=>'Sale End Time'],'class' => 'form-control flatpickr-date-time','placeholder'=>'YYY-MM-DD HH:MM', 'required' => false]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('token_distribution_date', ['label'=>['escape' => false, 'text'=>'Token Distribution Time'],'class' => 'form-control flatpickr-date-time','placeholder'=>'YYY-MM-DD HH:MM','required' => false]); ?><div class="help-block with-errors"></div></div>
                                     
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('initial_market_cap', ['class' => 'form-control amt','placeholder'=>'00.00','required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('initial_token_circulation', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('initial_market_cap', ['class' => 'form-control amt','placeholder'=>'00.00','required' => false]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('initial_token_circulation', ['class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('status', ['options' => $getStatus,'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     
                                     <hr>
                                     
