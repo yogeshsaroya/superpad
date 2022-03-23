@@ -443,7 +443,7 @@ class PagesController extends AppController
         }
         
 
-        $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
+        $this->paginate = ['contain' => ['Blockchains'],'limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Projects->find('all'));
         $this->set(compact('data'));
     }

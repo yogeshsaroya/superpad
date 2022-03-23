@@ -54,7 +54,7 @@
                                                 <td><?php echo $this->Number->currency($list->ticket_allocation,'USD'); ?></td>
                                                 <td><?php echo number_format($list->initial_token_circulation); ?></td>
                                                 <td><?php echo $list->product_status; ?></td>
-                                                <td><?php echo $list->blockchain_id; ?></td>
+                                                <td><?php if(isset($list->blockchain->name)) echo $list->blockchain->name; ?></td>
                                                 <td><?php if(!empty($list->start_date)) echo $list->start_date->format('Y-m-d H:i A') ?></td>
                                                 <td><?php if(!empty($list->end_date))  echo $list->end_date->format('Y-m-d H:i A') ?></td>
                                                 <td><?php if ($list->is_featured == 1) {

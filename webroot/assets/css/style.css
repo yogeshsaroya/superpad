@@ -5534,7 +5534,7 @@ textarea.form-control {
     margin-bottom: 15px;
 }
 
-.text-truncate>p a {
+.text-truncate>p span {
     word-break: break-all;
     white-space: normal;
     display: block;
@@ -5563,4 +5563,8 @@ textarea.form-control {
 
 .logoWrap img {
     max-width: 60px;
+}
+
+#project_list .hero_img {
+    min-height: 240px;
 }

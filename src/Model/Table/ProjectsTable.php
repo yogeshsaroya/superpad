@@ -11,6 +11,7 @@ class ProjectsTable extends Table
     public function initialize(array $config): void
     {
         $this->addBehavior('Timestamp');
+        $this->belongsTo('Blockchains');
     }
 
     public function validationDefault(Validator $validator): Validator
