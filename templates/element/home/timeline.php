@@ -15,7 +15,7 @@ if (!empty($data)) {
                         <?php foreach ($data as $list) { ?>
                             <div class="timeline">
                                 <div class="timeline-content">
-                                    <span class="year"><?php echo $list->year;?></span>
+                                    <span class="year"><?php echo $list->date->format('Y');?></span>
                                     <h3 class="title"><?php echo $list->title;?></h3>
                                     <p class="description"><?php echo nl2br($list->description);?></p>
                                 </div>

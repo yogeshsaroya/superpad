@@ -12,8 +12,8 @@ class RoadmapsTable extends Table{
     public function validationDefault(Validator $validator): Validator {
         $validator
 
-        ->requirePresence("year")
-        ->notEmptyString("year", "Title is required")
+        ->requirePresence("date")
+        ->notEmptyString("date", "Date is required")
 
         ->requirePresence("title")
         ->notEmptyString("title", "Title is required")

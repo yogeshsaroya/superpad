@@ -29,7 +29,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th><?php echo $this->Paginator->sort('year'); ?></th>
+                                        <th><?php echo $this->Paginator->sort('date'); ?></th>
                                         <th><?php echo $this->Paginator->sort('title'); ?></th>
                                         <th><?php echo $this->Paginator->sort('description'); ?></th>
                                         <th><?php echo $this->Paginator->sort('status') ?></th>
@@ -41,7 +41,7 @@
                                     if (!empty($data)) {
                                         foreach ($data as $list) { ?>
                                             <tr>
-                                                <td><?php echo $list->year; ?></td>
+                                                <td><?php echo $list->date->format('d/m/Y'); ?></td>
                                                 <td><?php echo $list->title; ?></td>
                                                 <td><?php echo $list->description; ?></td>
                                                 <td><?php

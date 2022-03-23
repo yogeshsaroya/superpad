@@ -64,7 +64,7 @@ class AppController extends Controller
         $this->loadModel('Blockchains');
         $this->loadModel('Partners');
         $this->loadModel('Roadmaps');
-        
+        $this->loadModel('Projects');
         
 
         $Setting = $this->Data->get_settings();

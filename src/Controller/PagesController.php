@@ -413,6 +413,76 @@ class PagesController extends AppController
     }
 
 
+    public function projects() {
+        $menu_act = 'projects';
+        $pro_menu = 'top_menu';
+        $this->set(compact('menu_act','pro_menu'));
+        if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
+            $blog_del = $this->Projects->findById($this->request->getQuery('del'))->firstOrFail();
+            if ($this->Projects->delete($blog_del)) {
+            }
+            $this->redirect('/pages/projects');
+        }
+        if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
+            $getData = $this->Projects->findById($this->request->getQuery('st'))->firstOrFail();
+            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2:1) ];
+            $saveData = $this->Projects->newEntity($upData, ['validate' => false]);
+            $this->Projects->save($saveData);
+            $this->redirect('/pages/projects');
+        }
+
+        $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
+        $data = $this->paginate($this->Projects->find('all'));
+        $this->set(compact('data'));
+    }
+
+    public function manageProjects($id = null){
+        $menu_act = 'projects';
+        $pro_menu = 'top_menu';
+        $this->set(compact('menu_act','pro_menu'));
+        $get_data = null;
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $file_name = $file_name_img = null;
+            $postData = $this->request->getData();
+            
+            if (isset($postData['id']) && !empty($postData['id'])) {
+                $getData = $this->Projects->get($postData['id']);
+                if (!empty($file_name)) { $postData['logo'] = $file_name; }
+                $chkData = $this->Projects->patchEntity($getData, $postData, ['validate' => true]);
+            } else {
+                $getData = $this->Projects->newEmptyEntity();
+                if (!empty($file_name)) { $postData['logo'] = $file_name; }
+                
+                $chkData = $this->Projects->patchEntity($getData, $postData, ['validate' => true]);
+            }
+            if ($chkData->getErrors()) {
+                $st = null;
+                foreach ($chkData->getErrors() as $elist) {
+                    foreach ($elist as $k => $v); {
+                        $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                    }
+                }
+                echo $st;
+                exit;
+            } else {
+                if ($this->Projects->save($chkData)) {
+                    $u = SITEURL . "pages/projects";
+                    echo '<div class="alert alert-success" role="alert"> Saved.</div>';
+                    echo "<script>window.location.href ='" . $u . "'; </script>";
+                } else {
+                    echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                }
+            }
+            exit;
+        }
+
+        if (!empty($id)) {
+            $get_data = $this->Projects->findById($id)->firstOrFail();
+        }
+        $this->set(compact('get_data'));
+    }
+
+
     public function settings(){
         $this->set('menu_act', 'settings');
         $postData = $this->request->getData();
