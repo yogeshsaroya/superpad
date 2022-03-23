@@ -1,3 +1,6 @@
+<?php 
+$list = $this->Data->getFeaturedSale();
+if(!empty($list)){?>
 <section class="section-space trending-section <?php echo (isset($bg_color) ?  $bg_color : null);?>">
     <div class="container">
         <div class="section-head text-center">
@@ -9,26 +12,29 @@
                 <div class="row align-items-center flex-md-row-reverse">
                     <div class="col-lg-6 col-sm-9 col-md-6">
                         <div class="hero-image hero-image-mobile">
-                            <img src="<?php echo SITEURL; ?>img/abc.jpeg" alt="" class="w-100">
+                            <img src="<?php echo SITEURL . "cdn/project_img/" . $list->hero_image; ?>" alt="<?php echo $list->title;?>" class="w-100">
                         </div>
                     </div><!-- end col-lg-6 -->
                     <div class="col-lg-6 col-md-6">
 
-                        <h1 class="hero-title mb-4">Swimming into this amazing world</h1>
-                        <p class="text-dark-gray"><span class="me-3 me-xl-4"><strong class="text-black">IDO DATE and Time </strong> 10/10/2022 09:00 AM </span></p>
-                        <p class="text-dark-gray"><span class="me-3 me-xl-4"><strong class="text-black">Fund Raise</strong> $250,000 </span><span><strong class="text-black">Token Price</strong> $0.0050 </span></p>
+                        <h1 class="hero-title mb-4"><?php echo $list->title; ?></h1>
+                        <?php if(!empty($list->start_date)){?><p class="text-dark-gray"><span class="me-3 me-xl-4"><strong class="text-black">IDO DATE and Time </strong> <?php echo $list->start_date->format('m/d/Y H:i A') ?></span></p><?php }?>
+                        <p class="text-dark-gray"><span class="me-3 me-xl-4"><strong class="text-black">Fund Raise</strong><?php echo $this->Number->currency($list->total_raise, 'USD'); ?></span>
+                        <span><strong class="text-black">Ticket Allocation</strong> <?php echo $this->Number->currency($list->ticket_allocation, 'USD'); ?></span></p>
                         <br>
+                        <?php if(!empty($list->end_date)){?>
                         <h5 class="mb-3 text-uppercase hero-text">auction ending in</h5>
-                        <div class="countdown-timer d-flex align-items-center" id="counter" data-exp-time="2022-5-30 23:30:00"></div>
+                        <div class="countdown-timer d-flex align-items-center" id="counter" data-exp-time="<?php echo $list->start_date->format('Y-m-d H:i:s') ?>"></div>
+                        <?php }?>
                         <ul class="hero-btns btns-group">
-                            <li><img src="<?php echo SITEURL; ?>img/tether.svg" width="64px" alt="" /> </li>
-                            <li><a href="product-details-v1.html" class="btn btn-lg btn-dark">Join Now</a></li>
-
+                            <li> <?php if (isset($list->blockchain->name)) { ?><img src="<?php echo SITEURL . 'cdn/blockchains/' . $list->blockchain->logo; ?>" title="<?php echo $list->blockchain->name; ?>" width="64px" alt="" /><?php } ?></li>
+                            <li><a href="<?php echo SITEURL . "explore/" . $list->slug; ?>" class="btn btn-lg btn-dark">Join Now</a></li>
                         </ul>
-                    </div><!-- hero-content -->
-                </div><!-- col-lg-6 -->
-            </div><!-- end row -->
-        </div><!-- .container-->
-    </div><!-- end hero-wrap -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     </div>
 </section>
+<?php }?>

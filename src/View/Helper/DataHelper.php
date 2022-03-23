@@ -30,12 +30,23 @@ class DataHelper extends Helper
         try {
             $query = $tbl->find('all', [
                 'contain' => ['Blockchains'],
-                'conditions' => ['Projects.status' => 1], 
+                'conditions' => ['Projects.status' => 1],
                 'order' => ['Projects.id' => 'desc'],
-                'limit' => $limit]);
+                'limit' => $limit
+            ]);
             return $query->all();
         } catch (\Throwable $th) {
-            
+        }
+    }
+
+    public function getFeaturedSale() {
+        $tbl = TableRegistry::get('Projects');
+        try {
+            $query = $tbl->find('all', [
+                'contain' => ['Blockchains'],
+                'conditions' => ['Projects.is_featured'=>1, 'Projects.status' => 1]]);
+            return $query->first();
+        } catch (\Throwable $th) {
         }
     }
 
