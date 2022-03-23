@@ -2,7 +2,7 @@
 $getStatus = getStatus();
 ?>
 
-<?php $this->assign('title', 'Manage Static Page'); ?>
+<?php $this->assign('title', 'Manage Projects'); ?>
 <!-- BEGIN: Content-->
 <div class="app-content content ">
     <div class="content-overlay"></div>
@@ -12,7 +12,7 @@ $getStatus = getStatus();
             <div class="content-header-left col-md-9 col-12 mb-2">
                 <div class="row breadcrumbs-top">
                     <div class="col-12">
-                        <h2 class="content-header-title float-left mb-0">Manage Static Page</h2>
+                        <h2 class="content-header-title float-left mb-0">Manage Projects</h2>
                     </div>
                 </div>
             </div>
@@ -29,7 +29,7 @@ $getStatus = getStatus();
                             <div class="card-body">
 
                                 <?php
-                                echo $this->Form->create($post_data, ['autocomplete' => 'off', 'id' => 'e_frm', 'class' => 'mt-2', 'data-toggle' => 'validator']);
+                                echo $this->Form->create($get_data, ['autocomplete' => 'off', 'id' => 'e_frm', 'class' => 'mt-2', 'data-toggle' => 'validator']);
                                 echo $this->Form->hidden('id');
                                 ?>
 

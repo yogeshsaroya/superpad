@@ -436,7 +436,7 @@ class PagesController extends AppController
         $this->set(compact('data'));
     }
 
-    public function manageProjects($id = null){
+    public function manageProject($id = null){
         $menu_act = 'projects';
         $pro_menu = 'top_menu';
         $this->set(compact('menu_act','pro_menu'));

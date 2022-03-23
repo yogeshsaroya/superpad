@@ -1,18 +1,18 @@
-<?php $this->assign('title', 'Manage Static Pages');?>
+<?php $this->assign('title', 'Manage Projects');?>
 <div class="app-content content ">
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="content-header-left col-md-9 col-12 mb-2">
                 <div class="row breadcrumbs-top">
                     <div class="col-12">
-                        <h2 class="content-header-title float-left mb-0">Manage Static Pages</h2>
+                        <h2 class="content-header-title float-left mb-0">Manage Projects</h2>
                     </div>
                 </div>
             </div>
             <div class="content-header-right text-md-right col-md-3 col-12 d-md-block d-none">
                 <div class="form-group breadcrumb-right">
                     <div class="dropdown">
-                        <?php echo $this->Html->link('Add New Page','/pages/edit_static_pages',['class'=>'btn btn-primary mr-1 waves-effect waves-float waves-light']);?>
+                        <?php echo $this->Html->link('Add New Project','/pages/manage_project',['class'=>'btn btn-primary mr-1 waves-effect waves-float waves-light']);?>
                     </div>
                 </div>
             </div>
@@ -27,9 +27,18 @@
                             <table class="table">
                                 <thead>
                                     <tr>
+                                    <th><?php echo $this->Paginator->sort('logo');?></th>
                                         <th><?php echo $this->Paginator->sort('title');?></th>
-                                        <th><?php echo $this->Paginator->sort('slug');?></th>
-                                        <th><?php echo $this->Paginator->sort('status');?></th>
+                                        <th><?php echo $this->Paginator->sort('type');?></th>
+                                        <th><?php echo $this->Paginator->sort('total_raise');?></th>
+                                        <th><?php echo $this->Paginator->sort('ticket_allocation');?></th>
+                                        <th><?php echo $this->Paginator->sort('ticket_allocation');?></th>
+                                        <th><?php echo $this->Paginator->sort('initial_token_circulation');?></th>
+                                            <th><?php echo $this->Paginator->sort('status');?></th>
+                                        <th><?php echo $this->Paginator->sort('blockchain_id');?></th>
+                                        <th><?php echo $this->Paginator->sort('start_date');?></th>
+                                        <th><?php echo $this->Paginator->sort('end_date');?></th>
+                                        <th><?php echo $this->Paginator->sort('is_featured');?></th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>

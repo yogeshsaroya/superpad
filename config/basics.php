@@ -108,3 +108,25 @@ function getStatus()
     return ['1' => 'Active', '2' => 'Inactive'];
 }
 
+function getProjectType()
+{
+    return [
+        'IDO' => 'IDO',
+        'Seed Sale' => 'Seed Sale',
+        'Private sale' => 'Private sale',
+        'NFT Sale' => 'NFT Sale',
+        'Land Sale' => 'Land Sale'
+    ];
+}
+
+function getProjectStatus()
+{
+    return [
+        'Coming Soon' => 'Coming Soon',
+        'Whitelist Open' => 'Whitelist Open',
+        'Whitelist Closed' => 'Whitelist Closed',
+        'Live Now' => 'Live now',
+        'Sold Out' => 'Sold Out',
+        'TBA' => 'TBA'
+    ];
+}
