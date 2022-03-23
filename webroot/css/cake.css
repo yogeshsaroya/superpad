@@ -278,3 +278,15 @@ form .required label:after {
 .header-navbar .navbar-container ul.navbar-nav li>a.nav-link {
     color: #2f85ae;
 }
+
+.clearfix::after {
+    display: block;
+    content: "";
+    clear: both;
+}
+
+small,
+.small {
+    font-size: 80% !important;
+    font-weight: 400;
+}

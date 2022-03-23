@@ -45,9 +45,6 @@ class UsersTable extends Table
         ->minLength("password", 6, "Password must be 6-20 characters")
         ->maxLength("password", 20, "Password must be 6-20 characters");
         
-
-        
-        
         return $validator;
     }
 

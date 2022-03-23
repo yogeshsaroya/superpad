@@ -1,5 +1,3 @@
-
-
 <?php $this->assign('title', 'Manage Roadmap');
 $getStatus = getStatus();
 ?>

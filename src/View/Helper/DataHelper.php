@@ -7,13 +7,19 @@ use Cake\ORM\TableRegistry;
 
 class DataHelper extends Helper{
 
-    public function getBlockchains(){
+    public function getBlockchains($type = 'all'){
         $tbl = TableRegistry::get('Blockchains');
-        try {
-            $query = $tbl->find('all', ['conditions' => ['Blockchains.status'=> 1],'limit' => 50]);
-            return $row = $query->all();
-        } catch (\Throwable $th) {
-            return false;
+        if($type == 'list'){
+            $query = $tbl->find('list', ['keyField' => 'id', 'valueField' => 'name'])->order(['Blockchains.name' => 'ASC']);
+            return $query->toArray();
+        }
+        else{
+            try {
+                $query = $tbl->find('all', ['conditions' => ['Blockchains.status'=> 1],'limit' => 50]);
+                return $query->all();
+            } catch (\Throwable $th) {
+                return false;
+            }
         }
     }
 

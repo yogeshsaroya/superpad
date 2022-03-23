@@ -11,5 +11,23 @@ class ProjectsTable extends Table{
         $this->addBehavior('Timestamp');
     }
     
+    public function validationDefault(Validator $validator): Validator
+    {
+        // adding model validation for fields
+        $validator
+        ->requirePresence("title")
+        ->notEmptyString("title", "Title is required")
+        ->minLength("title", 3, "Title must be 3-20 characters")
+        ->maxLength("title", 20, "Title must be 3-20 characters")
+        ->add("title", ['unique' => ['rule' => 'validateUnique', 'provider' => 'table', 'message' => 'Project title is already in use']])
+
+        ->requirePresence("ticker")
+        ->notEmptyString("ticker", "Last name is required")
+        ->minLength("ticker", 3, "Last name must be 3-20 characters")
+        ->maxLength("ticker", 20, "Last name must be 3-20 characters")
+        ->add("ticker", ['unique' => ['rule' => 'validateUnique', 'provider' => 'table', 'message' => 'Ticker is already in use']]);
+        
+        return $validator;
+    }
 
 }
