@@ -61,12 +61,18 @@ class HomesController extends AppController
     {
         $get_data = null;
         if (!empty($id)) {
-            $get_data = $this->Pages
+            $data = $this->Pages
                 ->find()
                 ->where(['slug' => $id, 'status' => 1])
                 ->first();
+                if(!empty($data)){
+                    $this->set(compact('data'));
+                }else{
+                    $this->viewBuilder()->setLayout('error_404');
+                }
+                
         }
-        $this->set(compact('get_data'));
+        
     }
 
     public function allocation()

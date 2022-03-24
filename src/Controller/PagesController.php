@@ -28,7 +28,7 @@ class PagesController extends AppController
 
     public function index()
     {
-        //$this->redirect('/pages/properties');
+        $this->redirect('/pages/users');
     }
 
     public function staticPages(){

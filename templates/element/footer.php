@@ -48,7 +48,7 @@
                                 <h5 class="mb-4">Company</h5>
                                 <ul class="list-item list-item-s1">
                                     <li><a href="<?php echo SITEURL;?>page/about-us">About</a></li>
-                                    <li><a href="<?php echo SITEURL;?>page/tea,">Team</a></li>
+                                    <li><a href="<?php echo SITEURL;?>page/team">Team</a></li>
                                     <li><a href="<?php echo SITEURL;?>contact">Contact</a></li>
                                     <li><a href="<?php echo SITEURL;?>page/careers">Careers</a></li>
                                 </ul>

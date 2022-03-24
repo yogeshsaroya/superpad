@@ -31,7 +31,7 @@ $session = $this->request->getSession()->read('Auth'); //read session data
                             <ul class="menu-list ms-lg-auto">
                                 <li class="menu-item"><a href="<?php echo SITEURL;?>allocation" class="menu-link">Allocation</a></li>
                                 <li class="menu-item"><a href="<?php echo SITEURL;?>stake" class="menu-link">Stake</a></li>
-                                <li class="menu-item"><a href="<?php echo SITEURL;?>buy-spad" class="menu-link">Buy SPAD</a></li>
+                                <li class="menu-item"><a href="javascript:void(0);" class="menu-link">Buy SPAD</a></li>
                                 <?php if(isset($session['User']['first_name']) && !empty($session['User']['first_name']) ){?>
                                 <li class="menu-item"><a href="<?php echo SITEURL;?>dashboard" class="menu-link">Dashboard</a></li>
                                 <li class="menu-item"><a href="<?php echo SITEURL;?>users/logout" class="menu-link">Logout</a></li>
