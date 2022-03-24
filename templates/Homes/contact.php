@@ -80,45 +80,12 @@ headers : {
 'X-CSRF-Token': $('[name="_csrfToken"]').val()
 },
 beforeSubmit:function(){ $("#login_sbtn").prop("disabled",true); $("#login_sbtn").val('Please wait..'); },
-success: function(response) { $("#login_sbtn").prop("disabled",false); $("#login_sbtn").val('Sign In'); },
+success: function(response) { $("#login_sbtn").prop("disabled",false); $("#login_sbtn").val('Send Message'); },
 error : function(response) {
 $('#f_err').html('<div class="alert alert-danger">Sorry, this is not working at the moment. Please try again later.</div>');
-$("#login_sbtn").prop("disabled",false); $("#login_sbtn").val('Sign In');
+$("#login_sbtn").prop("disabled",false); $("#login_sbtn").val('Send Message');
 },
 }).submit();
 });
 });
 <?php $this->Html->scriptEnd(); ?>
-
-<?php /* $this->Html->scriptStart(array('block' => 'scriptBottom'));
-?>
-
-    $(function() {
-        $("#login_sbtn").click(function(e) {
-            var form = $('#e_frm');
-            
-                e.preventDefault();
-                var formData = $(form).serialize();
-                console.log(formData);
-                $("#login_sbtn").prop("disabled",true); $("#login_sbtn").val('Please wait..');
-                $.ajax({
-                        type: 'POST',
-                        headers: {
-                            'X-CSRF-Token': $('[name="_csrfToken"]').val()
-                        },
-                        url: $(form).attr('action'),
-                        data: formData
-                    })
-                    .done(function(response) {
-                        $("#login_sbtn").prop("disabled",false); $("#login_sbtn").val('Send Message'); 
-                        $('#e_frm input,#e_frm textarea').val('');
-                    })
-                    .fail(function(data) {
-                        $("#login_sbtn").prop("disabled",false); $("#login_sbtn").val('Send Message'); 
-                    });
-            
-        });
-    });
-
-<?php $this->Html->scriptEnd(); */
-?>
