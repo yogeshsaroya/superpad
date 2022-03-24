@@ -81,10 +81,6 @@ class HomesController extends AppController
     {
     }
 
-    public function contactUs()
-    {
-    }
-
     public function explore($id = null)
     {
         if( !empty($id) ){
@@ -101,7 +97,7 @@ class HomesController extends AppController
             
         }
     }
-    public function projectDetails()
+    public function contact()
     {
     }
 

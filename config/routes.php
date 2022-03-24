@@ -55,15 +55,9 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/register/*', ['controller' => 'Users', 'action' => 'register']);
     $builder->connect('/sign-in/*', ['controller' => 'Users', 'action' => 'login']);
     $builder->connect('/forget-password/*', ['controller' => 'Users', 'action' => 'forget_password']);
-    
     $builder->connect('/connect-wallet/*', ['controller' => 'Users', 'action' => 'connect_wallet']);
-
     $builder->connect('/dashboard/*', ['controller' => 'Users', 'action' => 'dashboard']);
-
-    
-
     $builder->connect('/contact-us/*', ['controller' => 'Homes', 'action' => 'contact_us']);
-
     $builder->connect('/allocation/*', ['controller' => 'Homes', 'action' => 'allocation']);
     $builder->connect('/stake/*', ['controller' => 'Homes', 'action' => 'stake']);
     $builder->connect('/buy-spad/*', ['controller' => 'Homes', 'action' => 'spad']);
@@ -72,6 +66,8 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/project-details/*', ['controller' => 'Homes', 'action' => 'project_details']);
 
     $builder->connect('/page/*', ['controller' => 'Homes', 'action' => 'page']);
+    $builder->connect('/contact/*', ['controller' => 'Homes', 'action' => 'contact']);
+    
     
 
     $builder->connect('/backend/*', ['controller' => 'users', 'action' => 'backend']);

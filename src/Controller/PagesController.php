@@ -61,11 +61,13 @@ class PagesController extends AppController
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $file_name = null;
             $postData = $this->request->getData();
+            /*
             if (isset($postData['title']) && !empty($postData['title'])) {
                 $sluggedTitle = Text::slug($postData['title']);
                 $url = strtolower(substr($sluggedTitle, 0, 191));
             }
             $postData['slug'] = $url;
+            */
             
             if (isset($postData['id']) && !empty($postData['id'])) {
                 $getBlog = $this->Pages->get($postData['id']);
@@ -626,43 +628,45 @@ class PagesController extends AppController
 
     public function users() {
         $menu_act = 'users';
-        $this->set(compact('menu_act','pro_menu'));
+        $this->set(compact('menu_act'));    
         if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
-            $blog_del = $this->Roadmaps->findById($this->request->getQuery('del'))->firstOrFail();
-            if ($this->Roadmaps->delete($blog_del)) {
+            $blog_del = $this->Users->findById($this->request->getQuery('del'))->firstOrFail();
+            if ($this->Users->delete($blog_del)) {
             }
-            $this->redirect('/pages/roadmap');
+            $this->redirect('/pages/users');
         }
         if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
-            $getData = $this->Roadmaps->findById($this->request->getQuery('st'))->firstOrFail();
+            $getData = $this->Users->findById($this->request->getQuery('st'))->firstOrFail();
             $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2:1) ];
-            $saveData = $this->Roadmaps->newEntity($upData, ['validate' => false]);
-            $this->Roadmaps->save($saveData);
-            $this->redirect('/pages/roadmap');
+            $saveData = $this->Users->newEntity($upData, ['validate' => false]);
+            $this->Users->save($saveData);
+            $this->redirect('/pages/users');
         }
 
-        $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
-        $data = $this->paginate($this->Roadmaps->find('all'));
+        $this->paginate = ['limit' => 100,'conditions'=>['Users.role'=>2], 'order' => ['id' => 'desc']];
+        $data = $this->paginate($this->Users->find('all'));
         $this->set(compact('data'));
     }
 
     public function manageUser($id = null){
         $menu_act = 'users';
-        $this->set(compact('menu_act','pro_menu'));
+        $this->set(compact('menu_act'));
         $get_data = null;
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
-            $file_name = $file_name_img = null;
             $postData = $this->request->getData();
+            $val = ['validate' => true];
+            if (!empty($postData['password1'])) {
+                $postData['password'] = $postData['password1'];
+            }else{
+                $val = ['validate' => 'OnlyCheck'];
+            }
             
             if (isset($postData['id']) && !empty($postData['id'])) {
-                $getData = $this->Roadmaps->get($postData['id']);
-                if (!empty($file_name)) { $postData['logo'] = $file_name; }
-                $chkData = $this->Roadmaps->patchEntity($getData, $postData, ['validate' => true]);
+                $getData = $this->Users->get($postData['id']);
+                $chkData = $this->Users->patchEntity($getData, $postData, $val);
             } else {
-                $getData = $this->Roadmaps->newEmptyEntity();
-                if (!empty($file_name)) { $postData['logo'] = $file_name; }
-                
-                $chkData = $this->Roadmaps->patchEntity($getData, $postData, ['validate' => true]);
+                $getData = $this->Users->newEmptyEntity();
+                $chkData = $this->Users->patchEntity($getData, $postData, $val);
             }
             if ($chkData->getErrors()) {
                 $st = null;
@@ -674,8 +678,8 @@ class PagesController extends AppController
                 echo $st;
                 exit;
             } else {
-                if ($this->Roadmaps->save($chkData)) {
-                    $u = SITEURL . "pages/roadmap";
+                if ($this->Users->save($chkData)) {
+                    $u = SITEURL . "pages/users";
                     echo '<div class="alert alert-success" role="alert"> Saved.</div>';
                     echo "<script>window.location.href ='" . $u . "'; </script>";
                 } else {
@@ -686,7 +690,7 @@ class PagesController extends AppController
         }
 
         if (!empty($id)) {
-            $get_data = $this->Roadmaps->findById($id)->firstOrFail();
+            $get_data = $this->Users->findById($id)->firstOrFail();
         }
         $this->set(compact('get_data'));
     }

@@ -34,10 +34,11 @@ $getStatus = getStatus();
                                 ?>
 
                                 <div class="row">
-                                    <div class="col-md-6 col-12 form-group mb-2"><?php echo $this->Form->control('title', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-6 col-12 form-group mb-2"><?php echo $this->Form->control('meta_title', ['class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-6 col-12 form-group mb-2"><?php echo $this->Form->control('meta_description', ['class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-1 col-12 form-group mb-2"><?php echo $this->Form->control('status', ['options' => $getStatus, 'empty' => 'Select', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('title', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('meta_title', ['class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('meta_description', ['class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('slug', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('status', ['options' => $getStatus, 'empty' => 'Select', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
 
                                     <div class="col-12">
                                         <div class="form-group mb-2">
