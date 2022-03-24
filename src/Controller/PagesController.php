@@ -625,8 +625,7 @@ class PagesController extends AppController
     }
 
     public function users() {
-        $menu_act = 'roadmap';
-        $pro_menu = 'top_menu';
+        $menu_act = 'users';
         $this->set(compact('menu_act','pro_menu'));
         if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
             $blog_del = $this->Roadmaps->findById($this->request->getQuery('del'))->firstOrFail();
@@ -648,8 +647,7 @@ class PagesController extends AppController
     }
 
     public function manageUser($id = null){
-        $menu_act = 'roadmap';
-        $pro_menu = 'top_menu';
+        $menu_act = 'users';
         $this->set(compact('menu_act','pro_menu'));
         $get_data = null;
         if ($this->request->is('ajax') && !empty($this->request->getData())) {

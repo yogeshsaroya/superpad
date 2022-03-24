@@ -1,22 +1,16 @@
-<?php $this->assign('title', 'Manage Roadmaps'); ?>
+<?php $this->assign('title', 'Manage Users'); ?>
 <div class="app-content content ">
     <div class="content-wrapper">
         <div class="content-header row">
             <div class="content-header-left col-md-9 col-12 mb-2">
                 <div class="row breadcrumbs-top">
                     <div class="col-12">
-                        <h2 class="content-header-title float-left mb-0">Manage Roadmaps</h2>
+                        <h2 class="content-header-title float-left mb-0">Manage Users</h2>
 
                     </div>
                 </div>
             </div>
             <div class="content-header-right text-md-right col-md-3 col-12 d-md-block d-none">
-                <div class="form-group breadcrumb-right">
-                    <div class="dropdown">
-                        <?php echo $this->Html->link('Add New Roadmap', '/pages/manage_roadmap', ['class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
-
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -29,10 +23,10 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th><?php echo $this->Paginator->sort('date'); ?></th>
-                                        <th><?php echo $this->Paginator->sort('title'); ?></th>
-                                        <th><?php echo $this->Paginator->sort('description'); ?></th>
-                                        <th><?php echo $this->Paginator->sort('status') ?></th>
+                                        <th><?php echo $this->Paginator->sort('first_name'); ?></th>
+                                        <th><?php echo $this->Paginator->sort('last_name'); ?></th>
+                                        <th><?php echo $this->Paginator->sort('email'); ?></th>
+                                        <th><?php echo $this->Paginator->sort('created') ?></th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -41,18 +35,10 @@
                                     if (!empty($data)) {
                                         foreach ($data as $list) { ?>
                                             <tr>
-                                                <td><?php echo $list->date->format('d/m/Y'); ?></td>
-                                                <td><?php echo $list->title; ?></td>
-                                                <td><?php echo $list->description; ?></td>
-                                                <td><?php
-                                                    if ($list->status == 1) {
-                                                        echo $this->Html->link('Active', SITEURL . "pages/roadmap?st=" . $list->id, ['class' => 'text-success']);
-                                                    } else {
-                                                        echo $this->Html->link('Inactive', SITEURL . "pages/roadmap?st=" . $list->id, ['class' => 'text-danger']);
-                                                    } ?>
-                                                </td>
-
-
+                                                <td><?php echo $list->first_name; ?></td>
+                                                <td><?php echo $list->last_name; ?></td>
+                                                <td><?php echo $list->email; ?></td>
+                                                <td><?php echo $list->created->format('d/m/Y'); ?></td>
                                                 <td>
                                                     <div class="dropdown">
                                                         <button type="button" class="btn btn-sm dropdown-toggle hide-arrow" data-toggle="dropdown"><i data-feather="more-vertical"></i></button>
