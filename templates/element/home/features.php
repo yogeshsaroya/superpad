@@ -6,7 +6,6 @@ if (!empty($data)) {
         <div class="container">
             <div class="section-head text-center">
                 <h2 class="mb-3">Superpad features</h2>
-                <p>This is just a simple text made for this unique and awesome template, you can replace it with any text. It is a long established fact.</p>
             </div>
             <div class="row g-gs justify-content-center">
                 <?php foreach ($data as $list) { ?>
