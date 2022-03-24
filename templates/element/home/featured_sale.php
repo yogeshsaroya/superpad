@@ -11,7 +11,7 @@ if(!empty($list)){?>
             <div class="container">
                 <div class="row align-items-center flex-md-row-reverse">
                         <div class="col-lg-12 col-sm-12 col-md-12">
-                        <div class="hero-image hero-image-mobile">
+                        <div class="hero-image hero-image-mobile1">
                         <a href="<?php echo SITEURL . "explore/" . $list->slug; ?>" title="">
                             <img src="<?php echo SITEURL . "cdn/project_banner/" . $list->banner; ?>" alt="<?php echo $list->title;?>" class="w-100"/>
                         </a>

@@ -76,13 +76,14 @@ class CronsController extends AppController
                         $up_arr = ['id' => $list->id, 'status' => 1];
                         $saveData = $this->EmailServers->newEntity($up_arr, ['validate' => false]);
                         $this->EmailServers->save($saveData);
-                        ec('Email has been sent to '.$list->email_to);
+                        ec('<div style="color: green;">Email has been sent to '.$list->email_to.'</div>');
                     } catch (\Throwable $th) {
                         $mailer->reset();
                         $up_arr = ['id' => $list->id, 'status' => 3];
                         $saveData = $this->EmailServers->newEntity($up_arr, ['validate' => false]);
                         $this->EmailServers->save($saveData);
                         ec('Email has been failed to '.$list->email_to);
+                        ec('<div style="color: green;"><b>Email has been failed to '.$list->email_to.'</b></div>');
                     }
                 }
             }

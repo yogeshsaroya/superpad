@@ -83,79 +83,54 @@ class HomesController extends AppController
 
     public function explore($id = null)
     {
-        if( !empty($id) ){
+        if (!empty($id)) {
             $query = $this->Projects->find('all', [
                 'contain' => ['Blockchains'],
-                'conditions' => ['Projects.slug' => $id, 'Projects.status' => 1]]);
+                'conditions' => ['Projects.slug' => $id, 'Projects.status' => 1]
+            ]);
             $data =  $query->first();
-            if(!empty($data)){
+            if (!empty($data)) {
                 $this->set(compact('data'));
                 $this->render('project_details');
-            }else{
+            } else {
                 $this->viewBuilder()->setLayout('error_404');
             }
-            
         }
     }
     public function contact()
     {
-    }
-
-    public function ajFrm()
-    {
-        $this->autoRender = false;
-        if ($this->request->is('ajax')) {
-            //ec($this->request->getData());
-            // Only process POST reqeusts.
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                // Get the form fields and remove whitespace.
-                $name = strip_tags(trim($_POST["name"]));
-                $name = str_replace(array("\r", "\n"), array(" ", " "), $name);
-                $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
-                $message = trim($_POST["message"]);
-
-                // Check that data was sent to the mailer.
-                if (empty($name) or empty($message) or !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    // Set a 400 (bad request) response code and exit.
-                    // http_response_code(400);
-                    echo "Please complete the form and try again.";
-                    exit;
-                }
-
-                // Set the recipient email address.
-                // FIXME: Update this to your desired email address.
-                $recipient = "kevinal.min@gmail.com";
-                $recipient = "saroya.com@gmail.com";
-
-                $email_headers = "From: Info <test@redmoontech.com>";
-                // Set the email subject.
-                $subject = "New contact from $name";
-
-                // Build the email content.
-                $email_content = "Name: $name\n";
-                $email_content .= "Email: $email\n\n";
-                $email_content .= "Subject: $subject\n\n";
-                $email_content .= "Message:\n$message\n";
-
-                // Build the email headers.
-
-
-                // Send the email.
-                if (mail($recipient, $subject, $email_content, $email_headers)) {
-                    // Set a 200 (okay) response code.
-                    //http_response_code(200);
-                    echo "Thank You! Your message has been sent.";
-                } else {
-                    // Set a 500 (internal server error) response code.
-                    //http_response_code(500);
-                    echo "Oops! Something went wrong and we couldn't send your message.";
-                }
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $postData = $this->request->getData();
+            $data = array_map('trim', $postData);
+            if (empty($data['full_name'])) {
+                echo '<div class="alert alert-danger">Please enter full name</div>';
+                exit;
+            } elseif (empty($data['email'])) {
+                echo '<div class="alert alert-danger">Please enter email address</div>';
+                exit;
+            } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                echo '<div class="alert alert-danger">Please enter valid email address</div>';
+                exit;
+            } elseif (empty($data['sujbect'])) {
+                echo '<div class="alert alert-danger">Please enter subject</div>';
+                exit;
+            } elseif (empty($data['msg'])) {
+                echo '<div class="alert alert-danger">Please enter message</div>';
+                exit;
             } else {
-                // Not a POST request, set a 403 (forbidden) response code.
-                //http_response_code(403);
-                echo "There was a problem with your submission, please try again.";
+                $ticket = rand(111111111,999999999);
+                
+                $admin = 'support@superpad.finance';
+                $admin = 'yogeshsaroya@gmail.com';
+                $this->Data->AppMail($admin,5,['SUBJECT' => $data['sujbect'],'TICKET_NUMBER' => $ticket,'MESSAGE' => $data['msg'],'NAME' => $data['full_name'],'EMAIL' => $data['email']]);
+                $this->Data->AppMail($data['email'],6,['SUBJECT' => $data['sujbect'],'TICKET_NUMBER' => $ticket,'MESSAGE' => $data['msg'],'NAME' => $data['full_name'],'EMAIL' => $data['email']]);
+                echo '<script>$("#e_frm")[0].reset();</script>';
+                echo '<div class="alert alert-success">Thank you for submitting your request we will get in touch with you shortly</div>';
+                exit;
             }
+            exit;
         }
-        exit;
     }
+
+   
 }
