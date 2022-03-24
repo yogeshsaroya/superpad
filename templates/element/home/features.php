@@ -12,7 +12,7 @@ if (!empty($data)) {
                 <?php foreach ($data as $list) { ?>
                     <div class="col-10 col-sm-6 col-md-6 col-lg-3">
                         <div class="card-htw text-center">
-                            <img src="<?php echo SITEURL.'cdn/features/'.$list->icon?>" alt="" title="" class="features_icon" width="32px"/>
+                            <img src="<?php echo SITEURL.'cdn/features/'.$list->icon?>" alt="" title="" class="features_icon" width="50px"/>
                             <h4 class="mb-3"><?php echo $list->heading;?></h4>
                             <p class="card-text-s1"><?php echo $list->sub_heading;?></p>
                         </div>
