@@ -121,7 +121,6 @@ class HomesController extends AppController
                 $ticket = rand(111111111,999999999);
                 
                 $admin = 'support@superpad.finance';
-                $admin = 'yogeshsaroya@gmail.com';
                 $this->Data->AppMail($admin,5,['SUBJECT' => $data['sujbect'],'TICKET_NUMBER' => $ticket,'MESSAGE' => $data['msg'],'NAME' => $data['full_name'],'EMAIL' => $data['email']]);
                 $this->Data->AppMail($data['email'],6,['SUBJECT' => $data['sujbect'],'TICKET_NUMBER' => $ticket,'MESSAGE' => $data['msg'],'NAME' => $data['full_name'],'EMAIL' => $data['email']]);
                 echo '<script>$("#e_frm")[0].reset();</script>';
