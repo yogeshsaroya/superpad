@@ -5,7 +5,8 @@ if (!empty($data)) {
     <section class="section-space how-it-work-section <?php echo (isset($bg_color) ?  $bg_color : null); ?>">
         <div class="container">
             <div class="section-head text-center">
-                <h2 class="mb-3">Superpad features</h2>
+                <h2 class="mb-3">Superpad Features</h2>
+                <hr>
             </div>
             <div class="row g-gs justify-content-center">
                 <?php foreach ($data as $list) { ?>
