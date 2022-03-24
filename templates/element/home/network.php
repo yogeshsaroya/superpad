@@ -25,7 +25,7 @@
     ?>
     <div class="container">
         <div class="section-head text-center">
-            <h2 class="mb-3">All main BlockChain Network on SuperPAD</h2>
+            <h2 class="mb-3">Raise fund across all main blockchain networks</h2>
         </div><!-- end section-head -->
         <div class="slide_1 auto-slide-wrap">
             <div class="row g-gs marquee-with-options">

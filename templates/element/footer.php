@@ -4,10 +4,12 @@
             <div class="row">
                 <div class="col-lg-3 col-md-9 me-auto">
                     <div class="footer-item mb-5 mb-lg-0">
-                        <a href="index.html" class="footer-logo-link logo-link" style="display: none;">
+                    <?php /*?>
+                        <a href="<?php echo SITEURL;?>" class="footer-logo-link logo-link">
                             <img class="logo-dark logo-img" src="<?php echo SITEURL; ?>images/logo.png" alt="logo">
                             <img class="logo-light logo-img" src="<?php echo SITEURL; ?>images/logo.png" alt="logo">
                         </a>
+                        <?php */?>
                         <p class="my-4 footer-para">The world's first and largest digital marketplace for crypto collectibles and non-fungible tokens (NFTs).</p>
                         <ul class="styled-icon">
                             <?php if (!empty($Setting['twitter'])) { ?><li><a href="<?php echo $Setting['twitter']; ?>"><img src="<?php echo SITEURL; ?>img/twitter.svg" alt="" class="svg_icon" /></a></li><?php } ?>
@@ -60,10 +62,9 @@
         <div class="copyright-wrap d-flex flex-wrap py-3 align-items-center justify-content-between">
             <p class="footer-copy-text py-2">Copyright &copy; <?php echo date('Y'); ?> <?php echo WEBTITLE; ?>.</p>
             <ul class="list-item list-item-s1 list-item-inline">
-                <li><a href="explore.html">Explore</a></li>
-                <li><a href="activity.html">Activity</a></li>
-                <li><a href="login.html">Login</a></li>
-                <li><a href="wallet.html">Wallet</a></li>
+                <li><a href="<?php echo SITEURL;?>explore">Explore</a></li>
+                <li><a href="<?php echo SITEURL;?>sign-in">Login</a></li>
+                <li><a href="<?php echo SITEURL;?>connect-wallet">Wallet</a></li>
             </ul>
         </div><!-- end d-flex -->
     </div><!-- .container -->

@@ -85,8 +85,21 @@ class HomesController extends AppController
     {
     }
 
-    public function explore()
+    public function explore($id = null)
     {
+        if( !empty($id) ){
+            $query = $this->Projects->find('all', [
+                'contain' => ['Blockchains'],
+                'conditions' => ['Projects.slug' => $id, 'Projects.status' => 1]]);
+            $data =  $query->first();
+            if(!empty($data)){
+                $this->set(compact('data'));
+                $this->render('project_details');
+            }else{
+                $this->viewBuilder()->setLayout('error_404');
+            }
+            
+        }
     }
     public function projectDetails()
     {

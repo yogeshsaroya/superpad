@@ -16,7 +16,7 @@
                 <div class="card-htw text-center">
                     <span class="icon ni ni-setting icon-lg icon-circle shadow-sm icon-wbg mx-auto mb-4 text-danger"></span>
                     <h4 class="mb-3">Create collection</h4>
-                    <p class="card-text-s1">Click <a href="profile.html" class="btn-link">My Collections</a> and set up your collection. Add social links, a description.</p>
+                    <p class="card-text-s1">Click My Collections and set up your collection. Add social links, a description.</p>
                 </div>
             </div><!-- end col -->
             <div class="col-10 col-sm-6 col-md-6 col-lg-3">

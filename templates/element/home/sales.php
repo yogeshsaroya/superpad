@@ -5,7 +5,7 @@ if (!empty($data)) {?>
         <div class="container">
             <div class="section-head text-center">
                 <h2 class="mb-3">Upcoming Sale</h2>
-                <p>This is just a simple text made for this unique and awesome template, you can replace it with any text. It is a long established fact.</p>
+                
             </div>
             <div class="row g-gs">
                 <?php echo $this->element('home/product_box', ['data' => $data]);?>

@@ -10,15 +10,9 @@ if(!empty($list)){?>
         <div class="hero-wrap">
             <div class="container">
                 <div class="row align-items-center flex-md-row-reverse">
-                    <div class="col-lg-6 col-sm-9 col-md-6">
-                        <div class="hero-image hero-image-mobile">
-                            <img src="<?php echo SITEURL . "cdn/project_img/" . $list->hero_image; ?>" alt="<?php echo $list->title;?>" class="w-100">
-                        </div>
-                    </div><!-- end col-lg-6 -->
                     <div class="col-lg-6 col-md-6">
 
                         <h1 class="hero-title mb-4"><?php echo $list->title; ?></h1>
-                        <?php if(!empty($list->start_date)){?><p class="text-dark-gray"><span class="me-3 me-xl-4"><strong class="text-black">IDO DATE and Time </strong> <?php echo $list->start_date->format('m/d/Y H:i A') ?></span></p><?php }?>
                         <p class="text-dark-gray"><span class="me-3 me-xl-4"><strong class="text-black">Fund Raise</strong><?php echo $this->Number->currency($list->total_raise, 'USD'); ?></span>
                         <span><strong class="text-black">Ticket Allocation</strong> <?php echo $this->Number->currency($list->ticket_allocation, 'USD'); ?></span></p>
                         <br>
@@ -31,6 +25,11 @@ if(!empty($list)){?>
                             <li><a href="<?php echo SITEURL . "explore/" . $list->slug; ?>" class="btn btn-lg btn-dark">Join Now</a></li>
                         </ul>
                     </div>
+                    <div class="col-lg-6 col-sm-9 col-md-6">
+                        <div class="hero-image hero-image-mobile">
+                            <img src="<?php echo SITEURL . "cdn/project_img/" . $list->hero_image; ?>" alt="<?php echo $list->title;?>" class="w-100">
+                        </div>
+                    </div><!-- end col-lg-6 -->
                 </div>
             </div>
         </div>

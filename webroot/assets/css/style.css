@@ -5552,8 +5552,8 @@ textarea.form-control {
     z-index: 1;
     margin-top: -90px;
     border-radius: 5px;
-    background: #1c2b46;
-    border: 3px solid #000;
+    background: #fff;
+    border: 3px solid #fff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -5562,7 +5562,8 @@ textarea.form-control {
 }
 
 .logoWrap img {
-    max-width: 60px;
+    max-width: 97%;
+    border-radius: 5px;
 }
 
 #project_list .hero_img {

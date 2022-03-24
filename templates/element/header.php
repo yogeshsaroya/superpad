@@ -15,7 +15,7 @@ $session = $this->request->getSession()->read('Auth'); //read session data
                         <div class="header-mobile-action">
                             
                             <div class="header-mobile-wallet me-2">
-                                <a class="icon-btn" href="wallet.html">
+                                <a class="icon-btn" href="<?php echo SITEURL;?>connect-wallet">
                                     <em class="ni ni-wallet"></em>
                                 </a>
                             </div><!-- end hheader-mobile-wallet -->
