@@ -10,7 +10,7 @@ if(!empty($list)){?>
         <div class="hero-wrap">
             <div class="container">
                 <div class="row align-items-center flex-md-row-reverse">
-                    <div class="col-lg-6 col-md-6">
+                    <div class="col-lg-6 col-md-6 pd-l-50">
 
                         <h1 class="hero-title mb-4"><?php echo $list->title; ?></h1>
                         <p class="text-dark-gray"><span class="me-3 me-xl-4"><strong class="text-black">Fund Raise</strong><?php echo $this->Number->currency($list->total_raise, 'USD'); ?></span>

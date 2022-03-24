@@ -5569,3 +5569,7 @@ textarea.form-control {
 #project_list .hero_img {
     min-height: 240px;
 }
+
+.pd-l-50 {
+    padding-left: 50px;
+}
