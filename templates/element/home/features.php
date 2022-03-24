@@ -6,7 +6,7 @@ if (!empty($data)) {
         <div class="container">
             <div class="section-head text-center">
                 <h2 class="mb-3">Superpad Features</h2>
-                <hr>
+                <p> &nbsp </p>
             </div>
             <div class="row g-gs justify-content-center">
                 <?php foreach ($data as $list) { ?>
