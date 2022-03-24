@@ -73,4 +73,15 @@ class DataHelper extends Helper
             return false;
         }
     }
+
+    public function getFeatures()
+    {
+        $tbl = TableRegistry::get('Features');
+        try {
+            $query = $tbl->find('all', ['conditions' => ['Features.status' => 1], 'limit' => 50, 'order' => ['Features.position' => 'ASC']]);
+            return $row = $query->all();
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
 }

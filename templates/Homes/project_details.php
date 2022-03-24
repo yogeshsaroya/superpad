@@ -34,12 +34,12 @@ $this->assign('title', $list->title . ' : SuperPAD');
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        <tr><td>Sale Price</td><td>Doe</td></tr>
-                                        <tr><td>Sale Start Time (UTC)	</td><td>Doe</td></tr>
-                                        <tr><td>Sale End Time (UTC)	</td><td>Doe</td></tr>
-                                        <tr><td>Token Distribution (UTC)	</td><td>Doe</td></tr>
-                                        <tr><td>Initial Market Cap	</td><td>Doe</td></tr>
-                                        <tr><td>Initial Token Circulation	</td><td>Doe</td></tr>
+                                        <tr><td>Sale Price</td><td><?php echo "1 ".$list->ticker." = ".$this->Number->currency($list->price_per_token, 'USD'); ?></td></tr>
+                                        <tr><td>Sale Start Time (UTC)	</td><td><?php echo(!empty($list->start_date)? $list->start_date->format('Y-m-d H:i A') :'TBA'); ?></td></tr>
+                                        <tr><td>Sale End Time (UTC)	</td><td><?php echo(!empty($list->end_date)? $list->end_date->format('Y-m-d H:i A') :'TBA'); ?></td></tr>
+                                        <tr><td>Token Distribution (UTC)	</td><td><?php echo(!empty($list->token_distribution_date)? $list->token_distribution_date->format('Y-m-d H:i A') :'TBA'); ?></td></tr>
+                                        <tr><td>Initial Market Cap	</td><td><?php echo $this->Number->currency($list->initial_market_cap, 'USD'); ?></td></tr>
+                                        <tr><td>Initial Token Circulation	</td><td><?php echo number_format($list->initial_token_circulation); ?></td></tr>
                                             
 
 
@@ -83,3 +83,7 @@ $this->assign('title', $list->title . ' : SuperPAD');
         </div><!-- end row -->
     </div><!-- .container -->
 </section><!-- end item-detail-section -->
+
+<section class="item-detail-section ">
+    <div class="container">
+    </div></section>

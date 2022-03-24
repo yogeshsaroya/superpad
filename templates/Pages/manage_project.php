@@ -44,44 +44,48 @@ $this->assign('title', 'Manage Projects'); ?>
                                 ?>
 
                                 <div class="row">
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('title', ['label'=>['escape' => false, 'text'=>'Title <small>(unique project title)</small>'],'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('slug', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('heading', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('type', ['options' => $type,'empty'=>'Select Type', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('ticker', ['label'=>['escape' => false, 'text'=>'Tiker <small>(unique tiker name)</small>'],'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('product_status', ['options' => $status, 'empty'=>'Select Status','class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('blockchain_id', ['options' => $this->Data->getBlockchains('list'),'empty'=>'Select Blockchain Network','class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('title', ['label'=>['escape' => false, 'text'=>'Title <small>(unique project title)</small>'],'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('slug', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('heading', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('type', ['options' => $type,'empty'=>'Select Type', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('ticker', ['label'=>['escape' => false, 'text'=>'Tiker <small>(unique tiker name)</small>'],'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('product_status', ['options' => $status, 'empty'=>'Select Status','class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('blockchain_id', ['options' => $this->Data->getBlockchains('list'),'empty'=>'Select Blockchain Network','class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
 
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('total_raise', ['class' => 'form-control amt','placeholder'=>'00.00', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('ticket_allocation', ['class' => 'form-control amt','placeholder'=>'00.00', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('price_per_token', ['label'=>['escape' => false, 'text'=>'Sale Price <small>(Price per token)</small>'],'class' => 'form-control amt','placeholder'=>'00.00', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('total_raise', ['class' => 'form-control amt','placeholder'=>'00.00', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('ticket_allocation', ['class' => 'form-control amt','placeholder'=>'00.00', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('price_per_token', ['label'=>['escape' => false, 'text'=>'Sale Price <small>(Price per token)</small>'],'class' => 'form-control amt','placeholder'=>'00.00', 'required' => true]); ?><div class="help-block with-errors"></div></div>
 
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('start_date', ['label'=>['escape' => false, 'text'=>'Sale Start Time'],'class' => 'form-control flatpickr-date-time','placeholder'=>'YYY-MM-DD HH:MM','required' => false]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('end_date', ['label'=>['escape' => false, 'text'=>'Sale End Time'],'class' => 'form-control flatpickr-date-time','placeholder'=>'YYY-MM-DD HH:MM', 'required' => false]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('token_distribution_date', ['label'=>['escape' => false, 'text'=>'Token Distribution Time'],'class' => 'form-control flatpickr-date-time','placeholder'=>'YYY-MM-DD HH:MM','required' => false]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('start_date', ['label'=>['escape' => false, 'text'=>'Sale Start Time'],'class' => 'form-control flatpickr-date-time','placeholder'=>'YYY-MM-DD HH:MM','required' => false]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('end_date', ['label'=>['escape' => false, 'text'=>'Sale End Time'],'class' => 'form-control flatpickr-date-time','placeholder'=>'YYY-MM-DD HH:MM', 'required' => false]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('token_distribution_date', ['label'=>['escape' => false, 'text'=>'Token Distribution Time'],'class' => 'form-control flatpickr-date-time','placeholder'=>'YYY-MM-DD HH:MM','required' => false]); ?><div class="help-block with-errors"></div></div>
                                     
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('initial_market_cap', ['class' => 'form-control amt','placeholder'=>'00.00','required' => false]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('initial_token_circulation', ['class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('status', ['options' => $getStatus,'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    
-                                    <hr>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('initial_market_cap', ['class' => 'form-control amt','placeholder'=>'00.00','required' => false]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('initial_token_circulation', ['class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('status', ['options' => $getStatus,'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     
 
-
-                                    <div class="col-4 mb-2 form-group">
-                                        <h4 class="mb-1">Logo</h4>
+                                </div>
+                                <hr><br>
+                                    <div class="row">
+                                    <div class="col-4 form-group"><h4 class="mb-1">Logo <small>(Image size should be 400x400px or 200x200px or 1:1 aspect ratio)</small></h4>
                                         <?php echo $this->Form->file('logo_img', ['label' => 'Logo', 'required' => $file_req]) ?><div class="help-block with-errors"></div>
                                     </div>
 
-                                    <div class="col-4 mb-2 form-group">
-                                        <h4 class="mb-1">Hero Image</h4>
+                                    <div class="col-4 form-group"><h4 class="mb-1">Hero Image <small>(image size should be 500×375px or 4:3 aspect ratio)</small></h4>
                                         <?php echo $this->Form->file('hero_img', ['label' => 'Hero Image', 'required' => $file_req]) ?><div class="help-block with-errors"></div>
                                     </div>
-                                    <div class="col-12">
-                                        <div class="form-group mb-2">
+
+                                    <div class="col-4 form-group"><h4 class="mb-1">Banner Image <small>(image size should be 1080*360 or 1024x768px or 16:9 aspect ratio)</small></h4>
+                                        <?php echo $this->Form->file('banner_img', ['label' => 'Banner Image', 'required' => $file_req]) ?><div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <hr><br>
+                                    <div class="row">
+                                    <div class="col-md-12 col-12 form-group mb-2">
                                             <?php echo $this->Form->control('description', ['id' => 'editor', 'type' => 'textarea', 'class' => 'form-control', 'required' => true]); ?>
                                             <div class="help-block with-errors"></div>
-                                        </div>
+                                        
                                     </div>
 
                                     <div class="col-12 mt-50">

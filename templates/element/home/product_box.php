@@ -11,10 +11,9 @@ if (!empty($data)) {
                         <div class="logoWrap">
                             <img src="<?php echo SITEURL . "cdn/project_logo/" . $list->logo; ?>" alt="<?php echo $list->title; ?>" />
                         </div>
-                        <div class="st_date">
-                            10/10/2022 09:00 AM
-
-                        </div>
+                        <div class="st_date"><?php if (!empty($list->start_date)) {
+                                                    echo $list->start_date->format('Y-m-d');
+                                                } ?></div>
                         <h5 class="card-title text-truncate mb-0">
                             <p class="mb-0">
                                 <span><?php echo $list->title; ?></span>
@@ -23,8 +22,7 @@ if (!empty($data)) {
                             <?php if (isset($list->blockchain->name)) { ?>
                                 <img src="<?php echo SITEURL . 'cdn/blockchains/' . $list->blockchain->logo; ?>" title="<?php echo $list->blockchain->name; ?>" width="32px" alt="" />
                             <?php } ?>
-
-                        </h5>
+               </h5>
 
                         <div class="card-price-wrap d-flex align-items-center justify-content-sm-between mb-3">
                             <div class="me-5 me-sm-2">

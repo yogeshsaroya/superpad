@@ -5573,3 +5573,7 @@ textarea.form-control {
 .pd-l-50 {
     padding-left: 50px;
 }
+
+img.features_icon {
+    margin: 0 0 20px 0;
+}

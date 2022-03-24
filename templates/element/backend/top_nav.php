@@ -3,7 +3,7 @@
    <div class="navbar-header d-xl-block d-none">
      <ul class="nav navbar-nav">
        <li class="nav-item">
-         <a class="navbar-brand" href="<?php echo SITEURL;?>" target="_blank" title="Go to Frondend">
+         <a class="navbar-brand" href="<?php echo SITEURL;?>" target="_blank" title="Go to front-end">
            <span class="brand-logo">
              <svg viewbox="0 0 139 95" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="24">
                <defs>
@@ -120,6 +120,7 @@
              <li class="<?php echo (isset($menu_act) && $menu_act == 'blockchain' ? 'active' : null); ?>"><a class="dropdown-item d-flex align-items-center" href="<?php echo SITEURL; ?>pages/blockchain">BlockChain Network</a></li>
              <li class="<?php echo (isset($menu_act) && $menu_act == 'partners' ? 'active' : null); ?>"><a class="dropdown-item d-flex align-items-center" href="<?php echo SITEURL; ?>pages/partners">Partner And Investor</a></li>
              <li class="<?php echo (isset($menu_act) && $menu_act == 'roadmap' ? 'active' : null); ?>"><a class="dropdown-item d-flex align-items-center" href="<?php echo SITEURL; ?>pages/roadmap">Road Map</a></li>
+             <li class="<?php echo (isset($menu_act) && $menu_act == 'features' ? 'active' : null); ?>"><a class="dropdown-item d-flex align-items-center" href="<?php echo SITEURL; ?>pages/features">Features</a></li>
            </ul>
          </li>
 

@@ -65,6 +65,7 @@ class AppController extends Controller
         $this->loadModel('Partners');
         $this->loadModel('Roadmaps');
         $this->loadModel('Projects');
+        $this->loadModel('Features');
         
 
         $Setting = $this->Data->get_settings();
