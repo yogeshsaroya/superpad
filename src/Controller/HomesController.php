@@ -87,6 +87,10 @@ class HomesController extends AppController
     {
     }
 
+    public function team()
+    {
+    }
+
     public function explore($id = null)
     {
         if (!empty($id)) {
