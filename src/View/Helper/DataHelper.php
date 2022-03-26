@@ -84,4 +84,15 @@ class DataHelper extends Helper
             return false;
         }
     }
+
+    public function getFooterMenu()
+    {
+        $tbl = TableRegistry::get('Pages');
+        try {
+            $query = $tbl->find('all', ['conditions' => ['Pages.status' => 1], 'limit' => 50, 'order' => ['Pages.title' => 'ASC']]);
+            return $row = $query->all();
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
 }
