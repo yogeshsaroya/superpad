@@ -18,8 +18,8 @@ $MenuType = getMenuType();
                         <ul class="styled-icon">
                             <?php if (!empty($Setting['twitter'])) { ?><li><a href="<?php echo $Setting['twitter']; ?>"><img src="<?php echo SITEURL; ?>img/twitter.svg" alt="" class="svg_icon" /></a></li><?php } ?>
                             <?php if (!empty($Setting['telegram'])) { ?><li><a href="<?php echo $Setting['telegram']; ?>"><img src="<?php echo SITEURL; ?>img/telegram.svg" alt="" class="svg_icon" /></a></li><?php } ?>
-                            <?php if (!empty($Setting['medium'])) { ?><li><a href="<?php echo $Setting['medium']; ?>"><img src="<?php echo SITEURL; ?>img/medium.svg" alt="" class="svg_icon" /></a></li><?php } ?>
-                            <?php if (!empty($Setting['discord'])) { ?><li><a href="<?php echo $Setting['discord']; ?>"><img src="<?php echo SITEURL; ?>img/discord.svg" alt="" class="svg_icon" /></a></li><?php } ?>
+                            <?php if (!empty($Setting['discord'])) { ?><li><a href="<?php echo $Setting['discord']; ?>"><img src="<?php echo SITEURL; ?>img/telegram.svg" alt="" class="svg_icon" /></a></li><?php } ?>
+                            <?php if (!empty($Setting['medium'])) { ?><li><a href="<?php echo $Setting['medium']; ?>"><img src="<?php echo SITEURL; ?>img/discord.svg" alt="" class="svg_icon" /></a></li><?php } ?>
 
                         </ul>
                     </div><!-- end footer-item -->
@@ -32,8 +32,8 @@ $MenuType = getMenuType();
                                 <ul class="list-item list-item-s1">
                                     <?php if (!empty($Setting['twitter'])) { ?> <li><a href="<?php echo $Setting['twitter']; ?>">Twitter</a></li><?php } ?>
                                     <?php if (!empty($Setting['telegram'])) { ?> <li><a href="<?php echo $Setting['telegram']; ?>">Telegram</a></li><?php } ?>
-                                    <?php if (!empty($Setting['medium'])) { ?> <li><a href="<?php echo $Setting['medium']; ?>">Discord</a></li><?php } ?>
-                                    <?php if (!empty($Setting['discord'])) { ?> <li><a href="<?php echo $Setting['discord']; ?>">Medium</a></li><?php } ?>
+                                    <?php if (!empty($Setting['discord'])) { ?> <li><a href="<?php echo $Setting['discord']; ?>">Telegram Anoucment</a></li><?php } ?>
+                                    <?php if (!empty($Setting['medium'])) { ?> <li><a href="<?php echo $Setting['medium']; ?>">Medium</a></li><?php } ?>
                                 </ul>
                             </div><!-- end footer-item -->
                         </div><!-- end col -->

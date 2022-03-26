@@ -46,8 +46,8 @@
 
                                 <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('twitter', ['label'=>['escape' => false, 'text'=>'Twitter Link'],'type'=>'url','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
                                 <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('telegram', ['label'=>['escape' => false, 'text'=>'Telegram Link'],'type'=>'url','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
-                                <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('discord', ['label'=>['escape' => false, 'text'=>'Discord Link'],'type'=>'url','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
-                                <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('medium', ['label'=>['escape' => false, 'text'=>'Mhitepaper Link'],'type'=>'url','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
+                                <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('discord', ['label'=>['escape' => false, 'text'=>'Telegram Anoucment Link'],'type'=>'url','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
+                                <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('medium', ['label'=>['escape' => false, 'text'=>'Medium Link'],'type'=>'url','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
 
                                     
 
