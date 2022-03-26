@@ -5720,6 +5720,11 @@ img.features_icon {
     font-size: 15px;
     color: #4e5052;
     text-transform: capitalize;
+    margin: 0 15px 0 15px;
+}
+
+.our-team .sub_head {
+    text-align: justify;
 }
 
 .our-team .social {
