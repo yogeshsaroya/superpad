@@ -1,4 +1,4 @@
-<?php $this->assign('title', 'Our Team'); ?>
+<?php $this->assign('title', 'Our Team Members'); ?>
 <div class="hero-wrap hero-wrap-2 section-space">
     <div class="container">
 
