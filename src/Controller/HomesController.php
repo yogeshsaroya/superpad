@@ -90,7 +90,7 @@ class HomesController extends AppController
     public function team()
     {
                 
-        $query = $this->Teams->find('all', ['conditions' => ['Teams.status'=>1],'limit' => 100,'order'=>['Teams.title'=>'DESC']]);
+        $query = $this->Teams->find('all', ['conditions' => ['Teams.status'=>1],'limit' => 100,'order'=>['Teams.position'=>'ASC']]);
         $data = $query->all();
         $this->set(compact('data'));
     }

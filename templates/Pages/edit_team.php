@@ -42,6 +42,7 @@ $getStatus = getStatus();
                                     <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('heading', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('sub_heading', ['type'=>'text','class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('status', ['options' => $getStatus,'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('position', ['type'=>'number', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-4 mb-2 form-group">
                                         <h4 class="mb-1">Profile Image</h4>
                                         <?php echo $this->Form->file('hero_img', ['label' => 'Hero Image', 'required' => $file_req]) ?><div class="help-block with-errors"></div>
