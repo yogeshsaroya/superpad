@@ -14,7 +14,7 @@ $MenuType = getMenuType();
                             <img class="logo-light logo-img" src="<?php echo SITEURL; ?>images/logo.png" alt="logo">
                         </a>
                         <?php */ ?>
-                        <p class="my-4 footer-para">The world's first and largest digital marketplace for crypto collectibles and non-fungible tokens (NFTs).</p>
+                        <p class="my-4 footer-para">The world’s first and largest  multichain crypto Launchpad.</p>
                         <ul class="styled-icon">
                             <?php if (!empty($Setting['twitter'])) { ?><li><a href="<?php echo $Setting['twitter']; ?>"><img src="<?php echo SITEURL; ?>img/twitter.svg" alt="" class="svg_icon" /></a></li><?php } ?>
                             <?php if (!empty($Setting['telegram'])) { ?><li><a href="<?php echo $Setting['telegram']; ?>"><img src="<?php echo SITEURL; ?>img/telegram.svg" alt="" class="svg_icon" /></a></li><?php } ?>
