@@ -48,7 +48,7 @@ $MenuType = getMenuType();
                                             }
                                         }
                                     } ?>
-                                    <li><a href="<?php echo SITEURL; ?>Contact">Contact Us</a></li>
+                                    <li><a href="<?php echo SITEURL; ?>contact">Contact Us</a></li>
                                 </ul>
                             </div><!-- end footer-item -->
                         </div><!-- end col-lg-3 -->
