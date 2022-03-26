@@ -66,6 +66,7 @@ class AppController extends Controller
         $this->loadModel('Roadmaps');
         $this->loadModel('Projects');
         $this->loadModel('Features');
+        $this->loadModel('Teams');
         
 
         $Setting = $this->Data->get_settings();

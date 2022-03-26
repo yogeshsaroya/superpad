@@ -106,6 +106,90 @@ class PagesController extends AppController
         }
     }
 
+    public function team(){
+        $this->set('menu_act', 'team');
+        if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
+            $blog_del = $this->Teams->findById($this->request->getQuery('del'))->firstOrFail();
+            if ($this->Teams->delete($blog_del)) {
+            }
+            $this->redirect('/pages/team');
+        }
+
+        if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
+            $getData = $this->Teams->findById($this->request->getQuery('st'))->firstOrFail();
+            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2:1) ];
+            $saveData = $this->Teams->newEntity($upData, ['validate' => false]);
+            $this->Teams->save($saveData);
+            $this->redirect('/pages/team');
+        }
+
+        $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
+        $data = $this->paginate($this->Teams->find('all'));
+        $this->set(compact('data'));
+    }
+
+    public function editTeam($id = null)
+    {
+        $this->set('menu_act', 'team');
+        $post_data = null;
+
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $file_name = null;
+            $postData = $this->request->getData();
+            $uploadPath = 'cdn/team/';
+            if (!file_exists($uploadPath)) { mkdir($uploadPath, 0777, true); }
+            /* For logo */ 
+            
+            if (!empty($postData['hero_img'])) {
+                if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg','image/svg+xml'])) {
+                    $fileobject = $postData['hero_img'];
+                    $file_name = $fileobject->getClientFilename();
+                    $destination = $uploadPath . $file_name;
+                    try {
+                        $fileobject->moveTo($destination);
+                    } catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
+                }
+            }
+            
+            if (isset($postData['id']) && !empty($postData['id'])) {
+                $getBlog = $this->Teams->get($postData['id']);
+                if (!empty($file_name)) { $getBlog['img'] = $file_name; }
+                $chkBlog = $this->Teams->patchEntity($getBlog, $postData, ['validate' => true]);
+            } else {
+                $getBlog = $this->Teams->newEmptyEntity();
+                if (!empty($file_name)) { $getBlog['img'] = $file_name; }
+                $chkBlog = $this->Teams->patchEntity($getBlog, $postData, ['validate' => true]);
+            }
+
+            if ($chkBlog->getErrors()) {
+                $st = null;
+                foreach ($chkBlog->getErrors() as $elist) {
+                    foreach ($elist as $k => $v); {
+                        $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                    }
+                }
+                echo $st;
+                exit;
+            } else {
+                if ($this->Teams->save($chkBlog)) {
+                    $u = SITEURL . "pages/team";
+                    echo '<div class="alert alert-success" role="alert">Saved.</div>';
+                    echo "<script>window.location.href ='" . $u . "'; </script>";
+                } else {
+                    echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                }
+            }
+            exit;
+        }
+        
+        if ($this->request->is('get')) {
+            if(!empty($id)) {
+                $post_data = $this->Teams->findById($id)->firstOrFail();
+            }
+            $this->set(compact('post_data'));
+        }
+    }
+
     public function emailTemplates(){
         $this->set('menu_act', 'email_templates');
 

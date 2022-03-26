@@ -67,6 +67,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/page/*', ['controller' => 'Homes', 'action' => 'page']);
     $builder->connect('/contact/*', ['controller' => 'Homes', 'action' => 'contact']);
+    $builder->connect('/team/*', ['controller' => 'Homes', 'action' => 'team']);
     
     
 
