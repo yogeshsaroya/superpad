@@ -48,7 +48,7 @@ $MenuType = getMenuType();
                                             }
                                         }
                                     } ?>
-
+                                    <li><a href="<?php echo SITEURL; ?>Contact">Contact Us</a></li>
                                 </ul>
                             </div><!-- end footer-item -->
                         </div><!-- end col-lg-3 -->
@@ -56,7 +56,7 @@ $MenuType = getMenuType();
                             <div class="footer-item">
                                 <h5 class="mb-4">Company</h5>
                                 <ul class="list-item list-item-s1">
-                                <?php if (!empty($pages)) {
+                                    <?php if (!empty($pages)) {
                                         foreach ($pages as $list) {
                                             if ($list->heading == 'Company') {
                                                 echo '<li><a href="' . SITEURL . 'page/' . $list->slug . '">' . $list->title . '</a></li>';
@@ -64,7 +64,7 @@ $MenuType = getMenuType();
                                         }
                                     } ?>
                                     <li><a href="<?php echo SITEURL; ?>team">Team</a></li>
-                                    
+
                                 </ul>
                             </div><!-- end footer-item -->
                         </div><!-- end col-lg-3 -->
