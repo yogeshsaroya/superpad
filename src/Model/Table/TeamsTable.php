@@ -16,11 +16,7 @@ class TeamsTable extends Table{
         ->notEmptyString("title",'Please add page title.')
 
         ->requirePresence("heading")
-        ->notEmptyString("heading",'Please add heading.')
-
-        ->requirePresence("sub_heading")
-        ->notEmptyString("sub_heading",'Please add sub heading.');
-
+        ->notEmptyString("heading",'Please add heading.');
         return $validator;
     }
 

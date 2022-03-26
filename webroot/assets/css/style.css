@@ -5627,7 +5627,7 @@ img.features_icon {
 }
 
 .our-team {
-    padding: 0 0 40px;
+    padding: 0;
     background: #f9f9f9;
     text-align: center;
     overflow: hidden;

@@ -30,7 +30,6 @@
                                         <th><?php echo $this->Paginator->sort('img'); ?></th>
                                         <th><?php echo $this->Paginator->sort('title'); ?></th>
                                         <th><?php echo $this->Paginator->sort('heading'); ?></th>
-                                        <th><?php echo $this->Paginator->sort('sub_heading'); ?></th>
                                         <th><?php echo $this->Paginator->sort('status'); ?></th>
                                         <th>Actions</th>
                                     </tr>
@@ -45,7 +44,7 @@
                                                     } ?></td>
                                                 <td><?php echo $list->title; ?></td>
                                                 <td><?php echo $list->heading; ?></td>
-                                                <td><?php echo $list->sub_heading; ?></td>
+                                                
                                                 <td><?php
                                                     if ($list->status == 1) {
                                                         echo $this->Html->link('Active', SITEURL . "pages/team?st=" . $list->id, ['class' => 'text-success']);
