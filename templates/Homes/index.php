@@ -10,7 +10,7 @@
             <div class="col-lg-6 col-md-6">
                 <div class="hero-content pb-0 pt-md-0 pe-lg-4">
                     <h1 class="hero-title mb-4">Invest For Better Tomorrow</h1>
-                    <p class="hero-text mb-4 pb-1">Invest in early stage project before anyone knows & make your dreams come to true.</p>
+                    <p class="hero-text mb-4 pb-1"><b>Invest in early stage project before anyone knows & make your dreams come to true.</b></p>
                     <!-- button group -->
                     <ul class="btns-group hero-btns">
                         <li><a href="javascript:void(0);" id="to_project" class="btn btn-lg btn-dark">Upcoming Project</a></li>
