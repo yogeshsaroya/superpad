@@ -130,3 +130,8 @@ function getProjectStatus()
         'TBA' => 'TBA'
     ];
 }
+
+function getMenuType()
+{
+    return ['Help' => 'Help','Company' => 'Company'];
+}

@@ -28,6 +28,7 @@
                                 <thead>
                                     <tr>
                                         <th><?php echo $this->Paginator->sort('title');?></th>
+                                        <th><?php echo $this->Paginator->sort('heading','Parent Menu');?></th>
                                         <th><?php echo $this->Paginator->sort('slug');?></th>
                                         <th><?php echo $this->Paginator->sort('status');?></th>
                                         <th>Actions</th>
@@ -39,7 +40,8 @@
                                         foreach ($data as $list) { ?>
                                             <tr>
                                                 <td><?php echo $this->Html->Link($list->title,SITEURL."page/".$list->slug, ['target' => '_blank']); ?></td>
-                                                <td><?php echo $list->slug; ?></td>
+                                                <td><?php echo $list->heading;?></td>
+                                                <td><?php echo $list->slug;?></td>
                                                 <td><?php 
                                                 if($list->status == 1){ echo $this->Html->link('Active',SITEURL . "pages/static_pages?st=".$list->id,['class'=>'text-success'] );  }
                                                 else{ echo $this->Html->link('Inactive',SITEURL . "pages/static_pages?st=".$list->id,['class'=>'text-danger'] );  }?>
@@ -50,7 +52,7 @@
                                                         <button type="button" class="btn btn-sm dropdown-toggle hide-arrow" data-toggle="dropdown"><i data-feather="more-vertical"></i></button>
                                                         <div class="dropdown-menu">
                                                             <?php echo $this->Html->Link('<i data-feather="edit-2" class="mr-50"></i> Edit',SITEURL . "pages/edit_static_pages/".$list->id,['escape' => false,'class'=>'dropdown-item']); ?>
-                                                            <?php //echo $this->Html->Link('<i data-feather="trash" class="mr-50"></i> Delete',SITEURL . "pages/static_pages?del=".$list->id,['escape' => false,'class'=>'dropdown-item', 'onclick' => "return confirm('Are you sure you want to delete this blog post?')"]); ?>
+                                                            <?php echo $this->Html->Link('<i data-feather="trash" class="mr-50"></i> Delete',SITEURL . "pages/static_pages?del=".$list->id,['escape' => false,'class'=>'dropdown-item', 'onclick' => "return confirm('Are you sure you want to delete?')"]); ?>
                                                         </div>
                                                     </div>
                                                 </td>

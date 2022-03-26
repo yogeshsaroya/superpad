@@ -1,5 +1,6 @@
 <?= $this->Html->css(['/app-assets/css/pages/page-blog'], ['block' => 'css']);
 $getStatus = getStatus();
+$MenuType = getMenuType();
 ?>
 
 <?php $this->assign('title', 'Manage Static Page'); ?>
@@ -39,6 +40,7 @@ $getStatus = getStatus();
                                     <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('meta_description', ['class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('slug', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('status', ['options' => $getStatus, 'empty' => 'Select', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('heading', ['label'=>'Parent Menu', 'options' => $MenuType, 'empty' => 'Select Menu', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
 
                                     <div class="col-12">
                                         <div class="form-group mb-2">

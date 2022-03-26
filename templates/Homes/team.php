@@ -18,7 +18,7 @@
                                 </div>
                                 <div class="team-content">
                                     <h3 class="title"><?php echo $list->title;?></h3>
-                                    <span class="post"><?php echo $list->heading;?></span>
+                                    <span class="post team_heading"><?php echo $list->heading;?></span>
                                     <span class="post sub_head"><?php echo $list->sub_heading;?></span>
                                 </div>
 

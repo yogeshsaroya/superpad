@@ -5723,6 +5723,11 @@ img.features_icon {
     margin: 0 15px 0 15px;
 }
 
+.team_heading {
+    font-weight: bold;
+    margin-bottom: 15px !important;
+}
+
 .our-team .sub_head {
     text-align: justify;
 }
