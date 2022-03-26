@@ -41,7 +41,7 @@ $session = $this->request->getSession()->read('Auth'); //read session data
                                 <?php } ?>
                             </ul>
                             <ul class="menu-btns">
-                                <li><a href="<?php echo SITEURL;?>connect-wallet" class="btn btn-dark">Connect Wallet</a></li>
+                                <li><a href="javascript:void(0);" class="btn btn-dark">Connect Wallet</a></li>
                             </ul>
                             
                         </nav><!-- .header-menu -->

@@ -67,8 +67,8 @@ class AppController extends Controller
         $this->loadModel('Projects');
         $this->loadModel('Features');
         $this->loadModel('Teams');
+        $this->loadModel('Newsletters');
         
-
         $Setting = $this->Data->get_settings();
         $session = $this->getRequest()->getSession();
         $session->write('Setting', $Setting ); 

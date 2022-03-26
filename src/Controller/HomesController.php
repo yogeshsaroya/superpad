@@ -65,14 +65,12 @@ class HomesController extends AppController
                 ->find()
                 ->where(['slug' => $id, 'status' => 1])
                 ->first();
-                if(!empty($data)){
-                    $this->set(compact('data'));
-                }else{
-                    $this->viewBuilder()->setLayout('error_404');
-                }
-                
+            if (!empty($data)) {
+                $this->set(compact('data'));
+            } else {
+                $this->viewBuilder()->setLayout('error_404');
+            }
         }
-        
     }
 
     public function allocation()
@@ -89,8 +87,8 @@ class HomesController extends AppController
 
     public function team()
     {
-                
-        $query = $this->Teams->find('all', ['conditions' => ['Teams.status'=>1],'limit' => 100,'order'=>['Teams.position'=>'ASC']]);
+
+        $query = $this->Teams->find('all', ['conditions' => ['Teams.status' => 1], 'limit' => 100, 'order' => ['Teams.position' => 'ASC']]);
         $data = $query->all();
         $this->set(compact('data'));
     }
@@ -132,11 +130,11 @@ class HomesController extends AppController
                 echo '<div class="alert alert-danger">Please enter message</div>';
                 exit;
             } else {
-                $ticket = rand(111111111,999999999);
-                
+                $ticket = rand(111111111, 999999999);
+
                 $admin = 'support@superpad.finance';
-                $this->Data->AppMail($admin,5,['SUBJECT' => $data['sujbect'],'TICKET_NUMBER' => $ticket,'MESSAGE' => $data['msg'],'NAME' => $data['full_name'],'EMAIL' => $data['email']]);
-                $this->Data->AppMail($data['email'],6,['SUBJECT' => $data['sujbect'],'TICKET_NUMBER' => $ticket,'MESSAGE' => $data['msg'],'NAME' => $data['full_name'],'EMAIL' => $data['email']]);
+                $this->Data->AppMail($admin, 5, ['SUBJECT' => $data['sujbect'], 'TICKET_NUMBER' => $ticket, 'MESSAGE' => $data['msg'], 'NAME' => $data['full_name'], 'EMAIL' => $data['email']]);
+                $this->Data->AppMail($data['email'], 6, ['SUBJECT' => $data['sujbect'], 'TICKET_NUMBER' => $ticket, 'MESSAGE' => $data['msg'], 'NAME' => $data['full_name'], 'EMAIL' => $data['email']]);
                 echo '<script>$("#e_frm")[0].reset();</script>';
                 echo '<div class="alert alert-success">Thank you for submitting your request we will get in touch with you shortly</div>';
                 exit;
@@ -145,5 +143,33 @@ class HomesController extends AppController
         }
     }
 
-   
+    public function ajSub()
+    {
+        $this->autoRender = false;
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $postData = $this->request->getData();
+
+            $query = $this->Newsletters->find('all', ['conditions' => ['Newsletters.email' => $postData['email']]]);
+            $data =  $query->first();
+            if (empty($data)) {
+                $user_data = ['id' => null, 'email' => $postData['email'], 'name' => $postData['name']];
+                $user1 = $this->Newsletters->newEntity($user_data, ['validate' => true]);
+                if ($user1->getErrors()) {
+                    echo "<div class='alert alert-danger'>Server error, please try again later</div>";
+                    exit;
+                } else {
+                    if ($this->Newsletters->save($user1)) {
+                        echo "<script>$('#newsletter_div').html('<center><h3 class=\"form-title\">THANKS FOR SIGNING UP!</h3><p>We hope you find great value in the stories we publish.</p></center>');</script>";
+                    } else {
+                        echo "<div class='alert alert-danger'>Server error, please try again later.</div>";
+                        exit;
+                    }
+                }
+            } else {
+                echo "<div class='alert alert-danger'>The email address you have entered is already registered</div>";
+                exit;
+            }
+        }
+        exit;
+    }
 }
