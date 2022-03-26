@@ -32,7 +32,7 @@ $MenuType = getMenuType();
                                 <ul class="list-item list-item-s1">
                                     <?php if (!empty($Setting['twitter'])) { ?> <li><a href="<?php echo $Setting['twitter']; ?>">Twitter</a></li><?php } ?>
                                     <?php if (!empty($Setting['telegram'])) { ?> <li><a href="<?php echo $Setting['telegram']; ?>">Telegram</a></li><?php } ?>
-                                    <?php if (!empty($Setting['discord'])) { ?> <li><a href="<?php echo $Setting['discord']; ?>">Telegram Anoucment</a></li><?php } ?>
+                                    <?php if (!empty($Setting['discord'])) { ?> <li><a href="<?php echo $Setting['discord']; ?>">Telegram Announcement</a></li><?php } ?>
                                     <?php if (!empty($Setting['medium'])) { ?> <li><a href="<?php echo $Setting['medium']; ?>">Medium</a></li><?php } ?>
                                 </ul>
                             </div><!-- end footer-item -->
