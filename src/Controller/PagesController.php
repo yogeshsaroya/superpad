@@ -17,6 +17,9 @@ class PagesController extends AppController
         parent::beforeFilter($event);
         /* https://book.cakephp.org/4/en/controllers/components/authentication.html#AuthComponent::allow */
         $this->viewBuilder()->setLayout('backend');
+        if( $this->Auth->user('role') == 2 ){
+            $this->redirect('/');
+        }
         //$this->Auth->allow();
     }
     public function initialize(): void

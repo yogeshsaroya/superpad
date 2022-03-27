@@ -78,6 +78,8 @@ class AppController extends Controller
     function beforeRender(\Cake\Event\EventInterface $event) {
         // store user data to Auth variable.
         // we will use this Auth variable to get user data
-        if( $this->Auth->user() !== null ){ $this->set("Auth", $this->Auth->user()); }
+        if( $this->Auth->user() !== null ){ 
+            $this->set("Auth", $this->Auth->user()); 
+        }
     }
 }

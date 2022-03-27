@@ -51,79 +51,15 @@ class UsersController extends AppController
         /* https://codethepixel.com/tutorial/cakephp/cakephp-4-find-sort-count */
 
         $this->SiteSetting = $this->request->getSession()->read('Setting');
+        if( $this->Auth->user('role') == 1 ){
+            $this->redirect('/pages');
+        }
     }
 
 
     public function index()
     {
-        $po_data = [
-            ['id' => null, 'email' => rand() . 'abc@gmail.com', 'password' => '123456', 'first_name' => rand()],
-            ['id' => null, 'email' => rand() . 'abc@gmail.com', 'password' => '123456', 'first_name' => rand()],
-            ['id' => null, 'email' => rand() . 'abc@gmail.com', 'password' => '123456', 'first_name' => rand()]
-        ];
-
-        $entities = $this->Blogs->newEntities($po_data, ['validate' => true]);
-
-        try {
-            $result = $this->Blogs->saveMany($entities);
-            ec($result);
-        } catch (Exception $e) {
-            ec($e);
-        }
-
-        exit;
-        if (password_verify('123456', '$2y$10$8awoEg3aaKcXAnTmfpKdeufuyBLvBcyz79nngQRlGr5OCf2TJXNzi')) {
-            echo 'Password is valid!';
-        } else {
-            echo 'Invalid password.';
-        }
-
-        die;
-        /*
-        $query = $this->Users->find('all', [
-            'conditions' => [],
-            'contain' => [],
-            'limit' => 10
-        ]);
-        $row = $query->all()->toArray();
-        ec($row);die;
         
-        ec( $this->Auth->user() );
-        */
-        $user_data = ['id' => null, 'email' => rand() . 'abc@gmail.com', 'password' => '123456', 'first_name' => 'Yogesh'];
-        /*
-        $hasher = new DefaultPasswordHasher();
-        $pass = $hasher->hash('123456');
-        ec($pass);
-        
-        if (password_verify('123456', '$2y$10$3TgUhsVOsGDtEXjmP6FqneV7bBRQSQAd//K0WhP7FC1QJ8FWIlaFa')) {
-            echo 'Password is valid!';
-        } else {
-            echo 'Invalid password.';
-        }
-        
-        $postpassword = $hasher->check('123456',$pass);
-        dd($postpassword);die;
-        */
-
-        // Trial 1
-        $user1 = $this->Users->newEntity($user_data, ['validate' => true]);
-        if ($user1->getErrors()) {
-            ec($user1->getErrors());
-        } else {
-            if ($this->Users->save($user1)) {
-                echo "saved";
-            } else {
-                echo "error";
-            }
-        }
-        die;
-        // Trial 2
-        /*
-        $user2 = $this->Users->newEmptyEntity();
-        $entity = $this->Users->patchEntity($user2, $user_data);
-        $this->Users->save($user2);
-        */
     }
     public function connectWallet()
     {
