@@ -218,13 +218,13 @@ class UsersController extends AppController
 
                 $verify = $this->Users->find('all')
                     ->where(['Users.status' => 1, 'Users.role' => 1, 'Users.email' => trim(strtolower($post_data['email']))])
-                    ->first()->toArray();
+                    ->first();
 
                 if (!empty($verify)) {
-                    if (password_verify($pwd, $verify['password'])) {
+                    if (password_verify($pwd, $verify->password)) {
                         $this->Auth->setUser($verify);
 
-                        $up_arr = ['id' => $verify['id'], 'last_activity' => DATE];
+                        $up_arr = ['id' => $verify->id, 'last_activity' => DATE];
                         $user1 = $this->Users->newEntity($up_arr, ['validate' => false]);
                         if ($this->Users->save($user1)) {
                         }
