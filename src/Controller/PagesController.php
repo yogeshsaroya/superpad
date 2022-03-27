@@ -887,6 +887,7 @@ class PagesController extends AppController
                     }
                     echo "<script>$('#e_frm')[0].reset();</script>";
                     echo "<div class='alert alert-success'>Newsletter sent.</div>";
+                    echo "<script> setTimeout(function(){ location.reload(); }, 2000);</script>";
                 }else{ echo "<div class='alert alert-danger'>Subscribers not found</div>"; }
             }else{ echo "<div class='alert alert-danger'>Please add email subject and message.</div>"; }
             exit;
