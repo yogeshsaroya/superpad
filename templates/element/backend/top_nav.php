@@ -128,6 +128,10 @@
          <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'static_pages' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/static_pages">Static Pages</a></li>
          <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'team' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/team">Team</a></li>
          <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'email_templates' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/email_templates">Email Templates</a></li>
+
+         <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'newsletter' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/newsletter">Newsletter</a></li>
+         
+
          <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'settings' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/settings">Settings</a></li>
          <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'profile_update' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/profile_update">Profile Update</a></li>
          <li class=" nav-item"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>users/logout">Logout</a></li>

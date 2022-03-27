@@ -779,6 +779,10 @@ class PagesController extends AppController
         $this->set(compact('get_data'));
     }
 
+    public function newsletter(){
+        
+    }
+
     public function settings(){
         $this->set('menu_act', 'settings');
         $postData = $this->request->getData();
