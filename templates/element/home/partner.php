@@ -1,6 +1,6 @@
 <?php
 $data = $this->Data->getPartners();
-if( !empty($data) ){
+if ( !$data->isEmpty() ) {
 ?>
 <style>
     .partdiv {

@@ -1,3 +1,8 @@
+<?php
+    $data = $this->Data->getBlockchains();
+    
+if ( !$data->isEmpty() ) {
+    ?>
 <style>
     .pdiv {
         width: 300px;
@@ -20,9 +25,7 @@
     }
 </style>
 <section id="networks_list" class="brand-section section-space <?php echo (isset($bg_color) ?  $bg_color : null); ?>">
-    <?php
-    $data = $this->Data->getBlockchains();
-    ?>
+    
     <div class="container">
         <div class="section-head text-center">
             <h2 class="mb-3">Raise fund across all main blockchain networks</h2>
@@ -31,7 +34,6 @@
             <div class="row g-gs marquee-with-options">
                 <ul class="share-box">
                     <?php
-                    if (!empty($data)) {
                         foreach ($data as $list) { ?>
                             <li>
                                 <div class="pdiv col-6col-md-3col-sm-4">
@@ -40,9 +42,7 @@
                                     </div>
                                 </div>
                             </li>
-                    <?php }
-                    }
-                    ?>
+                    <?php } ?>
                 </ul>
             </div><!-- end d-flex -->
         </div>
@@ -67,4 +67,4 @@ pauseOnHover: true
 });
 
 });
-<?php $this->Html->scriptEnd(); ?>
+<?php $this->Html->scriptEnd(); }?>

@@ -28,24 +28,26 @@ class DataHelper extends Helper
     {
         $tbl = TableRegistry::get('Projects');
         try {
-            $query = $tbl->find('all', [
-                'contain' => ['Blockchains'],
-                'conditions' => ['Projects.status' => 1],
-                'order' => ['Projects.id' => 'desc'],
-                'limit' => $limit
-            ]);
-            return $query->all();
+            
+            return $data = $tbl
+                ->find()
+                ->contain(['Blockchains'])
+                ->where(['Projects.status' => 1])
+                ->order(['Projects.id' => 'desc'])
+                ->all();
         } catch (\Throwable $th) {
             return false;
         }
     }
 
-    public function getFeaturedSale() {
+    public function getFeaturedSale()
+    {
         $tbl = TableRegistry::get('Projects');
         try {
             $query = $tbl->find('all', [
                 'contain' => ['Blockchains'],
-                'conditions' => ['Projects.is_featured'=>1, 'Projects.status' => 1]]);
+                'conditions' => ['Projects.is_featured' => 1, 'Projects.status' => 1]
+            ]);
             return $query->first();
         } catch (\Throwable $th) {
             return false;

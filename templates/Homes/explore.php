@@ -20,13 +20,21 @@
         <div class="filter-container row g-gs">
             <?php
             $data = $this->Data->getProjects(50);
-            if (!empty($data)) {
+            if ( !$data->isEmpty() ) {
                 echo $this->element('home/product_box', ['data' => $data]);
-            } ?>
+            }else{ ?>
+            <center>
+<h1>please stay tuned for next upcoming sales</h1>
+</center>
+
+
+            <?php }?>
         </div><!-- end filter-container -->
     </div><!-- .container -->
 </section><!-- end explore-section -->
 
 <section class="top-creator-section section-space-sm-t">
-
+<br>
+<br>
+<br>
 </section>

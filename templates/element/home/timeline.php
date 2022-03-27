@@ -1,7 +1,7 @@
 <?php
 $data = $this->Data->getRoadmaps();
 
-if (!empty($data)) {
+if ( !$data->isEmpty() ) {
     echo $this->Html->css(['/assets/css/roadmap']);
 ?>
     <section class="brand-section section-space <?php echo (isset($bg_color) ?  $bg_color : null); ?>">

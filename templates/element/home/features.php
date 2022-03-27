@@ -1,6 +1,6 @@
 <?php
 $data = $this->Data->getFeatures();
-if (!empty($data)) {
+if ( !$data->isEmpty() ) {
 ?>
     <section class="section-space how-it-work-section <?php echo (isset($bg_color) ?  $bg_color : null); ?>">
         <div class="container">

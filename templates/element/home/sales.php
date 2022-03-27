@@ -1,6 +1,6 @@
 <?php
 $data = $this->Data->getProjects(6);
-if (!empty($data)) {?>
+if ( !$data->isEmpty() ) {?>
     <section class="section-space trending-section <?php echo (isset($bg_color) ?  $bg_color : null); ?>" id="project_list">
         <div class="container">
             <div class="section-head text-center">
