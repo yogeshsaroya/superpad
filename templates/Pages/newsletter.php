@@ -13,9 +13,6 @@
                     </div>
                 </div>
             </div>
-            <div class="content-header-right text-md-right col-md-3 col-12 d-md-block d-none">
-
-            </div>
         </div>
         <div class="content-body">
             <!-- Blog Edit -->
@@ -24,29 +21,21 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-
                                 <?php
                                 echo $this->Form->create(null, ['autocomplete' => 'off', 'id' => 'e_frm', 'class' => 'mt-2', 'data-toggle' => 'validator']);
-                                echo $this->Form->hidden('id');
                                 ?>
-
                                 <div class="row">
                                     <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('subject', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div>
                                     </div>
-
-
                                     <div class="col-12">
                                         <div class="form-group mb-2">
                                             <?php echo $this->Form->control('message', ['id' => 'editor', 'type' => 'textarea', 'class' => 'form-control', 'required' => true]); ?>
                                             <div class="help-block with-errors"></div>
                                         </div>
                                     </div>
-
-
                                     <div class="col-12 mt-50">
                                         <div id="f_err"></div>
                                     </div>
-
                                     <div class="col-12 mt-50">
                                         <input type="button" class="btn btn-primary mr-1" value="Save Changes" id="save_frm" />
 

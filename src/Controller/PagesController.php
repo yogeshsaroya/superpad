@@ -781,6 +781,11 @@ class PagesController extends AppController
 
     public function newsletter(){
         
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $postData = $this->request->getData();
+            ec($postData);
+            exit;
+        }
     }
 
     public function settings(){
