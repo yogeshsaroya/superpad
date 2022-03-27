@@ -37,7 +37,7 @@
                                         <div id="f_err"></div>
                                     </div>
                                     <div class="col-12 mt-50">
-                                        <input type="button" class="btn btn-primary mr-1" value="Save Changes" id="save_frm" />
+                                        <input type="button" class="btn btn-primary mr-1" value="Send Newsletter" id="save_frm" />
 
                                     </div>
                                 </div>
@@ -70,12 +70,12 @@
                 },
                 success: function(response) {
                     $("#save_frm").prop("disabled", false);
-                    $("#save_frm").html('Save Changes');
+                    $("#save_frm").html('Send Newsletter');
                 },
                 error: function(response) {
                     $('#f_err').html('<div class="alert alert-danger">Sorry, this is not working at the moment. Please try again later.</div>');
                     $("#save_frm").prop("disabled", false);
-                    $("#save_frm").html('Save Changes');
+                    $("#save_frm").html('Send Newsletter');
                 },
             }).submit();
         });
