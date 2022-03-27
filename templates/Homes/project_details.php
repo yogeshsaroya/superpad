@@ -110,16 +110,54 @@
     border: 1px solid #e2e4e9;
     border-radius: 10px;
 }
+.card-price-wrap{
+    width: 100%;
+}
+.item-detail-title {
+    font-size: 2.75rem;
+    letter-spacing: -.04em;
+    color: #0a0c10;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
 .card-price-wrap .card-price-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #05050c;
+    font-size: 18px;
+    font-weight: normal;
+    color: #4e5665;
 }
 .card-price-wrap > div > span {
     font-size: 16px;
     margin: 0.8rem 0 0 !important;
     color: #05050c;
 }
+.item-detail-title span.ms-auto img {
+    max-height: 35px;
+}
+.subHead {
+    color: #8c95a6;
+    margin-bottom: 0.5rem;
+    font-weight: normal;
+}
+.sidebars p {
+    font-size: 1.25rem;
+    line-height: 2rem;
+    color: #4e5665;
+}
+.sidebars a.btn.btn-primary {
+    color: #f3f4f6;
+    background-color: #3e4aad;
+    border-color: #3a46a2;
+    padding: 13px 15px;
+}
+.sidebars a.btn.bg-transparent {
+    color: #0a0c10;
+    border-color: #d9e0ea;
+}
+
+
+
+
 </style>
 <?php
 $list = $data;
@@ -246,9 +284,15 @@ CryptoCitizen
                 </div><!-- end item-detail-content -->
 
             </div><!-- end col -->
-            <div class="col-lg-4 mt-lg-0 mt-5">
+            <div class="col-lg-4 mt-lg-0 mt-5 sidebarFixed">
                 <div class="item-detail-content mt-4 mt-lg-0 sidebars">
-                    <h1 class="item-detail-title mb-2"><?php echo $list->title; ?></h1>
+                    <h6 class="subHead">Fundraise Goal</h6>
+                    <h1 class="item-detail-title mb-3"><?php echo $list->title; ?> 
+                      <span class="ms-auto"><img src="https://beta.superpad.finance/cdn/blockchains/bnb-bnb-logo.png" alt=""></span>
+                  </h1>
+                  <p class="item-detail-text mb-2">The allowlist for Kyoko is now available and you can apply for it below.
+Note</p> 
+<p class="item-detail-text mb-2"> that you need to have at least 250 POLS Power to qualify for this allowlist. Learn more.</p>
                     <div class="item-detail-meta d-flex flex-wrap align-items-center mb-3">
                         <div class="card-price-wrap  mb-3">
                             <div class="d-flex justify-content-between align-items-center col-12">
@@ -262,20 +306,27 @@ CryptoCitizen
                         </div>
                     </div>
                     <p class="item-detail-text mb-4"><?php echo $list->heading; ?></p>
-                    <div class="item-credits">
-                        <div class="row g-4">
-
-                        </div><!-- end row -->
-                    </div><!-- end row -->
                     <div class="item-detail-btns mt-4">
                         <ul class="btns-group d-flex">
                             <li class="flex-grow-1">
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#placeBidModal" class="btn btn-dark d-block">Place a Bid</a>
+                                <a class="btn btn-primary w-100" href="/dashboard#whitelists-table">Application Status</a></a>
+                            </li>
+                            <li class="flex-grow-1">
+                                    <a class="btn btn-primary w-100 bg-transparent" href="/dashboard#whitelists-table">Application Status</a>
                             </li>
 
                         </ul>
                     </div><!-- end item-detail-btns -->
                 </div><!-- end item-detail-content -->
+                <div class="timers">
+                     <!-- Countdown 3-->
+                <div class="rounded">
+                    <p class="mb-0 font-weight-bold text-uppercase">We'll open in</p>
+                    <div id="clock" class="countdown pt-4"></div>
+                </div>
+
+                </div>
+                <!-- countdown timer -->
             </div><!-- end col -->
         </div><!-- end row -->
     </div><!-- .container -->
@@ -285,3 +336,30 @@ CryptoCitizen
     <div class="container">
     </div>
 </section>
+
+<?php echo $this->Html->script(['jquery.countdown.min','sticky-sidebar'],
+['block' => 'scriptBottom']) ?>
+<?php $this->Html->scriptStart(array('block' => 'scriptBottom')); ?>
+    $(function () {
+
+
+    /* =========================================
+        COUNTDOWN 1
+     ========================================= */
+    $('#clock').countdown('2023/1/10').on('update.countdown', function(event) {
+      var $this = $(this).html(event.strftime(''
+        + '<span class="h1 font-weight-bold">%D</span> Day%!d'
+        + '<span class="h1 font-weight-bold">%H</span> Hr'
+        + '<span class="h1 font-weight-bold">%M</span> Min'
+        + '<span class="h1 font-weight-bold">%S</span> Sec'));
+    });
+});
+var a = new StickySidebar('.sidebarFixed', {
+			topSpacing: 25,
+			containerSelector: '.container',
+			innerWrapperSelector: '.sidebar__inner'
+		});
+
+
+<?php $this->Html->scriptEnd(); ?>
+	
