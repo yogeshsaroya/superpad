@@ -873,8 +873,29 @@ class PagesController extends AppController
         $this->set(compact('get_data'));
     }
 
+    public function subscribers()
+    {
+        $menu_act = 'subscribers';
+        $sub_menu = 'top_menu';
+        $this->set(compact('menu_act', 'sub_menu'));
+        if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
+            $blog_del = $this->Newsletters->findById($this->request->getQuery('del'))->firstOrFail();
+            if ($this->Newsletters->delete($blog_del)) {
+            }
+            $this->redirect('/pages/subscribers');
+        }
+
+        $this->paginate = ['limit' => 100, 'conditions' => [], 'order' => ['id' => 'desc']];
+        $data = $this->paginate($this->Newsletters->find('all'));
+        $this->set(compact('data'));
+    }
+
     public function newsletter()
     {
+
+        $menu_act = 'newsletter';
+        $sub_menu = 'top_menu';
+        $this->set(compact('menu_act', 'sub_menu'));
 
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $postData = $this->request->getData();

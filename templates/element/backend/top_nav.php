@@ -3,7 +3,7 @@
    <div class="navbar-header d-xl-block d-none">
      <ul class="nav navbar-nav">
        <li class="nav-item">
-         <a class="navbar-brand" href="<?php echo SITEURL;?>" target="_blank" title="Go to front-end">
+         <a class="navbar-brand" href="<?php echo SITEURL; ?>" target="_blank" title="Go to front-end">
            <span class="brand-logo">
              <svg viewbox="0 0 139 95" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="24">
                <defs>
@@ -129,12 +129,20 @@
          <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'team' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/team">Team</a></li>
          <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'email_templates' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/email_templates">Email Templates</a></li>
 
-         <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'newsletter' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/newsletter">Newsletter</a></li>
-         
+         <li class="dropdown nav-item <?php echo (isset($sub_menu) && !empty($sub_menu) ? 'active' : null); ?>" data-menu="dropdown"><a class="dropdown-toggle nav-link d-flex align-items-center" href="#" data-toggle="dropdown">Subscribers</a>
+           <ul class="dropdown-menu">
+             <li class="<?php echo (isset($menu_act) && $menu_act == 'subscribers' ? 'active' : null); ?>"><a class="dropdown-item d-flex align-items-center" href="<?php echo SITEURL; ?>pages/subscribers">Subscribers</a></li>
+             <li class="<?php echo (isset($menu_act) && $menu_act == 'newsletter' ? 'active' : null); ?>"><a class="dropdown-item d-flex align-items-center" href="<?php echo SITEURL; ?>pages/newsletter">Send Newsletter</a></li>
+         </li>
+       </ul>
+       </li>
 
-         <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'settings' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/settings">Settings</a></li>
-         <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'profile_update' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/profile_update">Profile Update</a></li>
-         <li class=" nav-item"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>users/logout">Logout</a></li>
+
+
+
+       <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'settings' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/settings">Settings</a></li>
+       <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'profile_update' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/profile_update">Profile Update</a></li>
+       <li class=" nav-item"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>users/logout">Logout</a></li>
        </ul>
      </div>
    </div>
