@@ -1,6 +1,21 @@
 <style>
+        .card.card-full {
+        border: 1px solid #d9e0ea;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: all 0.2s;
+        background: linear-gradient(180deg,#f7f3f3,hsla(0,0%,100%,0.5));
+    }
+.card.card-full:hover {
+    -webkit-transform: translateY(-4px);
+    transform: translateY(-4px);
+    -webkit-box-shadow: 0 1rem 3rem rgb(0 0 0 / 50%);
+    box-shadow: 0 1rem 3rem rgb(0 0 0 / 50%);
+    -webkit-box-shadow: 0px 4px 24px rgb(4 25 39 / 10%);
+    box-shadow: 0px 4px 24px rgb(4 25 39 / 10%);
+}
     .filter-item .card-body{
-        padding-bottom: 70px !important;
+        padding-bottom: 38px !important;
         position: relative;
     }
     .filter-item .card-body{color: #09090f;}
@@ -44,13 +59,30 @@
 }
 .card-price-wrap > div > span {
     font-size: 16px;
-    margin: 0.8rem 0 0 !important;
+    margin: 0 0 0.5rem !important;
     color: #05050c;
 }
 .card-price-wrap .card-price-title {
     font-size: 16px;
-    font-weight: 600;
-    color: #05050c;
+    font-weight: 500;
+    color: #0a0c10;
+}
+#project_list .badge {
+    top: 10px;
+    position: absolute;
+    right: 10px;
+    border-radius: 0 !important;
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 3px !important;
+    background: #9caabc !important;
+    text-transform: uppercase;
+}
+#project_list .badge.open {
+     background: #21bcc9 !important;
+}
+#project_list .badge.comingSoon {
+     background: #242a32 !important;
 }
 </style>
 <?php
