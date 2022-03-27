@@ -99,15 +99,13 @@ if (!empty($data)) {
                             <img src="<?php echo SITEURL . "cdn/project_logo/" . $list->logo; ?>" alt="<?php echo $list->title; ?>" />
                         </div>
                         <div class="supDt d-flex">
-                           <div class="st_date"><?php if (!empty($list->start_date)) {
-                                                    echo $list->start_date->format('Y-m-d');
-                                                } ?></div>
+                           <div class="st_date"><?php if (!empty($list->start_date)) { echo $list->start_date->format('Y-m-d'); } ?></div>
                         </div>
                         
                         <h5 class="card-title text-truncate mb-3">
                             <p class="mb-0">
                                 <span class="headins"><?php echo $list->title; ?></span>
-                                <span><?php echo $list->ticker; ?></span>
+                                <span class="ticker_small"><?php echo $list->ticker; ?></span>
                             </p>
                             <?php if (isset($list->blockchain->name)) { ?>
                                 <img src="<?php echo SITEURL . 'cdn/blockchains/' . $list->blockchain->logo; ?>" title="<?php echo $list->blockchain->name; ?>" width="32px" alt="" />

@@ -5773,3 +5773,9 @@ img.features_icon {
         margin-bottom: 10px;
     }
 }
+
+span.ticker_small {
+    font-weight: 100;
+    font-size: 14px;
+    text-transform: lowercase;
+}

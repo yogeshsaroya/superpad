@@ -49,6 +49,9 @@
                                 <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('discord', ['label'=>['escape' => false, 'text'=>'Telegram Announcement Link'],'type'=>'url','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
                                 <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('medium', ['label'=>['escape' => false, 'text'=>'Medium Link'],'type'=>'url','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
 
+                                <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('heading', ['label'=>['escape' => false, 'text'=>'Heading'],'type'=>'text','class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('sub_heading', ['label'=>['escape' => false, 'text'=>'Sub Heading'],'type'=>'text','class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+
                                     
 
 
