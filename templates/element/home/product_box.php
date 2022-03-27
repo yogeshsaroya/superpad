@@ -1,6 +1,6 @@
 <style>
     .filter-item .card-body{
-        padding-bottom: 80px !important;
+        padding-bottom: 70px !important;
         position: relative;
     }
     .filter-item .card-body{color: #09090f;}
@@ -15,6 +15,11 @@
     color: #434fa7;
     font-size: 16px;
     font-weight: 600;
+    padding: 10px 12px;
+}
+.filter-item button.btn-dark:hover {
+    background: #434fa7;
+    color: #fff;
 }
 .supDt {
     position: absolute;
@@ -38,8 +43,8 @@
     margin-bottom: 5px;
 }
 .card-price-wrap > div > span {
-    font-size: 18px;
-    margin: 0.5rem 0 0 !important;
+    font-size: 16px;
+    margin: 0.8rem 0 0 !important;
     color: #05050c;
 }
 .card-price-wrap .card-price-title {
@@ -67,7 +72,7 @@ if (!empty($data)) {
                                                 } ?></div>
                         </div>
                         
-                        <h5 class="card-title text-truncate mb-2">
+                        <h5 class="card-title text-truncate mb-3">
                             <p class="mb-0">
                                 <span class="headins"><?php echo $list->title; ?></span>
                                 <span><?php echo $list->ticker; ?></span>
@@ -77,14 +82,14 @@ if (!empty($data)) {
                             <?php } ?>
                </h5>
 
-                        <div class="card-price-wrap d-flex align-items-center justify-content-sm-between mb-3">
-                            <div class="me-5 me-sm-2">
+                        <div class="card-price-wrap  mb-3">
+                            <div class="d-flex justify-content-between align-items-center col-12">
                                 <span class="card-price-title">Ticket Allocation</span>
-                                <span class="card-price-number"><?php echo $this->Number->currency($list->ticket_allocation, 'USD'); ?></span>
+                                <span class="card-price-number text-end"><?php echo $this->Number->currency($list->ticket_allocation, 'USD'); ?></span>
                             </div>
-                            <div class="text-sm-end">
+                            <div class="d-flex justify-content-between align-items-center col-12">
                                 <span class="card-price-title">Fund Raise</span>
-                                <span class="card-price-number"><?php echo $this->Number->currency($list->total_raise, 'USD'); ?></span>
+                                <span class="card-price-number text-end"><?php echo $this->Number->currency($list->total_raise, 'USD'); ?></span>
                             </div>
                         </div><!-- end card-price-wrap -->
                         <button class="btn btn-sm btn-dark"><?php echo $list->type; ?></button>

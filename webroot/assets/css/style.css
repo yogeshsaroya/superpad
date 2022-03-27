@@ -118,6 +118,10 @@
     font-display: swap;
 }
 
+.bg-white {
+    background-color: #f7f8fd !important;
+}
+
 article,
 aside,
 details,
