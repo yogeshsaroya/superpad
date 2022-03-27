@@ -5,6 +5,7 @@
 /tmp/*
 /webroot/cache/*
 /webroot/html
+/webroot/cdn
 
 # OS generated files #
 ######################
