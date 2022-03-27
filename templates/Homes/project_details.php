@@ -109,6 +109,7 @@
     gap: 1.5rem;
     border: 1px solid #e2e4e9;
     border-radius: 10px;
+    background-color: #fff;
 }
 .card-price-wrap{
     width: 100%;
@@ -154,7 +155,66 @@
     color: #0a0c10;
     border-color: #d9e0ea;
 }
+.timers {
+    padding: 2rem;
+    grid-gap: 1.5rem;
+    gap: 1.5rem;
+    border: 1px solid #e2e4e9;
+    border-radius: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    /* border-top: 0; */
+    margin-top: -7px;
+    background: #f8fafc;
+    text-align: center;
+}
+.rounded p.text-uppercase{
+    letter-spacing: .3125rem;
+    color: grey;
+    margin-top: -0.25rem;
+    margin-bottom: 0.75rem;
+    font-size: .75rem;
+}
+div#clock{
+    display: flex;
+    justify-content: center;
+}
+div#clock > span {
+    display: inline-flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 3px 15px;
+    color:  #8c96a6;
+    position: relative;
+    text-align: center;
+    min-width: 50px;
+}
+div#clock > span:first-child {
+    padding-left: 0;
+}
+div#clock > span:last-child {
+    padding-right: 0;
+}
 
+div#clock > span:not(:last-child):after {
+    content: ":";
+    position: absolute;
+    right: 0;
+    top: 10px;
+    color:  #8c96a6;
+    font-size: 25px;
+    display: inline-flex;
+}
+
+div#clock > span .h1{
+    font-size: 1.90rem;
+    line-height: 1.3;
+    color: #0a0c10;
+    margin: 0;
+}
+.textContent .item-detail-tab-wrap{
+    margin-top: 40px;
+}
 
 
 
@@ -222,7 +282,7 @@ CryptoCitizen
                     <div class="item-detail-img-container mb-4">
                         <img src="<?php echo SITEURL . "cdn/project_img/" . $list->hero_image; ?>" alt="<?php echo $list->title; ?>" class="w-100 rounded-3">
                     </div><!-- end item-detail-img-container -->
-                    <div class="item-detail-tab">
+                    <div class="item-detail-tab textContent">
                         <ul class="nav nav-tabs nav-tabs-s1" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true"> Description </button>
@@ -321,8 +381,8 @@ Note</p>
                 <div class="timers">
                      <!-- Countdown 3-->
                 <div class="rounded">
-                    <p class="mb-0 font-weight-bold text-uppercase">We'll open in</p>
-                    <div id="clock" class="countdown pt-4"></div>
+                    <p class="mb-2 text-uppercase">SALE STARTS IN</p>
+                    <div id="clock" class="countdown"></div>
                 </div>
 
                 </div>
@@ -348,10 +408,10 @@ Note</p>
      ========================================= */
     $('#clock').countdown('2023/1/10').on('update.countdown', function(event) {
       var $this = $(this).html(event.strftime(''
-        + '<span class="h1 font-weight-bold">%D</span> Day%!d'
-        + '<span class="h1 font-weight-bold">%H</span> Hr'
-        + '<span class="h1 font-weight-bold">%M</span> Min'
-        + '<span class="h1 font-weight-bold">%S</span> Sec'));
+        + '<span class="clockbx"><span class="font-weight-bold h1">%D</span> Day%!d</span> '
+        + '<span class=" clockbx"><span class="h1 font-weight-bold h1">%H</span> Hr</span> '
+        + '<span class="clockbx"><span class="h1 font-weight-bold h1">%M</span> Min</span>'
+        + '<span class="clockbx"><span class="h1 font-weight-bold h1">%S</span>Sec</span>'));
     });
 });
 var a = new StickySidebar('.sidebarFixed', {

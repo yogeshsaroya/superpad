@@ -54,7 +54,7 @@
     </div>
 </div>
 <!-- END: Content-->
-<?php echo $this->Html->script(['//cdn.ckeditor.com/4.16.2/standard/ckeditor.js']); ?>
+<?php echo $this->Html->script(['//cdn.ckeditor.com/4.18.0/full-all/ckeditor.js']); ?>
 <script>
     $(document).ready(function() {
         $("#e_frm").validator();

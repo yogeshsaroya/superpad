@@ -31,7 +31,8 @@ class PagesController extends AppController
         $this->redirect('/pages/users');
     }
 
-    public function staticPages(){
+    public function staticPages()
+    {
         $this->set('menu_act', 'static_pages');
         if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
             $blog_del = $this->Pages->findById($this->request->getQuery('del'))->firstOrFail();
@@ -42,7 +43,7 @@ class PagesController extends AppController
 
         if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
             $getData = $this->Pages->findById($this->request->getQuery('st'))->firstOrFail();
-            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2:1) ];
+            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2 : 1)];
             $saveData = $this->Pages->newEntity($upData, ['validate' => false]);
             $this->Pages->save($saveData);
             $this->redirect('/pages/static_pages');
@@ -68,7 +69,7 @@ class PagesController extends AppController
             }
             $postData['slug'] = $url;
             */
-            
+
             if (isset($postData['id']) && !empty($postData['id'])) {
                 $getBlog = $this->Pages->get($postData['id']);
                 $chkBlog = $this->Pages->patchEntity($getBlog, $postData, ['validate' => true]);
@@ -97,16 +98,17 @@ class PagesController extends AppController
             }
             exit;
         }
-        
+
         if ($this->request->is('get')) {
-            if(!empty($id)) {
+            if (!empty($id)) {
                 $post_data = $this->Pages->findById($id)->firstOrFail();
             }
             $this->set(compact('post_data'));
         }
     }
 
-    public function team(){
+    public function team()
+    {
         $this->set('menu_act', 'team');
         if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
             $blog_del = $this->Teams->findById($this->request->getQuery('del'))->firstOrFail();
@@ -117,7 +119,7 @@ class PagesController extends AppController
 
         if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
             $getData = $this->Teams->findById($this->request->getQuery('st'))->firstOrFail();
-            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2:1) ];
+            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2 : 1)];
             $saveData = $this->Teams->newEntity($upData, ['validate' => false]);
             $this->Teams->save($saveData);
             $this->redirect('/pages/team');
@@ -137,27 +139,36 @@ class PagesController extends AppController
             $file_name = null;
             $postData = $this->request->getData();
             $uploadPath = 'cdn/team/';
-            if (!file_exists($uploadPath)) { mkdir($uploadPath, 0777, true); }
-            /* For logo */ 
-            
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+            /* For logo */
+
             if (!empty($postData['hero_img'])) {
-                if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg','image/svg+xml'])) {
+                if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg', 'image/svg+xml'])) {
                     $fileobject = $postData['hero_img'];
                     $file_name = $fileobject->getClientFilename();
                     $destination = $uploadPath . $file_name;
                     try {
                         $fileobject->moveTo($destination);
-                    } catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
+                    } catch (Exception $e) {
+                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                        exit;
+                    }
                 }
             }
-            
+
             if (isset($postData['id']) && !empty($postData['id'])) {
                 $getBlog = $this->Teams->get($postData['id']);
-                if (!empty($file_name)) { $getBlog['img'] = $file_name; }
+                if (!empty($file_name)) {
+                    $getBlog['img'] = $file_name;
+                }
                 $chkBlog = $this->Teams->patchEntity($getBlog, $postData, ['validate' => true]);
             } else {
                 $getBlog = $this->Teams->newEmptyEntity();
-                if (!empty($file_name)) { $getBlog['img'] = $file_name; }
+                if (!empty($file_name)) {
+                    $getBlog['img'] = $file_name;
+                }
                 $chkBlog = $this->Teams->patchEntity($getBlog, $postData, ['validate' => true]);
             }
 
@@ -181,21 +192,22 @@ class PagesController extends AppController
             }
             exit;
         }
-        
+
         if ($this->request->is('get')) {
-            if(!empty($id)) {
+            if (!empty($id)) {
                 $post_data = $this->Teams->findById($id)->firstOrFail();
             }
             $this->set(compact('post_data'));
         }
     }
 
-    public function emailTemplates(){
+    public function emailTemplates()
+    {
         $this->set('menu_act', 'email_templates');
 
         if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
             $getData = $this->EmailTemplates->findById($this->request->getQuery('st'))->firstOrFail();
-            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2:1) ];
+            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2 : 1)];
             $saveData = $this->EmailTemplates->newEntity($upData, ['validate' => false]);
             $this->EmailTemplates->save($saveData);
             $this->redirect('/pages/email_templates');
@@ -214,7 +226,7 @@ class PagesController extends AppController
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $file_name = null;
             $postData = $this->request->getData();
-            
+
             if (isset($postData['id']) && !empty($postData['id'])) {
                 $getData = $this->EmailTemplates->findById($postData['id'])->firstOrFail();;
                 $chkData = $this->EmailTemplates->patchEntity($getData, $postData, ['validate' => true]);
@@ -250,10 +262,11 @@ class PagesController extends AppController
         $this->set(compact('data'));
     }
 
-    public function blockchain() {
+    public function blockchain()
+    {
         $menu_act = 'blockchain';
         $pro_menu = 'top_menu';
-        $this->set(compact('menu_act','pro_menu'));
+        $this->set(compact('menu_act', 'pro_menu'));
         if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
             $blog_del = $this->Blockchains->findById($this->request->getQuery('del'))->firstOrFail();
             if ($this->Blockchains->delete($blog_del)) {
@@ -262,7 +275,7 @@ class PagesController extends AppController
         }
         if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
             $getData = $this->Blockchains->findById($this->request->getQuery('st'))->firstOrFail();
-            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2:1) ];
+            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2 : 1)];
             $saveData = $this->Blockchains->newEntity($upData, ['validate' => false]);
             $this->Blockchains->save($saveData);
             $this->redirect('/pages/blockchain');
@@ -273,51 +286,70 @@ class PagesController extends AppController
         $this->set(compact('data'));
     }
 
-    public function manageBlockchain($id = null){
+    public function manageBlockchain($id = null)
+    {
         $menu_act = 'blockchain';
         $pro_menu = 'top_menu';
-        $this->set(compact('menu_act','pro_menu'));
+        $this->set(compact('menu_act', 'pro_menu'));
         $get_data = null;
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $file_name = $file_name_img = null;
             $postData = $this->request->getData();
             $uploadPath = 'cdn/blockchains/';
             $uploadImg = 'cdn/blockchains_img/';
-            if (!file_exists($uploadPath)) { mkdir($uploadPath, 0777, true); }
-            if (!file_exists($uploadImg)) { mkdir($uploadImg, 0777, true); }
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+            if (!file_exists($uploadImg)) {
+                mkdir($uploadImg, 0777, true);
+            }
             /*For hero image*/
             if (!empty($postData['hero_img'])) {
-                if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg','image/svg+xml'])) {
+                if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg', 'image/svg+xml'])) {
                     $fileobject1 = $postData['hero_img'];
                     $file_name_img = $fileobject1->getClientFilename();
                     $destination1 = $uploadImg . $file_name_img;
                     try {
                         $fileobject1->moveTo($destination1);
-                    } catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
+                    } catch (Exception $e) {
+                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                        exit;
+                    }
                 }
             }
 
-            /* For logo */ 
+            /* For logo */
             if (!empty($postData['logo_img'])) {
-                if (in_array($postData['logo_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg','image/svg+xml'])) {
+                if (in_array($postData['logo_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg', 'image/svg+xml'])) {
                     $fileobject = $postData['logo_img'];
                     $file_name = $fileobject->getClientFilename();
                     $destination = $uploadPath . $file_name;
                     try {
                         $fileobject->moveTo($destination);
-                    } catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
+                    } catch (Exception $e) {
+                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                        exit;
+                    }
                 }
             }
 
             if (isset($postData['id']) && !empty($postData['id'])) {
                 $getData = $this->Blockchains->get($postData['id']);
-                if (!empty($file_name)) { $postData['logo'] = $file_name; }
-                if (!empty($file_name_img)) { $postData['img'] = $file_name_img; }
+                if (!empty($file_name)) {
+                    $postData['logo'] = $file_name;
+                }
+                if (!empty($file_name_img)) {
+                    $postData['img'] = $file_name_img;
+                }
                 $chkData = $this->Blockchains->patchEntity($getData, $postData, ['validate' => true]);
             } else {
                 $getData = $this->Blockchains->newEmptyEntity();
-                if (!empty($file_name)) { $postData['logo'] = $file_name; }
-                if (!empty($file_name_img)) { $postData['img'] = $file_name_img; }
+                if (!empty($file_name)) {
+                    $postData['logo'] = $file_name;
+                }
+                if (!empty($file_name_img)) {
+                    $postData['img'] = $file_name_img;
+                }
                 $chkData = $this->Blockchains->patchEntity($getData, $postData, ['validate' => true]);
             }
             if ($chkData->getErrors()) {
@@ -347,10 +379,11 @@ class PagesController extends AppController
         $this->set(compact('get_data'));
     }
 
-    public function partners() {
+    public function partners()
+    {
         $menu_act = 'partners';
         $pro_menu = 'top_menu';
-        $this->set(compact('menu_act','pro_menu'));
+        $this->set(compact('menu_act', 'pro_menu'));
         if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
             $blog_del = $this->Partners->findById($this->request->getQuery('del'))->firstOrFail();
             if ($this->Partners->delete($blog_del)) {
@@ -359,7 +392,7 @@ class PagesController extends AppController
         }
         if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
             $getData = $this->Partners->findById($this->request->getQuery('st'))->firstOrFail();
-            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2:1) ];
+            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2 : 1)];
             $saveData = $this->Partners->newEntity($upData, ['validate' => false]);
             $this->Partners->save($saveData);
             $this->redirect('/pages/partners');
@@ -370,37 +403,47 @@ class PagesController extends AppController
         $this->set(compact('data'));
     }
 
-    public function managePartners($id = null){
+    public function managePartners($id = null)
+    {
         $menu_act = 'partners';
         $pro_menu = 'top_menu';
-        $this->set(compact('menu_act','pro_menu'));
+        $this->set(compact('menu_act', 'pro_menu'));
         $get_data = null;
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $file_name = $file_name_img = null;
             $postData = $this->request->getData();
             $uploadPath = 'cdn/partners/';
-            if (!file_exists($uploadPath)) { mkdir($uploadPath, 0777, true); }
-            /* For logo */ 
-            
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+            /* For logo */
+
             if (!empty($postData['hero_img'])) {
-                if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg','image/svg+xml'])) {
+                if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg', 'image/svg+xml'])) {
                     $fileobject = $postData['hero_img'];
                     $file_name = $fileobject->getClientFilename();
                     $destination = $uploadPath . $file_name;
                     try {
                         $fileobject->moveTo($destination);
-                    } catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
+                    } catch (Exception $e) {
+                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                        exit;
+                    }
                 }
             }
 
             if (isset($postData['id']) && !empty($postData['id'])) {
                 $getData = $this->Partners->get($postData['id']);
-                if (!empty($file_name)) { $postData['logo'] = $file_name; }
+                if (!empty($file_name)) {
+                    $postData['logo'] = $file_name;
+                }
                 $chkData = $this->Partners->patchEntity($getData, $postData, ['validate' => true]);
             } else {
                 $getData = $this->Partners->newEmptyEntity();
-                if (!empty($file_name)) { $postData['logo'] = $file_name; }
-                
+                if (!empty($file_name)) {
+                    $postData['logo'] = $file_name;
+                }
+
                 $chkData = $this->Partners->patchEntity($getData, $postData, ['validate' => true]);
             }
             if ($chkData->getErrors()) {
@@ -430,10 +473,11 @@ class PagesController extends AppController
         $this->set(compact('get_data'));
     }
 
-    public function roadmap() {
+    public function roadmap()
+    {
         $menu_act = 'roadmap';
         $pro_menu = 'top_menu';
-        $this->set(compact('menu_act','pro_menu'));
+        $this->set(compact('menu_act', 'pro_menu'));
         if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
             $blog_del = $this->Roadmaps->findById($this->request->getQuery('del'))->firstOrFail();
             if ($this->Roadmaps->delete($blog_del)) {
@@ -442,7 +486,7 @@ class PagesController extends AppController
         }
         if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
             $getData = $this->Roadmaps->findById($this->request->getQuery('st'))->firstOrFail();
-            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2:1) ];
+            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2 : 1)];
             $saveData = $this->Roadmaps->newEntity($upData, ['validate' => false]);
             $this->Roadmaps->save($saveData);
             $this->redirect('/pages/roadmap');
@@ -453,23 +497,28 @@ class PagesController extends AppController
         $this->set(compact('data'));
     }
 
-    public function manageRoadmap($id = null){
+    public function manageRoadmap($id = null)
+    {
         $menu_act = 'roadmap';
         $pro_menu = 'top_menu';
-        $this->set(compact('menu_act','pro_menu'));
+        $this->set(compact('menu_act', 'pro_menu'));
         $get_data = null;
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $file_name = $file_name_img = null;
             $postData = $this->request->getData();
-            
+
             if (isset($postData['id']) && !empty($postData['id'])) {
                 $getData = $this->Roadmaps->get($postData['id']);
-                if (!empty($file_name)) { $postData['logo'] = $file_name; }
+                if (!empty($file_name)) {
+                    $postData['logo'] = $file_name;
+                }
                 $chkData = $this->Roadmaps->patchEntity($getData, $postData, ['validate' => true]);
             } else {
                 $getData = $this->Roadmaps->newEmptyEntity();
-                if (!empty($file_name)) { $postData['logo'] = $file_name; }
-                
+                if (!empty($file_name)) {
+                    $postData['logo'] = $file_name;
+                }
+
                 $chkData = $this->Roadmaps->patchEntity($getData, $postData, ['validate' => true]);
             }
             if ($chkData->getErrors()) {
@@ -500,10 +549,11 @@ class PagesController extends AppController
     }
 
 
-    public function projects() {
+    public function projects()
+    {
         $menu_act = 'projects';
         $pro_menu = 'top_menu';
-        $this->set(compact('menu_act','pro_menu'));
+        $this->set(compact('menu_act', 'pro_menu'));
         if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
             $blog_del = $this->Projects->findById($this->request->getQuery('del'))->firstOrFail();
             if ($this->Projects->delete($blog_del)) {
@@ -512,7 +562,7 @@ class PagesController extends AppController
         }
         if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
             $getData = $this->Projects->findById($this->request->getQuery('st'))->firstOrFail();
-            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2:1) ];
+            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2 : 1)];
             $saveData = $this->Projects->newEntity($upData, ['validate' => false]);
             $this->Projects->save($saveData);
             $this->redirect('/pages/projects');
@@ -520,24 +570,25 @@ class PagesController extends AppController
         if ($this->request->getQuery('featured')  && !empty($this->request->getQuery('featured'))) {
             $getData = $this->Projects->findById($this->request->getQuery('featured'))->firstOrFail();
 
-            $this->Projects->updateAll(['is_featured' => null],['is_featured' => 1]);
+            $this->Projects->updateAll(['is_featured' => null], ['is_featured' => 1]);
 
-            $upData = ['id' => $getData->id, 'is_featured' => 1 ];
+            $upData = ['id' => $getData->id, 'is_featured' => 1];
             $saveData = $this->Projects->newEntity($upData, ['validate' => false]);
             $this->Projects->save($saveData);
             $this->redirect('/pages/projects');
         }
-        
 
-        $this->paginate = ['contain' => ['Blockchains'],'limit' => 100, 'order' => ['id' => 'desc']];
+
+        $this->paginate = ['contain' => ['Blockchains'], 'limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Projects->find('all'));
         $this->set(compact('data'));
     }
 
-    public function manageProject($id = null){
+    public function manageProject($id = null)
+    {
         $menu_act = 'projects';
         $pro_menu = 'top_menu';
-        $this->set(compact('menu_act','pro_menu'));
+        $this->set(compact('menu_act', 'pro_menu'));
         $get_data = null;
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $file_name = $file_name_img = null;
@@ -545,58 +596,85 @@ class PagesController extends AppController
             $uploadPath = 'cdn/project_logo/';
             $uploadImg = 'cdn/project_img/';
             $uploadBanner = 'cdn/project_banner/';
-            if (!file_exists($uploadPath)) { mkdir($uploadPath, 0777, true); }
-            if (!file_exists($uploadImg)) { mkdir($uploadImg, 0777, true); }
-            if (!file_exists($uploadBanner)) { mkdir($uploadBanner, 0777, true); }
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+            if (!file_exists($uploadImg)) {
+                mkdir($uploadImg, 0777, true);
+            }
+            if (!file_exists($uploadBanner)) {
+                mkdir($uploadBanner, 0777, true);
+            }
 
             /*For hero image*/
             if (!empty($postData['banner_img'])) {
-                if (in_array($postData['banner_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg','image/svg+xml'])) {
+                if (in_array($postData['banner_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg', 'image/svg+xml'])) {
                     $fileobject2 = $postData['banner_img'];
                     $file_banner_img = $fileobject2->getClientFilename();
                     $destination2 = $uploadBanner . $file_banner_img;
                     try {
                         $fileobject2->moveTo($destination2);
-                    } catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
+                    } catch (Exception $e) {
+                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                        exit;
+                    }
                 }
             }
 
             /*For hero image*/
             if (!empty($postData['hero_img'])) {
-                if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg','image/svg+xml'])) {
+                if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg', 'image/svg+xml'])) {
                     $fileobject1 = $postData['hero_img'];
                     $file_name_img = $fileobject1->getClientFilename();
                     $destination1 = $uploadImg . $file_name_img;
                     try {
                         $fileobject1->moveTo($destination1);
-                    } catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
+                    } catch (Exception $e) {
+                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                        exit;
+                    }
                 }
             }
 
-            /* For logo */ 
+            /* For logo */
             if (!empty($postData['logo_img'])) {
-                if (in_array($postData['logo_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg','image/svg+xml'])) {
+                if (in_array($postData['logo_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg', 'image/svg+xml'])) {
                     $fileobject = $postData['logo_img'];
                     $file_name = $fileobject->getClientFilename();
                     $destination = $uploadPath . $file_name;
                     try {
                         $fileobject->moveTo($destination);
-                    } catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
+                    } catch (Exception $e) {
+                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                        exit;
+                    }
                 }
             }
-            
+
             if (isset($postData['id']) && !empty($postData['id'])) {
                 $getData = $this->Projects->get($postData['id']);
-                if (!empty($file_name)) { $postData['logo'] = $file_name; }
-                if (!empty($file_name_img)) { $postData['hero_image'] = $file_name_img; }
-                if (!empty($file_banner_img)) { $postData['banner'] = $file_banner_img; }
-                
+                if (!empty($file_name)) {
+                    $postData['logo'] = $file_name;
+                }
+                if (!empty($file_name_img)) {
+                    $postData['hero_image'] = $file_name_img;
+                }
+                if (!empty($file_banner_img)) {
+                    $postData['banner'] = $file_banner_img;
+                }
+
                 $chkData = $this->Projects->patchEntity($getData, $postData, ['validate' => true]);
             } else {
                 $getData = $this->Projects->newEmptyEntity();
-                if (!empty($file_name)) { $postData['logo'] = $file_name; }
-                if (!empty($file_name_img)) { $postData['hero_image'] = $file_name_img; }
-                if (!empty($file_banner_img)) { $postData['banner'] = $file_banner_img; }
+                if (!empty($file_name)) {
+                    $postData['logo'] = $file_name;
+                }
+                if (!empty($file_name_img)) {
+                    $postData['hero_image'] = $file_name_img;
+                }
+                if (!empty($file_banner_img)) {
+                    $postData['banner'] = $file_banner_img;
+                }
                 $chkData = $this->Projects->patchEntity($getData, $postData, ['validate' => true]);
             }
             if ($chkData->getErrors()) {
@@ -627,10 +705,11 @@ class PagesController extends AppController
     }
 
 
-    public function features() {
+    public function features()
+    {
         $menu_act = 'features';
         $pro_menu = 'top_menu';
-        $this->set(compact('menu_act','pro_menu'));
+        $this->set(compact('menu_act', 'pro_menu'));
         if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
             $blog_del = $this->Features->findById($this->request->getQuery('del'))->firstOrFail();
             if ($this->Features->delete($blog_del)) {
@@ -639,7 +718,7 @@ class PagesController extends AppController
         }
         if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
             $getData = $this->Features->findById($this->request->getQuery('st'))->firstOrFail();
-            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2:1) ];
+            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2 : 1)];
             $saveData = $this->Features->newEntity($upData, ['validate' => false]);
             $this->Features->save($saveData);
             $this->redirect('/pages/features');
@@ -650,37 +729,47 @@ class PagesController extends AppController
         $this->set(compact('data'));
     }
 
-    public function manageFeature($id = null){
+    public function manageFeature($id = null)
+    {
         $menu_act = 'features';
         $pro_menu = 'top_menu';
-        $this->set(compact('menu_act','pro_menu'));
+        $this->set(compact('menu_act', 'pro_menu'));
         $get_data = null;
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $file_name = $file_name_img = null;
             $postData = $this->request->getData();
             $uploadPath = 'cdn/features/';
-            if (!file_exists($uploadPath)) { mkdir($uploadPath, 0777, true); }
-            /* For logo */ 
-            
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+            /* For logo */
+
             if (!empty($postData['hero_img'])) {
-                if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg','image/svg+xml'])) {
+                if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg', 'image/svg+xml'])) {
                     $fileobject = $postData['hero_img'];
                     $file_name = $fileobject->getClientFilename();
                     $destination = $uploadPath . $file_name;
                     try {
                         $fileobject->moveTo($destination);
-                    } catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
+                    } catch (Exception $e) {
+                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                        exit;
+                    }
                 }
             }
 
             if (isset($postData['id']) && !empty($postData['id'])) {
                 $getData = $this->Features->get($postData['id']);
-                if (!empty($file_name)) { $postData['icon'] = $file_name; }
+                if (!empty($file_name)) {
+                    $postData['icon'] = $file_name;
+                }
                 $chkData = $this->Features->patchEntity($getData, $postData, ['validate' => true]);
             } else {
                 $getData = $this->Features->newEmptyEntity();
-                if (!empty($file_name)) { $postData['icon'] = $file_name; }
-                
+                if (!empty($file_name)) {
+                    $postData['icon'] = $file_name;
+                }
+
                 $chkData = $this->Features->patchEntity($getData, $postData, ['validate' => true]);
             }
             if ($chkData->getErrors()) {
@@ -710,9 +799,10 @@ class PagesController extends AppController
         $this->set(compact('get_data'));
     }
 
-    public function users() {
+    public function users()
+    {
         $menu_act = 'users';
-        $this->set(compact('menu_act'));    
+        $this->set(compact('menu_act'));
         if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
             $blog_del = $this->Users->findById($this->request->getQuery('del'))->firstOrFail();
             if ($this->Users->delete($blog_del)) {
@@ -721,18 +811,19 @@ class PagesController extends AppController
         }
         if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
             $getData = $this->Users->findById($this->request->getQuery('st'))->firstOrFail();
-            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2:1) ];
+            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2 : 1)];
             $saveData = $this->Users->newEntity($upData, ['validate' => false]);
             $this->Users->save($saveData);
             $this->redirect('/pages/users');
         }
 
-        $this->paginate = ['limit' => 100,'conditions'=>['Users.role'=>2], 'order' => ['id' => 'desc']];
+        $this->paginate = ['limit' => 100, 'conditions' => ['Users.role' => 2], 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Users->find('all'));
         $this->set(compact('data'));
     }
 
-    public function manageUser($id = null){
+    public function manageUser($id = null)
+    {
         $menu_act = 'users';
         $this->set(compact('menu_act'));
         $get_data = null;
@@ -741,10 +832,10 @@ class PagesController extends AppController
             $val = ['validate' => true];
             if (!empty($postData['password1'])) {
                 $postData['password'] = $postData['password1'];
-            }else{
+            } else {
                 $val = ['validate' => 'OnlyCheck'];
             }
-            
+
             if (isset($postData['id']) && !empty($postData['id'])) {
                 $getData = $this->Users->get($postData['id']);
                 $chkData = $this->Users->patchEntity($getData, $postData, $val);
@@ -779,16 +870,28 @@ class PagesController extends AppController
         $this->set(compact('get_data'));
     }
 
-    public function newsletter(){
-        
+    public function newsletter()
+    {
+
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $postData = $this->request->getData();
-            ec($postData);
+            if(!empty($postData['subject']) && !empty($postData['message'])){
+                $query = $this->Newsletters->find('list', ['keyField' => 'email', 'valueField' => 'name'])->order(['Newsletters.name' => 'ASC']);
+                $data = $query->all()->toArray();
+                if(!empty($data)){
+                    foreach($data as $em=>$name){
+                        $this->Data->AppMail($em,7, ['NAME'=>$name,'SUBJECT'=>$postData['subject'],'BODY'=>$postData['message']]);
+                    }
+                    echo "<script>$('#e_frm')[0].reset();</script>";
+                    echo "<div class='alert alert-success'>Newsletter sent.</div>";
+                }else{ echo "<div class='alert alert-danger'>Subscribers not found</div>"; }
+            }else{ echo "<div class='alert alert-danger'>Please add email subject and message.</div>"; }
             exit;
         }
     }
 
-    public function settings(){
+    public function settings()
+    {
         $this->set('menu_act', 'settings');
         $postData = $this->request->getData();
         $tbl_data = null;
@@ -822,7 +925,8 @@ class PagesController extends AppController
         $this->set(compact('tbl_data'));
     }
 
-    public function profileUpdate(){
+    public function profileUpdate()
+    {
         $this->set('menu_act', 'profile_update');
         $postData = $this->request->getData();
         $tbl_data = null;
@@ -830,7 +934,7 @@ class PagesController extends AppController
             $val = ['validate' => true];
             if (!empty($postData['password1'])) {
                 $postData['password'] = $postData['password1'];
-            }else{
+            } else {
                 $val = ['validate' => 'OnlyCheck'];
             }
             if (isset($postData['id']) && !empty($postData['id'])) {

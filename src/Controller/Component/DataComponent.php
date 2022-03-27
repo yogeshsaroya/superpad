@@ -61,6 +61,9 @@ class DataComponent extends Component
             foreach ($parameters as $param_name => $param_value) {
                 $body = str_replace('[' . $param_name . ']', $param_value, $body);
             }
+            foreach ($parameters as $param_name => $param_value) {
+                $body = str_replace('[' . $param_name . ']', $param_value, $body);
+            }
             $msg = $this->EmailServers($to, $sub, $body);
         }
         return $msg;
