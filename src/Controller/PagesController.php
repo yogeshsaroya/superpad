@@ -129,7 +129,7 @@ class PagesController extends AppController
             $this->redirect('/pages/team');
         }
 
-        $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
+        $this->paginate = ['limit' => 100,'conditions'=>['Teams.type'=>1],'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Teams->find('all'));
         $paging = $this->request->getAttribute('paging');
         $this->set(compact('data','paging'));
@@ -404,7 +404,7 @@ class PagesController extends AppController
             $this->redirect('/pages/partners');
         }
 
-        $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
+        $this->paginate = ['limit' => 100,'conditions'=>['Partners.type'=>1], 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Partners->find('all'));
         $paging = $this->request->getAttribute('paging');
         $this->set(compact('data','paging'));
