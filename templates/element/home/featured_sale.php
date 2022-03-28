@@ -63,7 +63,7 @@ if(!empty($list)){?>
                             <img src="<?php echo SITEURL . "cdn/project_banner/" . $list->banner; ?>" alt="<?php echo $list->title;?>" class="w-100"/>
                         </a>
                          <div class="position-absolute d-flex align-items-center">
-                            <span class="ms-auto"><?php if (!empty($list->start_date)) { echo $list->start_date->format('Y-m-d'); } ?></span>
+                            <span class="ms-auto"><?php if (!empty($list->start_date) && !empty( check_date($list->start_date->format('Y-m-d'))) ) { echo $list->start_date->format('Y-m-d'); } ?></span>
             <a href="<?php echo SITEURL . "explore/" . $list->slug; ?>" class="btn">Join Now</a>
         </div>
                         </div>

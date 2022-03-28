@@ -923,9 +923,34 @@ class PagesController extends AppController
         $postData = $this->request->getData();
         $tbl_data = null;
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
+
+            $uploadPath = 'cdn/logo/';
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+            /* For logo */
+
+            if (!empty($postData['logo_img'])) {
+                if (in_array($postData['logo_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg', 'image/svg+xml'])) {
+                    $fileobject = $postData['logo_img'];
+                    $file_name = $fileobject->getClientFilename();
+                    $destination = $uploadPath . $file_name;
+                    try {
+                        $fileobject->moveTo($destination);
+                    } catch (Exception $e) {
+                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                        exit;
+                    }
+                }
+            }
+
+
             if (isset($postData['id']) && !empty($postData['id'])) {
                 $getBlog = $this->Settings->get($postData['id']);
+                if (!empty($file_name)) { $getBlog['logo'] = $file_name; }
                 $chkBlog = $this->Settings->patchEntity($getBlog, $postData, ['validate' => true]);
+            }else{
+                echo '<div class="alert alert-danger" role="alert"> Not saved.</div>'; exit;
             }
             if ($chkBlog->getErrors()) {
                 $st = null;

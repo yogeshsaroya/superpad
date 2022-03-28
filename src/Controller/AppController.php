@@ -81,5 +81,7 @@ class AppController extends Controller
         if( $this->Auth->user() !== null ){ 
             $this->set("Auth", $this->Auth->user()); 
         }
+
+        
     }
 }

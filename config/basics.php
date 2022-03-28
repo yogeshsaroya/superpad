@@ -135,3 +135,10 @@ function getMenuType()
 {
     return ['Help' => 'Help','Company' => 'Company'];
 }
+
+function check_date($end_date = DATE ){
+    $st = date("Y-m-d",strtotime(DATE));
+    $end = date("Y-m-d",strtotime($end_date));
+    if($st < $end){ return $end_date; }
+    else{ return false; }
+}

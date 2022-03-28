@@ -31,6 +31,10 @@
                                 <?php
                                 echo $this->Form->create($tbl_data, ['autocomplete' => 'off', 'id' => 'e_frm', 'class' => 'mt-2', 'data-toggle' => 'validator']);
                                 echo $this->Form->hidden('id');
+                                $file_req = true;
+                                if (isset($tbl_data->id) && !empty($tbl_data->id)) {
+                                    $file_req = false;
+                                }
                                 ?>
 
                                 <div class="row">
@@ -51,6 +55,10 @@
 
                                 <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('heading', ['label'=>['escape' => false, 'text'=>'Heading'],'type'=>'text','class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                 <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('sub_heading', ['label'=>['escape' => false, 'text'=>'Sub Heading'],'type'=>'text','class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                <div class="col-4 mb-2 form-group">
+                                        <h4 class="mb-1">Website Logo <small>(164x60 px or 500x195 px)</small></h4>
+                                        <?php echo $this->Form->file('logo_img', ['label' => 'Website Logo', 'required' => $file_req]) ?><div class="help-block with-errors"></div>
+                                    </div>
 
                                     
 

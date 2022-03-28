@@ -99,7 +99,7 @@ if (!empty($data)) {
                             <img src="<?php echo SITEURL . "cdn/project_logo/" . $list->logo; ?>" alt="<?php echo $list->title; ?>" />
                         </div>
                         <div class="supDt d-flex">
-                           <div class="st_date"><?php if (!empty($list->start_date)) { echo $list->start_date->format('Y-m-d'); } ?></div>
+                           <div class="st_date"><?php if (!empty($list->start_date) && !empty( check_date($list->start_date->format('Y-m-d'))) ) { echo $list->start_date->format('Y-m-d'); } ?></div>
                         </div>
                         
                         <h5 class="card-title text-truncate mb-3">
