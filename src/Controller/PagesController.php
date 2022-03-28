@@ -710,6 +710,17 @@ class PagesController extends AppController
             $get_data = $this->Projects->findById($id)->firstOrFail();
             if ($this->request->getQuery('type')  && !empty($this->request->getQuery('type'))) {
                 $tab = $this->request->getQuery('type');
+                if( $tab == 'team' ){
+                    $this->paginate = ['limit' => 100,'conditions'=>['Teams.type'=>2],'order' => ['id' => 'desc']];
+                    $data = $this->paginate($this->Teams->find('all'));
+                    $paging = $this->request->getAttribute('paging');
+                    $this->set(compact('data','paging'));
+                }elseif( $tab == 'partner' ){
+                    $this->paginate = ['limit' => 100,'conditions'=>['Partners.type'=>2], 'order' => ['id' => 'desc']];
+                    $data = $this->paginate($this->Partners->find('all'));
+                    $paging = $this->request->getAttribute('paging');
+                    $this->set(compact('data','paging'));
+                }
             }
         }
         $this->set(compact('get_data','tab'));

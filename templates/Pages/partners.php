@@ -1,10 +1,10 @@
 <?php $this->assign('title', 'Manage Partners'); ?>
-<style> 
-img {
-    vertical-align: middle;
-    border-style: none;
-    background: #000;
-}
+<style>
+    img {
+        vertical-align: middle;
+        border-style: none;
+        background: #000;
+    }
 </style>
 <div class="app-content content ">
     <div class="content-wrapper">
@@ -48,15 +48,20 @@ img {
                                     if (!empty($data)) {
                                         foreach ($data as $list) { ?>
                                             <tr>
-                                            <td><?php if(!empty($list->logo)) { echo $this->Html->image(SITEURL.'cdn/partners/'.$list->logo, ['alt' => 'logo','width'=>100]); }?></td>
+                                                <td><?php if (!empty($list->logo)) {
+                                                        echo $this->Html->image(SITEURL . 'cdn/partners/' . $list->logo, ['alt' => 'logo', 'width' => 100]);
+                                                    } ?></td>
                                                 <td><?php echo $list->title; ?></td>
                                                 <td><?php echo $list->url; ?></td>
-                                                <td><?php 
-                                                if($list->status == 1){ echo $this->Html->link('Active',SITEURL . "pages/partners?st=".$list->id,['class'=>'text-success'] );  }
-                                                else{ echo $this->Html->link('Inactive',SITEURL . "pages/partners?st=".$list->id,['class'=>'text-danger'] );  }?>
+                                                <td><?php
+                                                    if ($list->status == 1) {
+                                                        echo $this->Html->link('Active', SITEURL . "pages/partners?st=" . $list->id, ['class' => 'text-success']);
+                                                    } else {
+                                                        echo $this->Html->link('Inactive', SITEURL . "pages/partners?st=" . $list->id, ['class' => 'text-danger']);
+                                                    } ?>
                                                 </td>
-                                                
-                                                
+
+
                                                 <td>
                                                     <div class="dropdown">
                                                         <button type="button" class="btn btn-sm dropdown-toggle hide-arrow" data-toggle="dropdown"><i data-feather="more-vertical"></i></button>
@@ -73,7 +78,7 @@ img {
                             </table>
 
                             <div class="card-header">
-                            <?php echo $this->Paginator->counter('Page {{page}} of {{pages}}, showing {{current}} records out of {{count}} total, starting on record {{start}}, ending on {{end}}'); ?>
+                                <?php echo $this->Paginator->counter('Page {{page}} of {{pages}}, showing {{current}} records out of {{count}} total, starting on record {{start}}, ending on {{end}}'); ?>
                                 <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
                                     <ul class="pagination">
                                         <?php
@@ -85,7 +90,7 @@ img {
                                         ?>
                                     </ul>
                                 </div>
-                        </div>
+                            </div>
                         </div>
                     </div>
                 </div>

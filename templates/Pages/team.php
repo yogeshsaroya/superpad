@@ -44,7 +44,7 @@
                                                     } ?></td>
                                                 <td><?php echo $list->title; ?></td>
                                                 <td><?php echo $list->heading; ?></td>
-                                                
+
                                                 <td><?php
                                                     if ($list->status == 1) {
                                                         echo $this->Html->link('Active', SITEURL . "pages/team?st=" . $list->id, ['class' => 'text-success']);
@@ -70,7 +70,7 @@
                             </table>
 
                             <div class="card-header">
-                            <?php echo $this->Paginator->counter('Page {{page}} of {{pages}}, showing {{current}} records out of {{count}} total, starting on record {{start}}, ending on {{end}}'); ?>
+                                <?php echo $this->Paginator->counter('Page {{page}} of {{pages}}, showing {{current}} records out of {{count}} total, starting on record {{start}}, ending on {{end}}'); ?>
                                 <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
                                     <ul class="pagination">
                                         <?php
@@ -82,7 +82,7 @@
                                         ?>
                                     </ul>
                                 </div>
-                        </div>
+                            </div>
                         </div>
                     </div>
                 </div>
