@@ -885,9 +885,11 @@ class PagesController extends AppController
             $this->redirect('/pages/subscribers');
         }
 
-        $this->paginate = ['limit' => 100, 'conditions' => [], 'order' => ['id' => 'desc']];
+        $this->paginate = ['limit' => 1, 'conditions' => [], 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Newsletters->find('all'));
-        $this->set(compact('data'));
+        $paging = $this->request->getAttribute('paging');
+        
+        $this->set(compact('data','paging'));
     }
 
     public function newsletter()

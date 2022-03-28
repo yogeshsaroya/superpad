@@ -2,29 +2,46 @@
     .bottomBar .position-relative{
         position: relative;
     }
+    .hero-image-mobile1{
+        position: relative;
+    }
     .bottomBar .position-absolute{
         position: absolute;
         bottom: 0;
         left: 0;
         color: #fff;
         padding: 0;
+        background: rgba(255, 255, 255, 0.7);
     }
     .bottomBar .position-absolute .ms-auto{
-        /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#000000+0,000000+100&0.17+0,0.52+100 */
-        background: -moz-linear-gradient(top,  rgba(0,0,0,0.17) 0%, rgba(0,0,0,0.52) 100%); /* FF3.6-15 */
-        background: -webkit-linear-gradient(top,  rgba(0,0,0,0.17) 0%,rgba(0,0,0,0.52) 100%); /* Chrome10-25,Safari5.1-6 */
-        background: linear-gradient(to bottom,  rgba(0,0,0,0.17) 0%,rgba(0,0,0,0.52) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2b000000', endColorstr='#85000000',GradientType=0 ); /* IE6-9 */
-        color: #fff;
-        padding: 8px 15px;
+        color: #000;
+        padding: 0 15px;
+        
+        right: 0;
+        bottom: 0;
     }
     .bottomBar .btn{
-        position: absolute;
         left: 0;
         bottom: 0;
-        background: #000;
+        background: transparent;
         border-radius: 0;
-        color: #fff;
+        color: #000;
+    }
+    @media (max-width: 767px){
+        .bottomBar .position-absolute {
+            position: relative !important;
+            background: rgba(0, 0, 0, 0.6);
+
+        }
+        .bottomBar .position-absolute .ms-auto{
+            margin-left: 0 !important;
+            font-weight: bold;
+            color: #fff;
+        }
+        .bottomBar .btn{
+            margin-left: auto !important;
+            color: #fff;
+        }
     }
 
 </style>
@@ -46,8 +63,8 @@ if(!empty($list)){?>
                             <img src="<?php echo SITEURL . "cdn/project_banner/" . $list->banner; ?>" alt="<?php echo $list->title;?>" class="w-100"/>
                         </a>
                          <div class="position-absolute d-flex align-items-center">
-            <a href="#" class="btn">Join Now</a>
-            <span class="ms-auto">2022-04-01</span>
+                            <span class="ms-auto"><?php if (!empty($list->start_date)) { echo $list->start_date->format('Y-m-d'); } ?></span>
+            <a href="<?php echo SITEURL . "explore/" . $list->slug; ?>" class="btn">Join Now</a>
         </div>
                         </div>
                     </div>
