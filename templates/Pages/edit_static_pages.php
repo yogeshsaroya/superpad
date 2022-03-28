@@ -79,9 +79,7 @@ $MenuType = getMenuType();
 </div>
 <!-- END: Content-->
 <?php
-echo $this->Html->script(['//cdn.ckeditor.com/4.18.0/full-all/ckeditor.js'],
-    //['block' => 'scriptBottom']
-);
+echo $this->Html->script(['//cdn.ckeditor.com/4.18.0/full-all/ckeditor.js']);
 ?>
 
 <script>

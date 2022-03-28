@@ -54,7 +54,8 @@ class PagesController extends AppController
 
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Pages->find('all'));
-        $this->set(compact('data'));
+        $paging = $this->request->getAttribute('paging');
+        $this->set(compact('data','paging'));
     }
 
     public function editStaticPages($id = null)
@@ -130,7 +131,8 @@ class PagesController extends AppController
 
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Teams->find('all'));
-        $this->set(compact('data'));
+        $paging = $this->request->getAttribute('paging');
+        $this->set(compact('data','paging'));
     }
 
     public function editTeam($id = null)
@@ -218,7 +220,8 @@ class PagesController extends AppController
 
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->EmailTemplates->find('all'));
-        $this->set(compact('data'));
+        $paging = $this->request->getAttribute('paging');
+        $this->set(compact('data','paging'));
     }
 
     public function editEmailTemplates($id = null)
@@ -286,7 +289,8 @@ class PagesController extends AppController
 
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Blockchains->find('all'));
-        $this->set(compact('data'));
+        $paging = $this->request->getAttribute('paging');
+        $this->set(compact('data','paging'));
     }
 
     public function manageBlockchain($id = null)
@@ -385,8 +389,7 @@ class PagesController extends AppController
     public function partners()
     {
         $menu_act = 'partners';
-        $pro_menu = 'top_menu';
-        $this->set(compact('menu_act', 'pro_menu'));
+        $this->set(compact('menu_act'));
         if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
             $blog_del = $this->Partners->findById($this->request->getQuery('del'))->firstOrFail();
             if ($this->Partners->delete($blog_del)) {
@@ -403,14 +406,14 @@ class PagesController extends AppController
 
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Partners->find('all'));
-        $this->set(compact('data'));
+        $paging = $this->request->getAttribute('paging');
+        $this->set(compact('data','paging'));
     }
 
     public function managePartners($id = null)
     {
         $menu_act = 'partners';
-        $pro_menu = 'top_menu';
-        $this->set(compact('menu_act', 'pro_menu'));
+        $this->set(compact('menu_act'));
         $get_data = null;
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $file_name = $file_name_img = null;
@@ -497,7 +500,8 @@ class PagesController extends AppController
 
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Roadmaps->find('all'));
-        $this->set(compact('data'));
+        $paging = $this->request->getAttribute('paging');
+        $this->set(compact('data','paging'));
     }
 
     public function manageRoadmap($id = null)
@@ -584,7 +588,8 @@ class PagesController extends AppController
 
         $this->paginate = ['contain' => ['Blockchains'], 'limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Projects->find('all'));
-        $this->set(compact('data'));
+        $paging = $this->request->getAttribute('paging');
+        $this->set(compact('data','paging'));
     }
 
     public function manageProject($id = null)
@@ -700,11 +705,14 @@ class PagesController extends AppController
             }
             exit;
         }
-
+        $tab = 'home';
         if (!empty($id)) {
             $get_data = $this->Projects->findById($id)->firstOrFail();
+            if ($this->request->getQuery('type')  && !empty($this->request->getQuery('type'))) {
+                $tab = $this->request->getQuery('type');
+            }
         }
-        $this->set(compact('get_data'));
+        $this->set(compact('get_data','tab'));
     }
 
 
@@ -729,7 +737,8 @@ class PagesController extends AppController
 
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Features->find('all'));
-        $this->set(compact('data'));
+        $paging = $this->request->getAttribute('paging');
+        $this->set(compact('data','paging'));
     }
 
     public function manageFeature($id = null)
@@ -822,7 +831,8 @@ class PagesController extends AppController
 
         $this->paginate = ['limit' => 100, 'conditions' => ['Users.role' => 2], 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Users->find('all'));
-        $this->set(compact('data'));
+        $paging = $this->request->getAttribute('paging');
+        $this->set(compact('data','paging'));
     }
 
     public function manageUser($id = null)
@@ -888,7 +898,6 @@ class PagesController extends AppController
         $this->paginate = ['limit' => 100, 'conditions' => [], 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Newsletters->find('all'));
         $paging = $this->request->getAttribute('paging');
-        
         $this->set(compact('data','paging'));
     }
 

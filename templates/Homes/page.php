@@ -1,6 +1,10 @@
 <?php $this->assign('title', $data->title); ?>
 <style>
     #cu_page td { padding: 0 20px 0 20px;}
+    #cu_page ol, #cu_page ul {
+    list-style: inside;
+    line-height: 40px;
+}
 </style>
 <section class="about-section pt-5 mt-3" id="cu_page">
     <div class="container">
