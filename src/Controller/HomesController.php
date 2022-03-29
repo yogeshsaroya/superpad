@@ -99,8 +99,8 @@ class HomesController extends AppController
             $query = $this->Projects->find('all', [
                 'contain' => [
                     'Blockchains' => ['conditions' => ['Blockchains.status' => 1]],
-                    'Teams' => ['conditions' => ['Teams.status' => 1]],
-                    'Partners' => ['conditions' => ['Partners.status' => 1]],
+                    'Teams' => ['conditions' => ['Teams.status' => 1],'order' => ['Teams.position' => 'ASC']],
+                    'Partners' => ['conditions' => ['Partners.status' => 1],'order' => ['Partners.position' => 'ASC']],
                 ],
                 'conditions' => ['Projects.slug' => $id, 'Projects.status' => 1]
             ]);
