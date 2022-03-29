@@ -42,8 +42,8 @@ $this->assign('description', $list->meta_description);
                             <li class="nav-item" role="presentation"><button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true"> Description </button></li>
                             <li class="nav-item" role="presentation"><button class="nav-link" id="token_sale-tab" data-bs-toggle="tab" data-bs-target="#token_sale" type="button" role="tab" aria-controls="token_sale" aria-selected="false"> Token Sale </button></li>
                             <?php if (!empty($list->tokenomics)) { ?><li class="nav-item" role="presentation"><button class="nav-link" id="tokenomics-tab" data-bs-toggle="tab" data-bs-target="#tokenomics" type="button" role="tab" aria-controls="tokenomics" aria-selected="false"> Tokenomics </button></li><?php } ?>
-                            <?php if (!empty($list->team)) { ?><li class="nav-item" role="presentation"><button class="nav-link" id="team-tab" data-bs-toggle="tab" data-bs-target="#team" type="button" role="tab" aria-controls="team" aria-selected="false"> Team </button></li><?php } ?>
-                            <?php if (!empty($list->partner_and_investor)) { ?><li class="nav-item" role="presentation"><button class="nav-link" id="partner-tab" data-bs-toggle="tab" data-bs-target="#partner" type="button" role="tab" aria-controls="partner" aria-selected="false"> Partner and Investor </button></li><?php } ?>
+                            <?php if (!empty($list->teams)) { ?><li class="nav-item" role="presentation"><button class="nav-link" id="team-tab" data-bs-toggle="tab" data-bs-target="#team" type="button" role="tab" aria-controls="team" aria-selected="false"> Team </button></li><?php } ?>
+                            <?php if (!empty($list->partners)) { ?><li class="nav-item" role="presentation"><button class="nav-link" id="partner-tab" data-bs-toggle="tab" data-bs-target="#partner" type="button" role="tab" aria-controls="partner" aria-selected="false"> Partner and Investor </button></li><?php } ?>
                         </ul>
                         <div class="tab-content mt-3" id="myTabContent">
                             <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
@@ -52,41 +52,44 @@ $this->assign('description', $list->meta_description);
                             <?php if (!empty($list->tokenomics)) { ?><div class="tab-pane fade show" id="tokenomics" role="tabpanel" aria-labelledby="tokenomics-tab">
                                     <div class="item-detail-tab-wrap"><?php echo $list->tokenomics; ?></div>
                                 </div><?php } ?>
-                            <?php if (!empty($list->team)) { ?><div class="tab-pane fade show" id="team" role="tabpanel" aria-labelledby="team-tab">
+                            <?php if (!empty($list->teams)) { ?>
+                                <div class="tab-pane fade show" id="team" role="tabpanel" aria-labelledby="team-tab">
                                     <div class="item-detail-tab-wrap">
 
-                                    <div class="col text-center">
-                                        <span class="badge rounded-pill badge-soft-info px-2 py-1">Our Team</span>
-                                        <h1 class="display-5 fw-medium">Meet Our Team</h1>
-                                        <p class="text-muted mx-auto">
-                                            Start working with <span class="text-dark fw-bold">Prompt</span> to manage your
-                                            workforce better.</p>
-                                    </div>
-                                    <br><br>
+                                        <div class="col text-center">
+                                            <span class="badge rounded-pill badge-soft-info px-2 py-1">Our Team</span>
+                                            <h2>Meet Our Team</h2>
+                                            <p class="text-muted mx-auto">
+                                                Start working with <span class="text-dark fw-bold">Prompt</span> to manage your
+                                                workforce better.</p>
+                                        </div>
+                                        <br><br>
 
-                                    <div class="row">
-                                        <!-- Team Member 1 -->
-                                        <div class="col-xl-6 col-md-6 mb-4">
-                                            <div class="card border-0 shadow">
-                                                <img src="https://source.unsplash.com/TMgQMXoglsM/500x350" class="card-img-top" alt="...">
-                                                <div class="card-body text-center">
-                                                    <h5 class="card-title mb-0">Team Member</h5>
-                                                    <div class="card-text text-black-50">Web Developer</div>
+                                        <div class="row">
+                                            <?php foreach($list->teams as $tList){?>
+                                            <div class="col-xl-6 col-md-6 mb-4">
+                                                <div class="card border-0 shadow">
+                                                    <?php echo $this->Html->image(SITEURL . 'cdn/team/' . $tList->img, ['alt' => 'logo', 'class'=>'card-img-top']);?>
+                                                    <div class="card-body text-center">
+                                                        <h5 class="card-title mb-0"><?php echo $tList->title;?></h5>
+                                                        <div class="card-text text-black-50"><?php echo $tList->heading;?></div>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <?php }?>
+
                                         </div>
 
-                                    </div>
-                                    
 
                                     </div>
                                 </div><?php } ?>
-                            <?php if (!empty($list->partner_and_investor)) { ?><div class="tab-pane fade show" id="partner" role="tabpanel" aria-labelledby="partner-tab">
+                            <?php if (!empty($list->partners)) { ?>
+                                <div class="tab-pane fade show" id="partner" role="tabpanel" aria-labelledby="partner-tab">
                                     <div class="item-detail-tab-wrap">
                                         <div class="row">
                                             <div class="col text-center">
                                                 <span class="badge rounded-pill badge-soft-info px-2 py-1">Investor</span>
-                                                <h1 class="display-5 fw-medium">We are backed by</h1>
+                                                <h2 class="">We are backed by</h2>
                                                 <p class="text-muted mx-auto">
                                                     100+ clients trust <span class="text-dark fw-bold">Prompt</span> to drive
                                                     perfomance &amp; engagement.
@@ -94,16 +97,24 @@ $this->assign('description', $list->meta_description);
                                             </div>
                                         </div>
                                         <div class="row mt-5">
-                                            <div class="col-md-3 col-xl-3 mb-4">
-                                                <img src="https://prompt.coderthemes.com/assets/images/brands/amazon.svg" alt="" height="45">
-                                            </div>
-                                            <div class="col-md-3 col-xl-3 mb-4">
-                                                <img src="https://prompt.coderthemes.com/assets/images/brands/google.svg" alt="" height="45">
-                                            </div>
-                                        </div>
+                                            <?php foreach ($list->partners as $plist) { ?>
 
+                                                <?php if (!empty($plist->url)) { ?>
+                                                    <div class="col-md-3 col-xl-3 mb-4">
+                                                        <a href="<?php echo $plist->url; ?>" title="<?php echo $plist->title; ?>" target="_blank">
+                                                            <img src="<?php echo SITEURL . "cdn/partners/" . $plist->logo; ?>" alt="" height="45">
+                                                        </a>
+                                                    </div>
+                                                <?php } else { ?>
+                                                    <div class="col-md-3 col-xl-3 mb-4">
+                                                        <img src="<?php echo SITEURL . "cdn/partners/" . $plist->logo; ?>" alt="" height="45">
+                                                    </div>
+                                            <?php }
+                                            } ?>
+                                        </div>
                                     </div>
-                                </div><?php } ?>
+                                </div>
+                            <?php } ?>
 
 
                             <div class="tab-pane fade" id="token_sale" role="tabpanel" aria-labelledby="token_sale-tab">
