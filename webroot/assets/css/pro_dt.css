@@ -243,3 +243,29 @@ div#clock>span .h1 {
 .textContent .item-detail-tab-wrap {
     margin-top: 40px;
 }
+
+@media (max-width: 991px) {
+    .mob_order_1 {
+        order: -1 !important;
+    }
+}
+
+.pro_logo {
+    margin-right: 20px;
+}
+
+@media (max-width: 768px) {
+    .pro_logo {
+        width: 200px;
+    }
+    .ps--project-show__main {
+        margin-bottom: 0;
+    }
+    h2.ps--project-show__subtitle {
+        font-size: 1rem;
+    }
+    p.item-detail-text.mb-4 {
+        font-size: 1rem;
+        text-align: justify;
+    }
+}

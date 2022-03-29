@@ -20,7 +20,7 @@ $this->assign('description', $list->meta_description);
             </div>
         </div>
         <div class="ps--project-show__main">
-            <div class="ps--project-show__logo">
+            <div class="ps--project-show__logo pro_logo">
                 <img class="ps--table__project-img" src="<?php echo SITEURL . "cdn/project_logo/" . $list->logo; ?>" alt="" />
             </div>
             <div class="ps--project-show__information">
@@ -57,7 +57,6 @@ $this->assign('description', $list->meta_description);
                                     <div class="item-detail-tab-wrap">
 
                                         <div class="col text-center">
-                                            <span class="badge rounded-pill badge-soft-info px-2 py-1">Our Team</span>
                                             <h2>Meet Our Team</h2>
                                             <p class="text-muted mx-auto">
                                                 Start working with <span class="text-dark fw-bold">Prompt</span> to manage your
@@ -88,7 +87,6 @@ $this->assign('description', $list->meta_description);
                                     <div class="item-detail-tab-wrap">
                                         <div class="row">
                                             <div class="col text-center">
-                                                <span class="badge rounded-pill badge-soft-info px-2 py-1">Investor</span>
                                                 <h2 class="">We are backed by</h2>
                                                 <p class="text-muted mx-auto">
                                                     100+ clients trust <span class="text-dark fw-bold">Prompt</span> to drive
@@ -159,7 +157,7 @@ $this->assign('description', $list->meta_description);
                 </div><!-- end item-detail-content -->
 
             </div><!-- end col -->
-            <div class="col-lg-4 mt-lg-0 mt-5 <?php if (!$this->request->is('mobile')) {
+            <div class="col-lg-4 mt-lg-0 mt-5 mob_order_1 <?php if (!$this->request->is('mobile')) {
                                                     echo "sidebarFixed";
                                                 } ?>">
                 <div class="item-detail-content mt-4 mt-lg-0 sidebars">
