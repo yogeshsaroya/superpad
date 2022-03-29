@@ -814,7 +814,7 @@ class PagesController extends AppController
                     exit;
                 } else {
                     if ($this->Teams->save($chkBlog)) {
-                        echo "<script>$('#save_frm')remove();</script>";
+                        echo "<script>$('#save_frm').remove();</script>";
                         echo "<div class='alert alert-success'>Saved</div>";
                         echo "<script> setTimeout(function(){ location.reload(); }, 2000);</script>";
                     } else {
@@ -882,7 +882,7 @@ class PagesController extends AppController
                     exit;
                 } else {
                     if ($this->Partners->save($chkBlog)) {
-                        echo "<script>$('#save_frm')remove();</script>";
+                        echo "<script>$('#save_frm').remove();</script>";
                         echo "<div class='alert alert-success'>Saved</div>";
                         echo "<script> setTimeout(function(){ location.reload(); }, 2000);</script>";
                     } else {
