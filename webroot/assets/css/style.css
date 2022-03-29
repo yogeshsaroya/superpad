@@ -5783,3 +5783,7 @@ span.ticker_small {
 .hide {
     display: none;
 }
+
+.pro_head {
+    background: #c1c1c1;
+}
