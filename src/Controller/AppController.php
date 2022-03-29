@@ -76,12 +76,17 @@ class AppController extends Controller
     }
     
     function beforeRender(\Cake\Event\EventInterface $event) {
+
+        if($this->request->isAjax())
+        {
+            $this->viewBuilder()->setLayout('ajax');
+
+        }
+        
         // store user data to Auth variable.
         // we will use this Auth variable to get user data
         if( $this->Auth->user() !== null ){ 
             $this->set("Auth", $this->Auth->user()); 
         }
-
-        
     }
 }

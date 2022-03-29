@@ -81,6 +81,9 @@ class Application extends BaseApplication
         // Token check will be skipped when callback returns `true`.
         $csrf->skipCheckCallback(function ($request) {
             // Skip token check for API URLs.
+            if ($request->getParam('controller') === 'Pages' && $request->getParam('action') === 'openPop') {
+                 return true;
+             }
             if ($request->getParam('controller') === 'Users') {
                // return true;
             }

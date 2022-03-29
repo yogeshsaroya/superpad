@@ -25,12 +25,15 @@ $this->assign('title', 'Manage Projects'); ?>
             <div class="content-header-right text-md-right col-md-3 col-12 d-md-block d-none">
                 <div class="form-group breadcrumb-right">
                     <div class="dropdown">
-                        <?php echo $this->Html->link('Add New Team', '/pages/edit_team', ['class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
-                        <?php echo $this->Html->link('Add New Partner', '/pages/manage_partners', ['class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
+                        <?php if (isset($get_data->id) && !empty($get_data->id)) { ?>
+                            <?php echo $this->Html->link('Add New Team', 'javascript:void(0);', ['onclick' => 'addTeam('.$get_data->id.')', 'class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
+                            <?php echo $this->Html->link('Add New Partner', 'javascript:void(0);', ['onclick' => 'addPartner('.$get_data->id.')', 'class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="content-body">
 
             <?php if (isset($get_data->id) && !empty($get_data->id)) { ?>
@@ -141,126 +144,126 @@ $this->assign('title', 'Manage Projects'); ?>
                                 </div>
                             <?php } elseif ($tab == 'team') { ?>
                                 <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th><?php echo $this->Paginator->sort('img'); ?></th>
-                                        <th><?php echo $this->Paginator->sort('title'); ?></th>
-                                        <th><?php echo $this->Paginator->sort('heading'); ?></th>
-                                        <th><?php echo $this->Paginator->sort('status'); ?></th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    if (!empty($data)) {
-                                        foreach ($data as $list) { ?>
+                                    <table class="table">
+                                        <thead>
                                             <tr>
-                                                <td><?php if (!empty($list->img)) {
-                                                        echo $this->Html->image(SITEURL . 'cdn/team/' . $list->img, ['alt' => 'logo', 'width' => 100]);
-                                                    } ?></td>
-                                                <td><?php echo $list->title; ?></td>
-                                                <td><?php echo $list->heading; ?></td>
-
-                                                <td><?php
-                                                    if ($list->status == 1) {
-                                                        echo $this->Html->link('Active', SITEURL . "pages/team?st=" . $list->id, ['class' => 'text-success']);
-                                                    } else {
-                                                        echo $this->Html->link('Inactive', SITEURL . "pages/team?st=" . $list->id, ['class' => 'text-danger']);
-                                                    } ?>
-                                                </td>
-                                                <td>
-                                                    <div class="dropdown">
-                                                        <button type="button" class="btn btn-sm dropdown-toggle hide-arrow" data-toggle="dropdown"><i data-feather="more-vertical"></i></button>
-                                                        <div class="dropdown-menu">
-                                                            <?php echo $this->Html->link('<i data-feather="edit-2" class="mr-50"></i> Edit', SITEURL . "pages/edit_team/" . $list->id, ['escape' => false, 'class' => 'dropdown-item']); ?>
-                                                            <?php echo $this->Html->link('<i data-feather="trash" class="mr-50"></i> Delete', SITEURL . "pages/team?del=" . $list->id, ['escape' => false, 'class' => 'dropdown-item', 'onclick' => "return confirm('Are you sure you want to delete?')"]); ?>
-                                                        </div>
-                                                    </div>
-                                                </td>
+                                                <th><?php echo $this->Paginator->sort('img'); ?></th>
+                                                <th><?php echo $this->Paginator->sort('title'); ?></th>
+                                                <th><?php echo $this->Paginator->sort('heading'); ?></th>
+                                                <th><?php echo $this->Paginator->sort('status'); ?></th>
+                                                <th>Actions</th>
                                             </tr>
-                                    <?php }
-                                    } ?>
-                                </tbody>
-                            </table>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            if (!empty($data)) {
+                                                foreach ($data as $list) { ?>
+                                                    <tr>
+                                                        <td><?php if (!empty($list->img)) {
+                                                                echo $this->Html->image(SITEURL . 'cdn/team/' . $list->img, ['alt' => 'logo', 'width' => 100]);
+                                                            } ?></td>
+                                                        <td><?php echo $list->title; ?></td>
+                                                        <td><?php echo $list->heading; ?></td>
 
-                            <div class="card-header">
-                                <?php echo $this->Paginator->counter('Page {{page}} of {{pages}}, showing {{current}} records out of {{count}} total, starting on record {{start}}, ending on {{end}}'); ?>
-                                <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
-                                    <ul class="pagination">
-                                        <?php
-                                        echo $this->Paginator->first(__('First', true), array('tag' => 'li', 'escape' => false), array('type' => "button", 'class' => "btn btn-default"));
-                                        echo $this->Paginator->prev('&laquo;', array('tag' => 'li', 'escape' => false), '<a href="#">&laquo;</a>', array('class' => 'prev disabled', 'tag' => 'li', 'escape' => false));
-                                        echo $this->Paginator->numbers(array('separator' => '', 'tag' => 'li', 'currentLink' => true, 'currentClass' => 'active', 'currentTag' => 'a'));
-                                        echo $this->Paginator->next('&raquo;', array('tag' => 'li', 'escape' => false), '<a href="#">&raquo;</a>', array('class' => 'prev disabled', 'tag' => 'li', 'escape' => false));
-                                        echo $this->Paginator->last(__('Last', true), array('tag' => 'li', 'escape' => false), array('type' => "button", 'class' => "btn btn-default"));
-                                        ?>
-                                    </ul>
+                                                        <td><?php
+                                                            if ($list->status == 1) {
+                                                                echo $this->Html->link('Active', SITEURL."pages/manage_project/$get_data->id?type=team&st=".$list->id, ['class' => 'text-success']);
+                                                            } else {
+                                                                echo $this->Html->link('Inactive', SITEURL."pages/manage_project/$get_data->id?type=team&st=".$list->id, ['class' => 'text-danger']);
+                                                            } ?>
+                                                        </td>
+                                                        <td>
+                                                            <div class="dropdown">
+                                                                <button type="button" class="btn btn-sm dropdown-toggle hide-arrow" data-toggle="dropdown"><i data-feather="more-vertical"></i></button>
+                                                                <div class="dropdown-menu">
+                                                                    <?php echo $this->Html->link('<i data-feather="edit-2" class="mr-50"></i> Edit', "javascript:void(0);", ['onclick'=>"addTeam(".$get_data->id.",".$list->id.")", 'escape' => false, 'class' => 'dropdown-item']); ?>
+                                                                    <?php echo $this->Html->link('<i data-feather="trash" class="mr-50"></i> Delete', SITEURL . "pages/manage_project/$get_data->id?type=team&del=" . $list->id, ['escape' => false, 'class' => 'dropdown-item', 'onclick' => "return confirm('Are you sure you want to delete?')"]); ?>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                            <?php }
+                                            } ?>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="card-header">
+                                        <?php echo $this->Paginator->counter('Page {{page}} of {{pages}}, showing {{current}} records out of {{count}} total, starting on record {{start}}, ending on {{end}}'); ?>
+                                        <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+                                            <ul class="pagination">
+                                                <?php
+                                                echo $this->Paginator->first(__('First', true), array('tag' => 'li', 'escape' => false), array('type' => "button", 'class' => "btn btn-default"));
+                                                echo $this->Paginator->prev('&laquo;', array('tag' => 'li', 'escape' => false), '<a href="#">&laquo;</a>', array('class' => 'prev disabled', 'tag' => 'li', 'escape' => false));
+                                                echo $this->Paginator->numbers(array('separator' => '', 'tag' => 'li', 'currentLink' => true, 'currentClass' => 'active', 'currentTag' => 'a'));
+                                                echo $this->Paginator->next('&raquo;', array('tag' => 'li', 'escape' => false), '<a href="#">&raquo;</a>', array('class' => 'prev disabled', 'tag' => 'li', 'escape' => false));
+                                                echo $this->Paginator->last(__('Last', true), array('tag' => 'li', 'escape' => false), array('type' => "button", 'class' => "btn btn-default"));
+                                                ?>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-<?php } elseif ($tab == 'partner') { ?> 
-    <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th><?php echo $this->Paginator->sort('logo'); ?></th>
-                                        <th><?php echo $this->Paginator->sort('title'); ?></th>
-                                        <th><?php echo $this->Paginator->sort('url'); ?></th>
-                                        <th><?php echo $this->Paginator->sort('status') ?></th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    if (!empty($data)) {
-                                        foreach ($data as $list) { ?>
+                            <?php } elseif ($tab == 'partner') { ?>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
                                             <tr>
-                                                <td><?php if (!empty($list->logo)) {
-                                                        echo $this->Html->image(SITEURL . 'cdn/partners/' . $list->logo, ['alt' => 'logo', 'width' => 100]);
-                                                    } ?></td>
-                                                <td><?php echo $list->title; ?></td>
-                                                <td><?php echo $list->url; ?></td>
-                                                <td><?php
-                                                    if ($list->status == 1) {
-                                                        echo $this->Html->link('Active', SITEURL . "pages/partners?st=" . $list->id, ['class' => 'text-success']);
-                                                    } else {
-                                                        echo $this->Html->link('Inactive', SITEURL . "pages/partners?st=" . $list->id, ['class' => 'text-danger']);
-                                                    } ?>
-                                                </td>
-
-
-                                                <td>
-                                                    <div class="dropdown">
-                                                        <button type="button" class="btn btn-sm dropdown-toggle hide-arrow" data-toggle="dropdown"><i data-feather="more-vertical"></i></button>
-                                                        <div class="dropdown-menu">
-                                                            <?php echo $this->Html->link('<i data-feather="edit-2" class="mr-50"></i> Edit', SITEURL . "pages/manage_partners/" . $list->id, ['escape' => false, 'class' => 'dropdown-item']); ?>
-                                                            <?php echo $this->Html->link('<i data-feather="trash" class="mr-50"></i> Delete', SITEURL . "pages/partners?del=" . $list->id, ['escape' => false, 'class' => 'dropdown-item', 'onclick' => "return confirm('Are you sure you want to delete?')"]); ?>
-                                                        </div>
-                                                    </div>
-                                                </td>
+                                                <th><?php echo $this->Paginator->sort('logo'); ?></th>
+                                                <th><?php echo $this->Paginator->sort('title'); ?></th>
+                                                <th><?php echo $this->Paginator->sort('url'); ?></th>
+                                                <th><?php echo $this->Paginator->sort('status') ?></th>
+                                                <th>Actions</th>
                                             </tr>
-                                    <?php }
-                                    } ?>
-                                </tbody>
-                            </table>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            if (!empty($data)) {
+                                                foreach ($data as $list) { ?>
+                                                    <tr>
+                                                        <td><?php if (!empty($list->logo)) {
+                                                                echo $this->Html->image(SITEURL . 'cdn/partners/' . $list->logo, ['alt' => 'logo', 'width' => 100]);
+                                                            } ?></td>
+                                                        <td><?php echo $list->title; ?></td>
+                                                        <td><?php echo $list->url; ?></td>
+                                                        <td><?php
+                                                            if ($list->status == 1) {
+                                                                echo $this->Html->link('Active', SITEURL."pages/manage_project/$get_data->id?type=partner&st=".$list->id, ['class' => 'text-success']);
+                                                            } else {
+                                                                echo $this->Html->link('Inactive', SITEURL."pages/manage_project/$get_data->id?type=partner&st=".$list->id, ['class' => 'text-danger']);
+                                                            } ?>
+                                                        </td>
 
-                            <div class="card-header">
-                                <?php echo $this->Paginator->counter('Page {{page}} of {{pages}}, showing {{current}} records out of {{count}} total, starting on record {{start}}, ending on {{end}}'); ?>
-                                <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
-                                    <ul class="pagination">
-                                        <?php
-                                        echo $this->Paginator->first(__('First', true), array('tag' => 'li', 'escape' => false), array('type' => "button", 'class' => "btn btn-default"));
-                                        echo $this->Paginator->prev('&laquo;', array('tag' => 'li', 'escape' => false), '<a href="#">&laquo;</a>', array('class' => 'prev disabled', 'tag' => 'li', 'escape' => false));
-                                        echo $this->Paginator->numbers(array('separator' => '', 'tag' => 'li', 'currentLink' => true, 'currentClass' => 'active', 'currentTag' => 'a'));
-                                        echo $this->Paginator->next('&raquo;', array('tag' => 'li', 'escape' => false), '<a href="#">&raquo;</a>', array('class' => 'prev disabled', 'tag' => 'li', 'escape' => false));
-                                        echo $this->Paginator->last(__('Last', true), array('tag' => 'li', 'escape' => false), array('type' => "button", 'class' => "btn btn-default"));
-                                        ?>
-                                    </ul>
+
+                                                        <td>
+                                                            <div class="dropdown">
+                                                                <button type="button" class="btn btn-sm dropdown-toggle hide-arrow" data-toggle="dropdown"><i data-feather="more-vertical"></i></button>
+                                                                <div class="dropdown-menu">
+                                                                    <?php echo $this->Html->link('<i data-feather="edit-2" class="mr-50"></i> Edit', "javascript:void(0);", ['onclick'=>"addPartner(".$get_data->id.",".$list->id.")", 'escape' => false, 'class' => 'dropdown-item']); ?>
+                                                                    <?php echo $this->Html->link('<i data-feather="trash" class="mr-50"></i> Delete', SITEURL . "pages/manage_project/$get_data->id?type=partner&del=" . $list->id, ['escape' => false, 'class' => 'dropdown-item', 'onclick' => "return confirm('Are you sure you want to delete?')"]); ?>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                            <?php }
+                                            } ?>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="card-header">
+                                        <?php echo $this->Paginator->counter('Page {{page}} of {{pages}}, showing {{current}} records out of {{count}} total, starting on record {{start}}, ending on {{end}}'); ?>
+                                        <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+                                            <ul class="pagination">
+                                                <?php
+                                                echo $this->Paginator->first(__('First', true), array('tag' => 'li', 'escape' => false), array('type' => "button", 'class' => "btn btn-default"));
+                                                echo $this->Paginator->prev('&laquo;', array('tag' => 'li', 'escape' => false), '<a href="#">&laquo;</a>', array('class' => 'prev disabled', 'tag' => 'li', 'escape' => false));
+                                                echo $this->Paginator->numbers(array('separator' => '', 'tag' => 'li', 'currentLink' => true, 'currentClass' => 'active', 'currentTag' => 'a'));
+                                                echo $this->Paginator->next('&raquo;', array('tag' => 'li', 'escape' => false), '<a href="#">&raquo;</a>', array('class' => 'prev disabled', 'tag' => 'li', 'escape' => false));
+                                                echo $this->Paginator->last(__('Last', true), array('tag' => 'li', 'escape' => false), array('type' => "button", 'class' => "btn btn-default"));
+                                                ?>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-<?php } ?>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>
@@ -288,6 +291,41 @@ echo $this->Html->script(['//cdn.ckeditor.com/4.18.0/full-all/ckeditor.js']);
 ?>
 
 <script>
+    function addTeam(pro_id,row_id) {
+        if ( row_id == null ){ row_id = ''; }
+        var d = "<?php echo urlencode(SITEURL . "pages/add_team?");?>pro_id="+pro_id+"&team_id="+row_id;
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo SITEURL; ?>pages/open_pop/',
+            data: {url:d},
+            success: function(data) {
+                $("#cover").html(data);
+            },
+            error: function(comment) {
+                $("#cover").html(comment);
+            }
+        });
+    }
+    function addPartner(pro_id,row_id) {
+        if ( row_id == null ){ row_id = ''; }
+        var d = "<?php echo urlencode(SITEURL . "pages/add_partner?");?>pro_id="+pro_id+"&partner_id="+row_id;
+        
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo SITEURL; ?>pages/open_pop/',
+            data: {url:d},
+            success: function(data) {
+                $("#cover").html(data);
+            },
+            error: function(comment) {
+                $("#cover").html(comment);
+            }
+        });
+    }
+
+
+
+
     // THE SCRIPT THAT CHECKS IF THE KEY PRESSED IS A NUMERIC OR DECIMAL VALUE.
     function isNumber(evt, element) {
 
@@ -335,20 +373,24 @@ echo $this->Html->script(['//cdn.ckeditor.com/4.18.0/full-all/ckeditor.js']);
     (function(window, document, $) {
         'use strict';
 
+        if(document.getElementById("editor") !== null){
 
         var $ckfield = CKEDITOR.replace('editor');
         $ckfield.config.height = 300;
         $ckfield.on('change', function() {
             $ckfield.updateElement();
         });
+    }
 
 
-
+    if(document.getElementById("tokenomics") !== null)
+{
         var $ckfield1 = CKEDITOR.replace('tokenomics');
         $ckfield1.config.height = 300;
         $ckfield1.on('change', function() {
             $ckfield1.updateElement();
         });
+    }
 
 
 

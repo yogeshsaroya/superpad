@@ -18,13 +18,24 @@
         '/app-assets/css/components',
         '/app-assets/css/themes/bordered-layout',
         '/app-assets/css/core/menu/menu-types/horizontal-menu',
-        'cake',
+        'cake','magnific-popup'
 
     ]); ?>
-    <?php echo $this->Html->script(['/app-assets/vendors/js/vendors.min.js', 'jquery.form.min.js', 'validator.min']); ?>
+    <?php echo $this->Html->script(['/app-assets/vendors/js/vendors.min.js', 'jquery.form.min.js', 'validator.min','jquery.magnific-popup.min']); ?>
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
+    <script type="text/javascript">
+    var SITEURL = "<?php echo SITEURL?>";
+    $(document).ready(function(){
+        $(".magnificAjax_cls").magnificPopup({type:"ajax",closeOnContentClick:false,closeOnBgClick:false,closeMarkup:'<button class="mfp-close mfp-new-close" type="button" title="Close (Esc)"></button>'});
+        $(".magnificAjax").magnificPopup({type:"ajax",closeOnContentClick:false,closeOnBgClick:true,showCloseBtn:false,enableEscapeKey:true,closeMarkup:'<button class="mfp-close mfp-new-close" type="button" title="Close (Esc)"></button>'});
+        $(".magnificAjax_act").magnificPopup({type:"ajax",closeOnContentClick:false,closeOnBgClick:false,showCloseBtn:true,enableEscapeKey:false,closeMarkup:'<button class="mfp-close mfp-new-close" type="button" title="Close (Esc)">X</button>'});
+        $(".magnificAjax").magnificPopup({type:"ajax",closeOnContentClick:false,closeOnBgClick:true,showCloseBtn:true,enableEscapeKey:true});
+        $(".magnificAjax_inline").magnificPopup({type:"inline",closeOnContentClick:false,closeOnBgClick:false,showCloseBtn:true,enableEscapeKey:false,alignTop:true,closeMarkup:" ",overflowY:"scroll"})
+
+    });
+    </script>
     <?php echo $this->Html->meta('csrfToken', $this->request->getAttribute('csrfToken')); ?>
 </head>
 <body class="horizontal-layout horizontal-menu  navbar-floating footer-static  " data-open="hover" data-menu="horizontal-menu" data-col="">
@@ -43,7 +54,7 @@
             }
         })
     </script>
-
+<div id="cover"></div>
 </body>
 
 </html>

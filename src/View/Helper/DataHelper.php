@@ -58,7 +58,7 @@ class DataHelper extends Helper
     {
         $tbl = TableRegistry::get('Partners');
         try {
-            $query = $tbl->find('all', ['conditions' => ['Partners.status' => 1], 'limit' => 50]);
+            $query = $tbl->find('all', ['conditions' => ['Partners.status' => 1,'Partners.type' => 1], 'limit' => 50]);
             return $row = $query->all();
         } catch (\Throwable $th) {
             return false;

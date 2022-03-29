@@ -598,6 +598,46 @@ class PagesController extends AppController
         $pro_menu = 'top_menu';
         $this->set(compact('menu_act', 'pro_menu'));
         $get_data = null;
+        $get = $this->request->getQuery();
+        
+        if (isset($get['type']) && $get['type'] == 'team'){
+            $url = SITEURL."pages/manage_project/$id?type=team";
+            if (isset($get['del'])  && !empty($get['del'])) {
+                $blog_del = $this->Teams->findById($get['del'])->firstOrFail();
+                if ($this->Teams->delete($blog_del)) {
+                }
+                $this->redirect($url);
+            }
+    
+            if (isset($get['st'] ) && !empty($get['st'])) {
+                $getData = $this->Teams->findById($get['st'])->firstOrFail();
+                $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2 : 1)];
+                $saveData = $this->Teams->newEntity($upData, ['validate' => false]);
+                $this->Teams->save($saveData);
+                $this->redirect($url);
+            }
+        }
+        if (isset($get['type']) && $get['type'] == 'partner'){
+            $url = SITEURL."pages/manage_project/$id?type=partner";
+            if (isset($get['del'])  && !empty($get['del'])) {
+                $blog_del = $this->Partners->findById($get['del'])->firstOrFail();
+                if ($this->Partners->delete($blog_del)) {
+                }
+                $this->redirect($url);
+            }
+    
+            if (isset($get['st'] ) && !empty($get['st'])) {
+                $getData = $this->Partners->findById($get['st'])->firstOrFail();
+                $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2 : 1)];
+                $saveData = $this->Partners->newEntity($upData, ['validate' => false]);
+                $this->Partners->save($saveData);
+                $this->redirect($url);
+            }
+        }
+
+        
+
+
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $file_name = $file_name_img = null;
             $postData = $this->request->getData();
@@ -711,12 +751,12 @@ class PagesController extends AppController
             if ($this->request->getQuery('type')  && !empty($this->request->getQuery('type'))) {
                 $tab = $this->request->getQuery('type');
                 if( $tab == 'team' ){
-                    $this->paginate = ['limit' => 100,'conditions'=>['Teams.type'=>2],'order' => ['id' => 'desc']];
+                    $this->paginate = ['limit' => 100,'conditions'=>['Teams.type'=>2,'Teams.project_id'=>$id],'order' => ['id' => 'desc']];
                     $data = $this->paginate($this->Teams->find('all'));
                     $paging = $this->request->getAttribute('paging');
                     $this->set(compact('data','paging'));
                 }elseif( $tab == 'partner' ){
-                    $this->paginate = ['limit' => 100,'conditions'=>['Partners.type'=>2], 'order' => ['id' => 'desc']];
+                    $this->paginate = ['limit' => 100,'conditions'=>['Partners.type'=>2,'Partners.project_id'=>$id], 'order' => ['id' => 'desc']];
                     $data = $this->paginate($this->Partners->find('all'));
                     $paging = $this->request->getAttribute('paging');
                     $this->set(compact('data','paging'));
@@ -726,6 +766,141 @@ class PagesController extends AppController
         $this->set(compact('get_data','tab'));
     }
 
+    public function addTeam(){
+        $post_data = null;
+        if ($this->request->is('ajax') ) {
+
+            if( !empty($this->request->getData()) ){
+                $file_name = null;
+                $postData = $this->request->getData();
+                $uploadPath = 'cdn/team/';
+                if (!file_exists($uploadPath)) { mkdir($uploadPath, 0777, true); }
+                /* For logo */
+    
+                if (!empty($postData['hero_img'])) {
+                    if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg', 'image/svg+xml'])) {
+                        $fileobject = $postData['hero_img'];
+                        $file_name = $fileobject->getClientFilename();
+                        $destination = $uploadPath . $file_name;
+                        try {
+                            $fileobject->moveTo($destination);
+                        } catch (Exception $e) {
+                            echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                            exit;
+                        }
+                    }else {
+                        echo '<div class="alert alert-danger" role="alert">Please upload only PNG and JPG file</div>'; exit;
+                    }
+                }
+    
+                if (isset($postData['id']) && !empty($postData['id'])) {
+                    $getBlog = $this->Teams->get($postData['id']);
+                    if (!empty($file_name)) { $getBlog['img'] = $file_name; }
+                    $chkBlog = $this->Teams->patchEntity($getBlog, $postData, ['validate' => true]);
+                } else {
+                    $getBlog = $this->Teams->newEmptyEntity();
+                    if (!empty($file_name)) { $getBlog['img'] = $file_name; }
+                    $chkBlog = $this->Teams->patchEntity($getBlog, $postData, ['validate' => true]);
+                }
+    
+                if ($chkBlog->getErrors()) {
+                    $st = null;
+                    foreach ($chkBlog->getErrors() as $elist) {
+                        foreach ($elist as $k => $v); {
+                            $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                        }
+                    }
+                    echo $st;
+                    exit;
+                } else {
+                    if ($this->Teams->save($chkBlog)) {
+                        echo "<script>$('#save_frm')remove();</script>";
+                        echo "<div class='alert alert-success'>Saved</div>";
+                        echo "<script> setTimeout(function(){ location.reload(); }, 2000);</script>";
+                    } else {
+                        echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                    }
+                }
+                exit;
+            }else{
+
+                $pro_id = $this->request->getQuery('pro_id');
+                $team_id = $this->request->getQuery('team_id');
+                if (!empty($team_id)) {
+                    $post_data = $this->Teams->findById($team_id)->firstOrFail();
+                }
+                $this->set(compact('post_data','pro_id','team_id'));
+            }
+        }
+    }
+
+    public function addPartner(){
+        $post_data = null;
+        if ($this->request->is('ajax') ) {
+
+            if( !empty($this->request->getData()) ){
+                $file_name = null;
+                $postData = $this->request->getData();
+                $uploadPath = 'cdn/partners/';
+                if (!file_exists($uploadPath)) { mkdir($uploadPath, 0777, true); }
+                /* For logo */
+    
+                if (!empty($postData['hero_img'])) {
+                    if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg', 'image/svg+xml'])) {
+                        $fileobject = $postData['hero_img'];
+                        $file_name = $fileobject->getClientFilename();
+                        $destination = $uploadPath . $file_name;
+                        try {
+                            $fileobject->moveTo($destination);
+                        } catch (Exception $e) {
+                            echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                            exit;
+                        }
+                    }else {
+                        echo '<div class="alert alert-danger" role="alert">Please upload only PNG and JPG file</div>'; exit;
+                    }
+                }
+    
+                if (isset($postData['id']) && !empty($postData['id'])) {
+                    $getBlog = $this->Partners->get($postData['id']);
+                    if (!empty($file_name)) { $getBlog['logo'] = $file_name; }
+                    $chkBlog = $this->Partners->patchEntity($getBlog, $postData, ['validate' => true]);
+                } else {
+                    $getBlog = $this->Partners->newEmptyEntity();
+                    if (!empty($file_name)) { $getBlog['logo'] = $file_name; }
+                    $chkBlog = $this->Partners->patchEntity($getBlog, $postData, ['validate' => true]);
+                }
+    
+                if ($chkBlog->getErrors()) {
+                    $st = null;
+                    foreach ($chkBlog->getErrors() as $elist) {
+                        foreach ($elist as $k => $v); {
+                            $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                        }
+                    }
+                    echo $st;
+                    exit;
+                } else {
+                    if ($this->Partners->save($chkBlog)) {
+                        echo "<script>$('#save_frm')remove();</script>";
+                        echo "<div class='alert alert-success'>Saved</div>";
+                        echo "<script> setTimeout(function(){ location.reload(); }, 2000);</script>";
+                    } else {
+                        echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                    }
+                }
+                exit;
+            }else{
+
+                $pro_id = $this->request->getQuery('pro_id');
+                $row_id = $this->request->getQuery('partner_id');
+                if (!empty($row_id)) {
+                    $post_data = $this->Partners->findById($row_id)->firstOrFail();
+                }
+                $this->set(compact('post_data','pro_id','row_id'));
+            }
+        }
+    }
 
     public function features()
     {
@@ -1036,4 +1211,15 @@ class PagesController extends AppController
         $tbl_data = $this->Users->findById('1')->firstOrFail();
         $this->set(compact('tbl_data'));
     }
+
+    
+    /* open new popup on ajax request */
+	public function openPop( $id = null ) {
+	    $this->autoRender = false;
+        $getData = $this->request->getData();
+        if(isset($getData['url']) && !empty($getData['url'])) {
+	        if ( $id == 1 ){ echo "<script> $.magnificPopup.open({items: { src: '" . urldecode($getData['url']) . "',type: 'ajax'}, closeOnContentClick: false, closeOnBgClick: false, showCloseBtn: false, enableEscapeKey: false, }); </script>"; }
+	        else{ echo "<script> $.magnificPopup.open({items: { src: '" . urldecode($getData['url']) . "',type: 'ajax'}, closeMarkup: '<button class=\"mfp-close mfp-new-close\" type=\"button\" title=\"Close\">x</button>', closeOnContentClick: false, closeOnBgClick: false, showCloseBtn: true, enableEscapeKey: false}); </script>"; }
+	    }
+	}
 }
