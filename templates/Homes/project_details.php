@@ -65,17 +65,17 @@ $this->assign('description', $list->meta_description);
                                         <br><br>
 
                                         <div class="row">
-                                            <?php foreach($list->teams as $tList){?>
-                                            <div class="col-xl-6 col-md-6 mb-4">
-                                                <div class="card border-0 shadow">
-                                                    <?php echo $this->Html->image(SITEURL . 'cdn/team/' . $tList->img, ['alt' => 'logo', 'class'=>'card-img-top']);?>
-                                                    <div class="card-body text-center">
-                                                        <h5 class="card-title mb-0"><?php echo $tList->title;?></h5>
-                                                        <div class="card-text text-black-50"><?php echo $tList->heading;?></div>
+                                            <?php foreach ($list->teams as $tList) { ?>
+                                                <div class="col-xl-6 col-md-6 mb-4">
+                                                    <div class="card border-0 shadow">
+                                                        <?php echo $this->Html->image(SITEURL . 'cdn/team/' . $tList->img, ['alt' => 'logo', 'class' => 'card-img-top']); ?>
+                                                        <div class="card-body text-center">
+                                                            <h5 class="card-title mb-0"><?php echo $tList->title; ?></h5>
+                                                            <div class="card-text text-black-50"><?php echo $tList->heading; ?></div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <?php }?>
+                                            <?php } ?>
 
                                         </div>
 
@@ -158,8 +158,8 @@ $this->assign('description', $list->meta_description);
 
             </div><!-- end col -->
             <div class="col-lg-4 mt-lg-0 mt-5 mob_order_1 <?php if (!$this->request->is('mobile')) {
-                                                    echo "sidebarFixed";
-                                                } ?>">
+                                                                echo "sidebarFixed";
+                                                            } ?>">
                 <div class="item-detail-content mt-4 mt-lg-0 sidebars">
                     <h6 class="subHead">Fundraise Goal</h6>
                     <h1 class="item-detail-title mb-3"><?php echo $list->title; ?>
@@ -169,17 +169,32 @@ $this->assign('description', $list->meta_description);
                             <?php } ?>
                         </span>
                     </h1>
-                    <p class="item-detail-text mb-4"><?php echo $list->heading; ?></p>
+                    <p class="item-detail-text mb-4"><?php //echo $list->heading; 
+                                                        ?></p>
+                    <p class="item-detail-text mb-4">Token Detail</p>
                     <div class="item-detail-meta d-flex flex-wrap align-items-center mb-3">
                         <div class="card-price-wrap  mb-3">
                             <div class="d-flex justify-content-between align-items-center col-12">
-                                <span class="card-price-title">Ticket Allocation</span>
-                                <span class="card-price-number text-end"><?php echo $this->Number->currency($list->ticket_allocation, 'USD'); ?></span>
+                                <span class="card-price-title">IDO Date And Time</span>
+                                <span class="card-price-number text-end"><?php echo (!empty($list->start_date) ? $list->start_date->format('Y-m-d H:i A') : 'TBA'); ?></span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center col-12">
                                 <span class="card-price-title">Fund Raise</span>
                                 <span class="card-price-number text-end"><?php echo $this->Number->currency($list->total_raise, 'USD'); ?></span>
                             </div>
+                            <div class="d-flex justify-content-between align-items-center col-12">
+                                <span class="card-price-title">Token Price</span>
+                                <span class="card-price-number text-end"><?php echo $this->Number->currency($list->price_per_token, 'USD'); ?></span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center col-12">
+                                <span class="card-price-title">Ticket Allocation</span>
+                                <span class="card-price-number text-end"><?php echo $this->Number->currency($list->ticket_allocation, 'USD'); ?></span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center col-12">
+                                <span class="card-price-title">Network</span>
+                                <span class="card-price-number text-end"><?php echo (isset($list->blockchain->name) ? $list->blockchain->name : 'TBA'); ?></span>
+                            </div>
+                            
                         </div>
                     </div>
 
