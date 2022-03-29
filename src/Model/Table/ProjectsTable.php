@@ -12,6 +12,8 @@ class ProjectsTable extends Table
     {
         $this->addBehavior('Timestamp');
         $this->belongsTo('Blockchains');
+        $this->hasMany('Teams');
+        $this->hasMany('Partners');
     }
 
     public function validationDefault(Validator $validator): Validator

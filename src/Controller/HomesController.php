@@ -97,10 +97,16 @@ class HomesController extends AppController
     {
         if (!empty($id)) {
             $query = $this->Projects->find('all', [
-                'contain' => ['Blockchains'],
+                'contain' => [
+                    'Blockchains' => ['conditions' => ['Blockchains.status' => 1]],
+                    'Teams' => ['conditions' => ['Teams.status' => 1]],
+                    'Partners' => ['conditions' => ['Partners.status' => 1]],
+                ],
                 'conditions' => ['Projects.slug' => $id, 'Projects.status' => 1]
             ]);
             $data =  $query->first();
+            ec($data);
+            die;
             if (!empty($data)) {
                 $this->set(compact('data'));
                 $this->render('project_details');
