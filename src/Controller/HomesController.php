@@ -105,8 +105,6 @@ class HomesController extends AppController
                 'conditions' => ['Projects.slug' => $id, 'Projects.status' => 1]
             ]);
             $data =  $query->first();
-            ec($data);
-            die;
             if (!empty($data)) {
                 $this->set(compact('data'));
                 $this->render('project_details');

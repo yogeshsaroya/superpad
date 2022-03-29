@@ -1,4 +1,6 @@
-<?php $this->assign('title', 'Create, sell or collect digital items : SuperPAD'); ?>
+<?php $this->assign('title', $Setting['meta_title']);
+$this->assign('description', $Setting['meta_description']);
+?>
 <div class="hero-wrap hero-wrap-2 section-space">
     <div class="container">
         <div class="row align-items-center flex-md-row-reverse justify-content-between">

@@ -71,6 +71,7 @@ class AppController extends Controller
         
         $Setting = $this->Data->get_settings();
         $session = $this->getRequest()->getSession();
+        
         $session->write('Setting', $Setting ); 
         $this->set(compact('Setting'));
     }

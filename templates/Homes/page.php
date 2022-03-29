@@ -1,4 +1,7 @@
-<?php $this->assign('title', $data->title); ?>
+<?php 
+$this->assign('title', $data->meta_title);
+$this->assign('description', $data->meta_description);
+?>
 <style>
     #cu_page td { padding: 0 20px 0 20px;}
     #cu_page ol, #cu_page ul {

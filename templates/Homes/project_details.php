@@ -1,6 +1,7 @@
 <?php
 $list = $data;
-$this->assign('title', $list->title . ' : SuperPAD');
+$this->assign('title', $list->meta_title);
+$this->assign('description', $list->meta_description);
 ?>
 <?php echo $this->Html->css(['/assets/css/pro_dt']); ?>
 <section class="item-detail-section ">
