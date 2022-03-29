@@ -66,7 +66,7 @@ $this->assign('description', $list->meta_description);
 
                                         <div class="row">
                                             <?php foreach ($list->teams as $tList) { ?>
-                                                <div class="col-xl-6 col-md-6 mb-4">
+                                                <div class="col-xl-4 col-md-6 mb-4">
                                                     <div class="card border-0 shadow">
                                                         <?php echo $this->Html->image(SITEURL . 'cdn/team/' . $tList->img, ['alt' => 'logo', 'class' => 'card-img-top']); ?>
                                                         <div class="card-body text-center">
