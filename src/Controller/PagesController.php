@@ -129,7 +129,7 @@ class PagesController extends AppController
             $this->redirect('/pages/team');
         }
 
-        $this->paginate = ['limit' => 100,'conditions'=>['Teams.type'=>1],'order' => ['id' => 'desc']];
+        $this->paginate = ['limit' => 100,'conditions'=>['Teams.type'=>1],'order' => ['Teams.position' => 'ASC']];
         $data = $this->paginate($this->Teams->find('all'));
         $paging = $this->request->getAttribute('paging');
         $this->set(compact('data','paging'));
