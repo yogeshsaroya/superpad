@@ -97,4 +97,12 @@ class DataHelper extends Helper
             return false;
         }
     }
+
+    public function getCountries(){
+
+        $tbl = TableRegistry::get('Countries');
+        $query = $tbl->find('list', ['keyField' => 'id', 'valueField' => 'name'])->order(['Countries.name' => 'ASC']);
+        return $query->toArray();
+        
+    }
 }

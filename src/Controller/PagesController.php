@@ -160,6 +160,9 @@ class PagesController extends AppController
                         echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
                         exit;
                     }
+                }else{
+                    echo '<div class="alert alert-danger" role="alert">Please upload only png and jpg image.</div>';
+                        exit;
                 }
             }
 

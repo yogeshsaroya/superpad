@@ -577,7 +577,7 @@ function choiceSelect(selector) {
     let formChoice = document.querySelector(selector);
     if (typeof(formChoice) != 'undefined' && formChoice != null) {
         const choices = new Choices(formChoice, {
-            searchEnabled: false,
+            searchEnabled: true,
             itemSelectText: ''
         });
     }

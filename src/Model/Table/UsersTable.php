@@ -51,6 +51,21 @@ class UsersTable extends Table
         return $validator;
     }
 
+
+    public function validationOnlyKyc(Validator $validator) {
+        $validator
+        ->notEmptyString("kyc_full_name", "Full name is required")
+        ->notEmptyString("kyc_dob", "Date of birth is required")
+        ->notEmptyString("kyc_address", "Address is required")
+        ->notEmptyString("kyc_city", "City is required")
+        ->notEmptyString("kyc_state", "State is required")
+        ->notEmptyString("kyc_country", "Country is required")
+        ->notEmptyString("kyc_doc_type", "Document type is required");
+        
+        
+        return $validator;
+    }
+
     public function beforeSave(EventInterface $event){
         
         

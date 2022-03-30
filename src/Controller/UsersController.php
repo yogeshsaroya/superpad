@@ -111,14 +111,57 @@ class UsersController extends AppController
     public function kyc(){
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $postData = $this->request->getData();
+            //ec($postData);die;
             $val = ['validate' => true];
-            if (!empty($postData['password1'])) {
-                $postData['password'] = $postData['password1'];
-            } else {
-                $val = ['validate' => 'OnlyCheck'];
+            $val = ['validate' => 'OnlyKyc'];
+
+            $uploadPath = 'cdn/kyc/';
+            if (!file_exists($uploadPath)) { mkdir($uploadPath, 0777, true); }
+            /*For profile iamge */
+            if (!empty($postData['kyc_user_pic1'])) {
+                if (in_array($postData['kyc_user_pic1']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg'])) {
+                    $fileobject1 = $postData['kyc_user_pic1'];
+                    $ext = pathinfo($fileobject1->getClientFilename(), PATHINFO_EXTENSION);
+                    $kyc_user_pic =  $postData['id']."-profile-pic.".$ext;
+                    $destination1 = $uploadPath . $kyc_user_pic;
+                    try { $fileobject1->moveTo($destination1); } 
+                    catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
+                }else{ echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit;  }
             }
+
+            /*For doc front img */
+            if (!empty($postData['kyc_doc_file1'])) {
+                if (in_array($postData['kyc_doc_file1']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg'])) {
+                    $fileobject2 = $postData['kyc_doc_file1'];
+                    $ext1 = pathinfo($fileobject2->getClientFilename(), PATHINFO_EXTENSION);
+                    $kyc_doc_file =  $postData['id']."-doc-front.".$ext1;
+                    $destination2 = $uploadPath.$kyc_doc_file;
+                    try { $fileobject2->moveTo($destination2); } 
+                    catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
+                }else{ echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit;  }
+            }
+
+            /*For doc last img*/
+            if (!empty($postData['kyc_doc_file_back1'])) {
+                if (in_array($postData['kyc_doc_file_back1']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg'])) {
+                    $fileobject3 = $postData['kyc_doc_file_back1'];
+                    $ext3 = pathinfo($fileobject3->getClientFilename(), PATHINFO_EXTENSION);
+                    $kyc_doc_file_back =  $postData['id']."-doc-back.".$ext3;
+                    $destination3 = $uploadPath . $kyc_doc_file_back;
+                    try { $fileobject3->moveTo($destination3); } 
+                    catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
+                }else{ echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit;  }
+            }
+
             if (isset($postData['id']) && !empty($postData['id'])) {
                 $getBlog = $this->Users->get($postData['id']);
+
+                if (!empty($kyc_user_pic)) { $postData['kyc_user_pic'] = $kyc_user_pic; }
+                if (!empty($kyc_doc_file)) { $postData['kyc_doc_file'] = $kyc_doc_file; }
+                if (!empty($kyc_doc_file_back)) { $postData['kyc_doc_file_back'] = $kyc_doc_file_back; }
+                $postData['kyc_completed'] = 1;
+                $postData['kyc_submitted'] = DATE;
+
                 $chkBlog = $this->Users->patchEntity($getBlog, $postData, $val);
             }
             if ($chkBlog->getErrors()) {
@@ -128,11 +171,10 @@ class UsersController extends AppController
                         $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
                     }
                 }
-                echo $st;
-                exit;
+                echo $st; exit;
             } else {
                 if ($this->Users->save($chkBlog)) {
-                    $u = SITEURL . "dashboard";
+                    $u = SITEURL . "users/kyc";
                     echo '<div class="alert alert-success" role="alert"> Saved.</div>';
                     echo "<script>window.location.href ='" . $u . "'; </script>";
                 } else {
