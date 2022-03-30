@@ -13,8 +13,8 @@
                     </a>
                     <div class="sidebar-widget">
                         <ul class="user-nav">
-                            <li class="active"><a href="<?php echo SITEURL;?>dashboard"><em class="ni ni-edit me-2"></em>Edit Profile</a></li>
-                            <li><a href="<?php echo SITEURL;?>users/kyc"><em class="ni ni-money me-2"></em>KYC</a></li>
+                            <li class="<?php echo (isset($menu_act) && $menu_act == 'profile' ? 'active' : null);?>"><a href="<?php echo SITEURL;?>dashboard"><em class="ni ni-edit me-2"></em>Edit Profile</a></li>
+                            <li class="<?php echo (isset($menu_act) && $menu_act == 'kyc' ? 'active' : null);?>"><a href="<?php echo SITEURL;?>users/kyc"><em class="ni ni-money me-2"></em>KYC</a></li>
                             <li><a href="<?php echo SITEURL;?>connect-wallet"><em class="ni ni-user me-2"></em>Connect Walllet</a></li>
                         </ul>
                     </div><!-- end sidebar-widget -->

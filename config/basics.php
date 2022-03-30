@@ -142,3 +142,8 @@ function check_date($end_date = DATE ){
     if($st < $end){ return $end_date; }
     else{ return false; }
 }
+
+function getDocType()
+{
+    return ['National ID' => 'National ID','Driving license' => 'Driving license','Passport'=>'Passport'];
+}

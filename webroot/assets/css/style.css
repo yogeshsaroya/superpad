@@ -5787,3 +5787,9 @@ span.ticker_small {
 .pro_head {
     background: #c1c1c1;
 }
+
+form .required label:after {
+    color: #e32;
+    content: '*';
+    display: inline
+}

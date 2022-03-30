@@ -34,10 +34,7 @@ class UsersTable extends Table
         ->notEmptyString("email", "Email is required")
         ->add("email", [
             'unique' => ['rule' => 'validateUnique', 'provider' => 'table', 'message' => 'Email address is already in use'],
-            "valid_email" => ["rule" => ["email"],"message" => "Email Address is not valid"],
-            "min_length" => ["rule" => ["minLength", 10],"message" => "Invalid min length"],
-            "max_length" => ["rule" => ["maxLength", 50],"message" => "Invalid max length",],
-        ])
+            "valid_email" => ["rule" => ["email"],"message" => "Email Address is not valid"]])
 
 
         ->requirePresence("password")

@@ -65,10 +65,92 @@ class UsersController extends AppController
     {
     }
 
-    public function dashboard()
-    {
-         //ec($this->Auth->user());
+    public function dashboard() {
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $postData = $this->request->getData();
+            $val = ['validate' => true];
+            if (!empty($postData['password1'])) {
+                $postData['password'] = $postData['password1'];
+            } else {
+                $val = ['validate' => 'OnlyCheck'];
+            }
+            if (isset($postData['id']) && !empty($postData['id'])) {
+                $getBlog = $this->Users->get($postData['id']);
+                $chkBlog = $this->Users->patchEntity($getBlog, $postData, $val);
+            }
+            if ($chkBlog->getErrors()) {
+                $st = null;
+                foreach ($chkBlog->getErrors() as $elist) {
+                    foreach ($elist as $k => $v); {
+                        $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                    }
+                }
+                echo $st;
+                exit;
+            } else {
+                if ($this->Users->save($chkBlog)) {
+                    $u = SITEURL . "dashboard";
+                    echo '<div class="alert alert-success" role="alert"> Saved.</div>';
+                    echo "<script>window.location.href ='" . $u . "'; </script>";
+                } else {
+                    echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                }
+            }
+            exit;
+        }
+
+
+        $user_data = $this->Users->findById($this->Auth->user('id'))->first();
+        if(!empty($user_data)){
+        $this->set(compact('user_data'));
+        }else{
+            $this->viewBuilder()->setLayout('error_404');
+        }
     }
+
+    public function kyc(){
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $postData = $this->request->getData();
+            $val = ['validate' => true];
+            if (!empty($postData['password1'])) {
+                $postData['password'] = $postData['password1'];
+            } else {
+                $val = ['validate' => 'OnlyCheck'];
+            }
+            if (isset($postData['id']) && !empty($postData['id'])) {
+                $getBlog = $this->Users->get($postData['id']);
+                $chkBlog = $this->Users->patchEntity($getBlog, $postData, $val);
+            }
+            if ($chkBlog->getErrors()) {
+                $st = null;
+                foreach ($chkBlog->getErrors() as $elist) {
+                    foreach ($elist as $k => $v); {
+                        $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                    }
+                }
+                echo $st;
+                exit;
+            } else {
+                if ($this->Users->save($chkBlog)) {
+                    $u = SITEURL . "dashboard";
+                    echo '<div class="alert alert-success" role="alert"> Saved.</div>';
+                    echo "<script>window.location.href ='" . $u . "'; </script>";
+                } else {
+                    echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                }
+            }
+            exit;
+        }
+
+
+        $user_data = $this->Users->findById($this->Auth->user('id'))->first();
+        if(!empty($user_data)){
+        $this->set(compact('user_data'));
+        }else{
+            $this->viewBuilder()->setLayout('error_404');
+        }
+    }
+
     /**
      * Admin password reset page
      */
