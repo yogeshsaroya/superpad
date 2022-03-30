@@ -1,4 +1,6 @@
-<?php echo $this->element('profile/header',['bg_color' => 'bg-gray' ]); ?>
+<?php 
+$this->assign('title', 'Dashboard');
+echo $this->element('profile/header',['bg_color' => 'bg-gray' ]); ?>
 <section class="profile-section section-space">
     <div class="container">
         <div class="row">
