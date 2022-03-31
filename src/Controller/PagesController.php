@@ -1072,6 +1072,56 @@ class PagesController extends AppController
         $this->set(compact('get_data'));
     }
 
+    public function manageKyc($id = null ){
+        $menu_act = 'users';
+        $this->set(compact('menu_act'));
+        $get_data = null;
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $postData = $this->request->getData();
+            $val = ['validate' => true];
+            if (!empty($postData['password1'])) {
+                $postData['password'] = $postData['password1'];
+            } else {
+                $val = ['validate' => 'OnlyCheck'];
+            }
+
+            if (isset($postData['id']) && !empty($postData['id'])) {
+                $getData = $this->Users->get($postData['id']);
+                $chkData = $this->Users->patchEntity($getData, $postData, $val);
+            } else {
+                $getData = $this->Users->newEmptyEntity();
+                $chkData = $this->Users->patchEntity($getData, $postData, $val);
+            }
+            if ($chkData->getErrors()) {
+                $st = null;
+                foreach ($chkData->getErrors() as $elist) {
+                    foreach ($elist as $k => $v); {
+                        $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                    }
+                }
+                echo $st;
+                exit;
+            } else {
+                if ($this->Users->save($chkData)) {
+                    $u = SITEURL . "pages/users";
+                    echo '<div class="alert alert-success" role="alert"> Saved.</div>';
+                    echo "<script>window.location.href ='" . $u . "'; </script>";
+                } else {
+                    echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                }
+            }
+            exit;
+        }
+
+        if (!empty($id)) {
+            $get_data = $this->Users->findById($id)->first();
+            if(empty($get_data)){
+                $this->viewBuilder()->setLayout('not_found');
+            }
+        }
+        $this->set(compact('get_data'));
+    }
+
     public function subscribers()
     {
         $menu_act = 'subscribers';

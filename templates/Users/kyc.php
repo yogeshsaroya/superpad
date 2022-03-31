@@ -29,14 +29,14 @@ echo $this->element('profile/header', ['bg_color' => 'bg-gray']); ?>
                     <h5 class="mb-4">KYC <small>(Know Your Customer)</small> </h5>
                             <hr>
                         <?php 
-                        if ($user_data->kyc_approved == 2 && $user_data->kyc_completed == 1) {
+                        if ($user_data->kyc_completed == 3) {
                             echo '<div class="alert alert-danger"><h4 class="alert-heading"> Rejected </h4><hr>
                             <p>Your KYC attempt has been rejected. Please try again.</p></div>';
                         }
-                        elseif ($user_data->kyc_approved == 1 && $user_data->kyc_completed == 1) {
+                        elseif ($user_data->kyc_completed == 2) {
                             echo '<div class="alert alert-success alert-dismissible fade show"><h4 class="alert-heading"> Verified </h4><hr>
                             <p>Your identity has been verified.</p></div>';
-                        } elseif ($user_data->kyc_approved == 0 && $user_data->kyc_completed == 1) {
+                        } elseif ($user_data->kyc_completed == 1) {
                             echo '<div class="alert alert-info alert-dismissible fade show"><h4 class="alert-heading"> KYC under review</h4><hr>
                             <p>We are reviewing your submitted KYC details. We will notify you when the review is complete. You can try out our products until then</p></div>';
                         } else {
@@ -79,7 +79,7 @@ echo $this->element('profile/header', ['bg_color' => 'bg-gray']); ?>
                                 </div>
                                 <div class="col-lg-6 mb-3 form-group"><?php echo $this->Form->control('kyc_zip', ['label' => ['text' => 'Zip Code', 'class' => 'form-label'], 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
                                 </div>
-                                <div class="col-lg-6 mb-3 form-group"><?php echo $this->Form->control('kyc_country', ['options' => $this->Data->getCountries(), 'autocomplete' => 'new-kyc_country', 'empty' => 'Select Country', 'label' => ['text' => 'Country Name', 'class' => 'form-label'], 'type' => 'select', 'class' => 'form-control form-control-s1 form-choice', 'required' => true]); ?><div class="help-block with-errors"></div>
+                                <div class="col-lg-6 mb-3 form-group"><?php echo $this->Form->control('country_id', ['options' => $this->Data->getCountries(), 'autocomplete' => 'new-country_id', 'empty' => 'Select Country', 'label' => ['text' => 'Country Name', 'class' => 'form-label'], 'type' => 'select', 'class' => 'form-control form-control-s1 form-choice', 'required' => true]); ?><div class="help-block with-errors"></div>
                                 </div>
 
                             </div><!-- end row -->

@@ -59,7 +59,7 @@ class UsersTable extends Table
         ->notEmptyString("kyc_address", "Address is required")
         ->notEmptyString("kyc_city", "City is required")
         ->notEmptyString("kyc_state", "State is required")
-        ->notEmptyString("kyc_country", "Country is required")
+        ->notEmptyString("country_id", "Country is required")
         ->notEmptyString("kyc_doc_type", "Document type is required");
         
         
