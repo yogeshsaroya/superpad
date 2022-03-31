@@ -214,7 +214,7 @@ $this->assign('description', $list->meta_description);
                     </div>
                 </div>
 
-                <?php if (!empty(check_date($list->start_date->format('Y-m-d')))) { ?>
+                <?php if (!empty(check_date($list->start_date->format('Y-m-d H:i:s')))) { ?>
                     <div class="timers">
                         <div class="rounded">
                             <p class="mb-2 text-uppercase">SALE STARTS IN</p>
@@ -233,7 +233,7 @@ $this->assign('description', $list->meta_description);
 </section>
 
 <?php
-if (!empty(check_date($list->start_date->format('Y-m-d')))) {
+if (!empty(check_date($list->start_date->format('Y-m-d H:i:s')))) {
     echo $this->Html->script(['jquery.countdown.min'], ['block' => 'scriptBottom']);
 }
 if (!$this->request->is('mobile')) {
@@ -241,9 +241,9 @@ if (!$this->request->is('mobile')) {
 }
 ?>
 <?php $this->Html->scriptStart(array('block' => 'scriptBottom')); ?>
-<?php if (!empty(check_date($list->start_date->format('Y-m-d')))) { ?>
+<?php if (!empty(check_date($list->start_date->format('Y-m-d H:i:s')))) { ?>
     $(function () {
-    $('#clock').countdown('<?php echo $list->start_date->format('Y/m/d'); ?>').on('update.countdown', function(event) {
+    $('#clock').countdown('<?php echo $list->start_date->format('Y-m-d H:i:s'); ?>').on('update.countdown', function(event) {
     var $this = $(this).html(event.strftime(''
     + '<span class="clockbx"><span class="font-weight-bold h1">%D</span> Day%!d</span> '
     + '<span class=" clockbx"><span class="h1 font-weight-bold h1">%H</span> Hr</span> '

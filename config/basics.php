@@ -137,8 +137,8 @@ function getMenuType()
 }
 
 function check_date($end_date = DATE ){
-    $st = date("Y-m-d",strtotime(DATE));
-    $end = date("Y-m-d",strtotime($end_date));
+    $st = date("Y-m-d H:i:s",strtotime(DATE));
+    $end = date("Y-m-d H:i:s",strtotime($end_date));
     if($st < $end){ return $end_date; }
     else{ return false; }
 }
