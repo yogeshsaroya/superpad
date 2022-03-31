@@ -27,10 +27,11 @@ $this->assign('description', $Setting['meta_description']);
 <?php echo $this->element('home/sales',['bg_color' => 'bg-white' ]); ?>
 <?php echo $this->element('home/features',['bg_color' => 'bg-gray' ]); ?>
 <?php echo $this->element('home/timeline',['bg_color' => 'bg-white' ]); ?>
-<?php echo $this->element('home/partner',['bg_color' => 'bg-gray' ]); ?>
-<?php echo $this->element('home/banner',['bg_color' => 'bg-white' ]); ?>
-<?php echo $this->element('home/network',['bg_color' => 'bg-gray' ]); ?>
-<?php echo $this->element('home/newsletter',['bg_color' => 'bg-white' ]); ?>
+<?php echo $this->element('home/teams',['bg_color' => 'bg-gray' ]); ?>
+<?php echo $this->element('home/partner',['bg_color' => 'bg-white' ]); ?>
+<?php echo $this->element('home/banner',['bg_color' => 'bg-gray' ]); ?>
+<?php echo $this->element('home/network',['bg_color' => 'bg-white' ]); ?>
+<?php echo $this->element('home/newsletter',['bg_color' => 'bg-gray' ]); ?>
 
 
 

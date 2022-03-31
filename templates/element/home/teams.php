@@ -1,17 +1,37 @@
-<?php $this->assign('title', 'Our Team Members'); ?>
-<div class="hero-wrap hero-wrap-2 section-space">
+<?php
+$data = $this->Data->getTeams();
+if ( !$data->isEmpty() ) {
+    echo $this->Html->css(["/slick/slick",'/slick/slick-theme'],['block' => 'css']);
+?>
+<style>
+    .team_home {
+    margin-right: 20px;
+}
+.slick-prev:before, .slick-next:before {
+    font-family: 'slick';
+    font-size: 20px;
+    line-height: 1;
+    opacity: 1;
+    color: #000;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+</style>
+
+
+<section id="partners_list" class="brand-section section-space <?php echo (isset($bg_color) ?  $bg_color : null); ?>">
     <div class="container">
-
-        <div class="row blog">
-            <h1 class="center mx-auto text-center py-4">Our Team Members</h1>
-            <p><br><br></p>
-
-            <div class="col-md-12">
-                <div class="row">
+        <div class="section-head text-center">
+            <h2 class="mb-3">Our Team Members</h2>
+        </div><!-- end section-head -->
+        <div class="row g-gs">
+        <div class="col-md-12">
+                <div class="row res_team">
                     <?php
                     if (!empty($data)) {
                         foreach ($data as $list) { ?>
-                            <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="col-lg-3 col-md-6 col-sm-6 team_home">
                                 <div class="our-team">
                                     <div class="pic">
                                         <?php echo $this->Html->image(SITEURL . 'cdn/team/' . $list->img, ['alt' => 'logo', 'width' => 100]); ?>
@@ -33,12 +53,53 @@
                 </div>
             </div>
 
-        </div>
-    </div>
-</div>
-</div>
+        </div><!-- end d-flex -->
+    </div><!-- end container -->
+</section>
 
-<div class="hero-wrap hero-wrap-2 section-space">
-    <div class="container">
-    </div>
-</div>
+<?php 
+echo $this->Html->script(["/slick/slick.min"],['block' => 'scriptBottom']);
+$this->Html->scriptStart(array('block' => 'scriptBottom')); ?>
+$(document).ready(function(){
+
+    $('.res_team').slick({
+  dots: true,
+  infinite: true,
+  autoplay: true,
+  autoplaySpeed: 2000,
+  speed: 300,
+  slidesToShow: 4,
+  slidesToScroll: 4,
+  responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 2,
+        infinite: true,
+        dots: true
+      }
+    },
+    {
+      breakpoint: 600,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1
+      }
+    },
+    {
+      breakpoint: 480,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1
+      }
+    }
+    // You can unslick at a given breakpoint now by adding:
+    // settings: "unslick"
+    // instead of a settings object
+  ]
+});
+
+});
+<?php $this->Html->scriptEnd(); ?>
+<?php }?>

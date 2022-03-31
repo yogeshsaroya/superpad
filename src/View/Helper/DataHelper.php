@@ -65,6 +65,17 @@ class DataHelper extends Helper
         }
     }
 
+    public function getTeams()
+    {
+        $tbl = TableRegistry::get('Teams');
+        try {
+            $query = $tbl->find('all', ['conditions' => ['Teams.status' => 1,'Teams.type' => 1],'order'=>['Teams.position'=>'ASC'], 'limit' => 50]);
+            return $row = $query->all();
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
+
     public function getRoadmaps()
     {
         $tbl = TableRegistry::get('Roadmaps');
