@@ -115,11 +115,11 @@ if (!empty($data)) {
                         <div class="card-price-wrap  mb-3">
                             <div class="d-flex justify-content-between align-items-center col-12">
                                 <span class="card-price-title">Ticket Allocation</span>
-                                <span class="card-price-number text-end"><?php echo $this->Number->currency($list->ticket_allocation, 'USD'); ?></span>
+                                <span class="card-price-number text-end"><?php echo ( $list->ticket_allocation > 0? $this->Number->currency($list->ticket_allocation, 'USD'): "TBA"); ?></span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center col-12">
                                 <span class="card-price-title">Fund Raise</span>
-                                <span class="card-price-number text-end"><?php echo $this->Number->currency($list->total_raise, 'USD'); ?></span>
+                                <span class="card-price-number text-end"><?php echo ($list->total_raise > 0? $this->Number->currency($list->total_raise, 'USD') : "TBA"); ?></span>
                             </div>
                         </div><!-- end card-price-wrap -->
                         <button class="btn btn-sm btn-dark"><?php echo $list->type; ?></button>

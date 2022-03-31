@@ -2,6 +2,31 @@
 $list = $data;
 $this->assign('title', $list->meta_title);
 $this->assign('description', $list->meta_description);
+$today = strtotime(DATE);
+$st_date = $end_date = null;
+if (!empty($list->start_date)) {
+    $st_date = strtotime($list->start_date->format('Y-m-d H:i:s'));
+}
+if (!empty($list->end_date)) {
+    $end_date = strtotime($list->end_date->format('Y-m-d H:i:s'));
+}
+$timer_st = $timer_end = null;
+
+if (!empty($st_date) && $st_date > $today) {
+    $timer_st = $st_date;
+}
+
+if (!empty($end_date)) {
+    if (!empty($st_date)) {
+        if ($end_date > $st_date && $end_date > $today && $st_date <= $today) {
+            $timer_end = $end_date;
+        }
+    } else {
+        if ($end_date > $today) {
+            $timer_end = $end_date;
+        }
+    }
+}
 ?>
 <?php echo $this->Html->css(['/assets/css/pro_dt']); ?>
 <section class="item-detail-section ">
@@ -41,29 +66,24 @@ $this->assign('description', $list->meta_description);
                         <ul class="nav nav-tabs nav-tabs-s1" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation"><button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true"> Description </button></li>
                             <li class="nav-item" role="presentation"><button class="nav-link" id="token_sale-tab" data-bs-toggle="tab" data-bs-target="#token_sale" type="button" role="tab" aria-controls="token_sale" aria-selected="false"> Token Sale </button></li>
-                            <?php if (!empty($list->tokenomics)) { ?><li class="nav-item" role="presentation"><button class="nav-link" id="tokenomics-tab" data-bs-toggle="tab" data-bs-target="#tokenomics" type="button" role="tab" aria-controls="tokenomics" aria-selected="false"> Tokenomics </button></li><?php } ?>
-                            <?php if (!empty($list->teams)) { ?><li class="nav-item" role="presentation"><button class="nav-link" id="team-tab" data-bs-toggle="tab" data-bs-target="#team" type="button" role="tab" aria-controls="team" aria-selected="false"> Team </button></li><?php } ?>
-                            <?php if (!empty($list->partners)) { ?><li class="nav-item" role="presentation"><button class="nav-link" id="partner-tab" data-bs-toggle="tab" data-bs-target="#partner" type="button" role="tab" aria-controls="partner" aria-selected="false"> Partner and Investor </button></li><?php } ?>
+                            <li class="nav-item" role="presentation"><button class="nav-link" id="tokenomics-tab" data-bs-toggle="tab" data-bs-target="#tokenomics" type="button" role="tab" aria-controls="tokenomics" aria-selected="false"> Tokenomics </button></li>
+                            <li class="nav-item" role="presentation"><button class="nav-link" id="team-tab" data-bs-toggle="tab" data-bs-target="#team" type="button" role="tab" aria-controls="team" aria-selected="false"> Team </button></li>
+                            <li class="nav-item" role="presentation"><button class="nav-link" id="partner-tab" data-bs-toggle="tab" data-bs-target="#partner" type="button" role="tab" aria-controls="partner" aria-selected="false"> Partner and Investor </button></li>
                         </ul>
                         <div class="tab-content mt-3" id="myTabContent">
                             <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
-                                <div class="item-detail-tab-wrap"><?php echo $list->description; ?></div>
+                                <div class="item-detail-tab-wrap"><?php if (!empty($list->description)) { echo $list->description; }else{ echo "<h3>Not Available</h3>";} ?>
                             </div>
-                            <?php if (!empty($list->tokenomics)) { ?><div class="tab-pane fade show" id="tokenomics" role="tabpanel" aria-labelledby="tokenomics-tab">
-                                    <div class="item-detail-tab-wrap"><?php echo $list->tokenomics; ?></div>
-                                </div><?php } ?>
-                            <?php if (!empty($list->teams)) { ?>
+                            </div>
+                            <div class="tab-pane fade show" id="tokenomics" role="tabpanel" aria-labelledby="tokenomics-tab">
+                                    <div class="item-detail-tab-wrap"><?php if (!empty($list->tokenomics)) { echo $list->tokenomics; }else{ echo "<h3>Not Available</h3>";} ?></div>
+                                </div>
+                            
                                 <div class="tab-pane fade show" id="team" role="tabpanel" aria-labelledby="team-tab">
                                     <div class="item-detail-tab-wrap">
-
-                                        <div class="col text-center">
-                                            <h2>Meet Our Team</h2>
-                                            <p class="text-muted mx-auto">
-                                                Start working with <span class="text-dark fw-bold">Prompt</span> to manage your
-                                                workforce better.</p>
-                                        </div>
+                                        <?php if (!empty($list->teams)) { ?>
+                                        <div class="col text-center"><h2>Meet Our Team</h2></div>
                                         <br><br>
-
                                         <div class="row">
                                             <?php foreach ($list->teams as $tList) { ?>
                                                 <div class="col-xl-4 col-md-6 mb-4">
@@ -76,28 +96,19 @@ $this->assign('description', $list->meta_description);
                                                     </div>
                                                 </div>
                                             <?php } ?>
-
                                         </div>
-
-
+                                        <?php }else{ echo "<h3>Not Available</h3>";}?>
                                     </div>
-                                </div><?php } ?>
-                            <?php if (!empty($list->partners)) { ?>
+                                </div>
+                            
                                 <div class="tab-pane fade show" id="partner" role="tabpanel" aria-labelledby="partner-tab">
                                     <div class="item-detail-tab-wrap">
-                                        <div class="row">
-                                            <div class="col text-center">
-                                                <h2 class="">We are backed by</h2>
-                                                <p class="text-muted mx-auto">
-                                                    100+ clients trust <span class="text-dark fw-bold">Prompt</span> to drive
-                                                    perfomance &amp; engagement.
-                                                </p>
-                                            </div>
-                                        </div>
+                                        <?php if (!empty($list->partners)) {?>
+                                        <div class="row"><div class="col text-center"><h2 class="">We are backed by</h2></div></div>
                                         <div class="row mt-5">
-                                            <?php foreach ($list->partners as $plist) { ?>
-
-                                                <?php if (!empty($plist->url)) { ?>
+                                        <?php   
+                                            foreach ($list->partners as $plist) {  
+                                                if (!empty($plist->url)) { ?>
                                                     <div class="col-md-3 col-xl-3 mb-4">
                                                         <a href="<?php echo $plist->url; ?>" title="<?php echo $plist->title; ?>" target="_blank">
                                                             <img src="<?php echo SITEURL . "cdn/partners/" . $plist->logo; ?>" alt="" height="45">
@@ -107,14 +118,11 @@ $this->assign('description', $list->meta_description);
                                                     <div class="col-md-3 col-xl-3 mb-4">
                                                         <img src="<?php echo SITEURL . "cdn/partners/" . $plist->logo; ?>" alt="" height="45">
                                                     </div>
-                                            <?php }
-                                            } ?>
+                                            <?php } }?>
                                         </div>
+                                        <?php }else{ echo "<h3>Not Available</h3>";}?>
                                     </div>
                                 </div>
-                            <?php } ?>
-
-
                             <div class="tab-pane fade" id="token_sale" role="tabpanel" aria-labelledby="token_sale-tab">
                                 <div class="item-detail-tab-wrap">
                                     <table class="table table-striped">
@@ -126,7 +134,12 @@ $this->assign('description', $list->meta_description);
                                         <tbody>
                                             <tr>
                                                 <td>Sale Price</td>
-                                                <td><?php echo "1 " . $list->ticker . " = " . $this->Number->currency($list->price_per_token, 'USD'); ?></td>
+                                                <td><?php
+                                                    if ($list->price_per_token > 0) {
+                                                        echo "1 " . $list->ticker . " = " . $this->Number->currency($list->price_per_token, 'USD');
+                                                    } else {
+                                                        echo "TBA";
+                                                    } ?></td>
                                             </tr>
                                             <tr>
                                                 <td>Sale Start Time (UTC) </td>
@@ -142,11 +155,15 @@ $this->assign('description', $list->meta_description);
                                             </tr>
                                             <tr>
                                                 <td>Initial Market Cap </td>
-                                                <td><?php echo $this->Number->currency($list->initial_market_cap, 'USD'); ?></td>
+                                                <td><?php echo ($list->initial_market_cap > 0 ? "$" . number_format_short($list->initial_market_cap) : 'TBA'); ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total Supply </td>
+                                                <td><?php echo ($list->total_supply > 0 ? "$" . number_format_short($list->total_supply) : 'TBA'); ?></td>
                                             </tr>
                                             <tr>
                                                 <td>Initial Token Circulation </td>
-                                                <td><?php echo number_format($list->initial_token_circulation); ?></td>
+                                                <td><?php echo ($list->initial_token_circulation > 0 ?  number_format_short($list->initial_token_circulation) : 'TBA');?></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -157,9 +174,7 @@ $this->assign('description', $list->meta_description);
                 </div><!-- end item-detail-content -->
 
             </div><!-- end col -->
-            <div class="col-lg-4 mt-lg-0 mt-5 mob_order_1 <?php if (!$this->request->is('mobile')) {
-                                                                echo "sidebarFixed";
-                                                            } ?>">
+            <div class="col-lg-4 mt-lg-0 mt-5 mob_order_1 <?php echo (!$this->request->is('mobile') ?  "sidebarFixed" : null); ?>">
                 <div class="item-detail-content mt-4 mt-lg-0 sidebars">
                     <h6 class="subHead">Fundraise Goal</h6>
                     <h1 class="item-detail-title mb-3"><?php echo $list->title; ?>
@@ -169,32 +184,30 @@ $this->assign('description', $list->meta_description);
                             <?php } ?>
                         </span>
                     </h1>
-                    <p class="item-detail-text mb-4"><?php //echo $list->heading; 
-                                                        ?></p>
-                    <p class="item-detail-text mb-4">Token Detail</p>
+                    <p class="item-detail-text mb-4">
                     <div class="item-detail-meta d-flex flex-wrap align-items-center mb-3">
                         <div class="card-price-wrap  mb-3">
                             <div class="d-flex justify-content-between align-items-center col-12">
-                                <span class="card-price-title">IDO Date And Time</span>
+                                <span class="card-price-title">IDO Date</span>
                                 <span class="card-price-number text-end"><?php echo (!empty($list->start_date) ? $list->start_date->format('Y-m-d H:i A') : 'TBA'); ?></span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center col-12">
                                 <span class="card-price-title">Fund Raise</span>
-                                <span class="card-price-number text-end"><?php echo $this->Number->currency($list->total_raise, 'USD'); ?></span>
+                                <span class="card-price-number text-end"><?php echo ($list->total_raise > 0 ?  $this->Number->currency($list->total_raise, 'USD') : 'TBA'); ?></span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center col-12">
                                 <span class="card-price-title">Token Price</span>
-                                <span class="card-price-number text-end"><?php echo $this->Number->currency($list->price_per_token, 'USD'); ?></span>
+                                <span class="card-price-number text-end"><?php echo ($list->price_per_token > 0 ?  $this->Number->currency($list->price_per_token, 'USD') : 'TBA'); ?></span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center col-12">
                                 <span class="card-price-title">Ticket Allocation</span>
-                                <span class="card-price-number text-end"><?php echo $this->Number->currency($list->ticket_allocation, 'USD'); ?></span>
+                                <span class="card-price-number text-end"><?php echo ($list->ticket_allocation > 0 ? $this->Number->currency($list->ticket_allocation, 'USD') : 'TBA'); ?></span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center col-12">
                                 <span class="card-price-title">Network</span>
                                 <span class="card-price-number text-end"><?php echo (isset($list->blockchain->name) ? $list->blockchain->name : 'TBA'); ?></span>
                             </div>
-                            
+
                         </div>
                     </div>
 
@@ -214,10 +227,19 @@ $this->assign('description', $list->meta_description);
                     </div>
                 </div>
 
-                <?php if (!empty(check_date($list->start_date->format('Y-m-d H:i:s')))) { ?>
+                <?php if (!empty($timer_st)) { ?>
                     <div class="timers">
                         <div class="rounded">
                             <p class="mb-2 text-uppercase">SALE STARTS IN</p>
+                            <div id="clock" class="countdown"></div>
+                        </div>
+                    </div>
+                <?php }
+
+                if (!empty($timer_end)) { ?>
+                    <div class="timers">
+                        <div class="rounded" id="sales_end">
+                            <p class="mb-2 text-uppercase">SALE ENDS IN</p>
                             <div id="clock" class="countdown"></div>
                         </div>
                     </div>
@@ -232,27 +254,51 @@ $this->assign('description', $list->meta_description);
     </div>
 </section>
 
+
+
 <?php
-if (!empty(check_date($list->start_date->format('Y-m-d H:i:s')))) {
+if (!empty($timer_st)) {
     echo $this->Html->script(['jquery.countdown.min'], ['block' => 'scriptBottom']);
 }
+if (!empty($timer_end)) {
+    echo $this->Html->script(['jquery.countdown.min'], ['block' => 'scriptBottom']);
+}
+
 if (!$this->request->is('mobile')) {
     echo $this->Html->script(['sticky-sidebar'], ['block' => 'scriptBottom']);
 }
 ?>
 <?php $this->Html->scriptStart(array('block' => 'scriptBottom')); ?>
-<?php if (!empty(check_date($list->start_date->format('Y-m-d H:i:s')))) { ?>
+
+<?php if (!empty($timer_st)) { ?>
     $(function () {
-    $('#clock').countdown('<?php echo $list->start_date->format('Y-m-d H:i:s'); ?>').on('update.countdown', function(event) {
+    $('#clock').countdown('<?php echo date("Y-m-d H:i:s", $timer_st); ?>').on('update.countdown', function(event) {
     var $this = $(this).html(event.strftime(''
     + '<span class="clockbx"><span class="font-weight-bold h1">%D</span> Day%!d</span> '
     + '<span class=" clockbx"><span class="h1 font-weight-bold h1">%H</span> Hr</span> '
     + '<span class="clockbx"><span class="h1 font-weight-bold h1">%M</span> Min</span>'
     + '<span class="clockbx"><span class="h1 font-weight-bold h1">%S</span>Sec</span>'));
+    })
+    .on('finish.countdown', function(event) {  location.reload(); });
+    });
+<?php }  ?>
+
+<?php if (!empty($timer_end)) { ?>
+    $(function () {
+    $('#clock').countdown('<?php echo date("Y-m-d H:i:s", $timer_end); ?>').on('update.countdown', function(event) {
+    var $this = $(this).html(event.strftime(''
+    + '<span class="clockbx"><span class="font-weight-bold h1">%D</span> Day%!d</span> '
+    + '<span class=" clockbx"><span class="h1 font-weight-bold h1">%H</span> Hr</span> '
+    + '<span class="clockbx"><span class="h1 font-weight-bold h1">%M</span> Min</span>'
+    + '<span class="clockbx"><span class="h1 font-weight-bold h1">%S</span>Sec</span>'));
+    })
+    .on('finish.countdown', function(event) {  
+        $("#sales_end").html('<p class="mb-2 text-uppercase">This sale has ended!</p>'); 
     });
     });
-<?php }
-if (!$this->request->is('mobile')) { ?>
+<?php }  ?>
+
+<?php if (!$this->request->is('mobile')) { ?>
     var a = new StickySidebar('.sidebarFixed', {
     topSpacing: 25,
     containerSelector: '.container',

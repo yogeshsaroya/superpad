@@ -653,12 +653,20 @@ class PagesController extends AppController
             }
         }
 
-
-
-
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $file_name = $file_name_img = null;
             $postData = $this->request->getData();
+            
+            if( !empty($postData['start_date']) && !empty($postData['end_date']) ){
+                if(strtotime($postData['start_date']) > strtotime($postData['end_date']) ){
+                    echo '<div class="alert alert-danger">Sale START DATE/TIME should be smaller to sale END DATE/TIME.</div>'; exit;
+                }
+                elseif(strtotime($postData['end_date']) < strtotime($postData['start_date']) ){
+                    echo '<div class="alert alert-danger">END DATE/TIME should be greater than START DATE/TIME.</div>'; exit;
+                }
+            }
+         
+
             $uploadPath = 'cdn/project_logo/';
             $uploadImg = 'cdn/project_img/';
             $uploadBanner = 'cdn/project_banner/';
