@@ -31,7 +31,7 @@ $getStatus = getStatus();
                                 echo $this->Form->create($post_data, ['autocomplete' => 'off', 'id' => 'e_frm', 'class' => 'mt-2', 'data-toggle' => 'validator']);
                                 echo $this->Form->hidden('id');
                                 echo $this->Form->hidden('type',['value'=>'2']);
-                                echo $this->Form->hidden('project_id',['value'=>'2']);
+                                echo $this->Form->hidden('project_id',['value'=>$pro_id]);
                                 $file_req = true;
                                 if (isset($post_data->id) && !empty($post_data->id)) {
                                     $file_req = false;
