@@ -66,8 +66,8 @@ $(document).ready(function(){
   dots: true,
   infinite: true,
   autoplay: true,
-  autoplaySpeed: 2000,
-  speed: 300,
+  autoplaySpeed: 3000,
+  speed: 2000,
   slidesToShow: 4,
   slidesToScroll: 4,
   responsive: [
