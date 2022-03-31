@@ -129,12 +129,12 @@
 
          <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'partners' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/partners">Partner And Investor</a></li>
 
-         <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'email_templates' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/email_templates">Email Templates</a></li>
-
          <li class="dropdown nav-item <?php echo (isset($sub_menu) && !empty($sub_menu) ? 'active' : null); ?>" data-menu="dropdown"><a class="dropdown-toggle nav-link d-flex align-items-center" href="#" data-toggle="dropdown">Subscribers</a>
            <ul class="dropdown-menu">
+           <li class="<?php echo (isset($menu_act) && $menu_act == 'email_templates' ? 'active' : null); ?>"><a class="dropdown-item d-flex align-items-center" href="<?php echo SITEURL; ?>pages/email_templates">Email Templates</a></li>
              <li class="<?php echo (isset($menu_act) && $menu_act == 'subscribers' ? 'active' : null); ?>"><a class="dropdown-item d-flex align-items-center" href="<?php echo SITEURL; ?>pages/subscribers">Subscribers</a></li>
              <li class="<?php echo (isset($menu_act) && $menu_act == 'newsletter' ? 'active' : null); ?>"><a class="dropdown-item d-flex align-items-center" href="<?php echo SITEURL; ?>pages/newsletter">Send Newsletter</a></li>
+             <li class="<?php echo (isset($menu_act) && $menu_act == 'emails' ? 'active' : null); ?>"><a class="dropdown-item d-flex align-items-center" href="<?php echo SITEURL; ?>pages/emails">Send box (email)</a></li>
          </li>
        </ul>
        </li>

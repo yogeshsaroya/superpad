@@ -174,6 +174,8 @@ class UsersController extends AppController
                 echo $st; exit;
             } else {
                 if ($this->Users->save($chkBlog)) {
+                    $admin = 'support@superpad.finance';
+                    $this->Data->AppMail($admin,8, ['NAME' => $chkBlog->first_name, 'LINK' => SITEURL."pages/manage_kyc/".$chkBlog->id]);
                     $u = SITEURL . "users/kyc";
                     echo '<div class="alert alert-success" role="alert"> Saved.</div>';
                     echo "<script>window.location.href ='" . $u . "'; </script>";

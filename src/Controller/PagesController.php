@@ -17,7 +17,7 @@ class PagesController extends AppController
         parent::beforeFilter($event);
         /* https://book.cakephp.org/4/en/controllers/components/authentication.html#AuthComponent::allow */
         $this->viewBuilder()->setLayout('backend');
-        if( $this->Auth->user('role') == 2 ){
+        if ($this->Auth->user('role') == 2) {
             $this->redirect('/');
         }
         //$this->Auth->allow();
@@ -55,7 +55,7 @@ class PagesController extends AppController
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Pages->find('all'));
         $paging = $this->request->getAttribute('paging');
-        $this->set(compact('data','paging'));
+        $this->set(compact('data', 'paging'));
     }
 
     public function editStaticPages($id = null)
@@ -129,10 +129,10 @@ class PagesController extends AppController
             $this->redirect('/pages/team');
         }
 
-        $this->paginate = ['limit' => 100,'conditions'=>['Teams.type'=>1],'order' => ['Teams.position' => 'ASC']];
+        $this->paginate = ['limit' => 100, 'conditions' => ['Teams.type' => 1], 'order' => ['Teams.position' => 'ASC']];
         $data = $this->paginate($this->Teams->find('all'));
         $paging = $this->request->getAttribute('paging');
-        $this->set(compact('data','paging'));
+        $this->set(compact('data', 'paging'));
     }
 
     public function editTeam($id = null)
@@ -160,9 +160,9 @@ class PagesController extends AppController
                         echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
                         exit;
                     }
-                }else{
+                } else {
                     echo '<div class="alert alert-danger" role="alert">Please upload only png and jpg image.</div>';
-                        exit;
+                    exit;
                 }
             }
 
@@ -211,7 +211,9 @@ class PagesController extends AppController
 
     public function emailTemplates()
     {
-        $this->set('menu_act', 'email_templates');
+        $menu_act = 'email_templates';
+        $sub_menu = 'top_menu';
+        $this->set(compact('menu_act', 'sub_menu'));
 
         if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
             $getData = $this->EmailTemplates->findById($this->request->getQuery('st'))->firstOrFail();
@@ -224,12 +226,14 @@ class PagesController extends AppController
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->EmailTemplates->find('all'));
         $paging = $this->request->getAttribute('paging');
-        $this->set(compact('data','paging'));
+        $this->set(compact('data', 'paging'));
     }
 
     public function editEmailTemplates($id = null)
     {
-        $this->set('menu_act', 'email_templates');
+        $menu_act = 'email_templates';
+        $sub_menu = 'top_menu';
+        $this->set(compact('menu_act', 'sub_menu'));
         $blog_data = null;
 
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
@@ -271,6 +275,17 @@ class PagesController extends AppController
         $this->set(compact('data'));
     }
 
+    public function readEmail($id = null ){
+        $getData = null;
+        if ($this->request->is('ajax')) {
+            if (!empty($id)) {
+                $getData = $this->EmailServers->findById($id)->first();
+            }
+            $this->set(compact('getData'));
+            
+        }
+    }
+
     public function blockchain()
     {
         $menu_act = 'blockchain';
@@ -293,7 +308,7 @@ class PagesController extends AppController
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Blockchains->find('all'));
         $paging = $this->request->getAttribute('paging');
-        $this->set(compact('data','paging'));
+        $this->set(compact('data', 'paging'));
     }
 
     public function manageBlockchain($id = null)
@@ -407,10 +422,10 @@ class PagesController extends AppController
             $this->redirect('/pages/partners');
         }
 
-        $this->paginate = ['limit' => 100,'conditions'=>['Partners.type'=>1], 'order' => ['id' => 'desc']];
+        $this->paginate = ['limit' => 100, 'conditions' => ['Partners.type' => 1], 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Partners->find('all'));
         $paging = $this->request->getAttribute('paging');
-        $this->set(compact('data','paging'));
+        $this->set(compact('data', 'paging'));
     }
 
     public function managePartners($id = null)
@@ -504,7 +519,7 @@ class PagesController extends AppController
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Roadmaps->find('all'));
         $paging = $this->request->getAttribute('paging');
-        $this->set(compact('data','paging'));
+        $this->set(compact('data', 'paging'));
     }
 
     public function manageRoadmap($id = null)
@@ -592,7 +607,7 @@ class PagesController extends AppController
         $this->paginate = ['contain' => ['Blockchains'], 'limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Projects->find('all'));
         $paging = $this->request->getAttribute('paging');
-        $this->set(compact('data','paging'));
+        $this->set(compact('data', 'paging'));
     }
 
     public function manageProject($id = null)
@@ -602,17 +617,17 @@ class PagesController extends AppController
         $this->set(compact('menu_act', 'pro_menu'));
         $get_data = null;
         $get = $this->request->getQuery();
-        
-        if (isset($get['type']) && $get['type'] == 'team'){
-            $url = SITEURL."pages/manage_project/$id?type=team";
+
+        if (isset($get['type']) && $get['type'] == 'team') {
+            $url = SITEURL . "pages/manage_project/$id?type=team";
             if (isset($get['del'])  && !empty($get['del'])) {
                 $blog_del = $this->Teams->findById($get['del'])->firstOrFail();
                 if ($this->Teams->delete($blog_del)) {
                 }
                 $this->redirect($url);
             }
-    
-            if (isset($get['st'] ) && !empty($get['st'])) {
+
+            if (isset($get['st']) && !empty($get['st'])) {
                 $getData = $this->Teams->findById($get['st'])->firstOrFail();
                 $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2 : 1)];
                 $saveData = $this->Teams->newEntity($upData, ['validate' => false]);
@@ -620,16 +635,16 @@ class PagesController extends AppController
                 $this->redirect($url);
             }
         }
-        if (isset($get['type']) && $get['type'] == 'partner'){
-            $url = SITEURL."pages/manage_project/$id?type=partner";
+        if (isset($get['type']) && $get['type'] == 'partner') {
+            $url = SITEURL . "pages/manage_project/$id?type=partner";
             if (isset($get['del'])  && !empty($get['del'])) {
                 $blog_del = $this->Partners->findById($get['del'])->firstOrFail();
                 if ($this->Partners->delete($blog_del)) {
                 }
                 $this->redirect($url);
             }
-    
-            if (isset($get['st'] ) && !empty($get['st'])) {
+
+            if (isset($get['st']) && !empty($get['st'])) {
                 $getData = $this->Partners->findById($get['st'])->firstOrFail();
                 $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2 : 1)];
                 $saveData = $this->Partners->newEntity($upData, ['validate' => false]);
@@ -638,7 +653,7 @@ class PagesController extends AppController
             }
         }
 
-        
+
 
 
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
@@ -753,33 +768,36 @@ class PagesController extends AppController
             $get_data = $this->Projects->findById($id)->firstOrFail();
             if ($this->request->getQuery('type')  && !empty($this->request->getQuery('type'))) {
                 $tab = $this->request->getQuery('type');
-                if( $tab == 'team' ){
-                    $this->paginate = ['limit' => 100,'conditions'=>['Teams.type'=>2,'Teams.project_id'=>$id],'order' => ['id' => 'desc']];
+                if ($tab == 'team') {
+                    $this->paginate = ['limit' => 100, 'conditions' => ['Teams.type' => 2, 'Teams.project_id' => $id], 'order' => ['id' => 'desc']];
                     $data = $this->paginate($this->Teams->find('all'));
                     $paging = $this->request->getAttribute('paging');
-                    $this->set(compact('data','paging'));
-                }elseif( $tab == 'partner' ){
-                    $this->paginate = ['limit' => 100,'conditions'=>['Partners.type'=>2,'Partners.project_id'=>$id], 'order' => ['id' => 'desc']];
+                    $this->set(compact('data', 'paging'));
+                } elseif ($tab == 'partner') {
+                    $this->paginate = ['limit' => 100, 'conditions' => ['Partners.type' => 2, 'Partners.project_id' => $id], 'order' => ['id' => 'desc']];
                     $data = $this->paginate($this->Partners->find('all'));
                     $paging = $this->request->getAttribute('paging');
-                    $this->set(compact('data','paging'));
+                    $this->set(compact('data', 'paging'));
                 }
             }
         }
-        $this->set(compact('get_data','tab'));
+        $this->set(compact('get_data', 'tab'));
     }
 
-    public function addTeam(){
+    public function addTeam()
+    {
         $post_data = null;
-        if ($this->request->is('ajax') ) {
+        if ($this->request->is('ajax')) {
 
-            if( !empty($this->request->getData()) ){
+            if (!empty($this->request->getData())) {
                 $file_name = null;
                 $postData = $this->request->getData();
                 $uploadPath = 'cdn/team/';
-                if (!file_exists($uploadPath)) { mkdir($uploadPath, 0777, true); }
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
                 /* For logo */
-    
+
                 if (!empty($postData['hero_img'])) {
                     if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg', 'image/svg+xml'])) {
                         $fileobject = $postData['hero_img'];
@@ -791,21 +809,26 @@ class PagesController extends AppController
                             echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
                             exit;
                         }
-                    }else {
-                        echo '<div class="alert alert-danger" role="alert">Please upload only PNG and JPG file</div>'; exit;
+                    } else {
+                        echo '<div class="alert alert-danger" role="alert">Please upload only PNG and JPG file</div>';
+                        exit;
                     }
                 }
-    
+
                 if (isset($postData['id']) && !empty($postData['id'])) {
                     $getBlog = $this->Teams->get($postData['id']);
-                    if (!empty($file_name)) { $getBlog['img'] = $file_name; }
+                    if (!empty($file_name)) {
+                        $getBlog['img'] = $file_name;
+                    }
                     $chkBlog = $this->Teams->patchEntity($getBlog, $postData, ['validate' => true]);
                 } else {
                     $getBlog = $this->Teams->newEmptyEntity();
-                    if (!empty($file_name)) { $getBlog['img'] = $file_name; }
+                    if (!empty($file_name)) {
+                        $getBlog['img'] = $file_name;
+                    }
                     $chkBlog = $this->Teams->patchEntity($getBlog, $postData, ['validate' => true]);
                 }
-    
+
                 if ($chkBlog->getErrors()) {
                     $st = null;
                     foreach ($chkBlog->getErrors() as $elist) {
@@ -825,29 +848,32 @@ class PagesController extends AppController
                     }
                 }
                 exit;
-            }else{
+            } else {
 
                 $pro_id = $this->request->getQuery('pro_id');
                 $team_id = $this->request->getQuery('team_id');
                 if (!empty($team_id)) {
                     $post_data = $this->Teams->findById($team_id)->firstOrFail();
                 }
-                $this->set(compact('post_data','pro_id','team_id'));
+                $this->set(compact('post_data', 'pro_id', 'team_id'));
             }
         }
     }
 
-    public function addPartner(){
+    public function addPartner()
+    {
         $post_data = null;
-        if ($this->request->is('ajax') ) {
+        if ($this->request->is('ajax')) {
 
-            if( !empty($this->request->getData()) ){
+            if (!empty($this->request->getData())) {
                 $file_name = null;
                 $postData = $this->request->getData();
                 $uploadPath = 'cdn/partners/';
-                if (!file_exists($uploadPath)) { mkdir($uploadPath, 0777, true); }
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0777, true);
+                }
                 /* For logo */
-    
+
                 if (!empty($postData['hero_img'])) {
                     if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg', 'image/svg+xml'])) {
                         $fileobject = $postData['hero_img'];
@@ -859,21 +885,26 @@ class PagesController extends AppController
                             echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
                             exit;
                         }
-                    }else {
-                        echo '<div class="alert alert-danger" role="alert">Please upload only PNG and JPG file</div>'; exit;
+                    } else {
+                        echo '<div class="alert alert-danger" role="alert">Please upload only PNG and JPG file</div>';
+                        exit;
                     }
                 }
-    
+
                 if (isset($postData['id']) && !empty($postData['id'])) {
                     $getBlog = $this->Partners->get($postData['id']);
-                    if (!empty($file_name)) { $getBlog['logo'] = $file_name; }
+                    if (!empty($file_name)) {
+                        $getBlog['logo'] = $file_name;
+                    }
                     $chkBlog = $this->Partners->patchEntity($getBlog, $postData, ['validate' => true]);
                 } else {
                     $getBlog = $this->Partners->newEmptyEntity();
-                    if (!empty($file_name)) { $getBlog['logo'] = $file_name; }
+                    if (!empty($file_name)) {
+                        $getBlog['logo'] = $file_name;
+                    }
                     $chkBlog = $this->Partners->patchEntity($getBlog, $postData, ['validate' => true]);
                 }
-    
+
                 if ($chkBlog->getErrors()) {
                     $st = null;
                     foreach ($chkBlog->getErrors() as $elist) {
@@ -893,14 +924,14 @@ class PagesController extends AppController
                     }
                 }
                 exit;
-            }else{
+            } else {
 
                 $pro_id = $this->request->getQuery('pro_id');
                 $row_id = $this->request->getQuery('partner_id');
                 if (!empty($row_id)) {
                     $post_data = $this->Partners->findById($row_id)->firstOrFail();
                 }
-                $this->set(compact('post_data','pro_id','row_id'));
+                $this->set(compact('post_data', 'pro_id', 'row_id'));
             }
         }
     }
@@ -927,7 +958,7 @@ class PagesController extends AppController
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Features->find('all'));
         $paging = $this->request->getAttribute('paging');
-        $this->set(compact('data','paging'));
+        $this->set(compact('data', 'paging'));
     }
 
     public function manageFeature($id = null)
@@ -1021,7 +1052,7 @@ class PagesController extends AppController
         $this->paginate = ['limit' => 100, 'conditions' => ['Users.role' => 2], 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Users->find('all'));
         $paging = $this->request->getAttribute('paging');
-        $this->set(compact('data','paging'));
+        $this->set(compact('data', 'paging'));
     }
 
     public function manageUser($id = null)
@@ -1072,27 +1103,39 @@ class PagesController extends AppController
         $this->set(compact('get_data'));
     }
 
-    public function manageKyc($id = null ){
+    public function manageKyc($id = null)
+    {
         $menu_act = 'users';
         $this->set(compact('menu_act'));
         $get_data = null;
 
         if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
             $chkData = $this->Users->findById($id)->first();
-            if(!empty($chkData)){
-                $upData = ['id' => $chkData->id, 'kyc_completed' => $this->request->getQuery('st')];
-                $saveData = $this->Users->newEntity($upData, ['validate' => false]);
-                $this->Users->save($saveData);
+            if (!empty($chkData)) {
+                if ($this->request->getQuery('st') == 2) {
+                    $upData = ['id' => $chkData->id, 'kyc_completed' => 2];
+                    $saveData = $this->Users->newEntity($upData, ['validate' => false]);
+                    $this->Users->save($saveData);
+
+                    $this->Data->AppMail($chkData->email, 9, ['NAME' =>$chkData->first_name]);
+
+                } elseif ($this->request->getQuery('st') == 3) {
+                    $upData = ['id' => $chkData->id, 'kyc_completed' => 3];
+                    $saveData = $this->Users->newEntity($upData, ['validate' => false]);
+                    $this->Data->AppMail($chkData->email, 10, ['NAME' =>$chkData->first_name]);
+                    $this->Users->save($saveData);
+                } else {
+                }
             }
             $this->redirect('/pages/users');
         }
 
 
         if (!empty($id)) {
-            $query = $this->Users->find('all', ['contain' => ['Countries'],'conditions' => ['Users.id'=> $id,'Users.kyc_completed IN' => [1,2,3] ]]);
+            $query = $this->Users->find('all', ['contain' => ['Countries'], 'conditions' => ['Users.id' => $id, 'Users.kyc_completed IN' => [1, 2, 3]]]);
             $get_data =  $query->first();
-            
-            if(empty($get_data)){
+
+            if (empty($get_data)) {
                 $this->viewBuilder()->setLayout('not_found');
             }
         }
@@ -1114,7 +1157,7 @@ class PagesController extends AppController
         $this->paginate = ['limit' => 100, 'conditions' => [], 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Newsletters->find('all'));
         $paging = $this->request->getAttribute('paging');
-        $this->set(compact('data','paging'));
+        $this->set(compact('data', 'paging'));
     }
 
     public function newsletter()
@@ -1126,20 +1169,35 @@ class PagesController extends AppController
 
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $postData = $this->request->getData();
-            if(!empty($postData['subject']) && !empty($postData['message'])){
+            if (!empty($postData['subject']) && !empty($postData['message'])) {
                 $query = $this->Newsletters->find('list', ['keyField' => 'email', 'valueField' => 'name'])->order(['Newsletters.name' => 'ASC']);
                 $data = $query->all()->toArray();
-                if(!empty($data)){
-                    foreach($data as $em=>$name){
-                        $this->Data->AppMail($em,7, ['NAME'=>$name,'SUBJECT'=>$postData['subject'],'BODY'=>$postData['message']]);
+                if (!empty($data)) {
+                    foreach ($data as $em => $name) {
+                        $this->Data->AppMail($em, 7, ['NAME' => $name, 'SUBJECT' => $postData['subject'], 'BODY' => $postData['message']]);
                     }
                     echo "<script>$('#e_frm')[0].reset();</script>";
                     echo "<div class='alert alert-success'>Newsletter sent.</div>";
                     echo "<script> setTimeout(function(){ location.reload(); }, 2000);</script>";
-                }else{ echo "<div class='alert alert-danger'>Subscribers not found</div>"; }
-            }else{ echo "<div class='alert alert-danger'>Please add email subject and message.</div>"; }
+                } else {
+                    echo "<div class='alert alert-danger'>Subscribers not found</div>";
+                }
+            } else {
+                echo "<div class='alert alert-danger'>Please add email subject and message.</div>";
+            }
             exit;
         }
+    }
+
+    public function emails(){
+        $menu_act = 'emails';
+        $sub_menu = 'top_menu';
+        $this->set(compact('menu_act', 'sub_menu'));
+
+        $this->paginate = ['limit' => 100, 'conditions' => [], 'order' => ['id' => 'desc']];
+        $data = $this->paginate($this->EmailServers->find('all'));
+        $paging = $this->request->getAttribute('paging');
+        $this->set(compact('data', 'paging'));
     }
 
     public function settings()
@@ -1172,10 +1230,13 @@ class PagesController extends AppController
 
             if (isset($postData['id']) && !empty($postData['id'])) {
                 $getBlog = $this->Settings->get($postData['id']);
-                if (!empty($file_name)) { $getBlog['logo'] = $file_name; }
+                if (!empty($file_name)) {
+                    $getBlog['logo'] = $file_name;
+                }
                 $chkBlog = $this->Settings->patchEntity($getBlog, $postData, ['validate' => true]);
-            }else{
-                echo '<div class="alert alert-danger" role="alert"> Not saved.</div>'; exit;
+            } else {
+                echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                exit;
             }
             if ($chkBlog->getErrors()) {
                 $st = null;
@@ -1242,14 +1303,18 @@ class PagesController extends AppController
         $this->set(compact('tbl_data'));
     }
 
-    
+
     /* open new popup on ajax request */
-	public function openPop( $id = null ) {
-	    $this->autoRender = false;
+    public function openPop($id = null)
+    {
+        $this->autoRender = false;
         $getData = $this->request->getData();
-        if(isset($getData['url']) && !empty($getData['url'])) {
-	        if ( $id == 1 ){ echo "<script> $.magnificPopup.open({items: { src: '" . urldecode($getData['url']) . "',type: 'ajax'}, closeOnContentClick: false, closeOnBgClick: false, showCloseBtn: false, enableEscapeKey: false, }); </script>"; }
-	        else{ echo "<script> $.magnificPopup.open({items: { src: '" . urldecode($getData['url']) . "',type: 'ajax'}, closeMarkup: '<button class=\"mfp-close mfp-new-close\" type=\"button\" title=\"Close\">x</button>', closeOnContentClick: false, closeOnBgClick: false, showCloseBtn: true, enableEscapeKey: false}); </script>"; }
-	    }
-	}
+        if (isset($getData['url']) && !empty($getData['url'])) {
+            if ($id == 1) {
+                echo "<script> $.magnificPopup.open({items: { src: '" . urldecode($getData['url']) . "',type: 'ajax'}, closeOnContentClick: false, closeOnBgClick: false, showCloseBtn: false, enableEscapeKey: false, }); </script>";
+            } else {
+                echo "<script> $.magnificPopup.open({items: { src: '" . urldecode($getData['url']) . "',type: 'ajax'}, closeMarkup: '<button class=\"mfp-close mfp-new-close\" type=\"button\" title=\"Close\">x</button>', closeOnContentClick: false, closeOnBgClick: false, showCloseBtn: true, enableEscapeKey: false}); </script>";
+            }
+        }
+    }
 }
