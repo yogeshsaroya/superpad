@@ -12,7 +12,7 @@ class ProjectsTable extends Table
     {
         $this->addBehavior('Timestamp');
         $this->belongsTo('Blockchains');
-        $this->hasMany('Teams');
+        $this->hasMany('Teams',['sort'=>['Teams.position ASC'] ]);
         $this->hasMany('Partners');
     }
 

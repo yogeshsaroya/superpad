@@ -27,6 +27,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
+                                    <th><?php echo $this->Paginator->sort('position'); ?></th>
                                         <th><?php echo $this->Paginator->sort('img'); ?></th>
                                         <th><?php echo $this->Paginator->sort('title'); ?></th>
                                         <th><?php echo $this->Paginator->sort('heading'); ?></th>
@@ -39,6 +40,7 @@
                                     if (!empty($data)) {
                                         foreach ($data as $list) { ?>
                                             <tr>
+                                            <td><?php echo $list->position; ?></td>
                                                 <td><?php if (!empty($list->img)) {
                                                         echo $this->Html->image(SITEURL . 'cdn/team/' . $list->img, ['alt' => 'logo', 'width' => 100]);
                                                     } ?></td>
