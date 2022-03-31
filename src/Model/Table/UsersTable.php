@@ -14,6 +14,7 @@ class UsersTable extends Table
     public function initialize(array $config): void
     {
         $this->addBehavior('Timestamp');
+        $this->belongsTo('Countries');
     }
     
     public function validationDefault(Validator $validator): Validator

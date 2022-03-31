@@ -43,8 +43,9 @@
                                                 <td><?php 
                                                 if($list->kyc_completed == 0){ } 
                                                 elseif($list->kyc_completed == 1){ echo '<span class="badge rounded-pill bg-warning text-dark">In Review</span>';} 
-                                                elseif($list->kyc_completed == 2){ echo '<span class="badge rounded-pill bg-danger">Rejected</span>';} 
-                                                elseif($list->kyc_completed == 3){ echo '<span class="badge rounded-pill bg-success">Verifid</span>';} 
+                                                elseif($list->kyc_completed == 2){ echo '<span class="badge rounded-pill bg-success">Verifid</span>';} 
+                                                elseif($list->kyc_completed == 3){ echo '<span class="badge rounded-pill bg-danger">Rejected</span>';} 
+                                                
                                                 ?></td>
                                                 <td><?php
                                                     if ($list->status == 1) {
