@@ -176,7 +176,6 @@ if (!empty($end_date)) {
             </div><!-- end col -->
             <div class="col-lg-4 mt-lg-0 mt-5 mob_order_1 <?php echo (!$this->request->is('mobile') ?  "sidebarFixed" : null); ?>">
                 <div class="item-detail-content mt-4 mt-lg-0 sidebars">
-                    <h6 class="subHead">Fundraise Goal</h6>
                     <h1 class="item-detail-title mb-3"><?php echo $list->title; ?>
                         <span class="ms-auto">
                             <?php if (isset($list->blockchain->name)) { ?>
@@ -203,12 +202,7 @@ if (!empty($end_date)) {
                                 <span class="card-price-title">Ticket Allocation</span>
                                 <span class="card-price-number text-end"><?php echo ($list->ticket_allocation > 0 ? $this->Number->currency($list->ticket_allocation, 'USD') : 'TBA'); ?></span>
                             </div>
-                            <div class="d-flex justify-content-between align-items-center col-12">
-                                <span class="card-price-title">Network</span>
-                                <span class="card-price-number text-end"><?php echo (isset($list->blockchain->name) ? $list->blockchain->name : 'TBA'); ?></span>
-                            </div>
-
-                        </div>
+                       </div>
                     </div>
 
                     <p class="item-detail-text mb-2 hide">The allowlist for Kyoko is now available and you can apply for it below. Note</p>
