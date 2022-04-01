@@ -90,4 +90,18 @@ class DataComponent extends Component
         }
         return $msg;
     }
+
+
+    public function getUser( $id = null ) {
+        if(!empty($id)){
+            $tbl = TableRegistry::get('Users');
+            try {
+                $query = $tbl->find('all', [ 'conditions' => ['Users.id'=>$id] ]);
+                return $query->first();
+            } catch (\Throwable $th) {
+                return false;
+            }
+        }
+        
+    }
 }

@@ -156,6 +156,7 @@ async function userLogin() {
                             },
                         })
                         .then(function(response) {
+                            console.log(response.data);
                             if (response.data[0] == "Success") {
                                 rd();
                                 /*
@@ -172,6 +173,10 @@ async function userLogin() {
                                 */
                             } else if (response.data[0] == "Error") {
                                 err_wallet();
+                            } else if (response.data[0] == "Cancel") {
+                                can_wallet();
+                            } else if (response.data[0] == "Fail") {
+                                fail_wallet();
                             }
                         })
                         .catch(function(error) {

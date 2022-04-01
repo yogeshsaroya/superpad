@@ -62,8 +62,12 @@ class UsersController extends AppController
     {
         
     }
-    public function connectWallet()
-    {
+    public function connectWallet() {
+        $user_data = $this->Users->findById($this->Auth->user('id'))->first();
+        if ( !empty($user_data->metamask_wallet_id ) ){
+            $this->redirect('/users/wallet');
+        }
+
     }
 
     public function dashboard() {
@@ -603,31 +607,29 @@ class UsersController extends AppController
         $this->autoRender = false;
         $getData = $this->request->getData();
         if (!empty($getData)) {
+            
             if ($getData['request'] == 'login') {
                 //ec("Login : ");ec($getData);
                 echo "Welcome to SuperPAD";
-            } elseif ($getData['request'] == 'auth') {
-                // echo "Your walllet address " . $getData['address'] . " will be linked with your SuperPAD account";
-                if ($this->Auth->User('id') != "") {
-                    $verify = $this->Users->find('all')
-                        ->where(['Users.status' => 1, 'Users.role' => 2, 'Users.id' => $this->Auth->User('id')])
-                        ->first();
-                    if (!empty($verify)) {
-                        $up_arr = ['id' => $verify->id, 'metamask_wallet_id' => $getData['address']];
-                        $user1 = $this->Users->newEntity($up_arr, ['validate' => 'WalletAddress']); 
-                        if ($user1->getErrors()) {
-                            echo (json_encode(['Error','This wallet address is already in use with other account.']));
-                            exit;
-                        } else {
-                            $this->Users->save($user1);
-                            echo (json_encode(["Success"]));
-                        }
-                    } else {
-                        echo "Fail";
-                    }
-                } else {
-                    echo "Fail";
-                }
+            } elseif ($getData['request'] == 'auth' ) {
+                if(isset($getData['signature'])){
+                    if ($this->Auth->User('id') != "") {
+                        $verify = $this->Users->find('all')
+                            ->where(['Users.status' => 1, 'Users.role' => 2, 'Users.id' => $this->Auth->User('id')])
+                            ->first();
+                        if (!empty($verify)) {
+                            $up_arr = ['id' => $verify->id, 'metamask_wallet_id' => $getData['address']];
+                            $user1 = $this->Users->newEntity($up_arr, ['validate' => 'WalletAddress']); 
+                            if ($user1->getErrors()) {
+                                echo (json_encode(['Error','This wallet address is already in use with other account.']));
+                                exit;
+                            } else {
+                                $this->Users->save($user1);
+                                echo (json_encode(["Success"]));
+                            }
+                        } else {  echo (json_encode(["Fail"])); }
+                    } else {  echo (json_encode(["Fail"])); }
+                }else{  echo (json_encode(["Cancel"])); }
             }
         }
         exit;
