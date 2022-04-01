@@ -108,6 +108,12 @@ function getStatus()
     return ['1' => 'Active', '2' => 'Inactive'];
 }
 
+function getSmAccountType()
+{
+    return ['Twitter' => 'Twitter', 'Discord' => 'Discord','Medium'=>'Medium','Telegram'=>'Telegram'];
+}
+
+
 function getProjectType()
 {
     return [

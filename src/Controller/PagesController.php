@@ -787,6 +787,12 @@ class PagesController extends AppController
                     $paging = $this->request->getAttribute('paging');
                     $this->set(compact('data', 'paging'));
                 }
+                elseif ($tab == 'media') {
+                    $this->paginate = ['limit' => 100, 'conditions' => ['SmAccounts.project_id' => $id], 'order' => ['id' => 'desc']];
+                    $data = $this->paginate($this->SmAccounts->find('all'));
+                    $paging = $this->request->getAttribute('paging');
+                    $this->set(compact('data', 'paging'));
+                }
             }
         }
         $this->set(compact('get_data', 'tab'));
@@ -940,6 +946,47 @@ class PagesController extends AppController
                     $post_data = $this->Partners->findById($row_id)->firstOrFail();
                 }
                 $this->set(compact('post_data', 'pro_id', 'row_id'));
+            }
+        }
+    }
+
+    public function addSmAccount(){
+        $post_data = null;
+        if ($this->request->is('ajax')) {
+
+            if (!empty($this->request->getData())) {
+                $file_name = null;
+                $postData = $this->request->getData();
+                
+                if (isset($postData['id']) && !empty($postData['id'])) {
+                    $getBlog = $this->SmAccounts->get($postData['id']);
+                    $chkBlog = $this->SmAccounts->patchEntity($getBlog, $postData, ['validate' => true]);
+                } else {
+                    $getBlog = $this->SmAccounts->newEmptyEntity();
+                    $chkBlog = $this->SmAccounts->patchEntity($getBlog, $postData, ['validate' => true]);
+                }
+
+                if ($chkBlog->getErrors()) {
+                    $st = null;
+                    foreach ($chkBlog->getErrors() as $elist) {
+                        foreach ($elist as $k => $v); { $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>"; }
+                    }
+                    echo $st; exit;
+                } else {
+                    if ($this->SmAccounts->save($chkBlog)) {
+                        echo "<script>$('#save_frm').remove();</script>";
+                        echo "<div class='alert alert-success'>Saved</div>";
+                        echo "<script> setTimeout(function(){ location.reload(); }, 2000);</script>";
+                    } else {
+                        echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                    }
+                }
+                exit;
+            } else {
+
+                $pro_id = $this->request->getQuery('pro_id');
+                $post_data = null;
+                $this->set(compact('post_data', 'pro_id'));
             }
         }
     }

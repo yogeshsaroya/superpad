@@ -45,7 +45,8 @@ class UsersController extends AppController
         parent::beforeFilter($event);
 
         /* https://book.cakephp.org/4/en/controllers/components/authentication.html#AuthComponent::allow */
-        $this->Auth->allow(['login','register','backend','backendRestPassword','logout','check','gAuth','forgetPassword','connectWallet']);
+        $this->Auth->allow(['login','register','backend','backendRestPassword','logout','check','gAuth',
+        'forgetPassword','connectWallet','check_metamask']);
 
         // Form helper https://codethepixel.com/tutorial/cakephp/cakephp-4-common-helpers
         /* https://codethepixel.com/tutorial/cakephp/cakephp-4-find-sort-count */
@@ -100,6 +101,15 @@ class UsersController extends AppController
         }
 
 
+        $user_data = $this->Users->findById($this->Auth->user('id'))->first();
+        if(!empty($user_data)){
+        $this->set(compact('user_data'));
+        }else{
+            $this->viewBuilder()->setLayout('error_404');
+        }
+    }
+
+    public function wallet(){
         $user_data = $this->Users->findById($this->Auth->user('id'))->first();
         if(!empty($user_data)){
         $this->set(compact('user_data'));
@@ -586,5 +596,30 @@ class UsersController extends AppController
             return $user;
         }
         return null;
+    }
+
+    public function checkMetamask()
+    {
+        $this->autoRender = false;
+        $getData = $this->request->getData();
+        if (!empty($getData)) {
+            if ($getData['request'] == 'login') {
+                //ec("Login : ");ec($getData);
+                echo "Welcome to SuperPAD";
+            } elseif ($getData['request'] == 'auth') {
+                // echo "Your walllet address " . $getData['address'] . " will be linked with your SuperPAD account";
+                if ($this->Auth->User('id') != "") {
+                    $verify = $this->Users->find('all')
+                        ->where(['Users.status' => 1, 'Users.role' => 2, 'Users.id' => $this->Auth->User('id') ])
+                        ->first();
+                    if (!empty($verify)) {
+                        $up_arr = ['id' => $verify->id, 'metamask_wallet_id' => $getData['address']];
+                        $user1 = $this->Users->newEntity($up_arr, ['validate' => false]);
+                        $this->Users->save($user1);
+                        echo (json_encode(["Success"]));
+                    }else{ echo "Fail"; }
+                } else { echo "Fail"; }
+            }
+        }
     }
 }

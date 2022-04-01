@@ -4,10 +4,12 @@ $type = getProjectType();
 $status = getProjectStatus();
 $this->assign('title', 'Manage Projects'); ?>
 
+<?php /* ?>
 <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/vendors/css/pickers/pickadate/pickadate.css">
 <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/vendors/css/pickers/flatpickr/flatpickr.min.css">
 <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/css/plugins/forms/pickers/form-flat-pickr.css">
 <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/css/plugins/forms/pickers/form-pickadate.css">
+<?php */ ?>
 
 <!-- BEGIN: Content-->
 <div class="app-content content ">
@@ -15,19 +17,20 @@ $this->assign('title', 'Manage Projects'); ?>
     <div class="header-navbar-shadow"></div>
     <div class="content-wrapper">
         <div class="content-header row">
-            <div class="content-header-left col-md-9 col-12 mb-2">
+            <div class="content-header-left col-md-6 col-12 mb-2">
                 <div class="row breadcrumbs-top">
                     <div class="col-12">
                         <h2 class="content-header-title float-left mb-0"><?php echo (isset($get_data->title) ? $get_data->title :  "Add New Project" ) ?> </h2>
                     </div>
                 </div>
             </div>
-            <div class="content-header-right text-md-right col-md-3 col-12 d-md-block d-none">
+            <div class="content-header-right text-md-right col-md-6 col-12 d-md-block d-none">
                 <div class="form-group breadcrumb-right">
                     <div class="dropdown">
                         <?php if (isset($get_data->id) && !empty($get_data->id)) { ?>
                             <?php echo $this->Html->link('Add New Team', 'javascript:void(0);', ['onclick' => 'addTeam('.$get_data->id.')', 'class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
                             <?php echo $this->Html->link('Add New Partner', 'javascript:void(0);', ['onclick' => 'addPartner('.$get_data->id.')', 'class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
+                            <?php echo $this->Html->link('Add New Social Media Account', 'javascript:void(0);', ['onclick' => 'addMedia('.$get_data->id.')', 'class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
                         <?php } ?>
                     </div>
                 </div>
@@ -42,6 +45,7 @@ $this->assign('title', 'Manage Projects'); ?>
                         <li class="nav-item"><a class="nav-link <?php echo ($tab == 'home' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id; ?>">Product</a></li>
                         <li class="nav-item"><a class="nav-link <?php echo ($tab == 'team' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=team"; ?>">Team</a></li>
                         <li class="nav-item"><a class="nav-link <?php echo ($tab == 'partner' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=partner"; ?>">Partner and Investor</a></li>
+                        <li class="nav-item"><a class="nav-link <?php echo ($tab == 'media' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=media"; ?>">Social Media Accounts</a></li>
                     </ul>
                 </div>
             <?php } ?>
@@ -268,7 +272,50 @@ $this->assign('title', 'Manage Projects'); ?>
                                         </div>
                                     </div>
                                 </div>
-                            <?php } ?>
+                            <?php } elseif ($tab == 'media') {?>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th><?php echo $this->Paginator->sort('type'); ?></th>
+                                                <th><?php echo $this->Paginator->sort('heading'); ?></th>
+                                                <th><?php echo $this->Paginator->sort('sub_heading'); ?></th>
+                                                <th><?php echo $this->Paginator->sort('link') ?></th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            if (!empty($data)) {
+                                                foreach ($data as $list) { ?>
+                                                    <tr>
+                                                        <td><?php echo $list->type; ?></td>
+                                                        <td><?php echo $list->heading; ?></td>
+                                                        <td><?php echo $list->sub_heading; ?></td>
+                                                        <td><?php echo $list->link; ?></td>
+                                                        <td><?php echo $this->Html->link('Delete', SITEURL."pages/manage_project/$get_data->id?type=media&del=".$list->id, ['escape' => false, 'class' => 'text-info', 'onclick' => "return confirm('Are you sure you want to delete?')"]);?></td>
+                                                    </tr>
+                                            <?php }
+                                            } ?>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="card-header">
+                                        <?php echo $this->Paginator->counter('Page {{page}} of {{pages}}, showing {{current}} records out of {{count}} total, starting on record {{start}}, ending on {{end}}'); ?>
+                                        <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+                                            <ul class="pagination">
+                                                <?php
+                                                echo $this->Paginator->first(__('First', true), array('tag' => 'li', 'escape' => false), array('type' => "button", 'class' => "btn btn-default"));
+                                                echo $this->Paginator->prev('&laquo;', array('tag' => 'li', 'escape' => false), '<a href="#">&laquo;</a>', array('class' => 'prev disabled', 'tag' => 'li', 'escape' => false));
+                                                echo $this->Paginator->numbers(array('separator' => '', 'tag' => 'li', 'currentLink' => true, 'currentClass' => 'active', 'currentTag' => 'a'));
+                                                echo $this->Paginator->next('&raquo;', array('tag' => 'li', 'escape' => false), '<a href="#">&raquo;</a>', array('class' => 'prev disabled', 'tag' => 'li', 'escape' => false));
+                                                echo $this->Paginator->last(__('Last', true), array('tag' => 'li', 'escape' => false), array('type' => "button", 'class' => "btn btn-default"));
+                                                ?>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php }?>
                         </div>
                     </div>
                 </div>
@@ -329,6 +376,21 @@ echo $this->Html->script(['//cdn.ckeditor.com/4.18.0/full-all/ckeditor.js']);
         });
     }
 
+    function addMedia(pro_id) {
+        var d = "<?php echo urlencode(SITEURL . "pages/add_sm_account?");?>pro_id="+pro_id;
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo SITEURL; ?>pages/open_pop/',
+            data: {url:d},
+            success: function(data) {
+                $("#cover").html(data);
+            },
+            error: function(comment) {
+                $("#cover").html(comment);
+            }
+        });
+    }
+    
 
 
 

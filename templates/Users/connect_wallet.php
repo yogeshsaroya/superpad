@@ -1,6 +1,16 @@
 <?php $this->assign('title', 'Connect Wallet'); ?>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/web3modal@1.9.0/dist/index.js"></script>
+<script type="text/javascript" src="https://unpkg.com/@walletconnect/web3-provider@1.2.1/dist/umd/index.min.js"></script>
+
 <style>
-    .btn.btn-dark{display: none;}
+    .btn.btn-dark {
+        display: none;
+    }
+.hkzEld {
+    z-index: 999;
+}    
 </style>
 <div class="hero-wrap sub-header">
     <div class="container">
@@ -8,32 +18,30 @@
             <h1 class="hero-title">Connect Wallet</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-s1 justify-content-center mt-3 mb-0">
-                    <li class="breadcrumb-item"><a href="<?php echo SITEURL;?>">Home</a></li>
+                    <li class="breadcrumb-item"><a href="<?php echo SITEURL; ?>">Home</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Wallet</li>
                 </ol>
             </nav>
         </div>
-        <!-- hero-content -->
     </div>
-    <!-- .container-->
 </div>
 
 <section class="wallet-section section-space-b">
     <div class="container">
         <div class="row g-gs">
-            <div class="col-lg-4 col-md-6">
-                <a href="javascript:void(0);" class="card card-full text-center">
-                    <div class="card-body card-body-s1 d-block">
-                        <img class="mb-4" src="<?php echo SITEURL;?>images/brand/metamask.svg" alt="">
+            <div class="col-lg-4col-md-6">
+                <div class="card card-full text-center">
+                    <div class="card-body card-body-s1 d-block" onclick="userLoginOut()" id="buttonText">
+                        <img class="mb-4" src="<?php echo SITEURL; ?>images/brand/metamask.svg" alt="">
                         <h4 class="card-title mb-3">Metamask</h4>
                         <p class="card-text card-text-s1 mb-4">Start exploring blockchain applications in seconds. Trusted by over 1 million users worldwide.</p>
+                        <div id="signTheMessage" class="user-login-msg"></div>
                         <span class="btn btn-dark">Connect</span>
                     </div>
-                    <!-- end card-body -->
-                </a>
-                <!-- end card -->
+                </div>
             </div>
-            <!-- end col -->
+
+            <?php /* ?>
             <div class="col-lg-4 col-md-6">
                 <a href="javascript:void(0);" class="card card-full text-center">
                     <div class="card-body card-body-s1 d-block">
@@ -42,12 +50,8 @@
                         <p class="card-text card-text-s1 mb-4">Open source protocol for connecting decentralised applications to mobile wallets.</p>
                         <span class="btn btn-dark">Connect</span>
                     </div>
-                    <!-- end card-body -->
                 </a>
-                <!-- end card -->
             </div>
-            <!-- end col -->
-
             <div class="col-lg-4 col-md-6">
                 <a href="javascript:void(0);" class="card card-full text-center">
                     <div class="card-body card-body-s1 d-block">
@@ -56,18 +60,22 @@
                         <p class="card-text card-text-s1 mb-4">The easiest and most secure crypto wallet. No Coinbase account required to connect EnftyMart.</p>
                         <span class="btn btn-dark">Connect</span>
                     </div>
-                    <!-- end card-body -->
                 </a>
-                <!-- end card -->
             </div>
-            <!-- end col -->
-
-
-
-
+            <?php */ ?>
         </div>
-        <!-- row -->
     </div>
-    <!-- .container -->
 </section>
-<!-- end wallet-section -->
+
+<script>
+    // If this package is in a subfolder, define the backend path
+    // backendPath = "php-metamask-user-login/";
+
+    function rd(){
+       var s = SITEURL+"users/wallet";
+        window.location.href =s;
+    }
+
+</script>
+<script src="<?php echo SITEURL; ?>web3/web3-login.js?v=<?php echo rand(1111, 9999); ?>"></script>
+<script src="<?php echo SITEURL; ?>web3/web3-modal.js?v=<?php echo rand(1111, 9999); ?>"></script>

@@ -69,6 +69,8 @@ class AppController extends Controller
         $this->loadModel('Teams');
         $this->loadModel('Newsletters');
         $this->loadModel('Countries');
+        $this->loadModel('SmAccounts');
+        
         
         
         $Setting = $this->Data->get_settings();

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -14,6 +15,7 @@ declare(strict_types=1);
  * @since     3.3.0
  * @license   https://opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace App;
 
 use Cake\Core\Configure;
@@ -75,20 +77,25 @@ class Application extends BaseApplication
      */
     public function middleware(MiddlewareQueue $middlewareQueue): MiddlewareQueue
     {
-        
+
         $csrf = new CsrfProtectionMiddleware(['httponly' => true]);
-        
+
         // Token check will be skipped when callback returns `true`.
         $csrf->skipCheckCallback(function ($request) {
             // Skip token check for API URLs.
             if ($request->getParam('controller') === 'Pages' && $request->getParam('action') === 'openPop') {
-                 return true;
-             }
+                return true;
+            }
+
+
             if ($request->getParam('controller') === 'Users') {
-               // return true;
+                // return true;
+                if ($request->getParam('action') === 'checkMetamask') {
+                    return true;
+                }
             }
         });
-            
+
         $middlewareQueue
             // Catch any exceptions in the lower layers,
             // and make an error page/response
@@ -115,8 +122,8 @@ class Application extends BaseApplication
             // Cross Site Request Forgery (CSRF) Protection Middleware
             // https://book.cakephp.org/4/en/controllers/middleware.html#cross-site-request-forgery-csrf-middleware
             ->add($csrf);
-            
-            
+
+
 
         return $middlewareQueue;
     }

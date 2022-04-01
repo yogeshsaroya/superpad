@@ -15,7 +15,9 @@
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
 
-    
+    <script type="text/javascript">
+    var SITEURL = "<?php echo SITEURL?>";
+    </script>
     <?php echo $this->Html->script(['/js/vendor/modernizr-2.8.3.min']) ?>
 </head>
 
