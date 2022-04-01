@@ -610,15 +610,24 @@ class UsersController extends AppController
                 // echo "Your walllet address " . $getData['address'] . " will be linked with your SuperPAD account";
                 if ($this->Auth->User('id') != "") {
                     $verify = $this->Users->find('all')
-                        ->where(['Users.status' => 1, 'Users.role' => 2, 'Users.id' => $this->Auth->User('id') ])
+                        ->where(['Users.status' => 1, 'Users.role' => 2, 'Users.id' => $this->Auth->User('id')])
                         ->first();
                     if (!empty($verify)) {
                         $up_arr = ['id' => $verify->id, 'metamask_wallet_id' => $getData['address']];
-                        $user1 = $this->Users->newEntity($up_arr, ['validate' => false]);
-                        $this->Users->save($user1);
-                        echo (json_encode(["Success"]));
-                    }else{ echo "Fail"; }
-                } else { echo "Fail"; }
+                        $user1 = $this->Users->newEntity($up_arr, ['validate' => 'WalletAddress']); 
+                        if ($user1->getErrors()) {
+                            echo (json_encode(['Error','This wallet address is already in use with other account.']));
+                            exit;
+                        } else {
+                            $this->Users->save($user1);
+                            echo (json_encode(["Success"]));
+                        }
+                    } else {
+                        echo "Fail";
+                    }
+                } else {
+                    echo "Fail";
+                }
             }
         }
     }

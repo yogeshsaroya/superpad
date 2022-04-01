@@ -170,6 +170,8 @@ async function userLogin() {
                                 userLoginData.JWT = response.data[2];
                                 localStorage.clear();
                                 */
+                            } else if (response.data[0] == "Error") {
+                                err_wallet();
                             }
                         })
                         .catch(function(error) {

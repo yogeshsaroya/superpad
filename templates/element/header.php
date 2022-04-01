@@ -44,9 +44,9 @@ $session = $this->request->getSession()->read('Auth'); //read session data
                             <li class="menu-item"><a href="<?php echo SITEURL; ?>register" class="menu-link">Register</a></li>
                         <?php } ?>
                     </ul>
-                    <ul class="menu-btns">
-                        <li><a href="javascript:void(0);" class="btn btn-dark">Connect Wallet</a></li>
-                    </ul>
+                    <?php if (isset($session['User']['role']) && $session['User']['role'] == 2 && empty($session['User']['metamask_wallet_id']) ) { ?>
+                    <ul class="menu-btns"> <li><a href="<?php echo SITEURL;?>connect-wallet" class="btn btn-dark">Connect Wallet</a></li> </ul>
+                    <?php }?>
 
                 </nav><!-- .header-menu -->
                 <div class="header-overlay"></div>

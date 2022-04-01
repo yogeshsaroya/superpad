@@ -72,8 +72,17 @@
     // backendPath = "php-metamask-user-login/";
 
     function rd(){
+      document.getElementById('buttonText').removeAttribute("onclick");
+
+       $('#signTheMessage').html('<div class="alert alert-success">Your MetaMask wallet address been linked with your account.</div>');
        var s = SITEURL+"users/wallet";
-        window.location.href =s;
+       
+       setTimeout(function(){ window.location.href =s; }, 2000);
+    }
+
+    function err_wallet(){
+        document.getElementById('buttonText').removeAttribute("onclick");
+        $('#signTheMessage').html('<div class="alert alert-danger">This wallet address is already in use with other account. Please use other account.</div>');
     }
 
 </script>

@@ -15,7 +15,7 @@
             <ul class="user-nav">
                 <li class="<?php echo (isset($menu_act) && $menu_act == 'profile' ? 'active' : null); ?>"><a href="<?php echo SITEURL; ?>dashboard"><em class="ni ni-edit me-2"></em>Edit Profile</a></li>
                 <li class="<?php echo (isset($menu_act) && $menu_act == 'kyc' ? 'active' : null); ?>"><a href="<?php echo SITEURL; ?>users/kyc"><em class="ni ni-money me-2"></em>KYC</a></li>
-                <li class="<?php echo (isset($menu_act) && $menu_act == 'wallet' ? 'active' : null); ?>"><a href="<?php echo SITEURL; ?>wallet"><em class="ni ni-user me-2"></em>Walllet</a></li>
+                <li class="<?php echo (isset($menu_act) && $menu_act == 'wallet' ? 'active' : null); ?>"><a href="<?php echo SITEURL; ?>users/wallet"><em class="ni ni-user me-2"></em>Walllet</a></li>
                 <li><a href="<?php echo SITEURL; ?>users/logout"><em class="ni ni-setting-alt me-2"></em>Logout</a></li>
             </ul>
         </div>

@@ -62,8 +62,14 @@ class UsersTable extends Table
         ->notEmptyString("kyc_state", "State is required")
         ->notEmptyString("country_id", "Country is required")
         ->notEmptyString("kyc_doc_type", "Document type is required");
-        
-        
+        return $validator;
+    }
+
+    public function validationWalletAddress(Validator $validator) {
+        $validator
+        ->requirePresence("metamask_wallet_id")
+        ->notEmptyString("metamask_wallet_id", "Wallet address is required")
+        ->add("metamask_wallet_id", ['unique' => ['rule' => 'validateUnique', 'provider' => 'table', 'message' => 'Wallet address is already in use']]);
         return $validator;
     }
 

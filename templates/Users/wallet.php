@@ -11,8 +11,13 @@ echo $this->element('profile/header', ['bg_color' => 'bg-gray']); ?>
                 </div>
                 <div class="profile-setting-panel-wrap">
                     <h5 class="mb-3">MetaMask Wallet Address</h5>
-                    <a href="#" class="btn btn-outline-dark"><?php echo $user_data->metamask_wallet_id?></a>
-                    <p class="fs-14 mt-2">Please allow for up to 40 seconds for your changes to be reflected on your display screen</p>
+                    <?php if(!empty($user_data->metamask_wallet_id) ){?>
+                    <button class="btn btn-outline-dark"><?php echo $user_data->metamask_wallet_id?></button>
+                    <?php }else{
+                        echo $this->Html->link('Connect Wallet','/connect-wallet',['class'=>'btn btn-outline-primary']);
+                    }?>
+                    
+                    <p class="fs-14 mt-2"></p>
 
                 </div>
             </div>
