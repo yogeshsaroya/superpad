@@ -5768,6 +5768,16 @@ img.features_icon {
     background: #f7f5ec;
 }
 
+@media only screen and (max-width: 576px) {
+    .wd-150,
+    .wd-200 {
+        width: 100% !important;
+    }
+    .wd-200 {
+        margin-bottom: 20px;
+    }
+}
+
 @media only screen and (max-width: 990px) {
     .our-team {
         margin-bottom: 10px;
@@ -5792,4 +5802,31 @@ form .required label:after {
     color: #e32;
     content: '*';
     display: inline
+}
+
+.text-right {
+    text-align: right;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.wd-200 {
+    width: 200px;
+}
+
+.wd-150 {
+    width: 150px;
+}
+
+.wd-150 .ni-check-circle-fill {
+    font-size: 20px;
+    color: green;
+}
+
+.sm_row {
+    padding-bottom: 20px;
+    border-bottom: 0.1px solid #e5e5e5;
+    margin-top: 10px;
 }

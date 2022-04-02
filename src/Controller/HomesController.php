@@ -177,4 +177,34 @@ class HomesController extends AppController
         }
         exit;
     }
+
+    public function applyNow( $id = null ){
+        if (!empty($id)) {
+            $query = $this->Projects->find('all', [
+                'contain' => [
+                    'Blockchains' => ['conditions' => ['Blockchains.status' => 1]],
+                    'Teams' => ['conditions' => ['Teams.status' => 1]],
+                    'SmAccounts'=>['conditions' => ['SmAccounts.featured' => 2]],
+                    'Partners' => ['conditions' => ['Partners.status' => 1]],
+                ],
+                'conditions' => ['Projects.id' => $id, 'Projects.status' => 1]
+            ]);
+            $data =  $query->first();
+            $this->set(compact('data'));
+        }
+    }
+
+    /* open new popup on ajax request */
+    public function openPop($id = null)
+    {
+        $this->autoRender = false;
+        $getData = $this->request->getData();
+        if (isset($getData['url']) && !empty($getData['url'])) {
+            if ($id == 1) {
+                echo "<script> $.magnificPopup.open({items: { src: '" . urldecode($getData['url']) . "',type: 'ajax'}, closeOnContentClick: false, closeOnBgClick: false, showCloseBtn: false, enableEscapeKey: false, }); </script>";
+            } else {
+                echo "<script> $.magnificPopup.open({items: { src: '" . urldecode($getData['url']) . "',type: 'ajax'}, closeMarkup: '<button class=\"mfp-close mfp-new-close\" type=\"button\" title=\"Close\">x</button>', closeOnContentClick: false, closeOnBgClick: false, showCloseBtn: true, enableEscapeKey: false}); </script>";
+            }
+        }
+    }
 }

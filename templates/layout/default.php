@@ -30,5 +30,6 @@
     <?php echo $this->Html->script(['/js/vendor/jquery-3.1.1.min','/assets/js/bundle','/assets/js/scripts']) ?>
     <?php echo $this->Html->script(['jquery.form.min.js', 'validator.min']); ?>
     <?php echo $this->fetch('scriptBottom'); ?>
+<div id="cover"></div>    
 </body>
 </html>

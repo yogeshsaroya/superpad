@@ -2,6 +2,9 @@
 $list = $data;
 $this->assign('title', $list->meta_title);
 $this->assign('description', $list->meta_description);
+echo $this->Html->css(['magnific-popup'], ['block' => 'css']);
+echo $this->Html->script(['jquery.magnific-popup.min'], ['block' => 'scriptBottom']);
+
 $today = strtotime(DATE);
 $st_date = $end_date = null;
 if (!empty($list->start_date)) {
@@ -242,7 +245,7 @@ if (!empty($end_date)) {
                     <div class="item-detail-btns mt-4">
                         <ul class="btns-group d-flex">
                         <?php if(strtolower($list->product_status) == 'whitelist open'){?>
-                            <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);">Join Now</a></li>
+                            <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="apply_sale(<?php echo $list->id?>);">Join Now</a></li>
                             <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Application Status</a> </li>
                             <?php }else if(strtolower($list->product_status) == 'whitelist closed'){?>
                                 <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Sale Ended</a> </li>
@@ -276,13 +279,9 @@ if (!empty($end_date)) {
         </div>
     </div>
 </section>
-
 <section class="item-detail-section ">
-    <div class="container">
-    </div>
+    <div class="container"></div>
 </section>
-
-
 
 <?php
 if (!empty($timer_st)) {
@@ -297,6 +296,28 @@ if (!$this->request->is('mobile')) {
 }
 ?>
 <?php $this->Html->scriptStart(array('block' => 'scriptBottom')); ?>
+function apply_sale(id) {
+        var d = "<?php echo urlencode(SITEURL . "homes/apply_now/");?>"+id;
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo SITEURL; ?>homes/open_pop/',
+            data: {url:d},
+            success: function(data) {
+                $("#cover").html(data);
+            },
+            error: function(comment) {
+                $("#cover").html(comment);
+            }
+        });
+}
+
+$(document).ready(function(){
+        $(".magnificAjax_cls").magnificPopup({type:"ajax",closeOnContentClick:false,closeOnBgClick:false,closeMarkup:'<button class="mfp-close mfp-new-close" type="button" title="Close (Esc)"></button>'});
+        $(".magnificAjax").magnificPopup({type:"ajax",closeOnContentClick:false,closeOnBgClick:true,showCloseBtn:false,enableEscapeKey:true,closeMarkup:'<button class="mfp-close mfp-new-close" type="button" title="Close (Esc)"></button>'});
+        $(".magnificAjax_act").magnificPopup({type:"ajax",closeOnContentClick:false,closeOnBgClick:false,showCloseBtn:true,enableEscapeKey:false,closeMarkup:'<button class="mfp-close mfp-new-close" type="button" title="Close (Esc)">X</button>'});
+        $(".magnificAjax").magnificPopup({type:"ajax",closeOnContentClick:false,closeOnBgClick:true,showCloseBtn:true,enableEscapeKey:true});
+        $(".magnificAjax_inline").magnificPopup({type:"inline",closeOnContentClick:false,closeOnBgClick:false,showCloseBtn:true,enableEscapeKey:false,alignTop:true,closeMarkup:" ",overflowY:"scroll"})
+});
 
 <?php if (!empty($timer_st)) { ?>
     $(function () {

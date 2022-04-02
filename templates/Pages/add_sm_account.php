@@ -5,7 +5,7 @@
             <div class="content-header-left col-md-9 col-12 mb-2">
                 <div class="row breadcrumbs-top">
                     <div class="col-12">
-                        <h2 class="content-header-title float-left mb-0">Manage Partner and Investor</h2>
+                        <h2 class="content-header-title float-left mb-0">Add Social Media Accounts</h2>
                     </div>
                 </div>
             </div>
@@ -32,6 +32,7 @@
                                 <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('type', ['options'=>getSmAccountType(),'empty'=>'Select Social Media Types', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('heading', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('sub_heading', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('label', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('link', ['type'=>'url','class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-12 mt-50"><div id="f_err"></div></div>
                                     <div class="col-12 mt-50">

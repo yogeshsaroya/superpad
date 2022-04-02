@@ -1397,8 +1397,7 @@ class PagesController extends AppController
 
 
     /* open new popup on ajax request */
-    public function openPop($id = null)
-    {
+    public function openPop($id = null) {
         $this->autoRender = false;
         $getData = $this->request->getData();
         if (isset($getData['url']) && !empty($getData['url'])) {
