@@ -24,13 +24,7 @@
         bottom: 0;
     }
 
-    .bottomBar .btn {
-        left: 0;
-        bottom: 0;
-        background: transparent;
-        border-radius: 0;
-        color: #000;
-    }
+
 
     @media (max-width: 767px) {
         #fea_sales .container {
@@ -39,11 +33,31 @@
         }
 
         div#fea_sales {
-            margin-top: 20px;
+            margin-top: 10px;
         }
+
+  
 
         #div_btn {
             padding-right: 0px;
+        }
+        #banner_img {
+            border-radius: 2px !important;
+        }
+        #fea_sales .fea_sale_btn {
+            padding: 10px 24px !important;
+            font-size: 1rem !important;
+            color: #ffffff !important;
+            background-color: #1c2b46 !important;
+            border-color: #1c2b46 !important;
+            transition: all 0.3s !important;
+            font-weight: 500 !important;
+            color: #1c2b46 !important;
+            padding: 10px 14px !important;
+            font-size: 1rem !important;
+            color: #fff !important;
+            border-radius: 2px !important;
+            width: 100%;
         }
 
         .bottomBar .position-absolute {
@@ -56,10 +70,8 @@
             color: #fff;
         }
 
-        .bottomBar .btn {
-            margin-left: auto !important;
-            color: #fff;
-        }
+
+
     }
 
     #fea_sales .badge {
@@ -95,11 +107,12 @@ if (!empty($list)) { ?>
                                 <div class="position-absolute d-flex align-items-center" id="fea_sales">
                                     <div class="container">
                                         <div class="row">
-                                            <div class="col" id="div_btn"> <a href="<?php echo SITEURL . "explore/" . $list->slug; ?>" class="badge rounded-pill bg-info text-dark">Join Now</a> </div>
+                                            <div class="col" id="div_btn"> <a href="<?php echo SITEURL . "explore/" . $list->slug; ?>" class="badge rounded-pill bg-info text-dark fea_sale_btn">Join Now</a> </div>
                                             <div class="col col-lg-2" id="div_time">
                                                 <?php if (!empty($list->start_date) && !empty(check_date($list->start_date->format('Y-m-d')))) { ?>
-                                                    <span class="badge rounded-pill bg-info text-dark">
-                                                        <?php echo $list->start_date->format('Y-m-d'); } ?>
+                                                    <span class="badge rounded-pill bg-info text-dark fea_sale_btn">
+                                                    <?php echo $list->start_date->format('Y-m-d');
+                                                } ?>
                                                     </span>
                                             </div>
                                         </div>
