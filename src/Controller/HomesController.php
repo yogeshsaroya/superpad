@@ -100,6 +100,7 @@ class HomesController extends AppController
                 'contain' => [
                     'Blockchains' => ['conditions' => ['Blockchains.status' => 1]],
                     'Teams' => ['conditions' => ['Teams.status' => 1]],
+                    'SmAccounts'=>['conditions' => ['SmAccounts.featured' => 2]],
                     'Partners' => ['conditions' => ['Partners.status' => 1]],
                 ],
                 'conditions' => ['Projects.slug' => $id, 'Projects.status' => 1]

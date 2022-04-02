@@ -31,7 +31,9 @@ echo $this->element('profile/header', ['bg_color' => 'bg-gray']); ?>
                         <?php 
                         if ($user_data->kyc_completed == 3) {
                             echo '<div class="alert alert-danger"><h4 class="alert-heading"> Rejected </h4><hr>
-                            <p>Your KYC attempt has been rejected. Please try again.</p></div>';
+                            <p>Your KYC attempt has been rejected. Please try again.</p>
+                            <p><b>Note:</b> '.$user_data->kyc_reject_reason.'<p>
+                            </div>';
                         }
                         if ($user_data->kyc_completed == 2) {
                             echo '<div class="alert alert-success alert-dismissible fade show"><h4 class="alert-heading"> Verified </h4><hr>

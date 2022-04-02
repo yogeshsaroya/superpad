@@ -652,6 +652,23 @@ class PagesController extends AppController
                 $this->redirect($url);
             }
         }
+        if (isset($get['type']) && $get['type'] == 'media') {
+            $url = SITEURL . "pages/manage_project/$id?type=media";
+            if (isset($get['del'])  && !empty($get['del'])) {
+                $blog_del = $this->SmAccounts->findById($get['del'])->firstOrFail();
+                if ($this->SmAccounts->delete($blog_del)) {
+                }
+                $this->redirect($url);
+            }
+
+            if (isset($get['st']) && !empty($get['st'])) {
+                $getData = $this->SmAccounts->findById($get['st'])->firstOrFail();
+                $upData = ['id' => $getData->id, 'featured' => ($getData->featured == 1 ? 2 : 1)];
+                $saveData = $this->SmAccounts->newEntity($upData, ['validate' => false]);
+                $this->SmAccounts->save($saveData);
+                $this->redirect($url);
+            }
+        }
 
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $file_name = $file_name_img = null;
@@ -1167,24 +1184,44 @@ class PagesController extends AppController
         if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
             $chkData = $this->Users->findById($id)->first();
             if (!empty($chkData)) {
+                /* Approve KYC */
                 if ($this->request->getQuery('st') == 2) {
                     $upData = ['id' => $chkData->id, 'kyc_completed' => 2];
                     $saveData = $this->Users->newEntity($upData, ['validate' => false]);
                     $this->Users->save($saveData);
-
                     $this->Data->AppMail($chkData->email, 9, ['NAME' =>$chkData->first_name]);
-
-                } elseif ($this->request->getQuery('st') == 3) {
-                    $upData = ['id' => $chkData->id, 'kyc_completed' => 3];
-                    $saveData = $this->Users->newEntity($upData, ['validate' => false]);
-                    $this->Data->AppMail($chkData->email, 10, ['NAME' =>$chkData->first_name]);
-                    $this->Users->save($saveData);
-                } else {
-                }
+                } 
             }
             $this->redirect('/pages/users');
         }
 
+        /* Reject KYC*/
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $postData = $this->request->getData();
+            if (isset($postData['id']) && !empty($postData['id'])) {
+                $getData = $this->Users->get($postData['id']);
+                $chkData = $this->Users->patchEntity($getData, $postData, ['validate' => false]);
+            }
+            if ($chkData->getErrors()) {
+                $st = null;
+                foreach ($chkData->getErrors() as $elist) {
+                    foreach ($elist as $k => $v); {
+                        $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                    }
+                }
+                echo $st; exit;
+            } else {
+                if ($this->Users->save($chkData)) {
+                    $this->Data->AppMail($chkData->email, 10, ['NAME' =>$chkData->first_name,'REJECT_REASON'=>$chkData->kyc_reject_reason]);
+                    $u = SITEURL . "pages/users";
+                    echo '<div class="alert alert-success" role="alert"> Saved.</div>';
+                    echo "<script>window.location.href ='" . $u . "'; </script>";
+                } else {
+                    echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                }
+            }
+            exit;
+        }
 
         if (!empty($id)) {
             $query = $this->Users->find('all', ['contain' => ['Countries'], 'conditions' => ['Users.id' => $id, 'Users.kyc_completed IN' => [1, 2, 3]]]);

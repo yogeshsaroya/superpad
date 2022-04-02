@@ -55,7 +55,7 @@ $getStatus = getStatus();
                                         <input type="button" class="btn btn-primary mr-1" value="Save" id="save_frm" />
                                     </div>
                                 </div>
-                                </form>
+                                <?php echo $this->Form->end(); ?>
                             </div>
                         </div>
                     </div>

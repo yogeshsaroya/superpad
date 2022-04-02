@@ -14,6 +14,8 @@ class ProjectsTable extends Table
         $this->belongsTo('Blockchains');
         $this->hasMany('Teams',['sort'=>['Teams.position ASC'] ]);
         $this->hasMany('Partners');
+        $this->hasMany('SmAccounts');
+        
     }
 
     public function validationDefault(Validator $validator): Validator

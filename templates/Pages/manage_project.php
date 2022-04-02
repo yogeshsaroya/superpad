@@ -85,6 +85,9 @@ $this->assign('title', 'Manage Projects'); ?>
                                         <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('status', ['options' => $getStatus, 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div>
                                         </div>
 
+                                        <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('website', ['type'=>'url','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
+                                        <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('whitepaper', ['type'=>'url','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>  
+
                                         <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('total_raise', ['class' => 'form-control amt', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div>
                                         </div>
                                         <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('ticket_allocation', ['class' => 'form-control amt', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div>
@@ -281,6 +284,7 @@ $this->assign('title', 'Manage Projects'); ?>
                                                 <th><?php echo $this->Paginator->sort('heading'); ?></th>
                                                 <th><?php echo $this->Paginator->sort('sub_heading'); ?></th>
                                                 <th><?php echo $this->Paginator->sort('link') ?></th>
+                                                <th><?php echo $this->Paginator->sort('featured'); ?></th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
@@ -293,6 +297,13 @@ $this->assign('title', 'Manage Projects'); ?>
                                                         <td><?php echo $list->heading; ?></td>
                                                         <td><?php echo $list->sub_heading; ?></td>
                                                         <td><?php echo $list->link; ?></td>
+                                                        <td><?php
+                                                            if ($list->featured == 1) {
+                                                                echo $this->Html->link('Hide', SITEURL."pages/manage_project/$get_data->id?type=media&st=".$list->id, ['class' => 'text-danger']);
+                                                            } else if ($list->featured == 2) {
+                                                                echo $this->Html->link('Show', SITEURL."pages/manage_project/$get_data->id?type=media&st=".$list->id, ['class' => 'text-success']);
+                                                            } ?>
+                                                        </td>
                                                         <td><?php echo $this->Html->link('Delete', SITEURL."pages/manage_project/$get_data->id?type=media&del=".$list->id, ['escape' => false, 'class' => 'text-info', 'onclick' => "return confirm('Are you sure you want to delete?')"]);?></td>
                                                     </tr>
                                             <?php }

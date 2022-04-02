@@ -35,11 +35,7 @@ echo $this->Html->css(['/app-assets/css/pages/app-invoice']); ?>
                                             elseif($get_data->kyc_completed == 2){ echo '<div class="badge badge-glow badge-success">Approved</div>';}
                                             elseif($get_data->kyc_completed == 3){ echo '<div class="badge badge-glow badge-danger">Rejected</div>';}
                                             ?>
-
-                                        
-                                        
                                         </h5>
-
                                         <h6 class="mb-2">Full Name : #<?php echo $get_data->kyc_full_name; ?></h6>
                                         <h6 class="mb-25">Date of Birth : <?php echo $get_data->kyc_dob; ?></h6>
                                         <p class="card-text mb-25"><b>Address:</b></p>
@@ -51,19 +47,33 @@ echo $this->Html->css(['/app-assets/css/pages/app-invoice']); ?>
                         </div>
                     </div>
                     <div class="col-xl-3 col-md-4 col-12 invoice-actions mt-md-0 mt-2">
+                    <?php if (!in_array($get_data->kyc_completed, [0, 2])) { ?>
                         <div class="card">
                             <div class="card-body">
-                                <?php if (!in_array($get_data->kyc_completed, [0, 2])) {
-                                    echo $this->Html->Link('Reject', SITEURL . "pages/manage_kyc/" . $get_data->id . "?st=3", ['escape' => false, 'class' => 'btn btn-danger btn-block', 'onclick' => "return confirm('Are you sure you want to Reject this KYC?')"]);
-                                    echo $this->Html->Link('Approve', SITEURL . "pages/manage_kyc/" . $get_data->id . "?st=2", ['escape' => false, 'class' => 'btn btn-success btn-block', 'onclick' => "return confirm('Are you sure you want to Approve this KYC?')"]);
-                                } ?>
+                                <?php echo $this->Form->create($get_data, ['autocomplete' => 'off', 'id' => 'e_frm', 'class' => 'mt-2', 'data-toggle' => 'validator']);
+                                echo $this->Form->hidden('id');
+                                echo $this->Form->hidden('kyc_completed',['value'=>3]);
+                                ?>
+                                <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('kyc_reject_reason', ['rows'=>3,'type'=>'textarea','placeholder'=>'Enter rejection reason here...', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                <br>
+                                <div class="col-12">
+                                        <div id="f_err"></div>
+                                    </div>
+                                <input type="button" value="Reject" class="btn btn-danger btn-block" id="kyc_rej"/>
+                                <?php echo $this->Form->end(); ?>
+                            </div>
+                        </div>
+                    <?php } ?>    
+
+                        <div class="card">
+                            <div class="card-body">
+                                <?php if (!in_array($get_data->kyc_completed, [0, 2])) { echo $this->Html->Link('Approve', SITEURL . "pages/manage_kyc/" . $get_data->id . "?st=2", ['escape' => false, 'class' => 'btn btn-success btn-block', 'onclick' => "return confirm('Are you sure you want to Approve this KYC?')"]);} ?>
                                 <?php echo $this->Html->Link('Back to Users', SITEURL . "pages/users/", ['escape' => false, 'class' => 'btn btn-dark btn-block']); ?>
                             </div>
                         </div>
                     </div>
                     <div class="col-xl-12 col-md-12 col-12">
                         <div class="card invoice-preview-card">
-
                             <div class="card-body invoice-padding pt-0">
                                 <div class="row invoice-spacing">
                                     <div class="card-body invoice-padding pt-0">
@@ -109,3 +119,32 @@ echo $this->Html->css(['/app-assets/css/pages/app-invoice']); ?>
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+
+        $("#e_frm").validator();
+
+        $("#kyc_rej").click(function() {
+            $("#e_frm").ajaxForm({
+                target: '#f_err',
+                headers: {
+                    'X-CSRF-Token': $('[name="_csrfToken"]').val()
+                },
+                beforeSubmit: function() {
+                    $("#kyc_rej").prop("disabled", true);
+                    $("#kyc_rej").html('Please wait..');
+                },
+                success: function(response) {
+                    $("#kyc_rej").prop("disabled", false);
+                    $("#kyc_rej").html('Reject');
+                },
+                error: function(response) {
+                    $('#f_err').html('<div class="alert alert-danger">Sorry, this is not working at the moment. Please try again later.</div>');
+                    $("#kyc_rej").prop("disabled", false);
+                    $("#kyc_rej").html('Reject');
+                },
+            }).submit();
+        });
+    });
+</script>

@@ -54,6 +54,15 @@ if (!empty($end_date)) {
                     <div class="ps--badge ps--ido"><?php echo $list->ticker; ?></div>
                 </div>
                 <h2 class="ps--project-show__subtitle"><?php echo $list->heading; ?></h2>
+                <div class="footer-item mb-5 mb-lg-0">
+                    <p class="my-4 footer-para"> </p>
+                    <ul class="styled-icon">
+                    <?php if(!empty($list->website)){?><li><a href="<?php echo $list->website;?>"><img src="<?php echo SITEURL;?>img/link.svg" alt="" title="Website" class="svg_icon"></a></li><?php }?>
+                    <?php if(!empty($list->whitepaper)){?><li><a href="<?php echo $list->whitepaper;?>"><img src="<?php echo SITEURL;?>img/doc.svg" alt="" title="Document" class="svg_icon"></a></li><?php }?>
+                    <?php if(!empty($list->sm_accounts)){
+                        foreach($list->sm_accounts as $sm){ echo '<li><a href="'.$sm->link.'"><img src="'.SITEURL.'img/'.strtolower($sm->type).'.svg" alt="" title="'.$sm->type.'" class="svg_icon"></a></li>'; } }?>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="row align-items-start">
@@ -72,17 +81,27 @@ if (!empty($end_date)) {
                         </ul>
                         <div class="tab-content mt-3" id="myTabContent">
                             <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
-                                <div class="item-detail-tab-wrap"><?php if (!empty($list->description)) { echo $list->description; }else{ echo "<h3>Not Available</h3>";} ?>
-                            </div>
+                                <div class="item-detail-tab-wrap"><?php if (!empty($list->description)) {
+                                                                        echo $list->description;
+                                                                    } else {
+                                                                        echo "<h3>Not Available</h3>";
+                                                                    } ?>
+                                </div>
                             </div>
                             <div class="tab-pane fade show" id="tokenomics" role="tabpanel" aria-labelledby="tokenomics-tab">
-                                    <div class="item-detail-tab-wrap"><?php if (!empty($list->tokenomics)) { echo $list->tokenomics; }else{ echo "<h3>Not Available</h3>";} ?></div>
-                                </div>
-                            
-                                <div class="tab-pane fade show" id="team" role="tabpanel" aria-labelledby="team-tab">
-                                    <div class="item-detail-tab-wrap">
-                                        <?php if (!empty($list->teams)) { ?>
-                                        <div class="col text-center"><h2>Meet Our Team</h2></div>
+                                <div class="item-detail-tab-wrap"><?php if (!empty($list->tokenomics)) {
+                                                                        echo $list->tokenomics;
+                                                                    } else {
+                                                                        echo "<h3>Not Available</h3>";
+                                                                    } ?></div>
+                            </div>
+
+                            <div class="tab-pane fade show" id="team" role="tabpanel" aria-labelledby="team-tab">
+                                <div class="item-detail-tab-wrap">
+                                    <?php if (!empty($list->teams)) { ?>
+                                        <div class="col text-center">
+                                            <h2>Meet Our Team</h2>
+                                        </div>
                                         <br><br>
                                         <div class="row">
                                             <?php foreach ($list->teams as $tList) { ?>
@@ -97,17 +116,23 @@ if (!empty($end_date)) {
                                                 </div>
                                             <?php } ?>
                                         </div>
-                                        <?php }else{ echo "<h3>Not Available</h3>";}?>
-                                    </div>
+                                    <?php } else {
+                                        echo "<h3>Not Available</h3>";
+                                    } ?>
                                 </div>
-                            
-                                <div class="tab-pane fade show" id="partner" role="tabpanel" aria-labelledby="partner-tab">
-                                    <div class="item-detail-tab-wrap">
-                                        <?php if (!empty($list->partners)) {?>
-                                        <div class="row"><div class="col text-center"><h2 class="">We are backed by</h2></div></div>
+                            </div>
+
+                            <div class="tab-pane fade show" id="partner" role="tabpanel" aria-labelledby="partner-tab">
+                                <div class="item-detail-tab-wrap">
+                                    <?php if (!empty($list->partners)) { ?>
+                                        <div class="row">
+                                            <div class="col text-center">
+                                                <h2 class="">We are backed by</h2>
+                                            </div>
+                                        </div>
                                         <div class="row mt-5">
-                                        <?php   
-                                            foreach ($list->partners as $plist) {  
+                                            <?php
+                                            foreach ($list->partners as $plist) {
                                                 if (!empty($plist->url)) { ?>
                                                     <div class="col-md-3 col-xl-3 mb-4">
                                                         <a href="<?php echo $plist->url; ?>" title="<?php echo $plist->title; ?>" target="_blank">
@@ -118,11 +143,14 @@ if (!empty($end_date)) {
                                                     <div class="col-md-3 col-xl-3 mb-4">
                                                         <img src="<?php echo SITEURL . "cdn/partners/" . $plist->logo; ?>" alt="" height="45">
                                                     </div>
-                                            <?php } }?>
+                                            <?php }
+                                            } ?>
                                         </div>
-                                        <?php }else{ echo "<h3>Not Available</h3>";}?>
-                                    </div>
+                                    <?php } else {
+                                        echo "<h3>Not Available</h3>";
+                                    } ?>
                                 </div>
+                            </div>
                             <div class="tab-pane fade" id="token_sale" role="tabpanel" aria-labelledby="token_sale-tab">
                                 <div class="item-detail-tab-wrap">
                                     <table class="table table-striped">
@@ -163,7 +191,7 @@ if (!empty($end_date)) {
                                             </tr>
                                             <tr>
                                                 <td>Initial Token Circulation </td>
-                                                <td><?php echo ($list->initial_token_circulation > 0 ?  number_format_short($list->initial_token_circulation) : 'TBA');?></td>
+                                                <td><?php echo ($list->initial_token_circulation > 0 ?  number_format_short($list->initial_token_circulation) : 'TBA'); ?></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -202,7 +230,7 @@ if (!empty($end_date)) {
                                 <span class="card-price-title">Ticket Allocation</span>
                                 <span class="card-price-number text-end"><?php echo ($list->ticket_allocation > 0 ? $this->Number->currency($list->ticket_allocation, 'USD') : 'TBA'); ?></span>
                             </div>
-                       </div>
+                        </div>
                     </div>
 
                     <p class="item-detail-text mb-2 hide">The allowlist for Kyoko is now available and you can apply for it below. Note</p>
@@ -273,7 +301,7 @@ if (!$this->request->is('mobile')) {
     + '<span class="clockbx"><span class="h1 font-weight-bold h1">%M</span> Min</span>'
     + '<span class="clockbx"><span class="h1 font-weight-bold h1">%S</span>Sec</span>'));
     })
-    .on('finish.countdown', function(event) {  location.reload(); });
+    .on('finish.countdown', function(event) { location.reload(); });
     });
 <?php }  ?>
 
@@ -286,8 +314,8 @@ if (!$this->request->is('mobile')) {
     + '<span class="clockbx"><span class="h1 font-weight-bold h1">%M</span> Min</span>'
     + '<span class="clockbx"><span class="h1 font-weight-bold h1">%S</span>Sec</span>'));
     })
-    .on('finish.countdown', function(event) {  
-        $("#sales_end").html('<p class="mb-2 text-uppercase">This sale has ended!</p>'); 
+    .on('finish.countdown', function(event) {
+    $("#sales_end").html('<p class="mb-2 text-uppercase">This sale has ended!</p>');
     });
     });
 <?php }  ?>
