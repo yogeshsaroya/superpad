@@ -83,8 +83,7 @@ if (!empty($list)) { ?>
         <div class="container">
             <div class="section-head text-center">
                 <h2 class="mb-3">Featured Sale</h2>
-
-            </div><!-- end section-head -->
+            </div>
             <div class="hero-wrap">
                 <div class="container">
                     <div class="row align-items-center flex-md-row-reverse bottomBar">
@@ -97,12 +96,11 @@ if (!empty($list)) { ?>
                                     <div class="container">
                                         <div class="row">
                                             <div class="col" id="div_btn"> <a href="<?php echo SITEURL . "explore/" . $list->slug; ?>" class="badge rounded-pill bg-info text-dark">Join Now</a> </div>
-
                                             <div class="col col-lg-2" id="div_time">
-                                                <span class="badge rounded-pill bg-info text-dark">
-                                                    <?php if (!empty($list->start_date) && !empty(check_date($list->start_date->format('Y-m-d')))) {
-                                                        echo $list->start_date->format('Y-m-d');
-                                                    } ?></span>
+                                                <?php if (!empty($list->start_date) && !empty(check_date($list->start_date->format('Y-m-d')))) { ?>
+                                                    <span class="badge rounded-pill bg-info text-dark">
+                                                        <?php echo $list->start_date->format('Y-m-d'); } ?>
+                                                    </span>
                                             </div>
                                         </div>
                                     </div>
