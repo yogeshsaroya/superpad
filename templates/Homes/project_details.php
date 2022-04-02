@@ -241,12 +241,15 @@ if (!empty($end_date)) {
 
                     <div class="item-detail-btns mt-4">
                         <ul class="btns-group d-flex">
-                            <li class="flex-grow-1">
-                                <a class="btn btn-primary w-100" href="javascript:void(0);">Application Status</a></a>
-                            </li>
-                            <li class="flex-grow-1">
-                                <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Application Status</a>
-                            </li>
+                        <?php if(strtolower($list->product_status) == 'whitelist open'){?>
+                            <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);">Join Now</a></li>
+                            <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Application Status</a> </li>
+                            <?php }else if(strtolower($list->product_status) == 'whitelist closed'){?>
+                                <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Sale Ended</a> </li>
+                            <?php }else if(strtolower($list->product_status) == 'sold out'){?>
+                                <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Sold Out</a> </li>
+                            <?php }?>    
+                            
 
                         </ul>
                     </div>
