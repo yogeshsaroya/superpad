@@ -57,10 +57,13 @@ if (!empty($end_date)) {
                 <div class="footer-item mb-5 mb-lg-0">
                     <p class="my-4 footer-para"> </p>
                     <ul class="styled-icon">
-                    <?php if(!empty($list->website)){?><li><a href="<?php echo $list->website;?>"><img src="<?php echo SITEURL;?>img/link.svg" alt="" title="Website" class="svg_icon"></a></li><?php }?>
-                    <?php if(!empty($list->whitepaper)){?><li><a href="<?php echo $list->whitepaper;?>"><img src="<?php echo SITEURL;?>img/doc.svg" alt="" title="Document" class="svg_icon"></a></li><?php }?>
-                    <?php if(!empty($list->sm_accounts)){
-                        foreach($list->sm_accounts as $sm){ echo '<li><a href="'.$sm->link.'"><img src="'.SITEURL.'img/'.strtolower($sm->type).'.svg" alt="" title="'.$sm->type.'" class="svg_icon"></a></li>'; } }?>
+                        <?php if (!empty($list->website)) { ?><li><a href="<?php echo $list->website; ?>"><img src="<?php echo SITEURL; ?>img/link.svg" alt="" title="Website" class="svg_icon"></a></li><?php } ?>
+                        <?php if (!empty($list->whitepaper)) { ?><li><a href="<?php echo $list->whitepaper; ?>"><img src="<?php echo SITEURL; ?>img/doc.svg" alt="" title="Document" class="svg_icon"></a></li><?php } ?>
+                        <?php if (!empty($list->sm_accounts)) {
+                            foreach ($list->sm_accounts as $sm) {
+                                echo '<li><a href="' . $sm->link . '"><img src="' . SITEURL . 'img/' . strtolower($sm->type) . '.svg" alt="" title="' . $sm->type . '" class="svg_icon"></a></li>';
+                            }
+                        } ?>
                     </ul>
                 </div>
             </div>
