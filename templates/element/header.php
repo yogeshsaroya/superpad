@@ -1,7 +1,3 @@
-<?php
-$session = $this->request->getSession()->read('Auth'); //read session data
-
-?>
 <header class="header-section has-header-main bg-gradient-2">
     <div class="header-main is-sticky is-transparent">
         <div class="container">
@@ -24,16 +20,15 @@ $session = $this->request->getSession()->read('Auth'); //read session data
                             <em class="menu-on menu-icon ni ni-menu"></em>
                             <em class="menu-off menu-icon ni ni-cross"></em>
                         </button>
-                    </div><!-- .header-toggle -->
-                </div><!-- end header-mobile-action -->
-
+                    </div>
+                </div>
                 <nav class="header-menu menu nav">
                     <ul class="menu-list ms-lg-auto">
                         <li class="menu-item"><a href="javascript:void(0);" class="menu-link">Allocation</a></li>
                         <li class="menu-item"><a href="javascript:void(0);" class="menu-link">Stake</a></li>
                         <li class="menu-item"><a href="javascript:void(0);" class="menu-link">Buy SPAD</a></li>
-                        <?php if (isset($session['User']['role'])) {
-                            if ($session['User']['role'] == 2) { ?>
+                        <?php if (isset($Auth->role) && !empty($Auth->role)) {
+                            if ($Auth->role == 2) { ?>
                                 <li class="menu-item"><a href="<?php echo SITEURL; ?>dashboard" class="menu-link">Dashboard</a></li>
                                 <li class="menu-item"><a href="<?php echo SITEURL; ?>users/logout" class="menu-link">Logout</a></li>
                             <?php }else{
@@ -44,14 +39,12 @@ $session = $this->request->getSession()->read('Auth'); //read session data
                             <li class="menu-item"><a href="<?php echo SITEURL; ?>register" class="menu-link">Register</a></li>
                         <?php } ?>
                     </ul>
-                    <?php if (isset($session['User']['role']) && $session['User']['role'] == 2 && empty($session['User']['metamask_wallet_id']) ) { ?>
+                    <?php if (isset($Auth->role) && $Auth->role == 2 && empty($Auth->metamask_wallet_id) ) { ?>
                     <ul class="menu-btns"> <li><a href="<?php echo SITEURL;?>connect-wallet" class="btn btn-dark">Connect Wallet</a></li> </ul>
                     <?php }?>
-
-                </nav><!-- .header-menu -->
+                </nav>
                 <div class="header-overlay"></div>
-            </div><!-- .header-warp-->
-        </div><!-- .container-->
-    </div><!-- .header-main-->
-
-</header><!-- end header-section -->
+            </div>
+        </div>
+    </div>
+</header>

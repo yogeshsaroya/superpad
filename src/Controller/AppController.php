@@ -70,7 +70,7 @@ class AppController extends Controller
         $this->loadModel('Newsletters');
         $this->loadModel('Countries');
         $this->loadModel('SmAccounts');
-        
+        $this->loadModel('Applications');
         
         
         $Setting = $this->Data->get_settings();

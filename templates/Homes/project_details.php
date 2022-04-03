@@ -245,8 +245,13 @@ if (!empty($end_date)) {
                     <div class="item-detail-btns mt-4">
                         <ul class="btns-group d-flex">
                         <?php if(strtolower($list->product_status) == 'whitelist open'){?>
-                            <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="apply_sale(<?php echo $list->id?>);">Join Now</a></li>
-                            <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Application Status</a> </li>
+                            <?php if (isset($Auth->role) && $Auth->role == 2 ) {?> 
+                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="apply_sale(<?php echo $list->id?>);">Join Now</a></li>
+                                <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Application Status</a> </li>
+                            <?php }else{?>
+                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL;?>sign-in">Login to Join Now</a></li>
+                            <?php }?>
+                            
                             <?php }else if(strtolower($list->product_status) == 'whitelist closed'){?>
                                 <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Sale Ended</a> </li>
                             <?php }else if(strtolower($list->product_status) == 'sold out'){?>
@@ -300,7 +305,7 @@ function apply_sale(id) {
         var d = "<?php echo urlencode(SITEURL . "homes/apply_now/");?>"+id;
         $.ajax({
             type: 'POST',
-            url: '<?php echo SITEURL; ?>homes/open_pop/',
+            url: '<?php echo SITEURL; ?>homes/open_pop/1',
             data: {url:d},
             success: function(data) {
                 $("#cover").html(data);
@@ -310,14 +315,6 @@ function apply_sale(id) {
             }
         });
 }
-
-$(document).ready(function(){
-        $(".magnificAjax_cls").magnificPopup({type:"ajax",closeOnContentClick:false,closeOnBgClick:false,closeMarkup:'<button class="mfp-close mfp-new-close" type="button" title="Close (Esc)"></button>'});
-        $(".magnificAjax").magnificPopup({type:"ajax",closeOnContentClick:false,closeOnBgClick:true,showCloseBtn:false,enableEscapeKey:true,closeMarkup:'<button class="mfp-close mfp-new-close" type="button" title="Close (Esc)"></button>'});
-        $(".magnificAjax_act").magnificPopup({type:"ajax",closeOnContentClick:false,closeOnBgClick:false,showCloseBtn:true,enableEscapeKey:false,closeMarkup:'<button class="mfp-close mfp-new-close" type="button" title="Close (Esc)">X</button>'});
-        $(".magnificAjax").magnificPopup({type:"ajax",closeOnContentClick:false,closeOnBgClick:true,showCloseBtn:true,enableEscapeKey:true});
-        $(".magnificAjax_inline").magnificPopup({type:"inline",closeOnContentClick:false,closeOnBgClick:false,showCloseBtn:true,enableEscapeKey:false,alignTop:true,closeMarkup:" ",overflowY:"scroll"})
-});
 
 <?php if (!empty($timer_st)) { ?>
     $(function () {

@@ -179,18 +179,48 @@ class HomesController extends AppController
     }
 
     public function applyNow( $id = null ){
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            if ($this->Auth->User('id') != "") {
+                $postData = $this->request->getData();
+                $postData['user_id'] = $this->Auth->User('id');
+                $total = $this->Applications->find()->where(['project_id' =>$postData['project_id'],'user_id'=>$postData['user_id']])->count();
+                if( $total === 0 ){
+                    $getEnt = $this->Applications->newEmptyEntity();
+                    $chkEnt = $this->Applications->patchEntity($getEnt, $postData, ['validate' => true]);
+                    if ($chkEnt->getErrors()) {
+                        $st = null;
+                        foreach ($chkEnt->getErrors() as $elist) {
+                            foreach ($elist as $k => $v); {
+                                $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                            }
+                        }
+                        echo $st;
+                        exit;
+                    } else {
+                        if ($this->Applications->save($chkEnt)) {
+                            $u = SITEURL."allocation";
+                            echo "<script>$('#save_frm').remove();</script>";
+                            echo "<div class='alert alert-success'>Your application is successfully submitted </div>";
+                            echo "<script> setTimeout(function(){ window.location.href ='" . $u . "'; }, 2000);</script>";
+                        } else {
+                            echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>'; exit;
+                        }
+                    }
+                }else{
+                    echo '<div class="alert alert-danger">You have already applied to this job. Please check application status <a href="'.SITEURL.'allocation">here</a> </div>'; exit; 
+                }
+            }else{
+                echo '<div class="alert alert-danger">Please login or register to apply.</div>'; exit; 
+            }
+            exit;
+        }
+
         if (!empty($id)) {
             $query = $this->Projects->find('all', [
-                'contain' => [
-                    'Blockchains' => ['conditions' => ['Blockchains.status' => 1]],
-                    'Teams' => ['conditions' => ['Teams.status' => 1]],
-                    'SmAccounts'=>['conditions' => ['SmAccounts.featured' => 2]],
-                    'Partners' => ['conditions' => ['Partners.status' => 1]],
-                ],
-                'conditions' => ['Projects.id' => $id, 'Projects.status' => 1]
-            ]);
+                'contain' => ['SmAccounts'=>['conditions' => ['SmAccounts.featured' => 2]]],
+                'conditions' => ['Projects.id' => $id, 'Projects.status' => 1] ]);
             $data =  $query->first();
-            $this->set(compact('data'));
+            $this->set(compact('data','id'));
         }
     }
 
