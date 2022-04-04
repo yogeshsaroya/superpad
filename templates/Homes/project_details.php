@@ -244,10 +244,10 @@ if (!empty($end_date)) {
                         <ul class="btns-group d-flex">
                         <?php if(strtolower($list->product_status) == 'whitelist open'){?>
                             <?php if (isset($Auth->role) && $Auth->role == 2 ) {?> 
-                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="apply_sale(<?php echo $list->id?>);">Whitelist Now</a></li>
+                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="apply_sale(<?php echo $list->id;?>);">Whitelist Now</a></li>
                                 <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Application Status</a> </li>
                             <?php }else{?>
-                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL;?>sign-in?redirect=/explore/kyoko/apply">Login to Whitelist</a></li>
+                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL;?>sign-in?redirect=explore/kyoko/apply">Login to Whitelist</a></li>
                             <?php }?>
                             
                             <?php }else if(strtolower($list->product_status) == 'whitelist closed'){?>
@@ -285,7 +285,6 @@ if (!empty($end_date)) {
 <section class="item-detail-section ">
     <div class="container"></div>
 </section>
-
 <?php
 if (!empty($timer_st)) {
     echo $this->Html->script(['jquery.countdown.min'], ['block' => 'scriptBottom']);
@@ -349,4 +348,12 @@ function apply_sale(id) {
     innerWrapperSelector: '.sidebar__inner'
     });
 <?php }
+
+if(!empty($op_pop) && isset( $Auth ) && isset($list->id) ){ ?>
+    
+    $(function () {
+        apply_sale(<?php echo $list->id;?>);
+    });
+ <?php }
+
 $this->Html->scriptEnd(); ?>

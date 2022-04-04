@@ -93,11 +93,12 @@ class HomesController extends AppController
         $this->set(compact('data'));
     }
 
-    public function explore($id = null)
+    public function explore($id = null,$is_pop = null )
     {
         $q = $this->request->getQuery();
-        if (isset($q['redirect']) && !empty($q['redirect'])) {
-            //$q['redirect']
+        $op_pop = null;
+        if (isset($is_pop) && $is_pop == 'apply') {
+            $op_pop = 'yes';
         }
 
         if (!empty($id)) {
@@ -120,7 +121,7 @@ class HomesController extends AppController
                         ->first();
                 }
 
-                $this->set(compact('data','data_app'));
+                $this->set(compact('data','data_app','op_pop'));
                 $this->render('project_details');
             } else {
                 $this->viewBuilder()->setLayout('error_404');
