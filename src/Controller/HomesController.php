@@ -107,7 +107,15 @@ class HomesController extends AppController
             ]);
             $data =  $query->first();
             if (!empty($data)) {
-                $this->set(compact('data'));
+                $data_app = null;
+                if ($this->Auth->User('id') != "") {
+                    $data_app = $this->Applications
+                        ->find()
+                        ->where(['project_id' => $data->id,'user_id'=>$this->Auth->User('id')])
+                        ->first();
+                }
+
+                $this->set(compact('data','data_app'));
                 $this->render('project_details');
             } else {
                 $this->viewBuilder()->setLayout('error_404');
@@ -182,6 +190,14 @@ class HomesController extends AppController
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             if ($this->Auth->User('id') != "") {
                 $postData = $this->request->getData();
+
+                $query = $this->Projects->find('all', ['conditions' => ['Projects.id' => $postData['project_id'], 'Projects.status' => 1,'Projects.product_status'=>'Whitelist Open'] ]);
+                $proData =  $query->first();
+                if(empty($proData)){
+                    echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>'; exit;   
+                }
+                
+
                 $postData['user_id'] = $this->Auth->User('id');
                 $total = $this->Applications->find()->where(['project_id' =>$postData['project_id'],'user_id'=>$postData['user_id']])->count();
                 if( $total === 0 ){
