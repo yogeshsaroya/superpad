@@ -65,7 +65,7 @@
                                     </div>
                                     <div class="col-sm sm_chk">
                                         <div class="form-check mb-2 form-group">
-                                            <?php echo $this->Form->checkbox('agree.', ['id' => 'agree', 'hiddenField' => true,'div'=>['class'=>'btn btn-primary w-100 bg-transparent'], 'value' => 1, 'class' => 'form-check-input check-all-input sm_follow', 'required' => true, 'checked' => false]); ?> 
+                                            <?php echo $this->Form->checkbox('follow.', ['id' => 'agree', 'hiddenField' => true,'div'=>['class'=>'btn btn-primary w-100 bg-transparent'], 'value' => 1, 'class' => 'form-check-input check-all-input sm_follow', 'required' => true, 'checked' => false]); ?> 
                                             <div class="help-block with-errors"></div>
                                         </div>
                                         <?php /* ?>
