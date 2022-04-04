@@ -11,10 +11,7 @@
                 </div>
                 <div class="modal-body">
                     <p class="fs-14 mb-3"></p>
-                    <p class="fs-14 mb-3">We are excited to launch our IDO on <?php echo WEBTITLE; ?>.
-                        For a chance to win a Whitelist spot, please fill out the form below and perform all tasks accordingly.
-                        If you have any questions, please contact us!</p>
-                    <p class="fs-14 mb-3">Good Luck!</p>
+                    
                     <h4 class="modal-title">Basic Information</h4>
                     <hr>
                     <?php echo $this->Form->create(null, ['url' => ['controller' => 'homes', 'action' => 'apply_now'], 'autocomplete' => 'off', 'id' => 'e_frm', 'class' => 'auth-login-form mt-2', 'data-toggle' => 'validator']);
