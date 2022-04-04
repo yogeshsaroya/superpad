@@ -247,7 +247,7 @@ if (!empty($end_date)) {
                                 <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="apply_sale(<?php echo $list->id?>);">Whitelist Now</a></li>
                                 <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Application Status</a> </li>
                             <?php }else{?>
-                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL;?>sign-in">Login to Whitelist</a></li>
+                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL;?>sign-in?redirect=/explore/kyoko/apply">Login to Whitelist</a></li>
                             <?php }?>
                             
                             <?php }else if(strtolower($list->product_status) == 'whitelist closed'){?>

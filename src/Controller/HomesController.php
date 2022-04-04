@@ -95,6 +95,11 @@ class HomesController extends AppController
 
     public function explore($id = null)
     {
+        $q = $this->request->getQuery();
+        if (isset($q['redirect']) && !empty($q['redirect'])) {
+            //$q['redirect']
+        }
+
         if (!empty($id)) {
             $query = $this->Projects->find('all', [
                 'contain' => [
@@ -214,7 +219,7 @@ class HomesController extends AppController
                         exit;
                     } else {
                         if ($this->Applications->save($chkEnt)) {
-                            $u = SITEURL."allocation";
+                            $u = SITEURL."users/application_status";
                             echo "<script>$('#save_frm').remove();</script>";
                             echo "<div class='alert alert-success'>Your application is successfully submitted </div>";
                             echo "<script> setTimeout(function(){ window.location.href ='" . $u . "'; }, 2000);</script>";

@@ -8,6 +8,7 @@ class ApplicationsTable extends Table{
     public function initialize(array $config): void
     {
         $this->addBehavior('Timestamp');
+        $this->belongsTo('Projects');
     }
 
     public function validationDefault(Validator $validator): Validator {

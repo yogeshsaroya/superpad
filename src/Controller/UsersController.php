@@ -45,14 +45,16 @@ class UsersController extends AppController
         parent::beforeFilter($event);
 
         /* https://book.cakephp.org/4/en/controllers/components/authentication.html#AuthComponent::allow */
-        $this->Auth->allow(['login','register','backend','backendRestPassword','logout','check','gAuth',
-        'forgetPassword','connectWallet','check_metamask']);
+        $this->Auth->allow([
+            'login', 'register', 'backend', 'backendRestPassword', 'logout', 'check', 'gAuth',
+            'forgetPassword', 'connectWallet', 'check_metamask'
+        ]);
 
         // Form helper https://codethepixel.com/tutorial/cakephp/cakephp-4-common-helpers
         /* https://codethepixel.com/tutorial/cakephp/cakephp-4-find-sort-count */
 
         $this->SiteSetting = $this->request->getSession()->read('Setting');
-        if( $this->Auth->user('role') == 1 ){
+        if ($this->Auth->user('role') == 1) {
             $this->redirect('/pages');
         }
     }
@@ -60,17 +62,28 @@ class UsersController extends AppController
 
     public function index()
     {
-        
     }
-    public function connectWallet() {
+
+    public function applicationStatus()
+    {
+        $query = $this->Applications->find('all', [
+            'contain' => ['Projects'],
+            'conditions' => ['Applications.user_id' => $this->Auth->User('id')]
+        ]);
+        $data =  $query->all();
+        $this->set(compact('data'));
+    }
+
+    public function connectWallet()
+    {
         $user_data = $this->Users->findById($this->Auth->user('id'))->first();
-        if ( !empty($user_data->metamask_wallet_id ) ){
+        if (!empty($user_data->metamask_wallet_id)) {
             $this->redirect('/users/wallet');
         }
-
     }
 
-    public function dashboard() {
+    public function dashboard()
+    {
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $postData = $this->request->getData();
             $val = ['validate' => true];
@@ -106,23 +119,25 @@ class UsersController extends AppController
 
 
         $user_data = $this->Users->findById($this->Auth->user('id'))->first();
-        if(!empty($user_data)){
-        $this->set(compact('user_data'));
-        }else{
+        if (!empty($user_data)) {
+            $this->set(compact('user_data'));
+        } else {
             $this->viewBuilder()->setLayout('error_404');
         }
     }
 
-    public function wallet(){
+    public function wallet()
+    {
         $user_data = $this->Users->findById($this->Auth->user('id'))->first();
-        if(!empty($user_data)){
-        $this->set(compact('user_data'));
-        }else{
+        if (!empty($user_data)) {
+            $this->set(compact('user_data'));
+        } else {
             $this->viewBuilder()->setLayout('error_404');
         }
     }
 
-    public function kyc(){
+    public function kyc()
+    {
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $postData = $this->request->getData();
             //ec($postData);die;
@@ -130,17 +145,26 @@ class UsersController extends AppController
             $val = ['validate' => 'OnlyKyc'];
 
             $uploadPath = 'cdn/kyc/';
-            if (!file_exists($uploadPath)) { mkdir($uploadPath, 0777, true); }
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
             /*For profile iamge */
             if (!empty($postData['kyc_user_pic1'])) {
                 if (in_array($postData['kyc_user_pic1']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg'])) {
                     $fileobject1 = $postData['kyc_user_pic1'];
                     $ext = pathinfo($fileobject1->getClientFilename(), PATHINFO_EXTENSION);
-                    $kyc_user_pic =  $postData['id']."-profile-pic.".$ext;
+                    $kyc_user_pic =  $postData['id'] . "-profile-pic." . $ext;
                     $destination1 = $uploadPath . $kyc_user_pic;
-                    try { $fileobject1->moveTo($destination1); } 
-                    catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
-                }else{ echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit;  }
+                    try {
+                        $fileobject1->moveTo($destination1);
+                    } catch (Exception $e) {
+                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                        exit;
+                    }
+                } else {
+                    echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                    exit;
+                }
             }
 
             /*For doc front img */
@@ -148,11 +172,18 @@ class UsersController extends AppController
                 if (in_array($postData['kyc_doc_file1']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg'])) {
                     $fileobject2 = $postData['kyc_doc_file1'];
                     $ext1 = pathinfo($fileobject2->getClientFilename(), PATHINFO_EXTENSION);
-                    $kyc_doc_file =  $postData['id']."-doc-front.".$ext1;
-                    $destination2 = $uploadPath.$kyc_doc_file;
-                    try { $fileobject2->moveTo($destination2); } 
-                    catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
-                }else{ echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit;  }
+                    $kyc_doc_file =  $postData['id'] . "-doc-front." . $ext1;
+                    $destination2 = $uploadPath . $kyc_doc_file;
+                    try {
+                        $fileobject2->moveTo($destination2);
+                    } catch (Exception $e) {
+                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                        exit;
+                    }
+                } else {
+                    echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                    exit;
+                }
             }
 
             /*For doc last img*/
@@ -160,19 +191,32 @@ class UsersController extends AppController
                 if (in_array($postData['kyc_doc_file_back1']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg'])) {
                     $fileobject3 = $postData['kyc_doc_file_back1'];
                     $ext3 = pathinfo($fileobject3->getClientFilename(), PATHINFO_EXTENSION);
-                    $kyc_doc_file_back =  $postData['id']."-doc-back.".$ext3;
+                    $kyc_doc_file_back =  $postData['id'] . "-doc-back." . $ext3;
                     $destination3 = $uploadPath . $kyc_doc_file_back;
-                    try { $fileobject3->moveTo($destination3); } 
-                    catch (Exception $e) { echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit; }
-                }else{ echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>'; exit;  }
+                    try {
+                        $fileobject3->moveTo($destination3);
+                    } catch (Exception $e) {
+                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                        exit;
+                    }
+                } else {
+                    echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                    exit;
+                }
             }
 
             if (isset($postData['id']) && !empty($postData['id'])) {
                 $getBlog = $this->Users->get($postData['id']);
 
-                if (!empty($kyc_user_pic)) { $postData['kyc_user_pic'] = $kyc_user_pic; }
-                if (!empty($kyc_doc_file)) { $postData['kyc_doc_file'] = $kyc_doc_file; }
-                if (!empty($kyc_doc_file_back)) { $postData['kyc_doc_file_back'] = $kyc_doc_file_back; }
+                if (!empty($kyc_user_pic)) {
+                    $postData['kyc_user_pic'] = $kyc_user_pic;
+                }
+                if (!empty($kyc_doc_file)) {
+                    $postData['kyc_doc_file'] = $kyc_doc_file;
+                }
+                if (!empty($kyc_doc_file_back)) {
+                    $postData['kyc_doc_file_back'] = $kyc_doc_file_back;
+                }
                 $postData['kyc_completed'] = 1;
                 $postData['kyc_submitted'] = DATE;
 
@@ -185,11 +229,12 @@ class UsersController extends AppController
                         $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
                     }
                 }
-                echo $st; exit;
+                echo $st;
+                exit;
             } else {
                 if ($this->Users->save($chkBlog)) {
                     $admin = 'support@superpad.finance';
-                    $this->Data->AppMail($admin,8, ['NAME' => $chkBlog->first_name, 'LINK' => SITEURL."pages/manage_kyc/".$chkBlog->id]);
+                    $this->Data->AppMail($admin, 8, ['NAME' => $chkBlog->first_name, 'LINK' => SITEURL . "pages/manage_kyc/" . $chkBlog->id]);
                     $u = SITEURL . "users/kyc";
                     echo '<div class="alert alert-success" role="alert"> Saved.</div>';
                     echo "<script>window.location.href ='" . $u . "'; </script>";
@@ -202,9 +247,9 @@ class UsersController extends AppController
 
 
         $user_data = $this->Users->findById($this->Auth->user('id'))->first();
-        if(!empty($user_data)){
-        $this->set(compact('user_data'));
-        }else{
+        if (!empty($user_data)) {
+            $this->set(compact('user_data'));
+        } else {
             $this->viewBuilder()->setLayout('error_404');
         }
     }
@@ -214,6 +259,12 @@ class UsersController extends AppController
      */
     public function register()
     {
+        $session = $this->getRequest()->getSession();
+        $q = $this->request->getQuery();
+        if (isset($q['redirect']) && !empty($q['redirect'])) {
+            $session->write('redirect', $q['redirect']);
+        }
+
         $user_data = null;
         $this->set(compact('user_data'));
         if ($this->Auth->User('id') != "") {
@@ -230,20 +281,28 @@ class UsersController extends AppController
             $s = "<script>s();</script>";
             $postData = $this->request->getData();
             $getEnt = $this->Users->newEmptyEntity();
-            $setData = $this->Users->patchEntity($getEnt,$postData,['validate' => true]);
+            $setData = $this->Users->patchEntity($getEnt, $postData, ['validate' => true]);
             if ($setData->getErrors()) {
                 $st = null;
-                foreach( $setData->getErrors() as $elist ){
-                    foreach($elist as $k=>$v);{ $st.="<div class='alert alert-danger'>".ucwords($v)."</div>"; }
+                foreach ($setData->getErrors() as $elist) {
+                    foreach ($elist as $k => $v); {
+                        $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                    }
                 }
-                echo $st; exit;
-            }else{
-                if($this->Users->save($setData)){
+                echo $st;
+                exit;
+            } else {
+                if ($this->Users->save($setData)) {
                     $this->Auth->setUser($setData);
-                    $u = SITEURL."dashboard";
+
+                    $q_url = SITEURL . "dashboard";
+                    if (!empty($session->read('redirect'))) {
+                        $q_url = SITEURL . $session->read('redirect');
+                        $session->delete('redirect');
+                    }
                     echo '<div class="alert alert-success" role="alert"> Blog post saved.</div>';
-                    echo "<script>window.location.href ='".$u."'; </script>";
-                }else{
+                    echo "<script>window.location.href ='" . $q_url . "'; </script>";
+                } else {
                     echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
                 }
             }
@@ -256,6 +315,12 @@ class UsersController extends AppController
      */
     public function login()
     {
+        $session = $this->getRequest()->getSession();
+        $q = $this->request->getQuery();
+        if (isset($q['redirect']) && !empty($q['redirect'])) {
+            $session->write('redirect', $q['redirect']);
+        }
+
         $user_data = null;
         $this->set(compact('user_data'));
         if ($this->Auth->User('id') != "") {
@@ -292,6 +357,10 @@ class UsersController extends AppController
                             }
 
                             $q_url = SITEURL . "dashboard";
+                            if (!empty($session->read('redirect'))) {
+                                $q_url = SITEURL . $session->read('redirect');
+                                $session->delete('redirect');
+                            }
                             echo '<script>window.location.href = "' . $q_url . '"</script>';
                             exit;
                         } else {
@@ -384,8 +453,9 @@ class UsersController extends AppController
             exit;
         }
     }
-    
-    public function forgetPassword(){
+
+    public function forgetPassword()
+    {
         $user_data = null;
         $this->set(compact('user_data'));
         if ($this->Auth->User('id') != "") {
@@ -402,28 +472,27 @@ class UsersController extends AppController
             $post_data = $this->request->getData();
             if (empty($post_data['email'])) {
                 echo '<div class="alert alert-danger">Please enter email id.</div>';
-            }else {
-                $password = rand(123456,987654);
+            } else {
+                $password = rand(123456, 987654);
 
                 $verify = $this->Users->find('all')
                     ->where(['Users.status' => 1, 'Users.role' => 2, 'Users.email' => trim(strtolower($post_data['email']))])
                     ->first();
-                    if (!empty($verify)) {
-                        $this->Data->AppMail($verify->email,4, ['NAME'=>$verify->first_name,'PWD'=>$password]);
-                        $up_arr = ['id' => $verify->id, 'password' => $password];
-                        $user1 = $this->Users->newEntity($up_arr, ['validate' => false]);
-                        $this->Users->save($user1);
-                        echo '<script>$("#e_frm")[0].reset();</script>';
-                        echo '<div class="alert alert-success">Change password request has been send to registered email address.</div>';
-                        exit;
-                    } else {
-                        echo '<div class="alert alert-danger">This email address is not registered </div>';
-                    }
+                if (!empty($verify)) {
+                    $this->Data->AppMail($verify->email, 4, ['NAME' => $verify->first_name, 'PWD' => $password]);
+                    $up_arr = ['id' => $verify->id, 'password' => $password];
+                    $user1 = $this->Users->newEntity($up_arr, ['validate' => false]);
+                    $this->Users->save($user1);
+                    echo '<script>$("#e_frm")[0].reset();</script>';
+                    echo '<div class="alert alert-success">Change password request has been send to registered email address.</div>';
+                    exit;
+                } else {
+                    echo '<div class="alert alert-danger">This email address is not registered </div>';
                 }
-            
+            }
+
             exit;
         }
-
     }
     /**
      * Admin password reset page
@@ -442,6 +511,12 @@ class UsersController extends AppController
     /* Login via Google */
     public function gAuth()
     {
+        $session = $this->getRequest()->getSession();
+        $q = $this->request->getQuery();
+        if (isset($q['redirect']) && !empty($q['redirect'])) {
+            $session->write('redirect', $q['redirect']);
+        }
+
         $this->autoRender = false;
         $err_msg = 'Authentication error. Please try again later.';
         //echo ROOT . '/vendor' . DS  . 'google' . DS . 'vendor' . DS . 'autoload.php';die;
@@ -482,7 +557,13 @@ class UsersController extends AppController
                         $up_arr = ['id' => $verify->id, 'last_activity' => DATE];
                         $user1 = $this->Users->newEntity($up_arr, ['validate' => false]);
                         $this->Users->save($user1);
-                        return $this->redirect(SITEURL . "dashboard");
+
+                        $q_url = SITEURL . "dashboard";
+                        if (!empty($session->read('redirect'))) {
+                            $q_url = SITEURL . $session->read('redirect');
+                            $session->delete('redirect');
+                        }
+                        return $this->redirect($q_url);
                         exit;
                     } else {
                         $verify_em = $this->Users->find('all')->where(['Users.status' => 1, 'Users.role' => 2, 'Users.email' => $email])->first();
@@ -498,7 +579,13 @@ class UsersController extends AppController
                                 $up_arr = ['id' => $user1->id, 'last_activity' => DATE];
                                 $udata = $this->Users->newEntity($up_arr, ['validate' => false]);
                                 $this->Users->save($udata);
-                                return $this->redirect(SITEURL . "dashboard");
+                                $q_url = SITEURL . "dashboard";
+                                if (!empty($session->read('redirect'))) {
+                                    $q_url = SITEURL . $session->read('redirect');
+                                    $session->delete('redirect');
+                                }
+
+                                return $this->redirect($q_url);
                                 exit;
                             } else {
                                 $err_msg = 'An error occurred. Please try again later';
@@ -525,19 +612,27 @@ class UsersController extends AppController
     public function check()
     {
         $this->autoRender = false;
-        $err_msg = 'Authentication error. Please try again later.';
+        $session = $this->getRequest()->getSession();
         $q = $this->request->getQuery();
+        if (isset($q['redirect']) && !empty($q['redirect'])) {
+            $session->write('redirect', $q['redirect']);
+        }
+
+        $err_msg = 'Authentication error. Please try again later.';
+
 
         if (isset($q['facebook']) && $q['facebook'] == 'true' && isset($q['code']) && !empty($q['code'])) {
             $fbappid = $this->SiteSetting['fb_app_id'];
             $fbappsecret = $this->SiteSetting['fb_app_secret'];
             $fbcode = $q['code'];
             $getToken = $this->_getFbToken($fbappid, $fbappsecret, SITEURL . 'check?facebook=true', $fbcode);
-            ec($getToken);die;
-            
+            ec($getToken);
+            die;
+
             if (isset($getToken['access_token']) && !empty($getToken['access_token'])) {
                 $fb_user = $this->_parseFbInfo($getToken['access_token']);
-                ec($fb_user);die;
+                ec($fb_user);
+                die;
                 /* Check if user exists */
                 $verify = $this->Users->find('all')
                     ->where(['Users.status' => 1, 'Users.role' => 2, 'Users.fb_id' => $fb_user->id])
@@ -547,7 +642,12 @@ class UsersController extends AppController
                     $up_arr = ['id' => $verify->id, 'last_activity' => DATE];
                     $user1 = $this->Users->newEntity($up_arr, ['validate' => false]);
                     $this->Users->save($user1);
-                    return $this->redirect(SITEURL . "dashboard");
+                    $q_url = SITEURL . "dashboard";
+                    if (!empty($session->read('redirect'))) {
+                        $q_url = SITEURL . $session->read('redirect');
+                        $session->delete('redirect');
+                    }
+                    return $this->redirect($q_url);
                     exit;
                 } else {
                     $verify_em = $this->Users->find('all')->where(['Users.status' => 1, 'Users.role' => 2, 'Users.email' => $fb_user->email])->first();
@@ -563,7 +663,12 @@ class UsersController extends AppController
                             $up_arr = ['id' => $user1->id, 'last_activity' => DATE];
                             $udata = $this->Users->newEntity($up_arr, ['validate' => false]);
                             $this->Users->save($udata);
-                            return $this->redirect(SITEURL . "dashboard");
+                            $q_url = SITEURL . "dashboard";
+                            if (!empty($session->read('redirect'))) {
+                                $q_url = SITEURL . $session->read('redirect');
+                                $session->delete('redirect');
+                            }
+                            return $this->redirect($q_url);
                             exit;
                         } else {
                             $err_msg = 'An error occurred. Please try again later';
@@ -607,29 +712,35 @@ class UsersController extends AppController
         $this->autoRender = false;
         $getData = $this->request->getData();
         if (!empty($getData)) {
-            
+
             if ($getData['request'] == 'login') {
                 //ec("Login : ");ec($getData);
                 echo "Welcome to SuperPAD";
-            } elseif ($getData['request'] == 'auth' ) {
-                if(isset($getData['signature'])){
+            } elseif ($getData['request'] == 'auth') {
+                if (isset($getData['signature'])) {
                     if ($this->Auth->User('id') != "") {
                         $verify = $this->Users->find('all')
                             ->where(['Users.status' => 1, 'Users.role' => 2, 'Users.id' => $this->Auth->User('id')])
                             ->first();
                         if (!empty($verify)) {
                             $up_arr = ['id' => $verify->id, 'metamask_wallet_id' => $getData['address']];
-                            $user1 = $this->Users->newEntity($up_arr, ['validate' => 'WalletAddress']); 
+                            $user1 = $this->Users->newEntity($up_arr, ['validate' => 'WalletAddress']);
                             if ($user1->getErrors()) {
-                                echo (json_encode(['Error','This wallet address is already in use with other account.']));
+                                echo (json_encode(['Error', 'This wallet address is already in use with other account.']));
                                 exit;
                             } else {
                                 $this->Users->save($user1);
                                 echo (json_encode(["Success"]));
                             }
-                        } else {  echo (json_encode(["Fail"])); }
-                    } else {  echo (json_encode(["Fail"])); }
-                }else{  echo (json_encode(["Cancel"])); }
+                        } else {
+                            echo (json_encode(["Fail"]));
+                        }
+                    } else {
+                        echo (json_encode(["Fail"]));
+                    }
+                } else {
+                    echo (json_encode(["Cancel"]));
+                }
             }
         }
         exit;

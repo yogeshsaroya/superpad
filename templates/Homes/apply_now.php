@@ -1,4 +1,15 @@
 <div id="custom-content" class="white-popup-block offer-pop" style="max-width:800px; margin: 20px auto;">
+<style>
+    .sm_follow{
+    border-radius: 0.25em;
+
+    padding: 10px;
+    margin: 16px 0 0 0;
+}
+.sm_chk .help-block.with-errors {
+    margin-left: 18px !important;
+}
+</style>
     <div class="app-contentcontent ">
         <div class="modal-content">
             <?php if (!empty($data)) { ?>
@@ -11,7 +22,7 @@
                 </div>
                 <div class="modal-body">
                     <p class="fs-14 mb-3"></p>
-                    
+
                     <h4 class="modal-title">Basic Information</h4>
                     <hr>
                     <?php echo $this->Form->create(null, ['url' => ['controller' => 'homes', 'action' => 'apply_now'], 'autocomplete' => 'off', 'id' => 'e_frm', 'class' => 'auth-login-form mt-2', 'data-toggle' => 'validator']);
@@ -19,9 +30,9 @@
                     echo $this->Form->hidden('project_id', ['value' => $id]);
                     ?>
 
-                    <div class="mb-3 form-group"><?php echo $this->Form->control('twitter', ['label' => ['text' => 'Your Twitter Handle', 'class' => 'form-label'],'placeholder'=>'@handle name', 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
+                    <div class="mb-3 form-group"><?php echo $this->Form->control('twitter', ['label' => ['text' => 'Your Twitter Handle', 'class' => 'form-label'], 'placeholder' => '@handle name', 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
                     </div>
-                    <div class="mb-3 form-group"><?php echo $this->Form->control('telegram', ['label' => ['text' => 'Your Telegram Handle', 'class' => 'form-label'],'placeholder'=>'@handle name', 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
+                    <div class="mb-3 form-group"><?php echo $this->Form->control('telegram', ['label' => ['text' => 'Your Telegram Handle', 'class' => 'form-label'], 'placeholder' => '@handle name', 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
                     </div>
 
                     <?php if (!empty($data->sm_accounts)) { ?>
@@ -52,8 +63,14 @@
                                     <div class="col-sm">
                                         <a href="<?php echo $sm->link; ?>" target="_blank" class="btn btn-lg btn-dark wd-200" id="ac_<?php echo $sm->id; ?>"><?php echo $sm->label; ?></a>
                                     </div>
-                                    <div class="col-sm hide">
-                                        <a href="javascript:void(0);" class="btn btn-lg btn-outline-dark wd-150" onclick="did(<?php echo $sm->id; ?>)" id="did_<?php echo $sm->id; ?>"> I did it </a>
+                                    <div class="col-sm sm_chk">
+                                        <div class="form-check mb-2 form-group">
+                                            <?php echo $this->Form->checkbox('agree.', ['id' => 'agree', 'hiddenField' => true,'div'=>['class'=>'btn btn-primary w-100 bg-transparent'], 'value' => 1, 'class' => 'form-check-input check-all-input sm_follow', 'required' => true, 'checked' => false]); ?> 
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                        <?php /* ?>
+                                        <a href="javascript:void(0);" class="btn btn-lg btn-outline-dark wd-150 hide" onclick="did(<?php echo $sm->id; ?>)" id="did_<?php echo $sm->id; ?>"> I did it </a>
+                                        <?php */ ?>
                                     </div>
                                 </div>
                             <?php } ?>
@@ -69,7 +86,7 @@
                             <div class="form-check mb-2 form-group">
                                 <?php
                                 echo $this->Form->label('agree', ' I accept the terms of service', ['class' => 'form-check-label form-check-label-s1']);
-                                echo $this->Form->checkbox('agree', ['id' => 'agree', 'hiddenField'=>true,'value' => 1, 'class' => 'form-check-input check-all-input', 'required' => true, 'checked' => false]);
+                                echo $this->Form->checkbox('agree', ['id' => 'agree', 'hiddenField' => true, 'value' => 1, 'class' => 'form-check-input check-all-input', 'required' => true, 'checked' => false]);
                                 ?>
                                 <div class="help-block with-errors"></div>
                             </div><!-- end form-check -->
@@ -80,7 +97,7 @@
                             <div class="form-check mb-2 form-group">
                                 <?php
                                 echo $this->Form->label('subscribe', 'Yes, I agree to receive updates from ' . $data->meta_title . ' in the future.', ['class' => 'form-check-label form-check-label-s1']);
-                                echo $this->Form->checkbox('subscribe', ['id' => 'subscribe','hiddenField'=>true, 'value' => 1, 'class' => 'form-check-input check-all-input', 'required' => false, 'checked' => false]);
+                                echo $this->Form->checkbox('subscribe', ['id' => 'subscribe', 'hiddenField' => true, 'value' => 1, 'class' => 'form-check-input check-all-input', 'required' => false, 'checked' => false]);
                                 ?>
                                 <div class="help-block with-errors"></div>
                             </div><!-- end form-check -->
@@ -132,19 +149,19 @@
         <?php $this->Html->scriptEnd(); ?>
     <?php } else { ?>
         <div class="modal-header">
-                    <h4 class="modal-title">Application Not Found</h4>
-                    <button type="button" class="btn-close icon-btn" onclick="$.magnificPopup.close();" aria-label="Close">
-                        <em class="ni ni-cross"></em>
-                    </button>
-                </div>
-        <div class="modal-body">
-                    
-        <div class="alert alert-danger d-flex mb-4" role="alert">
-            <svg class="flex-shrink-0 me-3" width="30" height="30" viewBox="0 0 24 24" fill="#ff6a8e">
-                <path d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20, 12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10, 10 0 0,0 12,2M11,17H13V11H11V17Z"></path>
-            </svg>
-            <p class="fs-14">Application Not Found. Please try again later</p>
+            <h4 class="modal-title">Application Not Found</h4>
+            <button type="button" class="btn-close icon-btn" onclick="$.magnificPopup.close();" aria-label="Close">
+                <em class="ni ni-cross"></em>
+            </button>
         </div>
+        <div class="modal-body">
+
+            <div class="alert alert-danger d-flex mb-4" role="alert">
+                <svg class="flex-shrink-0 me-3" width="30" height="30" viewBox="0 0 24 24" fill="#ff6a8e">
+                    <path d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20, 12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10, 10 0 0,0 12,2M11,17H13V11H11V17Z"></path>
+                </svg>
+                <p class="fs-14">Application Not Found. Please try again later</p>
+            </div>
         </div>
     <?php } ?>
     </div>
