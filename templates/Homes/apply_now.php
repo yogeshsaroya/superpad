@@ -4,16 +4,15 @@
             <?php if (!empty($data)) { ?>
                 <?php $this->assign('title', $data->meta_title . ' Application Form'); ?>
                 <div class="modal-header">
-                    <h4 class="modal-title">Allowlist Application Form for <?php echo $data->meta_title; ?></h4>
+                    <h4 class="modal-title">Whitelist Application Form for <?php echo $data->meta_title; ?></h4>
                     <button type="button" class="btn-close icon-btn" onclick="$.magnificPopup.close();" aria-label="Close">
                         <em class="ni ni-cross"></em>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h4 class="modal-title">Join the Allowlist</h4>
                     <p class="fs-14 mb-3"></p>
                     <p class="fs-14 mb-3">We are excited to launch our IDO on <?php echo WEBTITLE; ?>.
-                        For a chance to win a allowlist spot, please fill out the form below and perform all tasks accordingly.
+                        For a chance to win a Whitelist spot, please fill out the form below and perform all tasks accordingly.
                         If you have any questions, please contact us!</p>
                     <p class="fs-14 mb-3">Good Luck!</p>
                     <h4 class="modal-title">Basic Information</h4>
@@ -23,9 +22,9 @@
                     echo $this->Form->hidden('project_id', ['value' => $id]);
                     ?>
 
-                    <div class="mb-3 form-group"><?php echo $this->Form->control('twitter', ['label' => ['text' => 'Your Twitter Handle', 'class' => 'form-label'], 'type' => 'url', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
+                    <div class="mb-3 form-group"><?php echo $this->Form->control('twitter', ['label' => ['text' => 'Your Twitter Handle', 'class' => 'form-label'],'placeholder'=>'@handle name', 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
                     </div>
-                    <div class="mb-3 form-group"><?php echo $this->Form->control('telegram', ['label' => ['text' => 'Your Telegram Handle', 'class' => 'form-label'], 'type' => 'url', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
+                    <div class="mb-3 form-group"><?php echo $this->Form->control('telegram', ['label' => ['text' => 'Your Telegram Handle', 'class' => 'form-label'],'placeholder'=>'@handle name', 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
                     </div>
 
                     <?php if (!empty($data->sm_accounts)) { ?>
@@ -33,7 +32,7 @@
                         <hr>
                         <div class="mb-3">
                             <h4 class="modal-title">Social Media</h4>
-                            <p class="fs-14 mb-3">Please complete the social tasks below. They're optional, but provide increased chances of getting allowlisted.</p>
+                            <p class="fs-14 mb-3">Please complete the social tasks below.</p>
                         </div>
 
                         <div class="col-md-12"></div>
@@ -56,7 +55,7 @@
                                     <div class="col-sm">
                                         <a href="<?php echo $sm->link; ?>" target="_blank" class="btn btn-lg btn-dark wd-200" id="ac_<?php echo $sm->id; ?>"><?php echo $sm->label; ?></a>
                                     </div>
-                                    <div class="col-sm">
+                                    <div class="col-sm hide">
                                         <a href="javascript:void(0);" class="btn btn-lg btn-outline-dark wd-150" onclick="did(<?php echo $sm->id; ?>)" id="did_<?php echo $sm->id; ?>"> I did it </a>
                                     </div>
                                 </div>

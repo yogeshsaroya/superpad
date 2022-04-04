@@ -239,17 +239,15 @@ if (!empty($end_date)) {
                         </div>
                     </div>
 
-                    <p class="item-detail-text mb-2 hide">The allowlist for Kyoko is now available and you can apply for it below. Note</p>
-                    <p class="item-detail-text mb-2 hide"> that you need to have at least 250 POLS Power to qualify for this allowlist. Learn more.</p>
-
+                    
                     <div class="item-detail-btns mt-4">
                         <ul class="btns-group d-flex">
                         <?php if(strtolower($list->product_status) == 'whitelist open'){?>
                             <?php if (isset($Auth->role) && $Auth->role == 2 ) {?> 
-                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="apply_sale(<?php echo $list->id?>);">Join Now</a></li>
+                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="apply_sale(<?php echo $list->id?>);">Whitelist Now</a></li>
                                 <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Application Status</a> </li>
                             <?php }else{?>
-                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL;?>sign-in">Login to Join Now</a></li>
+                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL;?>sign-in">Login to Whitelist</a></li>
                             <?php }?>
                             
                             <?php }else if(strtolower($list->product_status) == 'whitelist closed'){?>
