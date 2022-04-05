@@ -243,9 +243,12 @@ if (!empty($end_date)) {
                     <div class="item-detail-btns mt-4">
                         <ul class="btns-group d-flex">
                         <?php if(strtolower($list->product_status) == 'whitelist open'){?>
-                            <?php if (isset($Auth->role) && $Auth->role == 2 ) {?> 
+                            <?php if (isset($Auth->role) && $Auth->role == 2 ) {
+                                if(empty($data_app)) {?> 
                                 <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="apply_sale(<?php echo $list->id;?>);">Whitelist Now</a></li>
-                                <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Application Status</a> </li>
+                                <?php }else{?>
+                                <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="<?php echo SITEURL;?>users/application_status">Application Status</a> </li>
+                                <?php }?>
                             <?php }else{?>
                                 <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL;?>sign-in?redirect=explore/kyoko/apply">Login to Whitelist</a></li>
                             <?php }?>

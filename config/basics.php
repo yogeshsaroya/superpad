@@ -180,3 +180,7 @@ function number_format_short( $n ) {
 
 	return !empty($n_format . $suffix) ? $n_format . $suffix : 0;
 }
+
+function getAppStatus(){
+    return ['1'=>'In-Progress','2'=>'Lucky','3'=>'Unlucky','4'=>'Allocated'];
+}

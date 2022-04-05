@@ -1,4 +1,6 @@
-<?php $this->assign('title', 'Application List'); ?>
+<?php $this->assign('title', 'Application List');
+$appStatus = getAppStatus();
+?>
 <div class="hero-wrap sub-header">
     <div class="container">
         <div class="hero-content text-center py-0">
@@ -24,21 +26,35 @@
                         <th scope="col">Logo</th>
                         <th scope="col">IDO Name</th>
                         <th scope="col">IDO Price</th>
-                        <th scope="col">Unit Price</th>
                         <th scope="col">Status</th>
-                        
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row" class="fw-regular">Created</th>
-                        <td>"The Cost" 09.27.2021, Debut Single</td>
-                        <td>0.001</td>
-                        <td>1</td>
-                        <td>In-Progress</td>
-                        
-                    </tr>
+                    <?php if (!$data->isEmpty()) {
+                        foreach ($data as $list) { ?>
+                            <tr>
+                                <th scope="row" class="fw-regular"><img src="<?php echo SITEURL . "cdn/project_img/" . $list->project->hero_image; ?>" class="st_img hero_img" alt="<?php echo $list->project->title; ?>"></th>
+                                <td><?php echo $list->project->title; ?></td>
+                                <td><?php echo ($list->project->price_per_token > 0 ?  $this->Number->currency($list->project->price_per_token, 'USD') : 'TBA'); ?></td>
+                                <td><?php if (isset($appStatus[$list->status])) {
+                                        if ($list->status == 4) {
+                                            echo $this->Html->link('Check Allocation', '/allocation', ['class' => 'text-success']);
+                                        } else {
+                                            echo $appStatus[$list->status];
+                                        }
+                                    } ?></td>
+                            </tr>
+                        <?php }
+                    } else { ?>
+                        <tr>
+                            <td colspan="5">
+                                <div class="alert alert-danger d-flex mb-4" role="alert">
+                                    <p class="fs-14">You have not applied for any IDO yet.</p>
+                                </div>
+                            </td>
+                        </tr>
 
+                    <?php } ?>
                 </tbody>
             </table>
 

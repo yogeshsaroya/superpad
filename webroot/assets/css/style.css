@@ -5829,3 +5829,8 @@ form .required label:after {
     padding-bottom: 20px;
     margin-top: 10px;
 }
+
+.st_img {
+    width: 128px;
+    border-radius: 0px;
+}
