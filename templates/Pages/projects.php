@@ -51,12 +51,12 @@
                                                 <td><?php echo $this->Html->Link($list->title, SITEURL . "explore/" . $list->slug, ['target' => '_blank']); ?></td>
                                                 <td><?php echo $list->type; ?></td>
                                                 <td><?php echo $this->Number->currency($list->total_raise, 'USD'); ?></td>
-                                                <td><?php echo $this->Number->currency($list->ticket_allocation,'USD'); ?></td>
+                                                <td><?php echo $this->Number->currency($list->ticket_allocation, 'USD'); ?></td>
                                                 <td><?php echo number_format($list->initial_token_circulation); ?></td>
                                                 <td><?php echo $list->product_status; ?></td>
-                                                <td><?php if(isset($list->blockchain->name)) echo $list->blockchain->name; ?></td>
-                                                <td><?php if(!empty($list->start_date)) echo $list->start_date->format('Y-m-d H:i A') ?></td>
-                                                <td><?php if(!empty($list->end_date))  echo $list->end_date->format('Y-m-d H:i A') ?></td>
+                                                <td><?php if (isset($list->blockchain->name)) echo $list->blockchain->name; ?></td>
+                                                <td><?php if (!empty($list->start_date)) echo $list->start_date->format('Y-m-d H:i A') ?></td>
+                                                <td><?php if (!empty($list->end_date))  echo $list->end_date->format('Y-m-d H:i A') ?></td>
                                                 <td><?php if ($list->is_featured == 1) {
                                                         echo 'Yes';
                                                     } ?></td>
@@ -72,10 +72,11 @@
                                                     <div class="dropdown">
                                                         <button type="button" class="btn btn-sm dropdown-toggle hide-arrow" data-toggle="dropdown"><i data-feather="more-vertical"></i></button>
                                                         <div class="dropdown-menu">
-                                                            <?php echo $this->Html->Link('<i data-feather="edit-2" class="mr-50"></i> Edit', SITEURL . "pages/manage_project/" . $list->id, ['escape' => false, 'class' => 'dropdown-item']); ?>
-                                                            <?php echo $this->Html->Link('<i data-feather="settings" class="mr-50"></i> Featured Sale', SITEURL . "pages/projects?featured=" . $list->id, ['escape' => false, 'class' => 'dropdown-item', 'onclick' => "return confirm('Are you sure you want to make it Featured Sale?')"]); ?>
-                                                            <?php echo $this->Html->Link('<i data-feather="trash" class="mr-50"></i> Delete', SITEURL . "pages/projects?del=" . $list->id, ['escape' => false, 'class' => 'dropdown-item', 'onclick' => "return confirm('Are you sure you want to delete?')"]); ?>
-                                                            
+                                                            <?php echo $this->Html->Link(' Edit', SITEURL . "pages/manage_project/" . $list->id, ['escape' => false, 'class' => 'dropdown-item']); ?>
+                                                            <?php echo $this->Html->Link(' Featured Sale', SITEURL . "pages/projects?featured=" . $list->id, ['escape' => false, 'class' => 'dropdown-item', 'onclick' => "return confirm('Are you sure you want to make it Featured Sale?')"]); ?>
+                                                            <?php echo $this->Html->Link(' Applications', SITEURL . "pages/manage_project/".$list->id."?type=applications", ['escape' => false, 'class' => 'dropdown-item']); ?>
+                                                            <?php echo $this->Html->Link(' Delete', SITEURL . "pages/projects?del=" . $list->id, ['escape' => false, 'class' => 'dropdown-item', 'onclick' => "return confirm('Are you sure you want to delete?')"]); ?>
+
                                                         </div>
                                                     </div>
                                                 </td>
@@ -86,7 +87,7 @@
                             </table>
 
                             <div class="card-header">
-                            <?php echo $this->Paginator->counter('Page {{page}} of {{pages}}, showing {{current}} records out of {{count}} total, starting on record {{start}}, ending on {{end}}'); ?>
+                                <?php echo $this->Paginator->counter('Page {{page}} of {{pages}}, showing {{current}} records out of {{count}} total, starting on record {{start}}, ending on {{end}}'); ?>
                                 <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
                                     <ul class="pagination">
                                         <?php
@@ -98,7 +99,7 @@
                                         ?>
                                     </ul>
                                 </div>
-                        </div>
+                            </div>
                         </div>
                     </div>
                 </div>

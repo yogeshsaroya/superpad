@@ -27,6 +27,18 @@
                         <li class="menu-item"><a href="javascript:void(0);" class="menu-link">Allocation</a></li>
                         <li class="menu-item"><a href="javascript:void(0);" class="menu-link">Stake</a></li>
                         <li class="menu-item"><a href="javascript:void(0);" class="menu-link">Buy SPAD</a></li>
+                        <?php /*?>
+                        <li class="menu-item has-sub">
+                            <a href="#" class="menu-link menu-toggle">Buy SPAD</a>
+                            <div class="menu-sub">
+                                <ul class="menu-list">
+                                    <li class="menu-item"><a href="index.html" class="menu-link">Home Page 1</a></li>
+                                    <li class="menu-item"><a href="index-2.html" class="menu-link">Home Page 2</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <?php */?>
+                        
                         <?php if (isset($Auth->role) && !empty($Auth->role)) {
                             if ($Auth->role == 2) { ?>
                                 <li class="menu-item"><a href="<?php echo SITEURL; ?>dashboard" class="menu-link">Dashboard</a></li>

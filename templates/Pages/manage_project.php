@@ -2,6 +2,7 @@
 $getStatus = getStatus();
 $type = getProjectType();
 $status = getProjectStatus();
+$appStatus = getAppStatus();
 $this->assign('title', 'Manage Projects'); ?>
 
 <?php /* ?>
@@ -46,6 +47,8 @@ $this->assign('title', 'Manage Projects'); ?>
                         <li class="nav-item"><a class="nav-link <?php echo ($tab == 'team' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=team"; ?>">Team</a></li>
                         <li class="nav-item"><a class="nav-link <?php echo ($tab == 'partner' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=partner"; ?>">Partner and Investor</a></li>
                         <li class="nav-item"><a class="nav-link <?php echo ($tab == 'media' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=media"; ?>">Social Media Accounts</a></li>
+                        <li class="nav-item"><a class="nav-link <?php echo ($tab == 'applications' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=applications"; ?>">Applications</a></li>
+                        
                     </ul>
                 </div>
             <?php } ?>
@@ -307,6 +310,55 @@ $this->assign('title', 'Manage Projects'); ?>
                                                             } ?>
                                                         </td>
                                                         <td><?php echo $this->Html->link('Delete', SITEURL."pages/manage_project/$get_data->id?type=media&del=".$list->id, ['escape' => false, 'class' => 'text-info', 'onclick' => "return confirm('Are you sure you want to delete?')"]);?></td>
+                                                    </tr>
+                                            <?php }
+                                            } ?>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="card-header">
+                                        <?php echo $this->Paginator->counter('Page {{page}} of {{pages}}, showing {{current}} records out of {{count}} total, starting on record {{start}}, ending on {{end}}'); ?>
+                                        <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+                                            <ul class="pagination">
+                                                <?php
+                                                echo $this->Paginator->first(__('First', true), array('tag' => 'li', 'escape' => false), array('type' => "button", 'class' => "btn btn-default"));
+                                                echo $this->Paginator->prev('&laquo;', array('tag' => 'li', 'escape' => false), '<a href="#">&laquo;</a>', array('class' => 'prev disabled', 'tag' => 'li', 'escape' => false));
+                                                echo $this->Paginator->numbers(array('separator' => '', 'tag' => 'li', 'currentLink' => true, 'currentClass' => 'active', 'currentTag' => 'a'));
+                                                echo $this->Paginator->next('&raquo;', array('tag' => 'li', 'escape' => false), '<a href="#">&raquo;</a>', array('class' => 'prev disabled', 'tag' => 'li', 'escape' => false));
+                                                echo $this->Paginator->last(__('Last', true), array('tag' => 'li', 'escape' => false), array('type' => "button", 'class' => "btn btn-default"));
+                                                ?>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php }elseif ($tab == 'applications') {?>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th><?php echo $this->Paginator->sort('user.first_name','First Name'); ?></th>
+                                                <th><?php echo $this->Paginator->sort('user.last_name','Last Name'); ?></th>
+                                                <th><?php echo $this->Paginator->sort('user.kyc_completed','KYC Status'); ?></th>
+                                                <th><?php echo $this->Paginator->sort('twitter'); ?></th>
+                                                <th><?php echo $this->Paginator->sort('telegram') ?></th>
+                                                <th><?php echo $this->Paginator->sort('status','Application Status') ?></th>
+                                                <th><?php echo $this->Paginator->sort('created'); ?></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            if (!empty($data)) {
+                                                foreach ($data as $list) { ?>
+                                                    <tr>
+                                                        <td><?php echo $list->user->first_name; ?></td>
+                                                        <td><?php echo $list->user->last_name; ?></td>
+                                                        <td><?php if($list->user->kyc_completed == 1){ echo "In-Review";}
+                                                        elseif($list->user->kyc_completed == 2){ echo "Approved";}
+                                                        elseif($list->user->kyc_completed == 3){ echo "Rejected";}?></td>
+                                                        <td><?php echo $list->twitter; ?></td>
+                                                        <td><?php echo $list->telegram; ?></td>
+                                                        <td><?php echo (isset($appStatus[$list->status]) ?  $appStatus[$list->status] : null ); ?></td>
+                                                        <td><?php echo $list->created->format('Y-m-d'); ?></td>
                                                     </tr>
                                             <?php }
                                             } ?>

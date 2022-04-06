@@ -73,6 +73,10 @@ class HomesController extends AppController
         }
     }
 
+    public function newProject(){
+        
+    }
+
     public function allocation()
     {
     }

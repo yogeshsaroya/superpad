@@ -810,6 +810,14 @@ class PagesController extends AppController
                     $paging = $this->request->getAttribute('paging');
                     $this->set(compact('data', 'paging'));
                 }
+                elseif ($tab == 'applications') {
+                    $this->paginate = ['contain' => ['Users'],
+                        'limit' => 100, 'conditions' => ['Applications.project_id' => $id], 'order' => ['id' => 'desc']];
+                    $data = $this->paginate($this->Applications->find('all'));
+                    $paging = $this->request->getAttribute('paging');
+                    $this->set(compact('data', 'paging'));
+                }
+                
             }
         }
         $this->set(compact('get_data', 'tab'));
@@ -1298,13 +1306,11 @@ class PagesController extends AppController
         $postData = $this->request->getData();
         $tbl_data = null;
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
-
             $uploadPath = 'cdn/logo/';
             if (!file_exists($uploadPath)) {
                 mkdir($uploadPath, 0777, true);
             }
             /* For logo */
-
             if (!empty($postData['logo_img'])) {
                 if (in_array($postData['logo_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg', 'image/svg+xml'])) {
                     $fileobject = $postData['logo_img'];
@@ -1318,8 +1324,6 @@ class PagesController extends AppController
                     }
                 }
             }
-
-
             if (isset($postData['id']) && !empty($postData['id'])) {
                 $getBlog = $this->Settings->get($postData['id']);
                 if (!empty($file_name)) {
@@ -1340,7 +1344,6 @@ class PagesController extends AppController
                 echo $st;
                 exit;
             } else {
-
                 if ($this->Settings->save($chkBlog)) {
                     $u = SITEURL . "pages/settings";
                     echo '<div class="alert alert-success" role="alert"> Saved.</div>';

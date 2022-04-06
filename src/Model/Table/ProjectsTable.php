@@ -15,7 +15,7 @@ class ProjectsTable extends Table
         $this->hasMany('Teams',['sort'=>['Teams.position ASC'] ]);
         $this->hasMany('Partners');
         $this->hasMany('SmAccounts');
-        
+        $this->hasMany('Applications');
     }
 
     public function validationDefault(Validator $validator): Validator
