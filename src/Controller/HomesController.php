@@ -73,8 +73,40 @@ class HomesController extends AppController
         }
     }
 
-    public function newProject(){
-        
+    public function newProject()
+    {
+
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $postData = $this->request->getData();
+            $getEnt = $this->NewProjects->newEmptyEntity();
+            $chkEnt = $this->NewProjects->patchEntity($getEnt, $postData, ['validate' => true]);
+            if ($chkEnt->getErrors()) {
+                $st = null;
+                foreach ($chkEnt->getErrors() as $elist) {
+                    foreach ($elist as $k => $v); {
+                        $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                    }
+                }
+                echo $st;
+                exit;
+            } else {
+                if ($this->NewProjects->save($chkEnt)) {
+                    $admin = 'support@superpad.finance';
+                    $this->Data->AppMail($admin, 12, ['TITLE' => $chkEnt->name]);
+                    $this->Data->AppMail($chkEnt->email, 11, ['TITLE' => $chkEnt->name]);
+
+                    $str = '<div class="alert alert-success d-flex mb-4" role="alert"><p class="fs-14">Your application has been submitted. Our team will review it shortly and get in touch with you.</p></div>';
+                    echo "<script>$('#ido_frm').html('$str');</script>";
+                    exit;
+                } else {
+                    echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
+                    exit;
+                }
+            }
+
+
+            exit;
+        }
     }
 
     public function allocation()
