@@ -120,6 +120,7 @@
              <li class="<?php echo (isset($menu_act) && $menu_act == 'blockchain' ? 'active' : null); ?>"><a class="dropdown-item d-flex align-items-center" href="<?php echo SITEURL; ?>pages/blockchain">BlockChain Network</a></li>
              <li class="<?php echo (isset($menu_act) && $menu_act == 'roadmap' ? 'active' : null); ?>"><a class="dropdown-item d-flex align-items-center" href="<?php echo SITEURL; ?>pages/roadmap">Road Map</a></li>
              <li class="<?php echo (isset($menu_act) && $menu_act == 'features' ? 'active' : null); ?>"><a class="dropdown-item d-flex align-items-center" href="<?php echo SITEURL; ?>pages/features">Features</a></li>
+             <li class="<?php echo (isset($menu_act) && $menu_act == 'ido_applications' ? 'active' : null); ?>"><a class="dropdown-item d-flex align-items-center" href="<?php echo SITEURL; ?>pages/ido_applications">IDO Applications</a></li>
            </ul>
          </li>
 

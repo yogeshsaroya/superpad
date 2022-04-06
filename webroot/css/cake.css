@@ -474,3 +474,7 @@ a.label:focus {
     margin: 40px auto;
     position: relative
 }
+
+dt.col-sm-3 {
+    font-weight: 900;
+}

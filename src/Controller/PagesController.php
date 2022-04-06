@@ -282,7 +282,6 @@ class PagesController extends AppController
                 $getData = $this->EmailServers->findById($id)->first();
             }
             $this->set(compact('getData'));
-            
         }
     }
 
@@ -1014,6 +1013,23 @@ class PagesController extends AppController
                 $post_data = null;
                 $this->set(compact('post_data', 'pro_id'));
             }
+        }
+    }
+
+    public function idoApplications(){
+        $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
+        $data = $this->paginate($this->NewProjects->find('all'));
+        $paging = $this->request->getAttribute('paging');
+        $this->set(compact('data', 'paging'));
+    }
+
+    public function viewIdo($id = null ){
+        $getData = null;
+        if ($this->request->is('ajax')) {
+            if (!empty($id)) {
+                $getData = $this->NewProjects->findById($id)->first();
+            }
+            $this->set(compact('getData'));
         }
     }
 
