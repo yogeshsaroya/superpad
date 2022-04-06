@@ -338,6 +338,8 @@ $this->assign('title', 'Manage Projects'); ?>
                                             <tr>
                                                 <th><?php echo $this->Paginator->sort('user.first_name','First Name'); ?></th>
                                                 <th><?php echo $this->Paginator->sort('user.last_name','Last Name'); ?></th>
+                                                <th><?php echo $this->Paginator->sort('user.kyc_address','Address'); ?></th>
+                                                
                                                 <th><?php echo $this->Paginator->sort('user.kyc_completed','KYC Status'); ?></th>
                                                 <th><?php echo $this->Paginator->sort('twitter'); ?></th>
                                                 <th><?php echo $this->Paginator->sort('telegram') ?></th>
@@ -352,6 +354,7 @@ $this->assign('title', 'Manage Projects'); ?>
                                                     <tr>
                                                         <td><?php echo $list->user->first_name; ?></td>
                                                         <td><?php echo $list->user->last_name; ?></td>
+                                                        <td><?php echo $list->user->kyc_address." ".$list->user->kyc_city." ".$list->user->kyc_state; ?></td>
                                                         <td><?php if($list->user->kyc_completed == 1){ echo "In-Review";}
                                                         elseif($list->user->kyc_completed == 2){ echo "Approved";}
                                                         elseif($list->user->kyc_completed == 3){ echo "Rejected";}?></td>
