@@ -593,16 +593,17 @@ class PagesController extends AppController
             $this->redirect('/pages/projects');
         }
         if ($this->request->getQuery('featured')  && !empty($this->request->getQuery('featured'))) {
-            $getData = $this->Projects->findById($this->request->getQuery('featured'))->firstOrFail();
-
-            $this->Projects->updateAll(['is_featured' => null], ['is_featured' => 1]);
-
-            $upData = ['id' => $getData->id, 'is_featured' => 1];
-            $saveData = $this->Projects->newEntity($upData, ['validate' => false]);
-            $this->Projects->save($saveData);
+            $getData = $this->Projects->findById($this->request->getQuery('featured'))->first();
+            if(!empty($getData)){
+                $this->Projects->updateAll(['is_featured' => null], ['is_featured' => 1]);
+                if( $getData->is_featured != 1 ){
+                    $upData = ['id' => $getData->id, 'is_featured' => 1];
+                    $saveData = $this->Projects->newEntity($upData, ['validate' => false]);
+                    $this->Projects->save($saveData);
+                }
+            }
             $this->redirect('/pages/projects');
         }
-
 
         $this->paginate = ['contain' => ['Blockchains'], 'limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Projects->find('all'));

@@ -73,7 +73,11 @@
                                                         <button type="button" class="btn btn-sm dropdown-toggle hide-arrow" data-toggle="dropdown"><i data-feather="more-vertical"></i></button>
                                                         <div class="dropdown-menu">
                                                             <?php echo $this->Html->Link(' Edit', SITEURL . "pages/manage_project/" . $list->id, ['escape' => false, 'class' => 'dropdown-item']); ?>
-                                                            <?php echo $this->Html->Link(' Featured Sale', SITEURL . "pages/projects?featured=" . $list->id, ['escape' => false, 'class' => 'dropdown-item', 'onclick' => "return confirm('Are you sure you want to make it Featured Sale?')"]); ?>
+                                                            <?php 
+                                                             $txt = 'Add as featured sale';
+                                                            if($list->is_featured == 1){ $txt = 'Remove from featured sale'; }
+                                                            
+                                                            echo $this->Html->Link($txt, SITEURL . "pages/projects?featured=" . $list->id, ['escape' => false, 'class' => 'dropdown-item', 'onclick' => "return confirm('Are you sure you want to $txt?')"]); ?>
                                                             <?php echo $this->Html->Link(' Applications', SITEURL . "pages/manage_project/".$list->id."?type=applications", ['escape' => false, 'class' => 'dropdown-item']); ?>
                                                             <?php echo $this->Html->Link(' Delete', SITEURL . "pages/projects?del=" . $list->id, ['escape' => false, 'class' => 'dropdown-item', 'onclick' => "return confirm('Are you sure you want to delete?')"]); ?>
 
