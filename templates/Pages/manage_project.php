@@ -151,7 +151,7 @@ $this->assign('title', 'Manage Projects'); ?>
                                         </div>
                                         <div class="col-12 mt-50">
                                             <input type="button" class="btn btn-primary mr-1" value="Save Changes" id="save_frm" />
-                                            <button type="reset" class="btn btn-outline-secondary">Cancel</button>
+                                            
                                         </div>
                                     </div>
                                     </form>
