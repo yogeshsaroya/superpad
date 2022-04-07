@@ -29,7 +29,7 @@ class ProjectsTable extends Table
             ->add("title", ['unique' => ['rule' => 'validateUnique', 'provider' => 'table', 'message' => 'Project title is already in use']])
 
             ->requirePresence("coin_id")
-            ->notEmptyString("coin_id", "Coin ID is required")
+            ->allowEmptyString("coin_id", "Coin ID is required")
             ->minLength("coin_id", 3, "Coin ID must be 3-20 characters")
             ->maxLength("coin_id", 20, "Coin ID must be 3-20 characters")
             ->add("coin_id", ['unique' => ['rule' => 'validateUnique', 'provider' => 'table', 'message' => 'Coin ID already in use']])

@@ -72,7 +72,7 @@ $this->assign('title', 'Manage Projects'); ?>
                                     <div class="row">
                                         <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('title', ['label' => ['escape' => false, 'text' => 'Title <small>(unique project title)</small>'], 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div>
                                         </div>
-                                        <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('coin_id', ['type'=>'text','label' => ['escape' => false, 'text' => 'Coin ID <small>(unique coin id)</small>'], 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div>
+                                        <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('coin_id', ['type'=>'text','label' => ['escape' => false, 'text' => 'Coin ID <small>(unique coin id)</small>'], 'class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div>
                                         </div>
                                         <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('ticker', ['label' => ['escape' => false, 'text' => 'Tiker <small>(unique tiker name)</small>'], 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div>
                                         </div>
