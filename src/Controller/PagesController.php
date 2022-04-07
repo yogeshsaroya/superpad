@@ -1021,7 +1021,14 @@ class PagesController extends AppController
         $pro_menu = 'top_menu';
         $this->set(compact('menu_act', 'pro_menu'));
 
-        $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
+        if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
+            $blog_del = $this->Levels->findById($this->request->getQuery('del'))->firstOrFail();
+            if ($this->Levels->delete($blog_del)) {
+            }
+            $this->redirect('/pages/tiers');
+        }
+
+        $this->paginate = ['limit' => 100, 'order' => ['position' => 'asc']];
         $data = $this->paginate($this->Levels->find('all'));
         $paging = $this->request->getAttribute('paging');
         $this->set(compact('data', 'paging'));

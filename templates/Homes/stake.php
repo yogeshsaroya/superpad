@@ -49,7 +49,7 @@
     #pricing .block-pricing ul {
         list-style: outside none none;
         margin: 10px auto;
-        max-width: 240px;
+        
         padding: 0
     }
 

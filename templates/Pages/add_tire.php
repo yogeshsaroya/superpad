@@ -1,4 +1,4 @@
-<div id="custom-content" class="white-popup-block offer-pop" style="max-width:900px; margin: 20px auto;">
+<div id="custom-content" class="white-popup-block offer-pop" style="max-width:500px; margin: 20px auto;">
 
     <?php
     $YesOrNo = YesOrNo();
@@ -32,12 +32,12 @@
                                     ?>
                                     <div class="row">
                                         <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('title', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                        <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('spad', ['type' => 'number','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
-                                        <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('ticket_multiplier', ['type' => 'text','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
+                                        <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('spad', ['type' => 'text','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
+                                        <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('ticket_multiplier', ['type' => 'text','type' => 'text','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
                                         <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('cooldown', ['options' => $YesOrNo,'empty'=>'Select', 'class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
                                         <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('social_task', ['options' => $YesOrNo, 'empty'=>'Select','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
-                                        <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('max_ticket_allocation', ['class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
-                                        <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('winning_chances', ['type' => 'number', 'class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
+                                        <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('max_ticket_allocation', ['type' => 'text','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
+                                        <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('winning_chances', ['type' => 'text', 'class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
                                         <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('position', ['type' => 'number', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
 
 
