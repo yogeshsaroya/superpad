@@ -1017,6 +1017,10 @@ class PagesController extends AppController
     }
 
     public function tiers(){
+        $menu_act = 'tiers';
+        $pro_menu = 'top_menu';
+        $this->set(compact('menu_act', 'pro_menu'));
+
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Levels->find('all'));
         $paging = $this->request->getAttribute('paging');
@@ -1069,6 +1073,9 @@ class PagesController extends AppController
 
 
     public function idoApplications(){
+        $menu_act = 'ido_applications';
+        $pro_menu = 'top_menu';
+        $this->set(compact('menu_act', 'pro_menu'));
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->NewProjects->find('all'));
         $paging = $this->request->getAttribute('paging');
