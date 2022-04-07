@@ -75,36 +75,63 @@ class HomesController extends AppController
 
     public function newProject()
     {
+        $tbl_data = null;
+        /*$tbl_data = $this->NewProjects->findById('1')->firstOrFail(); */
+        $this->set(compact('tbl_data'));
+
+        $Setting = $this->request->getSession()->read('Setting');
 
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
-            $postData = $this->request->getData();
-            $getEnt = $this->NewProjects->newEmptyEntity();
-            $chkEnt = $this->NewProjects->patchEntity($getEnt, $postData, ['validate' => true]);
-            if ($chkEnt->getErrors()) {
-                $st = null;
-                foreach ($chkEnt->getErrors() as $elist) {
-                    foreach ($elist as $k => $v); {
-                        $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
-                    }
-                }
-                echo $st;
+            if (empty($Setting['recaptcha_secret_key'])) {
+                echo '<script>grecaptcha.reset();</script>';
+                echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
                 exit;
-            } else {
-                if ($this->NewProjects->save($chkEnt)) {
-                    $admin = 'support@superpad.finance';
-                    $this->Data->AppMail($admin, 12, ['TITLE' => $chkEnt->name]);
-                    $this->Data->AppMail($chkEnt->email, 11, ['TITLE' => $chkEnt->name]);
-
-                    $str = '<div class="alert alert-success d-flex mb-4" role="alert"><p class="fs-14">Your application has been submitted. Our team will review it shortly and get in touch with you.</p></div>';
-                    echo "<script>$('#ido_frm').html('$str');</script>";
-                    exit;
-                } else {
-                    echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
-                    exit;
-                }
             }
+            $postData = $this->request->getData();
+            if (isset($_SERVER['HTTP_SEC_FETCH_SITE']) && $_SERVER['HTTP_SEC_FETCH_SITE'] == 'same-origin') {
+                if (isset($postData['g-recaptcha-response']) && !empty($postData['g-recaptcha-response'])) {
+                    $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . $Setting['recaptcha_secret_key'] . "&response=" . $postData['g-recaptcha-response'] . "&remoteip=" . $_SERVER['REMOTE_ADDR']);
+                    $arr = json_decode($response, true);
+                    if (isset($arr['success']) && $arr['success'] == 1) {
+                        $getEnt = $this->NewProjects->newEmptyEntity();
+                        $chkEnt = $this->NewProjects->patchEntity($getEnt, $postData, ['validate' => true]);
+                        if ($chkEnt->getErrors()) {
+                            $st = null;
+                            foreach ($chkEnt->getErrors() as $elist) {
+                                foreach ($elist as $k => $v); {
+                                    $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                                }
+                            }
+                            echo '<script>grecaptcha.reset();</script>';
+                            echo $st;
+                            exit;
+                        } else {
+                            if ($this->NewProjects->save($chkEnt)) {
+                                $admin = 'support@superpad.finance';
+                                $this->Data->AppMail($admin, 12, ['TITLE' => $chkEnt->name]);
+                                $this->Data->AppMail($chkEnt->email, 11, ['TITLE' => $chkEnt->name]);
 
-
+                                $str = '<div class="alert alert-success d-flex mb-4" role="alert"><p class="fs-14">Your application has been submitted. Our team will review it shortly and get in touch with you.</p></div>';
+                                echo "<script>$('#ido_frm').html('$str');</script>";
+                                exit;
+                            } else {
+                                echo '<script>grecaptcha.reset();</script>';
+                                echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
+                                exit;
+                            }
+                        }
+                    } else {
+                        echo '<script>grecaptcha.reset();</script>';
+                        echo "<div class='alert alert-danger'>Please verify that you are not a robot.</div>";
+                    }
+                } else {
+                    echo '<script>grecaptcha.reset();</script>';
+                    echo "<div class='alert alert-danger'>Please verify that you are not a robot.</div>";
+                }
+            } else {
+                echo '<script>grecaptcha.reset();</script>';
+                echo "<div class='alert alert-danger'>Server error. please try again later or contact to us</div>";
+            }
             exit;
         }
     }

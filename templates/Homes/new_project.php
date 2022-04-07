@@ -1,6 +1,16 @@
 <?php
 $this->assign('title', 'Apply to launch IDO');
-?>
+if(!empty($Setting['recaptcha_site_key']) && !empty($Setting['recaptcha_secret_key']) )
+{?>
+<script type="text/javascript">
+      var onloadCallback = function() {
+        grecaptcha.render('g-recaptcha', {
+          'sitekey' : '<?php echo $Setting['recaptcha_site_key'];?>'
+        });
+      };
+    </script>
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+<?php } ?>
 <section class="create-section section-space-b pt-70">
     <div class="container">
         <div class="row">
@@ -10,7 +20,7 @@ $this->assign('title', 'Apply to launch IDO');
                     <p>Welcome to the future of decentralised fundraising on SuperPAD. Our mission is to bring the highest quality projects together with investors to enable the launch of innovative startups and technology. With this goal, it is the responsibility of the SuperPAD Council to act as a governance board to ensure quality and due diligence for the projects we launch.</p>
                 </div>
                 <div id="ido_frm">
-                    <?php echo $this->Form->create(null, ['autocomplete' => 'off', 'id' => 'e_frm', 'class' => 'form-create mb-5 mb-lg-0', 'data-toggle' => 'validator']); ?>
+                    <?php echo $this->Form->create($tbl_data, ['autocomplete' => 'off', 'id' => 'e_frm', 'class' => 'form-create mb-5 mb-lg-0', 'data-toggle' => 'validator']); ?>
                     <div class="form-item mb-4">
 
                         <div class="mb-3 form-group"><?php echo $this->Form->control('name', ['label' => ['text' => 'Project Name', 'class' => 'mb-2 form-label'], 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
@@ -44,11 +54,12 @@ $this->assign('title', 'Apply to launch IDO');
                         </div>
                         <div class="mb-3 form-group"><?php echo $this->Form->control('audited', ['options' => ['Yes' => 'Yes', 'No' => 'No'], 'empty' => 'Select', 'label' => ['text' => 'Has your project been audited?', 'class' => 'mb-2 form-label'], 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
                         </div>
-                        <div class="mb-3 form-group"><?php echo $this->Form->control('hear_about', ['type' => 'textarea', 'rows' => 3, 'label' => ['text' => 'How did you hear about Ignition?', 'class' => 'mb-2 form-label'], 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
+                        <div class="mb-3 form-group"><?php echo $this->Form->control('hear_about', ['type' => 'textarea', 'rows' => 3, 'label' => ['text' => 'How did you hear about superPAD?', 'class' => 'mb-2 form-label'], 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
                         </div>
                         <div class="mb-3 form-group"><?php echo $this->Form->control('other_comment', ['type' => 'textarea', 'rows' => 3, 'label' => ['text' => 'Anything else we should know? *', 'class' => 'mb-2 form-label'], 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
                         </div>
                     </div>
+                    <div class="col-sm-12"><div id="g-recaptcha"></div>
                     <hr>
                     <div id="f_err"></div>
                     <br>

@@ -87,6 +87,15 @@
                                     <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('google_client_secret', ['label' => ['escape' => false, 'text' => 'Google Client Secret <small>(For Google Login)</small>'], 'class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div>
                                     </div>
                                 </div></div></div></div></div></section>
+
+                                <section><div class="row"><div class="col-md-12"><div class="card">
+                                <div class="card-header"><h4 class="card-title">reCaptcha</h4></div><div class="card-body">
+                                <div class="row">
+                                <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('recaptcha_site_key', ['type' => 'text', 'class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div>
+                                    </div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('recaptcha_secret_key', ['class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div>
+                                    </div>
+                                </div></div></div></div></div></section>
                                 
                                 
                                 <section><div class="row"><div class="col-md-12"><div class="card">
