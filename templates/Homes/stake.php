@@ -84,18 +84,13 @@
     <div class="container">
         <div class="hero-content text-center py-0">
             <h1 class="hero-title">Stake</h1>
-
         </div>
     </div>
 </div>
-
-
 <section class="contact-section section-space-b">
     <div class="container">
         <div class="row section-space-b">
             <div class="col-lg-12">
-
-
                 <section id="pricing" class="padd-section text-center wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
                     <div class="container">
                         <div class="section-title text-center">
@@ -111,25 +106,21 @@
                                     <div class="block-pricing">
                                         <div class="table">
                                             <h4><?php echo $list->title; ?></h4>
-                                            <h2><?php echo $list->spad; ?></h2>
+                                            <h2><?php echo (!empty($list->spad) ? $list->spad : "TBA"); ?></h2>
                                             <ul class="list-unstyled">
-                                                <li><b>Ticket Multiplier</b> <?php echo $list->ticket_multiplier; ?></li>
-                                                <li><b>Cooldown</b> <?php echo ($list->cooldown == 1 ? "Yes" : "No"); ?></li>
-                                                <li><b>Social Task</b> <?php echo ($list->social_task == 1 ? "Yes" : "No"); ?></li>
-                                                <li><b>Max Ticket Allocation</b> <?php echo $list->max_ticket_allocation; ?></li>
-                                                <li><b>Winning Chances</b> <?php echo $list->winning_chances; ?>%</li>
-
+                                                <li><b>Ticket Multiplier</b> <?php echo (!empty($list->ticket_multiplier) ? $list->ticket_multiplier : "TBA"); ?></li>
+                                                <li><b>Cooldown</b> <?php if(empty($list->cooldown)) { echo "TBA"; }else{ echo ($list->cooldown == 1 ? "Yes" : "No"); } ?></li>
+                                                <li><b>Social Task</b> <?php if(empty($list->social_task)){ echo "TBA"; }else{ echo ($list->social_task == 1 ? "Yes" : "No");} ?></li>
+                                                <li><b>Max Ticket Allocation</b> <?php echo (!empty($list->max_ticket_allocation) ? $list->max_ticket_allocation : "TBA"); ?></li>
+                                                <li><b>Winning Chances</b> <?php echo (!empty($list->winning_chances) ? $list->winning_chances."%" : "TBA"); ?></li>
                                             </ul>
-
                                         </div>
                                     </div>
                                 </div>
                             <?php } ?>
-
                         </div>
                     </div>
                 </section>
-
             </div>
         </div>
     </div>

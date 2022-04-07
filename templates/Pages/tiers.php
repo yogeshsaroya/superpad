@@ -47,11 +47,11 @@ $YesOrNo = YesOrNo();?>
                                                 <td><?php echo $list->title; ?></td>
                                                 <td><?php echo $list->spad; ?></td>
                                                 <td><?php echo $list->ticket_multiplier; ?></td>
-                                                <td><?php echo $YesOrNo[$list->cooldown]; ?></td>
-                                                <td><?php echo $YesOrNo[$list->social_task]; ?></td>
+                                                <td><?php echo @$YesOrNo[$list->cooldown]; ?></td>
+                                                <td><?php echo @$YesOrNo[$list->social_task]; ?></td>
                                                 <td><?php echo $list->max_ticket_allocation; ?></td>
                                                 <td><?php echo $list->winning_chances; ?></td>
-                                                <td><?php echo $this->Html->link(' View ', SITEURL . "pages/add_tire/" . $list->id, ['class' => 'magnificAjax']); ?></td>
+                                                <td><?php echo $this->Html->link(' Edit ', SITEURL . "pages/add_tire/" . $list->id, ['class' => 'magnificAjax']); ?></td>
                                                 
                                             </tr>
                                     <?php }
