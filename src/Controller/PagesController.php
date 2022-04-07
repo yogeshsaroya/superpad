@@ -1016,6 +1016,58 @@ class PagesController extends AppController
         }
     }
 
+    public function tiers(){
+        $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
+        $data = $this->paginate($this->Levels->find('all'));
+        $paging = $this->request->getAttribute('paging');
+        $this->set(compact('data', 'paging'));
+    }
+
+
+    public function addTire($id = null){
+        $post_data = null;
+        if ($this->request->is('ajax')) {
+
+            if (!empty($this->request->getData())) {
+                $file_name = null;
+                $postData = $this->request->getData();
+                if (isset($postData['id']) && !empty($postData['id'])) {
+                    $getBlog = $this->Levels->get($postData['id']);
+                    $chkBlog = $this->Levels->patchEntity($getBlog, $postData, ['validate' => true]);
+                } else {
+                    $getBlog = $this->Levels->newEmptyEntity();
+                    $chkBlog = $this->Levels->patchEntity($getBlog, $postData, ['validate' => true]);
+                }
+                if ($chkBlog->getErrors()) {
+                    $st = null;
+                    foreach ($chkBlog->getErrors() as $elist) {
+                        foreach ($elist as $k => $v); {
+                            $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                        }
+                    }
+                    echo $st;
+                    exit;
+                } else {
+                    if ($this->Levels->save($chkBlog)) {
+                        echo "<script>$('#save_frm').remove();</script>";
+                        echo "<div class='alert alert-success'>Saved</div>";
+                        echo "<script> setTimeout(function(){ location.reload(); }, 1000);</script>";
+                    } else {
+                        echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                    }
+                }
+                exit;
+            } else {
+
+                if (!empty($id )) {
+                    $post_data = $this->Levels->findById($id)->firstOrFail();
+                }
+                $this->set(compact('post_data'));
+            }
+        }
+    }
+
+
     public function idoApplications(){
         $this->paginate = ['limit' => 100, 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->NewProjects->find('all'));

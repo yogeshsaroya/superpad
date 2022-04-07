@@ -71,8 +71,9 @@ class AppController extends Controller
         $this->loadModel('Countries');
         $this->loadModel('SmAccounts');
         $this->loadModel('Applications');
-        $this->loadModel('NewProjects');    
-        
+        $this->loadModel('NewProjects');
+        $this->loadModel('Levels');
+                
         $Setting = $this->Data->get_settings();
         $session = $this->getRequest()->getSession();
         $session->write('Setting', $Setting ); 
