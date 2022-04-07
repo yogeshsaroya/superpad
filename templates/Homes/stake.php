@@ -109,8 +109,8 @@
                                             <h2><?php echo (!empty($list->spad) ? $list->spad : "TBA"); ?></h2>
                                             <ul class="list-unstyled">
                                                 <li><b>Ticket Multiplier</b> <?php echo (!empty($list->ticket_multiplier) ? $list->ticket_multiplier : "TBA"); ?></li>
-                                                <li><b>Cooldown</b> <?php if(empty($list->cooldown)) { echo "TBA"; }else{ echo ($list->cooldown == 1 ? "Yes" : "No"); } ?></li>
-                                                <li><b>Social Task</b> <?php if(empty($list->social_task)){ echo "TBA"; }else{ echo ($list->social_task == 1 ? "Yes" : "No");} ?></li>
+                                                <li><b>Cooldown</b> <?php echo (!empty($list->cooldown) ? $list->cooldown : "TBA");  ?></li>
+                                                <li><b>Social Task</b> <?php echo (!empty($list->social_task) ? $list->social_task : "TBA");?></li>
                                                 <li><b>Max Ticket Allocation</b> <?php echo (!empty($list->max_ticket_allocation) ? $list->max_ticket_allocation : "TBA"); ?></li>
                                                 <li><b>Winning Chances</b> <?php echo (!empty($list->winning_chances) ? $list->winning_chances."%" : "TBA"); ?></li>
                                             </ul>
