@@ -28,11 +28,7 @@
     <script type="text/javascript">
     var SITEURL = "<?php echo SITEURL?>";
     $(document).ready(function(){
-        $(".magnificAjax_cls").magnificPopup({type:"ajax",closeOnContentClick:false,closeOnBgClick:false,closeMarkup:'<button class="mfp-close mfp-new-close" type="button" title="Close (Esc)"></button>'});
-        $(".magnificAjax").magnificPopup({type:"ajax",closeOnContentClick:false,closeOnBgClick:true,showCloseBtn:false,enableEscapeKey:true,closeMarkup:'<button class="mfp-close mfp-new-close" type="button" title="Close (Esc)"></button>'});
-        $(".magnificAjax_act").magnificPopup({type:"ajax",closeOnContentClick:false,closeOnBgClick:false,showCloseBtn:true,enableEscapeKey:false,closeMarkup:'<button class="mfp-close mfp-new-close" type="button" title="Close (Esc)">X</button>'});
-        $(".magnificAjax").magnificPopup({type:"ajax",closeOnContentClick:false,closeOnBgClick:true,showCloseBtn:true,enableEscapeKey:true});
-        $(".magnificAjax_inline").magnificPopup({type:"inline",closeOnContentClick:false,closeOnBgClick:false,showCloseBtn:true,enableEscapeKey:false,alignTop:true,closeMarkup:" ",overflowY:"scroll"})
+        $(".magnificAjax").magnificPopup({type:"ajax",closeOnContentClick:false,closeOnBgClick:false,showCloseBtn:true,enableEscapeKey:false});
 
     });
     </script>
