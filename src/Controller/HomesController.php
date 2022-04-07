@@ -142,6 +142,12 @@ class HomesController extends AppController
 
     public function stake()
     {
+
+        $query = $this->Levels->find()
+            ->limit(100)
+            ->order(['position' => 'ASC']);
+        $data = $query->all();
+        $this->set(compact('data'));
     }
 
     public function spad()
