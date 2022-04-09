@@ -250,7 +250,7 @@ if (!empty($end_date)) {
                                 <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="<?php echo SITEURL;?>users/application_status">Application Status</a> </li>
                                 <?php }?>
                             <?php }else{?>
-                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL;?>sign-in?redirect=explore/kyoko/apply">Login to Whitelist</a></li>
+                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL;?>sign-in?redirect=explore/<?php echo $list->slug;?>/apply">Login to Whitelist</a></li>
                             <?php }?>
                             
                             <?php }else if(strtolower($list->product_status) == 'whitelist closed'){?>
