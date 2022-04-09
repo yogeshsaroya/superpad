@@ -8,6 +8,13 @@ use Cake\ORM\TableRegistry;
 class DataHelper extends Helper
 {
 
+    public function getStake()
+    {
+        $tbl = TableRegistry::get('Stakes');
+
+        $query = $tbl->find('list', ['keyField' => 'id', 'valueField' => 'days'])->order(['Stakes.days' => 'ASC'])->where(['Stakes.type'=>1]);
+        return $query->toArray();
+    }
     public function getBlockchains($type = 'all')
     {
         $tbl = TableRegistry::get('Blockchains');
@@ -28,7 +35,7 @@ class DataHelper extends Helper
     {
         $tbl = TableRegistry::get('Projects');
         try {
-            
+
             return $data = $tbl
                 ->find()
                 ->contain(['Blockchains'])
@@ -58,7 +65,7 @@ class DataHelper extends Helper
     {
         $tbl = TableRegistry::get('Partners');
         try {
-            $query = $tbl->find('all', ['conditions' => ['Partners.status' => 1,'Partners.type' => 1], 'limit' => 50]);
+            $query = $tbl->find('all', ['conditions' => ['Partners.status' => 1, 'Partners.type' => 1], 'limit' => 50]);
             return $row = $query->all();
         } catch (\Throwable $th) {
             return false;
@@ -69,7 +76,7 @@ class DataHelper extends Helper
     {
         $tbl = TableRegistry::get('Teams');
         try {
-            $query = $tbl->find('all', ['conditions' => ['Teams.status' => 1,'Teams.type' => 1],'order'=>['Teams.position'=>'ASC'], 'limit' => 50]);
+            $query = $tbl->find('all', ['conditions' => ['Teams.status' => 1, 'Teams.type' => 1], 'order' => ['Teams.position' => 'ASC'], 'limit' => 50]);
             return $row = $query->all();
         } catch (\Throwable $th) {
             return false;
@@ -109,11 +116,11 @@ class DataHelper extends Helper
         }
     }
 
-    public function getCountries(){
+    public function getCountries()
+    {
 
         $tbl = TableRegistry::get('Countries');
         $query = $tbl->find('list', ['keyField' => 'id', 'valueField' => 'name'])->order(['Countries.name' => 'ASC']);
         return $query->toArray();
-        
     }
 }

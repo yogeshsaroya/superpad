@@ -73,6 +73,8 @@ class AppController extends Controller
         $this->loadModel('Applications');
         $this->loadModel('NewProjects');
         $this->loadModel('Levels');
+        $this->loadModel('Stakes');
+        
                 
         $Setting = $this->Data->get_settings();
         $session = $this->getRequest()->getSession();

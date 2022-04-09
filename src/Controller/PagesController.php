@@ -275,7 +275,8 @@ class PagesController extends AppController
         $this->set(compact('data'));
     }
 
-    public function readEmail($id = null ){
+    public function readEmail($id = null)
+    {
         $getData = null;
         if ($this->request->is('ajax')) {
             if (!empty($id)) {
@@ -426,6 +427,7 @@ class PagesController extends AppController
         $paging = $this->request->getAttribute('paging');
         $this->set(compact('data', 'paging'));
     }
+
 
     public function managePartners($id = null)
     {
@@ -593,9 +595,9 @@ class PagesController extends AppController
         }
         if ($this->request->getQuery('featured')  && !empty($this->request->getQuery('featured'))) {
             $getData = $this->Projects->findById($this->request->getQuery('featured'))->first();
-            if(!empty($getData)){
+            if (!empty($getData)) {
                 $this->Projects->updateAll(['is_featured' => null], ['is_featured' => 1]);
-                if( $getData->is_featured != 1 ){
+                if ($getData->is_featured != 1) {
                     $upData = ['id' => $getData->id, 'is_featured' => 1];
                     $saveData = $this->Projects->newEntity($upData, ['validate' => false]);
                     $this->Projects->save($saveData);
@@ -673,16 +675,17 @@ class PagesController extends AppController
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $file_name = $file_name_img = null;
             $postData = $this->request->getData();
-            
-            if( !empty($postData['start_date']) && !empty($postData['end_date']) ){
-                if(strtotime($postData['start_date']) > strtotime($postData['end_date']) ){
-                    echo '<div class="alert alert-danger">Sale START DATE/TIME should be smaller to sale END DATE/TIME.</div>'; exit;
-                }
-                elseif(strtotime($postData['end_date']) < strtotime($postData['start_date']) ){
-                    echo '<div class="alert alert-danger">END DATE/TIME should be greater than START DATE/TIME.</div>'; exit;
+
+            if (!empty($postData['start_date']) && !empty($postData['end_date'])) {
+                if (strtotime($postData['start_date']) > strtotime($postData['end_date'])) {
+                    echo '<div class="alert alert-danger">Sale START DATE/TIME should be smaller to sale END DATE/TIME.</div>';
+                    exit;
+                } elseif (strtotime($postData['end_date']) < strtotime($postData['start_date'])) {
+                    echo '<div class="alert alert-danger">END DATE/TIME should be greater than START DATE/TIME.</div>';
+                    exit;
                 }
             }
-         
+
 
             $uploadPath = 'cdn/project_logo/';
             $uploadImg = 'cdn/project_img/';
@@ -803,21 +806,20 @@ class PagesController extends AppController
                     $data = $this->paginate($this->Partners->find('all'));
                     $paging = $this->request->getAttribute('paging');
                     $this->set(compact('data', 'paging'));
-                }
-                elseif ($tab == 'media') {
+                } elseif ($tab == 'media') {
                     $this->paginate = ['limit' => 100, 'conditions' => ['SmAccounts.project_id' => $id], 'order' => ['id' => 'desc']];
                     $data = $this->paginate($this->SmAccounts->find('all'));
                     $paging = $this->request->getAttribute('paging');
                     $this->set(compact('data', 'paging'));
-                }
-                elseif ($tab == 'applications') {
-                    $this->paginate = ['contain' => ['Users'],
-                        'limit' => 100, 'conditions' => ['Applications.project_id' => $id], 'order' => ['id' => 'desc']];
+                } elseif ($tab == 'applications') {
+                    $this->paginate = [
+                        'contain' => ['Users'],
+                        'limit' => 100, 'conditions' => ['Applications.project_id' => $id], 'order' => ['id' => 'desc']
+                    ];
                     $data = $this->paginate($this->Applications->find('all'))->toArray();
                     $paging = $this->request->getAttribute('paging');
                     $this->set(compact('data', 'paging'));
                 }
-                
             }
         }
         $this->set(compact('get_data', 'tab'));
@@ -975,14 +977,15 @@ class PagesController extends AppController
         }
     }
 
-    public function addSmAccount(){
+    public function addSmAccount()
+    {
         $post_data = null;
         if ($this->request->is('ajax')) {
 
             if (!empty($this->request->getData())) {
                 $file_name = null;
                 $postData = $this->request->getData();
-                
+
                 if (isset($postData['id']) && !empty($postData['id'])) {
                     $getBlog = $this->SmAccounts->get($postData['id']);
                     $chkBlog = $this->SmAccounts->patchEntity($getBlog, $postData, ['validate' => true]);
@@ -994,9 +997,12 @@ class PagesController extends AppController
                 if ($chkBlog->getErrors()) {
                     $st = null;
                     foreach ($chkBlog->getErrors() as $elist) {
-                        foreach ($elist as $k => $v); { $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>"; }
+                        foreach ($elist as $k => $v); {
+                            $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                        }
                     }
-                    echo $st; exit;
+                    echo $st;
+                    exit;
                 } else {
                     if ($this->SmAccounts->save($chkBlog)) {
                         echo "<script>$('#save_frm').remove();</script>";
@@ -1016,7 +1022,8 @@ class PagesController extends AppController
         }
     }
 
-    public function tiers(){
+    public function tiers()
+    {
         $menu_act = 'tiers';
         $pro_menu = 'top_menu';
         $this->set(compact('menu_act', 'pro_menu'));
@@ -1035,7 +1042,8 @@ class PagesController extends AppController
     }
 
 
-    public function addTire($id = null){
+    public function addTire($id = null)
+    {
         $post_data = null;
         if ($this->request->is('ajax')) {
 
@@ -1070,7 +1078,7 @@ class PagesController extends AppController
                 exit;
             } else {
 
-                if (!empty($id )) {
+                if (!empty($id)) {
                     $post_data = $this->Levels->findById($id)->firstOrFail();
                 }
                 $this->set(compact('post_data'));
@@ -1079,7 +1087,137 @@ class PagesController extends AppController
     }
 
 
-    public function idoApplications(){
+    public function stakes()
+    {
+        $menu_act = 'stakes';
+        $this->set(compact('menu_act'));
+
+        if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
+            $readData = $this->Stakes->findById($this->request->getQuery('del'))->first();
+            if(!empty($readData)){
+                if ($this->Stakes->delete($readData)) {
+                    $this->Stakes->deleteAll(['stake_id' => $readData->id]);
+                }
+            }
+            $this->redirect('/pages/stakes');
+        }
+
+        $this->paginate = ['contain' => ['unStakes'], 'limit' => 100, 'conditions' => [], 'order' => ['id' => 'desc']];
+        $data = $this->paginate($this->Stakes->find('all'));
+        $paging = $this->request->getAttribute('paging');
+        $this->set(compact('data', 'paging'));
+    }
+
+    public function addStake($id = null)
+    {
+        $post_data = null;
+        if ($this->request->is('ajax')) {
+            if (!empty($this->request->getData())) {
+                $postData = $this->request->getData();
+                $postData['type'] = 1;
+
+                if (isset($postData['id']) && !empty($postData['id'])) {
+                    $chk = $this->Stakes->find()->where(['type' => 1, 'days' => $postData['days'], 'id <>' => $postData['id']])->first();
+                    if (!empty($chk)) {
+                        echo '<div class="alert alert-danger" role="alert">Stake already added for ' . $postData['days'] . ' days</div>';
+                        exit;
+                    }
+                    $getBlog = $this->Stakes->get($postData['id']);
+                    $chkBlog = $this->Stakes->patchEntity($getBlog, $postData, ['validate' => true]);
+                } else {
+                    $chk = $this->Stakes->find()->where(['type' => 1, 'days' => $postData['days']])->first();
+                    if (!empty($chk)) {
+                        echo '<div class="alert alert-danger" role="alert">Stake already added for ' . $postData['days'] . ' days</div>';
+                        exit;
+                    }
+                    $getBlog = $this->Stakes->newEmptyEntity();
+                    $chkBlog = $this->Stakes->patchEntity($getBlog, $postData, ['validate' => true]);
+                }
+                if ($chkBlog->getErrors()) {
+                    $st = null;
+                    foreach ($chkBlog->getErrors() as $elist) {
+                        foreach ($elist as $k => $v); {
+                            $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                        }
+                    }
+                    echo $st;
+                    exit;
+                } else {
+                    if ($this->Stakes->save($chkBlog)) {
+                        echo "<script>$('#save_frm').remove();</script>";
+                        echo "<div class='alert alert-success'>Saved</div>";
+                        echo "<script> setTimeout(function(){ location.reload(); }, 1000);</script>";
+                    } else {
+                        echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                    }
+                }
+                exit;
+            } else {
+                if (!empty($id)) {
+                    $post_data = $this->Stakes->findById($id)->firstOrFail();
+                }
+                $this->set(compact('post_data'));
+            }
+        }
+    }
+
+    public function addUnstake($id = null)
+    {
+        $post_data = null;
+        if ($this->request->is('ajax')) {
+            if (!empty($this->request->getData())) {
+                $postData = $this->request->getData();
+                $postData['type'] = 2;
+                
+
+                if (isset($postData['id']) && !empty($postData['id'])) {
+                    $chk = $this->Stakes->find()->where(['type' => 2, 'stake_id' => $postData['stake_id'], 'days' => $postData['days'], 'id <>' => $postData['id']])->first();
+                if (!empty($chk)) {
+                    echo '<div class="alert alert-danger" role="alert"> unStake already added for ' . $postData['days'] . ' days</div>';
+                    exit;
+                }
+                    $getBlog = $this->Stakes->get($postData['id']);
+                    $chkBlog = $this->Stakes->patchEntity($getBlog, $postData, ['validate' => true]);
+                } else {
+                    $chk = $this->Stakes->find()->where(['type' => 2, 'stake_id' => $postData['stake_id'], 'days' => $postData['days']])->first();
+                if (!empty($chk)) {
+                    echo '<div class="alert alert-danger" role="alert"> unStake already added for ' . $postData['days'] . ' days</div>';
+                    exit;
+                }
+                    $getBlog = $this->Stakes->newEmptyEntity();
+                    $chkBlog = $this->Stakes->patchEntity($getBlog, $postData, ['validate' => true]);
+                }
+                if ($chkBlog->getErrors()) {
+                    $st = null;
+                    foreach ($chkBlog->getErrors() as $elist) {
+                        foreach ($elist as $k => $v); {
+                            $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                        }
+                    }
+                    echo $st;
+                    exit;
+                } else {
+                    if ($this->Stakes->save($chkBlog)) {
+                        echo "<script>$('#save_frm').remove();</script>";
+                        echo "<div class='alert alert-success'>Saved</div>";
+                        echo "<script> setTimeout(function(){ location.reload(); }, 1000);</script>";
+                    } else {
+                        echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                    }
+                }
+                exit;
+            } else {
+                if (!empty($id)) {
+                    $post_data = $this->Stakes->findById($id)->firstOrFail();
+                }
+                $this->set(compact('post_data'));
+            }
+        }
+    }
+
+
+    public function idoApplications()
+    {
         $menu_act = 'ido_applications';
         $pro_menu = 'top_menu';
         $this->set(compact('menu_act', 'pro_menu'));
@@ -1089,7 +1227,8 @@ class PagesController extends AppController
         $this->set(compact('data', 'paging'));
     }
 
-    public function viewIdo($id = null ){
+    public function viewIdo($id = null)
+    {
         $getData = null;
         if ($this->request->is('ajax')) {
             if (!empty($id)) {
@@ -1280,8 +1419,8 @@ class PagesController extends AppController
                     $upData = ['id' => $chkData->id, 'kyc_completed' => 2];
                     $saveData = $this->Users->newEntity($upData, ['validate' => false]);
                     $this->Users->save($saveData);
-                    $this->Data->AppMail($chkData->email, 9, ['NAME' =>$chkData->first_name]);
-                } 
+                    $this->Data->AppMail($chkData->email, 9, ['NAME' => $chkData->first_name]);
+                }
             }
             $this->redirect('/pages/users');
         }
@@ -1300,10 +1439,11 @@ class PagesController extends AppController
                         $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
                     }
                 }
-                echo $st; exit;
+                echo $st;
+                exit;
             } else {
                 if ($this->Users->save($chkData)) {
-                    $this->Data->AppMail($chkData->email, 10, ['NAME' =>$chkData->first_name,'REJECT_REASON'=>$chkData->kyc_reject_reason]);
+                    $this->Data->AppMail($chkData->email, 10, ['NAME' => $chkData->first_name, 'REJECT_REASON' => $chkData->kyc_reject_reason]);
                     $u = SITEURL . "pages/users";
                     echo '<div class="alert alert-success" role="alert"> Saved.</div>';
                     echo "<script>window.location.href ='" . $u . "'; </script>";
@@ -1372,7 +1512,8 @@ class PagesController extends AppController
         }
     }
 
-    public function emails(){
+    public function emails()
+    {
         $menu_act = 'emails';
         $sub_menu = 'top_menu';
         $this->set(compact('menu_act', 'sub_menu'));
@@ -1483,7 +1624,8 @@ class PagesController extends AppController
 
 
     /* open new popup on ajax request */
-    public function openPop($id = null) {
+    public function openPop($id = null)
+    {
         $this->autoRender = false;
         $getData = $this->request->getData();
         if (isset($getData['url']) && !empty($getData['url'])) {

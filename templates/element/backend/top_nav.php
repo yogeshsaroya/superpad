@@ -130,6 +130,7 @@
          <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'team' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/team">Team</a></li>
 
          <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'partners' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/partners">Partner And Investor</a></li>
+         <li class=" nav-item <?php echo (isset($menu_act) && $menu_act == 'stakes' ? 'active' : null); ?>"><a class="d-flex align-items-center" href="<?php echo SITEURL; ?>pages/stakes">Stakes</a></li>
 
          <li class="dropdown nav-item <?php echo (isset($sub_menu) && !empty($sub_menu) ? 'active' : null); ?>" data-menu="dropdown"><a class="dropdown-toggle nav-link d-flex align-items-center" href="#" data-toggle="dropdown">Subscribers</a>
            <ul class="dropdown-menu">
