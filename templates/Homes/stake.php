@@ -108,12 +108,12 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
 
                         <div class="row">
                             <div class="col-6">
-                                <button class="w-100 btn btn-approve">
+                                <button class="w-100 btn btn-lg btn-dark">
                                     Approve
                                 </button>
                             </div>
                             <div class="col-6">
-                                <button class="w-100 btn btn-approve disbble-bTn" disabled>
+                                <button class="w-100 btn btn-lg btn-outline-dark" disabled>
                                     STAKE TO JOIN SHOS
                                 </button>
                             </div>
