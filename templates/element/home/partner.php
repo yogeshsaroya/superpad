@@ -17,7 +17,7 @@ if ( !$data->isEmpty() ) {
             <?php
             if (!empty($data)) {
                 foreach ($data as $list) { ?>
-                    <div class="partdiv col-6 col-md-3 col-sm-4">
+                    <div class="partdiv1 col-6 col-md-3 col-sm-4">
                         <div class="client-logo-item1 text-center partners_logo">
                             <?php if(!empty($list->url)){?>
                             <a href="<?php echo $list->url; ?>" title="<?php echo $list->title;?>" target="_blank">

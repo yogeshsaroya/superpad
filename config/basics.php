@@ -182,5 +182,5 @@ function number_format_short( $n ) {
 }
 
 function getAppStatus(){
-    return ['1'=>'In-Progress','2'=>'Lucky','3'=>'Unlucky','4'=>'Allocated'];
+    return ['1'=>'Whitelist Successfully','2'=>'Lucky','3'=>'Unlucky','4'=>'Allocated'];
 }

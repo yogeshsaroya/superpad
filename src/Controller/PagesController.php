@@ -813,7 +813,7 @@ class PagesController extends AppController
                     $this->set(compact('data', 'paging'));
                 } elseif ($tab == 'applications') {
                     $this->paginate = [
-                        'contain' => ['Users'],
+                        'contain' => ['Users' => ['Countries']],
                         'limit' => 100, 'conditions' => ['Applications.project_id' => $id], 'order' => ['id' => 'desc']
                     ];
                     $data = $this->paginate($this->Applications->find('all'))->toArray();

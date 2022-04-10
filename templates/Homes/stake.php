@@ -258,7 +258,7 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                 <section id="pricing" class="padd-section text-center wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
                     <div class="container">
                         <div class="section-title text-center">
-                            <h2>SUPERPAD - TIERS</h2>
+                            <h2 class="hero-title mb-4">SUPERPAD - TIERS</h2>
                             <p class="separator"></p>
                             <br><br>
                         </div>
