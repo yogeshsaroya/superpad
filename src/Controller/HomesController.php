@@ -90,7 +90,7 @@ class HomesController extends AppController
             $postData = $this->request->getData();
             if (isset($_SERVER['HTTP_SEC_FETCH_SITE']) && $_SERVER['HTTP_SEC_FETCH_SITE'] == 'same-origin') {
                 if (isset($postData['g-recaptcha-response']) && !empty($postData['g-recaptcha-response'])) {
-                    $response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . $Setting['recaptcha_secret_key'] . "&response=" . $postData['g-recaptcha-response'] . "&remoteip=" . $_SERVER['REMOTE_ADDR']);
+                    $response = $this->Data->fetch("https://www.google.com/recaptcha/api/siteverify?secret=" . $Setting['recaptcha_secret_key'] . "&response=" . $postData['g-recaptcha-response'] . "&remoteip=" . $_SERVER['REMOTE_ADDR']);
                     $arr = json_decode($response, true);
                     if (isset($arr['success']) && $arr['success'] == 1) {
                         $getEnt = $this->NewProjects->newEmptyEntity();
