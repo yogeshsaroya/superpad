@@ -89,21 +89,9 @@ li {
     border-radius: 8px;
 }
 
-.imgWrap {
-    border-radius: 10px;
-    min-width: 30px;
-    min-height: 30px;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-}
-
-.imgGrad {
-    background: linear-gradient(90deg, #4086ff 0%, #2bcdff 100%);
-}
-
+.imgGrad,
 .imgGradsky {
-    background: linear-gradient(90deg, #20e4a4 0%, #2cc9cc 100%);
+    background: linear-gradient(90deg, #323232 0%, #999999 100%);
 }
 
 .bg-lite-blue+.bg-lite-blue {
@@ -237,14 +225,6 @@ hr {
     align-items: center;
     justify-content: center;
     display: flex;
-}
-
-.imgGrad {
-    background: linear-gradient(90deg, #4086ff 0%, #2bcdff 100%);
-}
-
-.imgGradsky {
-    background: linear-gradient(90deg, #20e4a4 0%, #2cc9cc 100%);
 }
 
 .bg-lite-blue+.bg-lite-blue {
@@ -463,4 +443,30 @@ body .btn-approve:hover {
     .setOninput {
         font-size: 12px;
     }
+}
+
+.header-container {
+    display: flex;
+    grid-column-gap: 20px;
+    -moz-column-gap: 20px;
+    column-gap: 20px;
+    align-items: center;
+    margin: 30px 0 0 10px;
+}
+
+.title-black {
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 22px;
+    letter-spacing: 0.5px;
+    color: #2b2d42;
+}
+
+.icon-container {
+    border-radius: 10px;
+    min-width: 30px;
+    min-height: 30px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
 }

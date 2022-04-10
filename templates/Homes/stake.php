@@ -1,5 +1,8 @@
 <?php $this->assign('title', 'Stake');
 echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
+
+
+
 ?>
 
 <div class="hero-wrap sub-header">
@@ -18,7 +21,7 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                     <div class="bg-lite-blue height100">
                         <h3 class="d-flex align-items-center mb-3">
                             <div class="imgWrap imgGrad me-3">
-                                <img src="newImages/blue_percent_icon-svg.png" alt="percent">
+                                <img src="<?php echo SITEURL; ?>newImages/blue_percent_icon-svg.png" alt="percent">
                             </div>
                             <span>SPAD to be Staked</span>
                         </h3>
@@ -32,8 +35,8 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                 <div class="col-lg-6">
                     <div class="bg-lite-blue height100">
                         <h3 class="d-flex align-items-center mb-3">
-                            <div class="imgWrap imgGrad me-3">
-                                <img src="https://daomaker.com/assets/img/venture-yield/white_dao_icon.svg" alt="percent">
+                            <div class="me-3">
+                                <img src="<?php echo SITEURL; ?>newImages/logo.png" alt="percent">
                             </div>
                             <span>Average Locking Days</span>
                         </h3>
@@ -56,7 +59,7 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                             <div class="fixWdth">
                                 <div class="d-flex align-items-center inputFieldsWrap">
                                     <div class="logoItem me-2">
-                                        <img src="newImages/logo.png" alt="logos">
+                                        <img src="<?php echo SITEURL; ?>newImages/logo.png" alt="logos">
                                     </div>
                                     <span>SPAD</span>
                                 </div>
@@ -77,7 +80,7 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                             <div class="fixWdth">
                                 <div class="d-flex align-items-center inputFieldsWrap">
                                     <div class="logoItem me-2">
-                                        <img src="newImages/calender-png.png" alt="logos">
+                                        <img src="<?php echo SITEURL; ?>newImages/calender-png.png" alt="logos">
                                     </div>
                                     <span>Days</span>
                                 </div>
@@ -94,28 +97,30 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
 
                         <div class="d-flex align-items-center tooltipWrap mt-3">
                             <div class="toolTipImg me-2">
-                                <img src="newImages/help-svg.png" alt="tooltip">
+                                <?php echo getToolTip('A longer staking timeframe will provide
+higher daily rewards. Users are given a 50%
+bonus in daily rewards for every additional
+30 days staking duration. to'); ?>
+
                             </div>
                             <span>Long Term Bonus: <strong class="txtHighlight">49%</strong></span>
                         </div>
 
                         <div class="btnWraper mt-5 d-flex justify-content-center">
-                            <ul class="steps2 d-flex col-8 mb-3 justify-content-center align-items-center">
+                            <ul class="steps2 d-flex col-8 mb-3 justify-content-center align-items-center" style="display: none !important;">
                                 <li>1</li>
                                 <li>2</li>
                             </ul>
                         </div>
 
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-12">
                                 <button class="w-100 btn btn-lg btn-dark">
-                                    Approve
+                                    Stake Now
                                 </button>
                             </div>
                             <div class="col-6">
-                                <button class="w-100 btn btn-lg btn-outline-dark" disabled>
-                                    STAKE TO JOIN SHOS
-                                </button>
+                                
                             </div>
                         </div>
                     </div>
@@ -126,16 +131,18 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                     <div class="bg-lite-blue">
                         <h3 class="d-flex align-items-center mb-3">
                             <div class="imgWrap imgGrad me-3">
-                                <img src="newImages/blue_percent_icon-svg.png" alt="percent">
+                                <img src="<?php echo SITEURL; ?>newImages/blue_percent_icon-svg.png" alt="percent">
                             </div>
-                            <span>Estimated Venture Yield</span>
+                            <span>Annual Percentage Yield</span>
                         </h3>
 
                         <div class="row estimatedRow">
                             <div class="col-md-6">
-                                <p><small class="d-flex align-items-start">Estimated APR
-                                        <i data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top" class="ms-2">
-                                            <img src="newImages/help-svg.png" alt="tool tip"></i></small></p>
+                                <p><small class="d-flex align-items-start">Estimated APY
+                                        <?php echo getToolTip('Estimated APR is calculated based on the
+estimated Daily rewards and your staked
+SPAD'); ?>
+                                    </small></p>
 
                                 <div class="headeredTextContainer d-flex">
                                     <div class="primaryText">0%</div>
@@ -145,9 +152,10 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                             <!-- end of colom -->
 
                             <div class="col-md-6">
-                                <p><small class="d-flex align-items-start">Estimated Total DAO Rewards
-                                        <i data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top" class="ms-2">
-                                            <img src="newImages/help-svg.png" alt="tool tip"></i></small></p>
+                                <p><small class="d-flex align-items-start">Estimated SPAD Rewards
+                                        <?php echo getToolTip('Daily Rewards calculated as per default
+values shown in the simulation model
+multiplied by number of days staked'); ?></small></p>
 
                                 <div class="headeredTextContainer d-flex">
                                     <div class="primaryText">3,519 SPAD</div>
@@ -164,16 +172,17 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                     <div class="bg-lite-blue">
                         <h3 class="d-flex align-items-center mb-3">
                             <div class="imgWrap imgGradsky me-3">
-                                <img src="newImages/blue_percent_icon-svg.png" alt="percent">
+                                <img src="<?php echo SITEURL; ?>newImages/blue_percent_icon-svg.png" alt="percent">
                             </div>
-                            <span>Estimated SHO Yield</span>
+                            <span>Tier details</span>
                         </h3>
 
                         <div class="row estimatedRow">
                             <div class="col-md-6">
-                                <p><small class="d-flex align-items-start">Total DAO Power
-                                        <i data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top" class="ms-2">
-                                            <img src="newImages/help-svg.png" alt="tool tip"></i></small></p>
+                                <p><small class="d-flex align-items-start">Total SPAD Power
+                                        <?php echo getToolTip('Total SPAD Power is calculated based on
+vour staked tokens (and provided liquidity)
+and new tokens to be staked'); ?></small></p>
 
                                 <div class="headeredTextContainer d-flex">
                                     <div class="primaryText">0%</div>
@@ -184,8 +193,11 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
 
                             <div class="col-md-6">
                                 <p><small class="d-flex align-items-start">Tier
-                                        <i data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top" class="ms-2">
-                                            <img src="newImages/help-svg.png" alt="tool tip"></i></small></p>
+                                        <?php echo getToolTip('Users participate to SHOs in Tier. Being in a
+higher tier offers higher allocations and
+winning chances. If you already have staked
+SPAD then the shown Tranche will consider
+your past deposits as well.'); ?></small></p>
 
                                 <div class="headeredTextContainer d-flex">
                                     <div class="primaryText">Not Active yet</div>
@@ -200,9 +212,10 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                         <div class="row estimatedRow">
                             <div class="col-md-6">
                                 <p><small class="d-flex align-items-start">Max Allocations
-
-                                        <i data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top" class="ms-2">
-                                            <img src="newImages/help-svg.png" alt="tool tip"></i></small></p>
+                                        <?php echo getToolTip('Number of allocations participant can win T
+per SHO. If each allocation provides $200
+and the users maximum allocation is 3 then
+then user cannot win more than $600.'); ?></small></p>
 
                                 <div class="headeredTextContainer d-flex">
                                     <div class="primaryText">0%</div>
@@ -213,8 +226,37 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
 
                             <div class="col-md-6">
                                 <p><small class="d-flex align-items-start">Estimated Winning Chance
-                                        <i data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top" class="ms-2">
-                                            <img src="newImages/help-svg.png" alt="tool tip"></i></small></p>
+                                        <?php echo getToolTip('Chance of winning a ticket per SHO.
+Chances depend on total amount of
+participation and the total amount raised in
+the SHO. Less participants means higher
+chances. Larger size raises mean higher
+winning chances. The winning chance is
+based on the default value shown in the
+simulation model'); ?></small></p>
+
+                                <div class="headeredTextContainer d-flex">
+                                    <div class="primaryText">0%</div>
+                                    <div class="secondaryText"></div>
+                                </div>
+                            </div>
+                            <!-- end of colom -->
+                        </div>
+                        <div class="row estimatedRow">
+                            <div class="col-md-6">
+                                <p><small class="d-flex align-items-start">Cooldown
+                                        <?php echo getToolTip(); ?></small></p>
+
+                                <div class="headeredTextContainer d-flex">
+                                    <div class="primaryText">0%</div>
+                                    <div class="secondaryText"></div>
+                                </div>
+                            </div>
+                            <!-- end of colom -->
+
+                            <div class="col-md-6">
+                                <p><small class="d-flex align-items-start">Social Task
+                                        <?php echo getToolTip(); ?></small></p>
 
                                 <div class="headeredTextContainer d-flex">
                                     <div class="primaryText">0%</div>
@@ -226,26 +268,17 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
 
 
 
-                        <div class="row estimatedRow">
-                            <div class="col-md-6">
-                                <p><small class="d-flex align-items-center">Estimated SHO Yield APR
 
-                                        <i data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top" class="ms-2">
-                                            <img src="newImages/help-svg.png" alt="tool tip"></i></small></p>
-
-                                <div class="headeredTextContainer d-flex">
-                                    <div class="primaryText">0% APR</div>
-                                    <div class="secondaryText"></div>
-                                </div>
-                            </div>
-                            <!-- end of colom -->
-
-                        </div>
 
                     </div>
                     <!-- end of bg blue -->
                 </div>
-                <!-- end of colom -->
+
+
+            </div>
+            <div class="header-container">
+                <div class="icon-container ng-star-inserted"><img _ngcontent-kha-c106="" src="<?php echo SITEURL; ?>img/Warning.svg"></div>
+                <span class="title-black">Minimum staking for 10 days . Early unstaking will cause penalty. (<?php echo $this->Html->link('FAQ', '/page/faq'); ?>)</span>
             </div>
         </div>
 
