@@ -25,7 +25,7 @@
                                     echo $this->Form->hidden('id');
                                     ?>
                                     <div class="row">
-                                    <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('stake_id', ['options' => $this->Data->getStake(), 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('stake_id', ['options' => $this->Data->getStake(),'default'=>'Select Stake', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                         <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('days', ['type' => 'number', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                         <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('percentage', ['label'=>'Penalty', 'class' => 'form-control amt numeral-mask', 'placeholder' => '00.00', 'required' => true]); ?><div class="help-block with-errors"></div>
                                         </div>
