@@ -130,7 +130,7 @@ class HomesController extends AppController
                 }
             } else {
                 echo '<script>grecaptcha.reset();</script>';
-                echo "<div class='alert alert-danger'>Server error. please try again later or contact to us</div>";
+                echo "<div class='alert alert-danger'>Server error [origin_error]. please try again later or contact to us</div>";
             }
             exit;
         }
