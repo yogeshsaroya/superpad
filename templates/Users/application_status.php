@@ -1,6 +1,14 @@
 <?php $this->assign('title', 'Application List');
 $appStatus = getAppStatus();
 ?>
+<style>
+    .ps--project-show__logo img {
+    height: 5rem;
+    width: 5rem;
+    border-radius: 100%;
+    margin-right: 20px;
+}
+</style>
 <div class="hero-wrap sub-header">
     <div class="container">
         <div class="hero-content text-center py-0">
@@ -33,7 +41,7 @@ $appStatus = getAppStatus();
                     <?php if (!$data->isEmpty()) {
                         foreach ($data as $list) { ?>
                             <tr>
-                                <th scope="row" class="fw-regular"><img src="<?php echo SITEURL . "cdn/project_img/" . $list->project->hero_image; ?>" class="st_img hero_img" alt="<?php echo $list->project->title; ?>"></th>
+                                <th scope="row" class="fw-regular ps--project-show__logo"><img src="<?php echo SITEURL . "cdn/project_logo/" . $list->project->logo;?>" class="st_img hero_img" alt="<?php echo $list->project->title; ?>"></th>
                                 <td><?php echo $list->project->title; ?></td>
                                 <td><?php echo ($list->project->price_per_token > 0 ?  $this->Number->currency($list->project->price_per_token, 'USD') : 'TBA'); ?></td>
                                 <td><?php if (isset($appStatus[$list->status])) {
