@@ -5834,3 +5834,7 @@ form .required label:after {
     width: 128px;
     border-radius: 0px;
 }
+
+.hide {
+    display: none !important;
+}

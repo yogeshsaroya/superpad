@@ -2,8 +2,13 @@
 echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
 ?>
 
-<input type="hidden" id="max_token" value="100000">
-<input type="hidden" id="max_days" value="760">
+<input type="hidden" id="max_token" value="100000"/>
+<input type="hidden" id="max_days" value="<?php echo $max;?>"/>
+<input type="hidden" id="min_days" value="<?php echo $min;?>"/>
+
+<input type="hidden" id="min_return" value="<?php echo $min_return;?>"/>
+<input type="hidden" id="max_return" value="<?php echo $max_return;?>"/>
+
 <div class="hero-wrap sub-header">
     <div class="container">
         <div class="hero-content text-center py-0">
@@ -22,7 +27,7 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                             <div class="imgWrap imgGrad me-3">
                                 <img src="<?php echo SITEURL; ?>newImages/blue_percent_icon-svg.png" alt="percent">
                             </div>
-                            <span>SPAD to be Staked</span>
+                            <span>Total SPAD Staked</span>
                         </h3>
                         <h1 class="mb-2 txtHighlight">37,759,911 Spad</h1>
                         <p><small class="d-flex align-items-center">89,490,982</small></p>
@@ -37,7 +42,7 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                             <div class="me-3">
                                 <img src="<?php echo SITEURL; ?>newImages/logo.png" alt="percent">
                             </div>
-                            <span>Average Locking Days</span>
+                            <span>Average Locking period</span>
                         </h3>
                         <h1 class="mb-2 txtHighlight">560 days</h1>
                         <p><small class="d-flex align-items-center">89,490,982</small></p>
@@ -53,7 +58,7 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
             <div class="row align-items-stretch">
                 <div class="col-lg-6">
                     <div class="bg-lite-blue height100">
-                        <h3 class="pb-0 mb-3">Superpad to be Staked</h3>
+                        <h3 class="pb-0 mb-3">SPAD to be Staked</h3>
                         <div class="d-flex row align-items-stretch">
                             <div class="fixWdth">
                                 <div class="d-flex align-items-center inputFieldsWrap">
@@ -67,7 +72,7 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                             <div class="col">
                                 <div class="input-group">
                                     <span class="input-group-text setOninput" id="max_spad">Max</span>
-                                    <input type="text" class="form-control text-end" name="bal" id="bal" placeholder="0">
+                                    <input type="number" min='0' class="form-control text-end" name="bal" id="bal" placeholder="0" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                 </div>
                                 <p class="text-end"><small class="d-flex align-items-center">Your balance: 100,000 SPAD
                                     </small></p>
@@ -86,7 +91,7 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                             <div class="col">
                                 <div class="input-group">
                                     <span class="input-group-text setOninput" id="_days">Max</span>
-                                    <input type="text" class="form-control text-end" name="days" id="days" placeholder="10">
+                                    <input type="number"  min='<?php echo $min;?>' class="form-control text-end" name="days" id="days" value="<?php echo $min;?>" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                 </div>
                             </div>
                             <!-- end of colom -->
@@ -100,7 +105,7 @@ bonus in daily rewards for every additional
 30 days staking duration. to'); ?>
 
                             </div>
-                            <span>Long Term Bonus: <strong class="txtHighlight">49%</strong></span>
+                            <span>Long Term Bonus: <strong class="txtHighlight"><?php echo $max_return;?>%</strong></span>
                         </div>
 
                         <div class="btnWraper mt-5 d-flex justify-content-center">
@@ -155,8 +160,8 @@ values shown in the simulation model
 multiplied by number of days staked'); ?></small></p>
 
                                 <div class="headeredTextContainer d-flex">
-                                    <div class="primaryText">3,519 SPAD</div>
-                                    <div class="secondaryText">$8,623</div>
+                                    <div class="primaryText">0 SPAD</div>
+                                    <div class="secondaryText hide">$0</div>
                                 </div>
                             </div>
                             <!-- end of colom -->

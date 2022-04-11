@@ -189,15 +189,15 @@ if (!empty($end_date)) {
                                             </tr>
                                             <tr>
                                                 <td>Initial Market Cap </td>
-                                                <td><?php echo ($list->initial_market_cap > 0 ? "$" . number_format_short($list->initial_market_cap) : 'TBA'); ?></td>
+                                                <td><?php echo ($list->initial_market_cap > 0 ? "$" . number_format($list->initial_market_cap) : 'TBA'); ?></td>
                                             </tr>
                                             <tr>
                                                 <td>Total Supply </td>
-                                                <td><?php echo ($list->total_supply > 0 ? "$" . number_format_short($list->total_supply) : 'TBA'); ?></td>
+                                                <td><?php echo ($list->total_supply > 0 ? number_format($list->total_supply) : 'TBA'); ?></td>
                                             </tr>
                                             <tr>
                                                 <td>Initial Token Circulation </td>
-                                                <td><?php echo ($list->initial_token_circulation > 0 ?  number_format_short($list->initial_token_circulation) : 'TBA'); ?></td>
+                                                <td><?php echo ($list->initial_token_circulation > 0 ?  number_format($list->initial_token_circulation) : 'TBA'); ?></td>
                                             </tr>
                                         </tbody>
                                     </table>

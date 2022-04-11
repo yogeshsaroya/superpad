@@ -147,7 +147,21 @@ class HomesController extends AppController
             ->limit(100)
             ->order(['position' => 'ASC']);
         $data = $query->all();
-        $this->set(compact('data'));
+
+        $chkStake = $this->Stakes
+            ->find()
+            ->where(['type' => 1])
+            ->order(['days' => 'ASC'])
+            ->all()->toArray();
+        $min = $max = $min_return = $max_return = 0;
+        if (!empty($chkStake)) {
+            $min = min(array_column($chkStake, 'days'));
+            $max = max(array_column($chkStake, 'days'));
+
+            $min_return = min(array_column($chkStake, 'percentage'));
+            $max_return = max(array_column($chkStake, 'percentage'));
+        }
+        $this->set(compact('data','chkStake','min','max','min_return','max_return'));
     }
 
     public function spad()
