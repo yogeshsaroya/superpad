@@ -1,6 +1,4 @@
-<?php $this->assign('title', 'Manage Influencers');
-$getStatus = getStatus();
-?>
+<?php $this->assign('title', 'Manage Influencers');?>
 <!-- BEGIN: Content-->
 <div class="app-content content ">
     <div class="content-overlay"></div>
@@ -37,8 +35,9 @@ $getStatus = getStatus();
 
                                 <div class="row">
                                     <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('title', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('url', ['class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('status', ['options' => $getStatus,'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('media_type', ['options'=>getMediaType(),'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('url', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('status', ['options' => getStatus(),'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-4 mb-2 form-group">
                                         <h4 class="mb-1">Influencer's Logo</h4>
                                         <?php echo $this->Form->file('hero_img', ['label' => 'Hero Image', 'required' => $file_req]) ?><div class="help-block with-errors"></div>
