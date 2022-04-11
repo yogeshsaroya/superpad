@@ -61,11 +61,21 @@ class DataHelper extends Helper
         }
     }
 
+    public function getInfluencers(){
+        $tbl = TableRegistry::get('Influencers');
+        try {
+            $query = $tbl->find('all', ['conditions' => ['Influencers.status' => 1], 'limit' => 100]);
+            return $row = $query->all();
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
+
     public function getPartners()
     {
         $tbl = TableRegistry::get('Partners');
         try {
-            $query = $tbl->find('all', ['conditions' => ['Partners.status' => 1, 'Partners.type' => 1], 'limit' => 50]);
+            $query = $tbl->find('all', ['conditions' => ['Partners.status' => 1, 'Partners.type' => 1], 'limit' => 100]);
             return $row = $query->all();
         } catch (\Throwable $th) {
             return false;

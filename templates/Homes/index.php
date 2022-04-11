@@ -29,16 +29,13 @@ $this->assign('description', $Setting['meta_description']);
 <?php echo $this->element('home/timeline',['bg_color' => 'bg-white' ]); ?>
 <?php echo $this->element('home/teams',['bg_color' => 'bg-gray' ]); ?>
 <?php echo $this->element('home/partner',['bg_color' => 'bg-white' ]); ?>
-<?php echo $this->element('home/banner',['bg_color' => 'bg-gray' ]); ?>
-<?php echo $this->element('home/network',['bg_color' => 'bg-white' ]); ?>
-<?php echo $this->element('home/newsletter',['bg_color' => 'bg-gray' ]); ?>
-
-
+<?php echo $this->element('home/influencers',['bg_color' => 'bg-gray' ]); ?>
+<?php echo $this->element('home/banner',['bg_color' => 'bg-white' ]); ?>
+<?php echo $this->element('home/network',['bg_color' => 'bg-gray' ]); ?>
+<?php echo $this->element('home/newsletter',['bg_color' => 'bg-white' ]); ?>
 
 <?php $this->Html->scriptStart(array('block' => 'scriptBottom')); ?>
 $(document).ready(function(){
-
-
 $("#to_project").click(function() {
 $('html, body').animate({
 scrollTop: $("#project_list").offset().top

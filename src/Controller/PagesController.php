@@ -498,6 +498,103 @@ class PagesController extends AppController
         $this->set(compact('get_data'));
     }
 
+    public function influencers()
+    {
+        $menu_act = 'influencers';
+        $this->set(compact('menu_act'));
+        if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
+            $blog_del = $this->Influencers->findById($this->request->getQuery('del'))->firstOrFail();
+            if ($this->Influencers->delete($blog_del)) {
+            }
+            $this->redirect('/pages/influencers');
+        }
+        if ($this->request->getQuery('st')  && !empty($this->request->getQuery('st'))) {
+            $getData = $this->Influencers->findById($this->request->getQuery('st'))->firstOrFail();
+            $upData = ['id' => $getData->id, 'status' => ($getData->status == 1 ? 2 : 1)];
+            $saveData = $this->Influencers->newEntity($upData, ['validate' => false]);
+            $this->Influencers->save($saveData);
+            $this->redirect('/pages/influencers');
+        }
+
+        $this->paginate = ['limit' => 100, 'conditions' => [], 'order' => ['id' => 'desc']];
+        $data = $this->paginate($this->Influencers->find('all'));
+        $paging = $this->request->getAttribute('paging');
+        $this->set(compact('data', 'paging'));
+    }
+
+
+    public function manageInfluencers($id = null)
+    {
+        $menu_act = 'influencers';
+        $this->set(compact('menu_act'));
+        $get_data = null;
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $file_name = $file_name_img = null;
+            $postData = $this->request->getData();
+            $uploadPath = 'cdn/influencers/';
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+            /* For logo */
+
+            if (!empty($postData['hero_img'])) {
+                if (in_array($postData['hero_img']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg', 'image/svg+xml'])) {
+                    $fileobject = $postData['hero_img'];
+                    $file_name = $fileobject->getClientFilename();
+                    $destination = $uploadPath . $file_name;
+                    try {
+                        $fileobject->moveTo($destination);
+                    } catch (Exception $e) {
+                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                        exit;
+                    }
+                } else {
+                    echo '<div class="alert alert-danger" role="alert">Please upload only PNG and JPG file</div>';
+                    exit;
+                }
+            }
+
+            if (isset($postData['id']) && !empty($postData['id'])) {
+                $getData = $this->Influencers->get($postData['id']);
+                if (!empty($file_name)) {
+                    $postData['logo'] = $file_name;
+                }
+                $chkData = $this->Influencers->patchEntity($getData, $postData, ['validate' => true]);
+            } else {
+                $getData = $this->Influencers->newEmptyEntity();
+                if (!empty($file_name)) {
+                    $postData['logo'] = $file_name;
+                }
+
+                $chkData = $this->Influencers->patchEntity($getData, $postData, ['validate' => true]);
+            }
+            if ($chkData->getErrors()) {
+                $st = null;
+                foreach ($chkData->getErrors() as $elist) {
+                    foreach ($elist as $k => $v); {
+                        $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                    }
+                }
+                echo $st;
+                exit;
+            } else {
+                if ($this->Influencers->save($chkData)) {
+                    $u = SITEURL . "pages/influencers";
+                    echo '<div class="alert alert-success" role="alert"> Saved.</div>';
+                    echo "<script>window.location.href ='" . $u . "'; </script>";
+                } else {
+                    echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                }
+            }
+            exit;
+        }
+
+        if (!empty($id)) {
+            $get_data = $this->Influencers->findById($id)->firstOrFail();
+        }
+        $this->set(compact('get_data'));
+    }
+
     public function roadmap()
     {
         $menu_act = 'roadmap';

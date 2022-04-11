@@ -74,6 +74,8 @@ class AppController extends Controller
         $this->loadModel('NewProjects');
         $this->loadModel('Levels');
         $this->loadModel('Stakes');
+        $this->loadModel('Influencers');
+        
         
                 
         $Setting = $this->Data->get_settings();
