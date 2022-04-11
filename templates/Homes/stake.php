@@ -1,10 +1,9 @@
 <?php $this->assign('title', 'Stake');
 echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
-
-
-
 ?>
 
+<input type="hidden" id="max_token" value="100000">
+<input type="hidden" id="max_days" value="760">
 <div class="hero-wrap sub-header">
     <div class="container">
         <div class="hero-content text-center py-0">
@@ -67,10 +66,10 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
 
                             <div class="col">
                                 <div class="input-group">
-                                    <span class="input-group-text setOninput">Max</span>
-                                    <input type="text" class="form-control text-end" placeholder="999,999">
+                                    <span class="input-group-text setOninput" id="max_spad">Max</span>
+                                    <input type="text" class="form-control text-end" name="bal" id="bal" placeholder="0">
                                 </div>
-                                <p class="text-end"><small class="d-flex align-items-center">Your balance: 0 SPAD
+                                <p class="text-end"><small class="d-flex align-items-center">Your balance: 100,000 SPAD
                                     </small></p>
                             </div>
                             <!-- end of colom -->
@@ -79,17 +78,15 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                         <div class="d-flex row align-items-stretch">
                             <div class="fixWdth">
                                 <div class="d-flex align-items-center inputFieldsWrap">
-                                    <div class="logoItem me-2">
-                                        <img src="<?php echo SITEURL; ?>newImages/calender-png.png" alt="logos">
-                                    </div>
+                                    <div class="logoItem me-2"><img src="<?php echo SITEURL; ?>newImages/calender-png.png" alt="logos"></div>
                                     <span>Days</span>
                                 </div>
                             </div>
 
                             <div class="col">
                                 <div class="input-group">
-                                    <span class="input-group-text setOninput">Max</span>
-                                    <input type="text" class="form-control text-end" placeholder="0">
+                                    <span class="input-group-text setOninput" id="_days">Max</span>
+                                    <input type="text" class="form-control text-end" name="days" id="days" placeholder="10">
                                 </div>
                             </div>
                             <!-- end of colom -->
@@ -120,7 +117,7 @@ bonus in daily rewards for every additional
                                 </button>
                             </div>
                             <div class="col-6">
-                                
+
                             </div>
                         </div>
                     </div>
@@ -322,3 +319,34 @@ simulation model'); ?></small></p>
         </div>
     </div>
 </section>
+
+<?php $this->Html->scriptStart(array('block' => 'scriptBottom')); ?>
+$(document).ready(function(){
+$( "#max_spad" ).click(function() {
+var t = $("#max_token").val();
+$("#bal").val(t);
+});
+
+$( "#_days" ).click(function() {
+var d = $("#max_days").val();
+$("#days").val(d);
+});
+
+$("#e_frm").validator();
+
+$( "#login_sbtn" ).click(function() {
+$("#e_frm").ajaxForm({
+target: '#f_err',
+headers : {
+'X-CSRF-Token': $('[name="_csrfToken"]').val()
+},
+beforeSubmit:function(){ $("#login_sbtn").prop("disabled",true); $("#login_sbtn").val('Please wait..'); },
+success: function(response) { $("#login_sbtn").prop("disabled",false); $("#login_sbtn").val('Sign In'); },
+error : function(response) {
+$('#f_err').html('<div class="alert alert-danger">Sorry, this is not working at the moment. Please try again later.</div>');
+$("#login_sbtn").prop("disabled",false); $("#login_sbtn").val('Sign In');
+},
+}).submit();
+});
+});
+<?php $this->Html->scriptEnd(); ?>

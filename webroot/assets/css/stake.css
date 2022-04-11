@@ -470,3 +470,7 @@ body .btn-approve:hover {
     justify-content: center;
     display: flex;
 }
+
+.setOninput {
+    cursor: pointer;
+}
