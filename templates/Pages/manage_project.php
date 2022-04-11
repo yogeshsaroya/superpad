@@ -354,7 +354,7 @@ $this->assign('title', 'Manage Projects'); ?>
                                                     <tr>
                                                         <td><?php echo $list->user->first_name; ?></td>
                                                         <td><?php echo $list->user->last_name; ?></td>
-                                                        <td><?php echo $list->user->kyc_address." <br>".$list->user->kyc_city." ".$list->user->kyc_state."<br>".$list->user->country->name; ?></td>
+                                                        <td><?php echo $list->user->kyc_address." <br>".$list->user->kyc_city." ".$list->user->kyc_state."<br>".@$list->user->country->name; ?></td>
                                                         <td><?php if($list->user->kyc_completed == 1){ echo "In-Review";}
                                                         elseif($list->user->kyc_completed == 2){ echo "Approved";}
                                                         elseif($list->user->kyc_completed == 3){ echo "Rejected";}?></td>
