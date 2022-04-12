@@ -324,6 +324,20 @@ simulation model'); ?></small></p>
 
 <?php $this->Html->scriptStart(array('block' => 'scriptBottom')); ?>
 $(document).ready(function(){
+function find(day, obj) 
+{
+    if(day > 0){
+  let keys = Object.keys(obj);
+  result = keys.concat(Number.MAX_SAFE_INTEGER).filter(key => {
+     return day <= key;
+  }).shift();
+  
+  if(result === Number.MAX_SAFE_INTEGER) {
+     result = keys.pop();
+  }
+  return obj[result];
+}
+}
 
 function cal(){
 
@@ -334,17 +348,9 @@ var obj_tires = JSON.parse(tires);
 
 var bal = parseInt( $("#bal").val() );
 var days = parseInt( $("#days").val() );
-var max = Math.max(...Object.keys(obj_stakes));
-var par = 0;
-if ( days >= max ){
-    par = obj_stakes[max];
-}else{
-    jQuery.each(obj_stakes, function(key, val) {
-    if(  days <= key ){
-        par = obj_stakes[key];
-        return false;
-    }
-}); }
+
+var par = find(days, obj_stakes);
+
 if ( days > 0 && bal > 0){
 var rew = Math.round( (bal*par/100)/365*days );
 $("#est_apy").html(par+'%');
@@ -354,19 +360,25 @@ $("#est_apy").html('0%');
 $("#est_rewards").html('0 SPAD');
 }
 
-console.log(obj_tires);
-var max_spad = Math.max(...Object.keys(obj_tires));
-
-if ( bal >= max_spad ){
+var ti = find(bal, obj_tires);
+console.log(ti);
+if (ti === undefined || ti === null) {  
     
+    $("#tier_spad").html('0');
+    $("#tier_name").html('Not Active yet');
+    $("#tier_all").html('0');
+    $("#tier_cha").html("0%");
+    $("#tier_cooldown").html('N/A');
+    $("#tier_sm").html('N/A');
 }else{
-    jQuery.each(obj_tires, function(key, val) {
-    if(  bal <= key ){
-        
-        return false;
-    }
-}); }
-
+    $("#tier_spad").html(ti.spad);
+    $("#tier_name").html(ti.title);
+    $("#tier_all").html(ti.max_ticket_allocation);
+    $("#tier_cha").html(ti.winning_chances+"%");
+    $("#tier_cooldown").html(ti.cooldown);
+    $("#tier_sm").html(ti.social_task);
+    
+}
 
 }
 

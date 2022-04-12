@@ -160,6 +160,7 @@ class HomesController extends AppController
             foreach ($data as $a) {
                 if (!empty($a->spad)) {
                     $tire[$a->spad] = [
+                        'spad' => $a->spad,
                         'title' => $a->title,
                         'ticket_multiplier' => $a->ticket_multiplier,
                         'cooldown' => $a->cooldown,
