@@ -2,12 +2,18 @@
 echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
 ?>
 
-<input type="hidden" id="max_token" value="100000"/>
-<input type="hidden" id="max_days" value="<?php echo $max;?>"/>
-<input type="hidden" id="min_days" value="<?php echo $min;?>"/>
+<input type="hidden" id="max_token" value="100000" />
+<input type="hidden" id="max_days" value="<?php echo $max; ?>" />
+<input type="hidden" id="min_days" value="<?php echo $min; ?>" />
 
-<input type="hidden" id="min_return" value="<?php echo $min_return;?>"/>
-<input type="hidden" id="max_return" value="<?php echo $max_return;?>"/>
+<input type="hidden" id="min_return" value="<?php echo $min_return; ?>" />
+<input type="hidden" id="max_return" value="<?php echo $max_return; ?>" />
+
+<input type="hidden" id="tires" value='<?php echo json_encode($tire); ?>' />
+<input type="hidden" id="stakes" value='<?php echo json_encode($stake); ?>' />
+
+
+
 
 <div class="hero-wrap sub-header">
     <div class="container">
@@ -29,8 +35,8 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                             </div>
                             <span>Total SPAD Staked</span>
                         </h3>
-                        <h1 class="mb-2 txtHighlight">37,759,911 Spad</h1>
-                        <p><small class="d-flex align-items-center">89,490,982</small></p>
+                        <h1 class="mb-2 txtHighlight">TBA</h1>
+                        <p><small class="d-flex align-items-center">TBA</small></p>
                         </h3>
                     </div>
                 </div>
@@ -44,8 +50,8 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                             </div>
                             <span>Average Locking period</span>
                         </h3>
-                        <h1 class="mb-2 txtHighlight">560 days</h1>
-                        <p><small class="d-flex align-items-center">89,490,982</small></p>
+                        <h1 class="mb-2 txtHighlight">TBA</h1>
+                        <p><small class="d-flex align-items-center">TBA</small></p>
                     </div>
 
                     <!-- end of col -->
@@ -91,7 +97,7 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                             <div class="col">
                                 <div class="input-group">
                                     <span class="input-group-text setOninput" id="_days">Max</span>
-                                    <input type="number"  min='<?php echo $min;?>' class="form-control text-end" name="days" id="days" value="<?php echo $min;?>" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+                                    <input type="number" min='<?php echo $min; ?>' class="form-control text-end" name="days" id="days" value="<?php echo $min; ?>" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                 </div>
                             </div>
                             <!-- end of colom -->
@@ -105,7 +111,7 @@ bonus in daily rewards for every additional
 30 days staking duration. to'); ?>
 
                             </div>
-                            <span>Long Term Bonus: <strong class="txtHighlight"><?php echo $max_return;?>%</strong></span>
+                            <span>Long Term Bonus: <strong class="txtHighlight"><?php echo $max_return; ?>%</strong></span>
                         </div>
 
                         <div class="btnWraper mt-5 d-flex justify-content-center">
@@ -147,7 +153,7 @@ SPAD'); ?>
                                     </small></p>
 
                                 <div class="headeredTextContainer d-flex">
-                                    <div class="primaryText">0%</div>
+                                    <div class="primaryText" id="est_apy">0%</div>
                                     <div class="secondaryText"></div>
                                 </div>
                             </div>
@@ -160,7 +166,7 @@ values shown in the simulation model
 multiplied by number of days staked'); ?></small></p>
 
                                 <div class="headeredTextContainer d-flex">
-                                    <div class="primaryText">0 SPAD</div>
+                                    <div class="primaryText" id="est_rewards">0 SPAD</div>
                                     <div class="secondaryText hide">$0</div>
                                 </div>
                             </div>
@@ -187,7 +193,7 @@ vour staked tokens (and provided liquidity)
 and new tokens to be staked'); ?></small></p>
 
                                 <div class="headeredTextContainer d-flex">
-                                    <div class="primaryText">0%</div>
+                                    <div class="primaryText" id="tier_spad">0</div>
                                     <div class="secondaryText"></div>
                                 </div>
                             </div>
@@ -202,7 +208,7 @@ SPAD then the shown Tranche will consider
 your past deposits as well.'); ?></small></p>
 
                                 <div class="headeredTextContainer d-flex">
-                                    <div class="primaryText">Not Active yet</div>
+                                    <div class="primaryText" id="tier_name">Not Active yet</div>
                                     <div class="secondaryText"></div>
                                 </div>
                             </div>
@@ -220,7 +226,7 @@ and the users maximum allocation is 3 then
 then user cannot win more than $600.'); ?></small></p>
 
                                 <div class="headeredTextContainer d-flex">
-                                    <div class="primaryText">0%</div>
+                                    <div class="primaryText" id="tier_all" >0</div>
                                     <div class="secondaryText"></div>
                                 </div>
                             </div>
@@ -238,7 +244,7 @@ based on the default value shown in the
 simulation model'); ?></small></p>
 
                                 <div class="headeredTextContainer d-flex">
-                                    <div class="primaryText">0%</div>
+                                    <div class="primaryText" id="tier_cha">0%</div>
                                     <div class="secondaryText"></div>
                                 </div>
                             </div>
@@ -250,7 +256,7 @@ simulation model'); ?></small></p>
                                         <?php echo getToolTip(); ?></small></p>
 
                                 <div class="headeredTextContainer d-flex">
-                                    <div class="primaryText">0%</div>
+                                    <div class="primaryText" id="tier_cooldown">N/A</div>
                                     <div class="secondaryText"></div>
                                 </div>
                             </div>
@@ -261,22 +267,13 @@ simulation model'); ?></small></p>
                                         <?php echo getToolTip(); ?></small></p>
 
                                 <div class="headeredTextContainer d-flex">
-                                    <div class="primaryText">0%</div>
+                                    <div class="primaryText" id="tier_sm">N/A</div>
                                     <div class="secondaryText"></div>
                                 </div>
                             </div>
-                            <!-- end of colom -->
                         </div>
-
-
-
-
-
                     </div>
-                    <!-- end of bg blue -->
                 </div>
-
-
             </div>
             <div class="header-container">
                 <div class="icon-container ng-star-inserted"><img _ngcontent-kha-c106="" src="<?php echo SITEURL; ?>img/Warning.svg"></div>
@@ -327,14 +324,67 @@ simulation model'); ?></small></p>
 
 <?php $this->Html->scriptStart(array('block' => 'scriptBottom')); ?>
 $(document).ready(function(){
+
+function cal(){
+
+var tires = $("#tires").val();
+var stakes = $("#stakes").val();
+var obj_stakes = JSON.parse(stakes);
+var obj_tires = JSON.parse(tires);
+
+var bal = parseInt( $("#bal").val() );
+var days = parseInt( $("#days").val() );
+var max = Math.max(...Object.keys(obj_stakes));
+var par = 0;
+if ( days >= max ){
+    par = obj_stakes[max];
+}else{
+    jQuery.each(obj_stakes, function(key, val) {
+    if(  days <= key ){
+        par = obj_stakes[key];
+        return false;
+    }
+}); }
+if ( days > 0 && bal > 0){
+var rew = Math.round( (bal*par/100)/365*days );
+$("#est_apy").html(par+'%');
+$("#est_rewards").html(rew+' SPAD');
+}else{
+$("#est_apy").html('0%');
+$("#est_rewards").html('0 SPAD');
+}
+
+console.log(obj_tires);
+var max_spad = Math.max(...Object.keys(obj_tires));
+
+if ( bal >= max_spad ){
+    
+}else{
+    jQuery.each(obj_tires, function(key, val) {
+    if(  bal <= key ){
+        
+        return false;
+    }
+}); }
+
+
+}
+
+$('#bal, #days').on('input', function(e) {
+cal();
+});
+
+
 $( "#max_spad" ).click(function() {
 var t = $("#max_token").val();
 $("#bal").val(t);
+cal();
 });
 
 $( "#_days" ).click(function() {
 var d = $("#max_days").val();
 $("#days").val(d);
+cal();
 });
 
 $("#e_frm").validator();

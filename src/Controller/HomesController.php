@@ -160,6 +160,7 @@ class HomesController extends AppController
             foreach ($data as $a) {
                 if (!empty($a->spad)) {
                     $tire[$a->spad] = [
+                        'title' => $a->title,
                         'ticket_multiplier' => $a->ticket_multiplier,
                         'cooldown' => $a->cooldown,
                         'social_task' => $a->social_task,
@@ -176,7 +177,7 @@ class HomesController extends AppController
                 }
             }
         }
-
+        //ec($tire); ec($stake);die;
 
         if (!empty($chkStake)) {
             $min = min(array_column($chkStake, 'days'));
