@@ -29,7 +29,7 @@
                                         <th><?php echo $this->Paginator->sort('kyc_completed','KYC Status'); ?></th>
                                         <th><?php echo $this->Paginator->sort('status'); ?></th>
                                         <th><?php echo $this->Paginator->sort('created') ?></th>
-                                        
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -55,7 +55,7 @@
                                                     } ?>
                                                 </td>
                                                 <td><?php echo $list->created->format('d/m/Y'); ?></td>
-                                                <?php /*?>
+                                                
                                                 <td>
                                                     <div class="dropdown">
                                                         <button type="button" class="btn btn-sm dropdown-toggle hide-arrow" data-toggle="dropdown"><i data-feather="more-vertical"></i></button>
@@ -65,7 +65,7 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <?php */?>
+                                                
                                             </tr>
                                     <?php }
                                     } ?>
