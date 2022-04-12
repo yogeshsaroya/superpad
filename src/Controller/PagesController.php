@@ -1435,8 +1435,9 @@ class PagesController extends AppController
         $menu_act = 'users';
         $this->set(compact('menu_act'));
         if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
-            $blog_del = $this->Users->findById($this->request->getQuery('del'))->firstOrFail();
-            if ($this->Users->delete($blog_del)) {
+            $readData = $this->Users->findById($this->request->getQuery('del'))->firstOrFail();
+            if ($this->Users->delete($readData)) {
+                $this->Applications->deleteAll(['user_id' => $readData->id]);
             }
             $this->redirect('/pages/users');
         }

@@ -62,6 +62,7 @@
                                                         <div class="dropdown-menu">
                                                             <?php echo $this->Html->link('<i data-feather="edit-2" class="mr-50"></i> Edit', SITEURL . "pages/manage_user/" . $list->id, ['escape' => false, 'class' => 'dropdown-item']); ?>
                                                             <?php if($list->kyc_completed != 0){ echo $this->Html->link('<i data-feather="edit-2" class="mr-50"></i> KYC ', SITEURL . "pages/manage_kyc/" . $list->id, ['escape' => false, 'class' => 'dropdown-item']);} ?>
+                                                            <?php echo $this->Html->link('<i data-feather="trash" class="mr-50"></i> Delete', SITEURL . "pages/users?del=" . $list->id, ['escape' => false, 'class' => 'dropdown-item', 'onclick' => "return confirm('Are you sure you want to delete this user?')"]); ?>
                                                         </div>
                                                     </div>
                                                 </td>
