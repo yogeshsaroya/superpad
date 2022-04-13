@@ -36,6 +36,7 @@ $YesOrNo = YesOrNo(); ?>
                                         <th><?php echo $this->Paginator->sort('cooldown') ?></th>
                                         <th><?php echo $this->Paginator->sort('social_task') ?></th>
                                         <th><?php echo $this->Paginator->sort('max_ticket_allocation') ?></th>
+                                        <th><?php echo $this->Paginator->sort('guaranteed_allocation') ?></th>
                                         <th><?php echo $this->Paginator->sort('winning_chances') ?></th>
                                         <th>Actions</th>
                                         <th>Delete</th>
@@ -53,6 +54,7 @@ $YesOrNo = YesOrNo(); ?>
                                                 <td><?php echo $list->cooldown; ?></td>
                                                 <td><?php echo $list->social_task; ?></td>
                                                 <td><?php echo $list->max_ticket_allocation; ?></td>
+                                                <td><?php echo $list->guaranteed_allocation; ?></td>
                                                 <td><?php echo $list->winning_chances; ?></td>
                                                 <td><?php echo $this->Html->link(' Edit ', SITEURL . "pages/add_tire/" . $list->id, ['class' => 'magnificAjax']); ?></td>
                                                 <td><?php echo $this->Html->link(' Delete ', SITEURL . "pages/tiers/?del=" . $list->id, ['onclick' => "return confirm('Are you sure you want to delete?')"]); ?></td>

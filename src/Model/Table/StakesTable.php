@@ -13,7 +13,12 @@ class StakesTable extends Table{
         $this->belongsTo( 'unStakes', [
             'foreignKey' => 'stake_id',
             'className' => 'Stakes'
-        ]);    
+        ]);
+        
+        $this->hasMany( 'allStakes', [
+            'foreignKey' => 'stake_id',
+            'className' => 'Stakes'
+        ]);
 
     }
     public function validationDefault(Validator $validator): Validator {

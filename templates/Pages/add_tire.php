@@ -38,7 +38,9 @@
                                         <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('social_task', ['options' => ['Yes'=>'Yes','No'=>'No','Optional'=>'Optional'], 'empty'=>'Select','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
                                         <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('max_ticket_allocation', ['type' => 'text','class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
                                         <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('winning_chances', ['type' => 'text', 'class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
+                                        <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('guaranteed_allocation', ['options' => ['Yes'=>'Yes','No'=>'No'],'empty'=>'Select', 'class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div></div>
                                         <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('position', ['type' => 'number', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+
 
 
                                         <div class="col-12 mt-50">

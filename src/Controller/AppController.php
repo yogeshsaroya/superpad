@@ -75,8 +75,8 @@ class AppController extends Controller
         $this->loadModel('Levels');
         $this->loadModel('Stakes');
         $this->loadModel('Influencers');
-        
-        
+        $this->loadModel('UserStakes');
+               
                 
         $Setting = $this->Data->get_settings();
         $session = $this->getRequest()->getSession();

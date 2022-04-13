@@ -1,7 +1,9 @@
 <?php $this->assign('title', 'Stake');
 echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
 ?>
-
+<?php
+echo $this->Form->create(null);
+echo $this->Form->end(); ?>
 <input type="hidden" id="max_token" value="100000" />
 <input type="hidden" id="max_days" value="<?php echo $max; ?>" />
 <input type="hidden" id="min_days" value="<?php echo $min; ?>" />
@@ -78,7 +80,7 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                             <div class="col">
                                 <div class="input-group">
                                     <span class="input-group-text setOninput" id="max_spad">Max</span>
-                                    <input type="number" min='0' class="form-control text-end" name="bal" id="bal" placeholder="0" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+                                    <input type="number" min='0' class="form-control text-end" name="bal" id="bal" value="<?php echo (isset($qr['token']) ? $qr['token'] : null);?>" placeholder="0" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                 </div>
                                 <p class="text-end"><small class="d-flex align-items-center">Your balance: 100,000 SPAD
                                     </small></p>
@@ -97,13 +99,13 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
                             <div class="col">
                                 <div class="input-group">
                                     <span class="input-group-text setOninput" id="_days">Max</span>
-                                    <input type="number" min='<?php echo $min; ?>' class="form-control text-end" name="days" id="days" value="<?php echo $min; ?>" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+                                    <input type="number" min='<?php echo $min; ?>' class="form-control text-end" name="days" id="days" value="<?php echo (isset($qr['days']) ? $qr['days'] : $min);?>" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
                                 </div>
                             </div>
                             <!-- end of colom -->
                         </div>
 
-                        <div class="d-flex align-items-center tooltipWrap mt-3">
+                        <div class="d-flex align-items-center tooltipWrap mt-3 hide">
                             <div class="toolTipImg me-2">
                                 <?php echo getToolTip('A longer staking timeframe will provide
 higher daily rewards. Users are given a 50%
@@ -122,14 +124,12 @@ bonus in daily rewards for every additional
                         </div>
 
                         <div class="row">
-                            <div class="col-12">
-                                <button class="w-100 btn btn-lg btn-dark">
-                                    Stake Now
-                                </button>
-                            </div>
-                            <div class="col-6">
-
-                            </div>
+                        <?php if(isset($Auth)){ ?>
+                            <div class="col-6"> <input type="button" class="w-100 btn btn-lg btn-dark" value="Stake Now" id="doStake" /> </div>
+                            <div class="col-6"> <input type="button" class="w-100 btn btn-lg btn-outline-dark" value="unStake" id="doUnStake" /> </div>
+                        <?php }else{ ?>
+                            <div class="col-12"> <input type="button" class="w-100 btn btn-lg btn-dark" value="Stake Now" id="doLogin"/> </div>
+                       <?php } ?>
                         </div>
                     </div>
                 </div>
@@ -309,6 +309,8 @@ simulation model'); ?></small></p>
                                                 <li><b>Social Task</b> <?php echo (!empty($list->social_task) ? $list->social_task : "TBA"); ?></li>
                                                 <li><b>Max Ticket Allocation</b> <?php echo (!empty($list->max_ticket_allocation) ? $list->max_ticket_allocation : "TBA"); ?></li>
                                                 <li><b>Winning Chances</b> <?php echo (!empty($list->winning_chances) ? $list->winning_chances . "%" : "TBA"); ?></li>
+                                                <li><b>Guaranteed Allocation</b> <?php echo (!empty($list->guaranteed_allocation) ? $list->guaranteed_allocation : "TBA"); ?></li>
+                                                
                                             </ul>
                                         </div>
                                     </div>
@@ -361,7 +363,6 @@ $("#est_rewards").html('0 SPAD');
 }
 
 var ti = find(bal, obj_tires);
-console.log(ti);
 if (ti === undefined || ti === null) {  
     
     $("#tier_spad").html('0');
@@ -382,9 +383,11 @@ if (ti === undefined || ti === null) {
 
 }
 
-$('#bal, #days').on('input', function(e) {
-cal();
-});
+<?php if( isset($qr['days']) && isset($qr['token']) ){
+    echo "cal();";
+}?>
+
+$('#bal, #days').on('input', function(e) { cal(); });
 
 
 $( "#max_spad" ).click(function() {
@@ -398,6 +401,32 @@ var d = $("#max_days").val();
 $("#days").val(d);
 cal();
 });
+
+
+
+$( "#doLogin" ).click(function() {
+var bal = parseInt( $("#bal").val() );
+var days = parseInt( $("#days").val() );
+if(bal > 0 && days  > 0 ){ window.location.href = "sign-in?redirect=stake&days="+days+"&token="+bal; }
+});
+
+$( "#doStake" ).click(function() {
+    var bal = parseInt( $("#bal").val() );
+    var days = parseInt( $("#days").val() );
+    if(bal > 0 && days  > 0 ){
+
+    $.ajax({type: 'POST',
+    headers : { 'X-CSRF-Token': $('[name="_csrfToken"]').val() },
+	url: SITEURL+'users/do_stake',
+	data: {bal:bal,days:days},
+	success: function(data) { $("#cover").html(data); },
+	error: function(comment) { $("#cover").html(comment); }});
+
+    }
+
+});
+
+
 
 $("#e_frm").validator();
 

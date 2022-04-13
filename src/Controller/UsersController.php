@@ -261,9 +261,6 @@ class UsersController extends AppController
     {
         $session = $this->getRequest()->getSession();
         $q = $this->request->getQuery();
-        if (isset($q['redirect']) && !empty($q['redirect'])) {
-            $session->write('redirect', $q['redirect']);
-        }
 
         $user_data = null;
         $this->set(compact('user_data'));
@@ -318,7 +315,12 @@ class UsersController extends AppController
         $session = $this->getRequest()->getSession();
         $q = $this->request->getQuery();
         if (isset($q['redirect']) && !empty($q['redirect'])) {
-            $session->write('redirect', $q['redirect']);
+            $qr = $q['redirect'];
+            unset($q['redirect']);
+            if (!empty($q)) {
+                $qr .= "?" . http_build_query($q);
+            }
+            $session->write('redirect', $qr);
         }
 
         $user_data = null;
@@ -378,12 +380,6 @@ class UsersController extends AppController
             }
             exit;
         }
-        /*
-        $users = $this->Users->find();
-        $user = $users->first()->toArray();
-        $this->Auth->setUser($user);
-        $this->redirect('/users');
-        */
     }
 
     /**
@@ -513,9 +509,6 @@ class UsersController extends AppController
     {
         $session = $this->getRequest()->getSession();
         $q = $this->request->getQuery();
-        if (isset($q['redirect']) && !empty($q['redirect'])) {
-            $session->write('redirect', $q['redirect']);
-        }
 
         $this->autoRender = false;
         $err_msg = 'Authentication error. Please try again later.';
@@ -563,6 +556,7 @@ class UsersController extends AppController
                             $q_url = SITEURL . $session->read('redirect');
                             $session->delete('redirect');
                         }
+
                         return $this->redirect($q_url);
                         exit;
                     } else {
@@ -614,9 +608,6 @@ class UsersController extends AppController
         $this->autoRender = false;
         $session = $this->getRequest()->getSession();
         $q = $this->request->getQuery();
-        if (isset($q['redirect']) && !empty($q['redirect'])) {
-            $session->write('redirect', $q['redirect']);
-        }
 
         $err_msg = 'Authentication error. Please try again later.';
 
@@ -740,6 +731,58 @@ class UsersController extends AppController
                     }
                 } else {
                     echo (json_encode(["Cancel"]));
+                }
+            }
+        }
+        exit;
+    }
+
+    public function doStake()
+    {
+        $this->autoRender = false;
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $post_data = $this->request->getData();
+            $post_data['user_id'] = $this->Auth->User('id');
+            //$all_levels = $this->Levels->find()->all()->toArray();
+            $all_satakes = $this->Stakes->find()->where(['Stakes.type' => 1])->order(['Stakes.days' => 'ASC'])->all()->toArray();
+            $stakes = null;
+            if (!empty($all_satakes)) {
+                foreach ($all_satakes as $b) {
+                    if (!empty($b['days'])) {
+                        $stakes[$b['days']] = ['id' => $b['id'], 'per' => $b['percentage']];
+                    }
+                }
+            }
+
+            $closest = null;
+            if (!empty($stakes)) {
+                foreach ($stakes as $threshold => $stake) {
+                    if ($post_data['days'] <= $threshold) {
+                        $closest = $stake['id'];
+                        break;
+                    }
+                }
+                if ($closest === null) {
+                    $l = end($stakes);
+                    $closest = $l['id'];
+                }
+                if (!empty($closest)) {
+                    $get_satake = $this->Stakes->find()
+                        ->contain(['allStakes' => ['fields' => ['id', 'stake_id', 'type', 'days', 'percentage']]])
+                        ->where(['Stakes.id' => $closest])
+                        ->select(['id', 'stake_id', 'type', 'days', 'percentage'])
+                        ->first()->toArray();
+
+                    if (!empty($get_satake)) {
+                        $post_data['stake_info'] = json_encode($get_satake);
+                        $post_data['stake_date'] = DATE;
+                        $post_data['taken_balance'] =  $post_data['bal'];
+                        $post_data['reward_token'] = $post_data['unstaked_token'] = $post_data['taken_penalty'] = 0;
+
+                        $saveData = $this->UserStakes->newEntity($post_data, ['validate' => false]);
+                        if ($this->UserStakes->save($saveData)) {
+                        }
+                    }
                 }
             }
         }

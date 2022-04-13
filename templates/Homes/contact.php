@@ -25,7 +25,6 @@
                     </div>
                     <?php
                     echo $this->Form->create(null, ['autocomplete' => 'off', 'id' => 'e_frm']);
-
                     ?>
                     <div class="row g-gs">
                         <div class="col-lg-6">

@@ -143,9 +143,12 @@ class HomesController extends AppController
     public function stake()
     {
 
-        $query = $this->Levels->find()
-            ->limit(100)
-            ->order(['position' => 'ASC']);
+        $q = $this->request->getQuery();
+        $qr = null;
+        if (isset($q['days']) && isset($q['token'])) {
+            $qr = ['days'=>$q['days'],'token'=>$q['token']];
+        }
+        $query = $this->Levels->find()->order(['position' => 'ASC']);
         $data = $query->all();
         $tire = $stake = [];
         $min = $max = $min_return = $max_return = 0;
@@ -178,7 +181,6 @@ class HomesController extends AppController
                 }
             }
         }
-        //ec($tire); ec($stake);die;
 
         if (!empty($chkStake)) {
             $min = min(array_column($chkStake, 'days'));
@@ -187,7 +189,7 @@ class HomesController extends AppController
             $min_return = min(array_column($chkStake, 'percentage'));
             $max_return = max(array_column($chkStake, 'percentage'));
         }
-        $this->set(compact('data', 'chkStake', 'min', 'max', 'min_return', 'max_return', 'stake', 'tire'));
+        $this->set(compact('data', 'chkStake', 'min', 'max', 'min_return', 'max_return', 'stake', 'tire','qr'));
     }
 
     public function spad()

@@ -39,7 +39,7 @@ if (!$data->isEmpty()) {
     <section id="partners_list" class="brand-section section-space <?php echo (isset($bg_color) ?  $bg_color : null); ?>">
         <div class="container">
             <div class="section-head text-center">
-                <h2 class="mb-3">Crypto Influencers</h2>
+                <h2 class="mb-3">Crypto superPAD</h2>
             </div><!-- end section-head -->
             <div class="row g-gs">
                 <?php
