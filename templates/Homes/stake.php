@@ -187,7 +187,7 @@ multiplied by number of days staked'); ?></small></p>
 
                         <div class="row estimatedRow">
                             <div class="col-md-6">
-                                <p><small class="d-flex align-items-start">Total SPAD Power
+                                <p><small class="d-flex align-items-start">Ticket Multiplier
                                         <?php echo getToolTip('Total SPAD Power is calculated based on
 vour staked tokens (and provided liquidity)
 and new tokens to be staked'); ?></small></p>
@@ -372,7 +372,7 @@ if (ti === undefined || ti === null) {
     $("#tier_cooldown").html('N/A');
     $("#tier_sm").html('N/A');
 }else{
-    $("#tier_spad").html(ti.spad);
+    $("#tier_spad").html(ti.ticket_multiplier);
     $("#tier_name").html(ti.title);
     $("#tier_all").html(ti.max_ticket_allocation);
     $("#tier_cha").html(ti.winning_chances+"%");
