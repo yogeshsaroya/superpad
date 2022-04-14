@@ -744,7 +744,28 @@ class UsersController extends AppController
             $post_data = $this->request->getData();
             $post_data['user_id'] = $this->Auth->User('id');
             //$all_levels = $this->Levels->find()->all()->toArray();
-            $all_satakes = $this->Stakes->find()->where(['Stakes.type' => 1])->order(['Stakes.days' => 'ASC'])->all()->toArray();
+
+            $get_satak = $this->Stakes->find()
+            ->contain(['allStakes' => ['fields' => ['id', 'stake_id', 'type', 'days', 'percentage']]])
+            ->select(['id', 'stake_id', 'type', 'days', 'percentage'])
+            ->where(['Stakes.type' => 1,'Stakes.days' => $post_data['days']])
+            ->first()->toArray();
+
+            if (!empty($get_satak)) {
+                $post_data['stake_info'] = json_encode($get_satak);
+                $post_data['stake_date'] = DATE;
+                $post_data['taken_balance'] =  $post_data['bal'];
+                $post_data['reward_token'] = $post_data['unstaked_token'] = $post_data['taken_penalty'] = 0;
+                
+                $saveData = $this->UserStakes->newEntity($post_data, ['validate' => false]);
+                if ($this->UserStakes->save($saveData)) {
+                    $q_url = SITEURL."users/staking";
+                    echo '<script>window.location.href = "' . $q_url . '"</script>';
+                    exit;
+                }
+            }
+
+            ec($get_satak);die;
             $stakes = null;
             if (!empty($all_satakes)) {
                 foreach ($all_satakes as $b) {
@@ -754,6 +775,7 @@ class UsersController extends AppController
                 }
             }
 
+            /*
             $closest = null;
             if (!empty($stakes)) {
                 foreach ($stakes as $threshold => $stake) {
@@ -772,20 +794,14 @@ class UsersController extends AppController
                         ->where(['Stakes.id' => $closest])
                         ->select(['id', 'stake_id', 'type', 'days', 'percentage'])
                         ->first()->toArray();
-
-                    if (!empty($get_satake)) {
-                        $post_data['stake_info'] = json_encode($get_satake);
-                        $post_data['stake_date'] = DATE;
-                        $post_data['taken_balance'] =  $post_data['bal'];
-                        $post_data['reward_token'] = $post_data['unstaked_token'] = $post_data['taken_penalty'] = 0;
-
-                        $saveData = $this->UserStakes->newEntity($post_data, ['validate' => false]);
-                        if ($this->UserStakes->save($saveData)) {
-                        }
-                    }
                 }
             }
+            */
         }
         exit;
+    }
+
+    public function staking(){
+        
     }
 }

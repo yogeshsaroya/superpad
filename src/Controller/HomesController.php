@@ -169,7 +169,8 @@ class HomesController extends AppController
                         'cooldown' => $a->cooldown,
                         'social_task' => $a->social_task,
                         'max_ticket_allocation' => $a->max_ticket_allocation,
-                        'winning_chances' => $a->winning_chances
+                        'winning_chances' => $a->winning_chances,
+                        'guaranteed_allocation'=>$a->guaranteed_allocation
                     ];
                 }
             }

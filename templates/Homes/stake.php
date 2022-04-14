@@ -254,12 +254,25 @@ simulation model'); ?></small></p>
                                 </div>
                             </div>
                         </div>
+                        <div class="row estimatedRow">
+                            <div class="col-md-6">
+                                <p><small class="d-flex align-items-start">Guaranteed Allocation<?php echo getToolTip(); ?></small></p>
+                                <div class="headeredTextContainer d-flex">
+                                    <div class="primaryText" id="tier_gua">N/A</div>
+                                    <div class="secondaryText"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="header-container">
                 <div class="icon-container ng-star-inserted"><img _ngcontent-kha-c106="" src="<?php echo SITEURL; ?>img/Warning.svg"></div>
-                <span class="title-black">Minimum staking for 10 days . Early unstaking will cause penalty. (<?php echo $this->Html->link('FAQ', '/page/faq'); ?>)</span>
+                <span class="title-black">Minimum staking for 10 days . Early unstaking will cause penalty. (<?php echo $this->Html->link('FAQ', '/page/faq'); ?>).</span>
+                
+            </div>
+            <div class="header-container">
+                <span class="title-black">If You stack for 2-3 years then no cooldown (Applicable from Asteroid Tier)</span>
             </div>
         </div>
 
@@ -309,19 +322,12 @@ simulation model'); ?></small></p>
 <?php $this->Html->scriptStart(array('block' => 'scriptBottom')); ?>
 $(document).ready(function(){
     function ec(s){ console.log(s); }
-        function find(day, obj) 
-        {
-            if(day > 0){
-                let keys = Object.keys(obj);
-                result = keys.concat(Number.MAX_SAFE_INTEGER).filter(key => {
-                    return day <= key;
-                }).shift();
-                
-                if(result === Number.MAX_SAFE_INTEGER) {
-                    result = keys.pop();
-                }
-                return obj[result];
-            }
+
+        function findNearestMinObj(obj, target) {
+            const sortedKeys = Object.keys(obj).map(d => Number(d)).sort((a, b) => b - a)
+            const key = sortedKeys.find(k => target >= k)
+            if (key === undefined) return false
+            return obj[key];
         }
 
         function cal(){
@@ -345,8 +351,9 @@ $(document).ready(function(){
                         $("#est_rewards").html('0 SPAD');
                     }
 
-                    ec(obj_tires);
-                var ti = find(bal, obj_tires);
+                    
+                var ti = findNearestMinObj(obj_tires,bal);
+                ec(ti);
                 if (ti === undefined || ti === null) {  
                     
                     $("#tier_spad").html('0');
@@ -355,6 +362,8 @@ $(document).ready(function(){
                     $("#tier_cha").html("0%");
                     $("#tier_cooldown").html('N/A');
                     $("#tier_sm").html('N/A');
+                    $("#tier_gua").html('N/A');
+                    
                 }else{
                     $("#tier_spad").html(ti.ticket_multiplier);
                     $("#tier_name").html(ti.title);
@@ -362,6 +371,7 @@ $(document).ready(function(){
                     $("#tier_cha").html(ti.winning_chances+"%");
                     $("#tier_cooldown").html(ti.cooldown);
                     $("#tier_sm").html(ti.social_task);
+                    $("#tier_gua").html(ti.guaranteed_allocation);
                     
                 }
                 }else{
@@ -374,6 +384,7 @@ $(document).ready(function(){
                     $("#tier_cha").html("0%");
                     $("#tier_cooldown").html('N/A');
                     $("#tier_sm").html('N/A');
+                    $("#tier_gua").html('N/A');
                 }
         }
 
@@ -381,63 +392,47 @@ $(document).ready(function(){
     echo "cal();";
 }?>
 
-$('#bal, #days').on('input', function(e) { cal(); });
-$( "#days" ).change(function() { cal(); });
+        $('#bal, #days').on('input', function(e) { cal(); });
+        $( "#days" ).change(function() { cal(); });
 
 
-$( "#max_spad" ).click(function() {
-var t = $("#max_token").val();
-$("#bal").val(t);
-cal();
-});
+        $( "#max_spad" ).click(function() {
+        var t = $("#max_token").val();
+        $("#bal").val(t);
+        cal();
+        });
 
-$( "#_days" ).click(function() {
-var d = $("#max_days").val();
-$("#days").val(d);
-cal();
-});
-
-
-
-$( "#doLogin" ).click(function() {
-var bal = parseInt( $("#bal").val() );
-var days = parseInt( $("#days").val() );
-if(bal > 0 && days  > 0 ){ window.location.href = "sign-in?redirect=stake&days="+days+"&token="+bal; }
-});
-
-$( "#doStake" ).click(function() {
-    var bal = parseInt( $("#bal").val() );
-    var days = parseInt( $("#days").val() );
-    if(bal > 0 && days  > 0 ){
-
-    $.ajax({type: 'POST',
-    headers : { 'X-CSRF-Token': $('[name="_csrfToken"]').val() },
-	url: SITEURL+'users/do_stake',
-	data: {bal:bal,days:days},
-	success: function(data) { $("#cover").html(data); },
-	error: function(comment) { $("#cover").html(comment); }});
-
-    }
-
-});
+        $( "#_days" ).click(function() {
+        var d = $("#max_days").val();
+        $("#days").val(d);
+        cal();
+        });
 
 
 
-$("#e_frm").validator();
+        $( "#doLogin" ).click(function() {
+        var bal = parseInt( $("#bal").val() );
+        var days = parseInt( $("#days").val() );
+        var min_t = $("#bal").attr('data_min');
+        if(bal >= min_t && days  > 0 ){ window.location.href = "sign-in?redirect=stake&days="+days+"&token="+bal; }
+        });
 
-$( "#login_sbtn" ).click(function() {
-$("#e_frm").ajaxForm({
-target: '#f_err',
-headers : {
-'X-CSRF-Token': $('[name="_csrfToken"]').val()
-},
-beforeSubmit:function(){ $("#login_sbtn").prop("disabled",true); $("#login_sbtn").val('Please wait..'); },
-success: function(response) { $("#login_sbtn").prop("disabled",false); $("#login_sbtn").val('Sign In'); },
-error : function(response) {
-$('#f_err').html('<div class="alert alert-danger">Sorry, this is not working at the moment. Please try again later.</div>');
-$("#login_sbtn").prop("disabled",false); $("#login_sbtn").val('Sign In');
-},
-}).submit();
-});
+        $( "#doStake" ).click(function() {
+            var bal = parseInt( $("#bal").val() );
+            var days = parseInt( $("#days").val() );
+            var min_t = $("#bal").attr('data_min');
+            if(bal >= min_t && days  > 0 ){
+
+            $.ajax({type: 'POST',
+            headers : { 'X-CSRF-Token': $('[name="_csrfToken"]').val() },
+            url: SITEURL+'users/do_stake',
+            data: {bal:bal,days:days},
+            success: function(data) { $("#cover").html(data); },
+            error: function(comment) { $("#cover").html(comment); }});
+
+            }
+
+        });
+
 });
 <?php $this->Html->scriptEnd(); ?>
