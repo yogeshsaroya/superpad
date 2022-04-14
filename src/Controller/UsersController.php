@@ -64,196 +64,6 @@ class UsersController extends AppController
     {
     }
 
-    public function applicationStatus()
-    {
-        $query = $this->Applications->find('all', [
-            'contain' => ['Projects'],
-            'conditions' => ['Applications.user_id' => $this->Auth->User('id')]
-        ]);
-        $data =  $query->all();
-        $this->set(compact('data'));
-    }
-
-    public function connectWallet()
-    {
-        $user_data = $this->Users->findById($this->Auth->user('id'))->first();
-        if (!empty($user_data->metamask_wallet_id)) {
-            $this->redirect('/users/wallet');
-        }
-    }
-
-    public function dashboard()
-    {
-        if ($this->request->is('ajax') && !empty($this->request->getData())) {
-            $postData = $this->request->getData();
-            $val = ['validate' => true];
-            if (!empty($postData['password1'])) {
-                $postData['password'] = $postData['password1'];
-            } else {
-                $val = ['validate' => 'OnlyCheck'];
-            }
-            if (isset($postData['id']) && !empty($postData['id'])) {
-                $getBlog = $this->Users->get($postData['id']);
-                $chkBlog = $this->Users->patchEntity($getBlog, $postData, $val);
-            }
-            if ($chkBlog->getErrors()) {
-                $st = null;
-                foreach ($chkBlog->getErrors() as $elist) {
-                    foreach ($elist as $k => $v); {
-                        $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
-                    }
-                }
-                echo $st;
-                exit;
-            } else {
-                if ($this->Users->save($chkBlog)) {
-                    $u = SITEURL . "dashboard";
-                    echo '<div class="alert alert-success" role="alert"> Saved.</div>';
-                    echo "<script>window.location.href ='" . $u . "'; </script>";
-                } else {
-                    echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
-                }
-            }
-            exit;
-        }
-
-
-        $user_data = $this->Users->findById($this->Auth->user('id'))->first();
-        if (!empty($user_data)) {
-            $this->set(compact('user_data'));
-        } else {
-            $this->viewBuilder()->setLayout('error_404');
-        }
-    }
-
-    public function wallet()
-    {
-        $user_data = $this->Users->findById($this->Auth->user('id'))->first();
-        if (!empty($user_data)) {
-            $this->set(compact('user_data'));
-        } else {
-            $this->viewBuilder()->setLayout('error_404');
-        }
-    }
-
-    public function kyc()
-    {
-        if ($this->request->is('ajax') && !empty($this->request->getData())) {
-            $postData = $this->request->getData();
-            //ec($postData);die;
-            $val = ['validate' => true];
-            $val = ['validate' => 'OnlyKyc'];
-
-            $uploadPath = 'cdn/kyc/';
-            if (!file_exists($uploadPath)) {
-                mkdir($uploadPath, 0777, true);
-            }
-            /*For profile iamge */
-            if (!empty($postData['kyc_user_pic1'])) {
-                if (in_array($postData['kyc_user_pic1']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg'])) {
-                    $fileobject1 = $postData['kyc_user_pic1'];
-                    $ext = pathinfo($fileobject1->getClientFilename(), PATHINFO_EXTENSION);
-                    $kyc_user_pic =  $postData['id'] . "-profile-pic." . $ext;
-                    $destination1 = $uploadPath . $kyc_user_pic;
-                    try {
-                        $fileobject1->moveTo($destination1);
-                    } catch (Exception $e) {
-                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
-                        exit;
-                    }
-                } else {
-                    echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
-                    exit;
-                }
-            }
-
-            /*For doc front img */
-            if (!empty($postData['kyc_doc_file1'])) {
-                if (in_array($postData['kyc_doc_file1']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg'])) {
-                    $fileobject2 = $postData['kyc_doc_file1'];
-                    $ext1 = pathinfo($fileobject2->getClientFilename(), PATHINFO_EXTENSION);
-                    $kyc_doc_file =  $postData['id'] . "-doc-front." . $ext1;
-                    $destination2 = $uploadPath . $kyc_doc_file;
-                    try {
-                        $fileobject2->moveTo($destination2);
-                    } catch (Exception $e) {
-                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
-                        exit;
-                    }
-                } else {
-                    echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
-                    exit;
-                }
-            }
-
-            /*For doc last img*/
-            if (!empty($postData['kyc_doc_file_back1'])) {
-                if (in_array($postData['kyc_doc_file_back1']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg'])) {
-                    $fileobject3 = $postData['kyc_doc_file_back1'];
-                    $ext3 = pathinfo($fileobject3->getClientFilename(), PATHINFO_EXTENSION);
-                    $kyc_doc_file_back =  $postData['id'] . "-doc-back." . $ext3;
-                    $destination3 = $uploadPath . $kyc_doc_file_back;
-                    try {
-                        $fileobject3->moveTo($destination3);
-                    } catch (Exception $e) {
-                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
-                        exit;
-                    }
-                } else {
-                    echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
-                    exit;
-                }
-            }
-
-            if (isset($postData['id']) && !empty($postData['id'])) {
-                $getBlog = $this->Users->get($postData['id']);
-
-                if (!empty($kyc_user_pic)) {
-                    $postData['kyc_user_pic'] = $kyc_user_pic;
-                }
-                if (!empty($kyc_doc_file)) {
-                    $postData['kyc_doc_file'] = $kyc_doc_file;
-                }
-                if (!empty($kyc_doc_file_back)) {
-                    $postData['kyc_doc_file_back'] = $kyc_doc_file_back;
-                }
-                $postData['kyc_completed'] = 1;
-                $postData['kyc_submitted'] = DATE;
-
-                $chkBlog = $this->Users->patchEntity($getBlog, $postData, $val);
-            }
-            if ($chkBlog->getErrors()) {
-                $st = null;
-                foreach ($chkBlog->getErrors() as $elist) {
-                    foreach ($elist as $k => $v); {
-                        $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
-                    }
-                }
-                echo $st;
-                exit;
-            } else {
-                if ($this->Users->save($chkBlog)) {
-                    $admin = 'support@superpad.finance';
-                    $this->Data->AppMail($admin, 8, ['NAME' => $chkBlog->first_name, 'LINK' => SITEURL . "pages/manage_kyc/" . $chkBlog->id]);
-                    $u = SITEURL . "users/kyc";
-                    echo '<div class="alert alert-success" role="alert"> Saved.</div>';
-                    echo "<script>window.location.href ='" . $u . "'; </script>";
-                } else {
-                    echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
-                }
-            }
-            exit;
-        }
-
-
-        $user_data = $this->Users->findById($this->Auth->user('id'))->first();
-        if (!empty($user_data)) {
-            $this->set(compact('user_data'));
-        } else {
-            $this->viewBuilder()->setLayout('error_404');
-        }
-    }
-
     /**
      * Admin password reset page
      */
@@ -737,6 +547,198 @@ class UsersController extends AppController
         exit;
     }
 
+
+    public function applicationStatus()
+    {
+        $query = $this->Applications->find('all', [
+            'contain' => ['Projects'],
+            'conditions' => ['Applications.user_id' => $this->Auth->User('id')]
+        ]);
+        $data =  $query->all();
+        $this->set(compact('data'));
+    }
+
+    public function connectWallet()
+    {
+        $user_data = $this->Users->findById($this->Auth->user('id'))->first();
+        if (!empty($user_data->metamask_wallet_id)) {
+            $this->redirect('/users/wallet');
+        }
+    }
+
+    public function dashboard()
+    {
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $postData = $this->request->getData();
+            $val = ['validate' => true];
+            if (!empty($postData['password1'])) {
+                $postData['password'] = $postData['password1'];
+            } else {
+                $val = ['validate' => 'OnlyCheck'];
+            }
+            if (isset($postData['id']) && !empty($postData['id'])) {
+                $getBlog = $this->Users->get($postData['id']);
+                $chkBlog = $this->Users->patchEntity($getBlog, $postData, $val);
+            }
+            if ($chkBlog->getErrors()) {
+                $st = null;
+                foreach ($chkBlog->getErrors() as $elist) {
+                    foreach ($elist as $k => $v); {
+                        $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                    }
+                }
+                echo $st;
+                exit;
+            } else {
+                if ($this->Users->save($chkBlog)) {
+                    $u = SITEURL . "dashboard";
+                    echo '<div class="alert alert-success" role="alert"> Saved.</div>';
+                    echo "<script>window.location.href ='" . $u . "'; </script>";
+                } else {
+                    echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                }
+            }
+            exit;
+        }
+
+
+        $user_data = $this->Users->findById($this->Auth->user('id'))->first();
+        if (!empty($user_data)) {
+            $this->set(compact('user_data'));
+        } else {
+            $this->viewBuilder()->setLayout('error_404');
+        }
+    }
+
+    public function wallet()
+    {
+        $user_data = $this->Users->findById($this->Auth->user('id'))->first();
+        if (!empty($user_data)) {
+            $this->set(compact('user_data'));
+        } else {
+            $this->viewBuilder()->setLayout('error_404');
+        }
+    }
+
+    public function kyc()
+    {
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $postData = $this->request->getData();
+            //ec($postData);die;
+            $val = ['validate' => true];
+            $val = ['validate' => 'OnlyKyc'];
+
+            $uploadPath = 'cdn/kyc/';
+            if (!file_exists($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
+            }
+            /*For profile iamge */
+            if (!empty($postData['kyc_user_pic1'])) {
+                if (in_array($postData['kyc_user_pic1']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg'])) {
+                    $fileobject1 = $postData['kyc_user_pic1'];
+                    $ext = pathinfo($fileobject1->getClientFilename(), PATHINFO_EXTENSION);
+                    $kyc_user_pic =  $postData['id'] . "-profile-pic." . $ext;
+                    $destination1 = $uploadPath . $kyc_user_pic;
+                    try {
+                        $fileobject1->moveTo($destination1);
+                    } catch (Exception $e) {
+                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                        exit;
+                    }
+                } else {
+                    echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                    exit;
+                }
+            }
+
+            /*For doc front img */
+            if (!empty($postData['kyc_doc_file1'])) {
+                if (in_array($postData['kyc_doc_file1']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg'])) {
+                    $fileobject2 = $postData['kyc_doc_file1'];
+                    $ext1 = pathinfo($fileobject2->getClientFilename(), PATHINFO_EXTENSION);
+                    $kyc_doc_file =  $postData['id'] . "-doc-front." . $ext1;
+                    $destination2 = $uploadPath . $kyc_doc_file;
+                    try {
+                        $fileobject2->moveTo($destination2);
+                    } catch (Exception $e) {
+                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                        exit;
+                    }
+                } else {
+                    echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                    exit;
+                }
+            }
+
+            /*For doc last img*/
+            if (!empty($postData['kyc_doc_file_back1'])) {
+                if (in_array($postData['kyc_doc_file_back1']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg'])) {
+                    $fileobject3 = $postData['kyc_doc_file_back1'];
+                    $ext3 = pathinfo($fileobject3->getClientFilename(), PATHINFO_EXTENSION);
+                    $kyc_doc_file_back =  $postData['id'] . "-doc-back." . $ext3;
+                    $destination3 = $uploadPath . $kyc_doc_file_back;
+                    try {
+                        $fileobject3->moveTo($destination3);
+                    } catch (Exception $e) {
+                        echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                        exit;
+                    }
+                } else {
+                    echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
+                    exit;
+                }
+            }
+
+            if (isset($postData['id']) && !empty($postData['id'])) {
+                $getBlog = $this->Users->get($postData['id']);
+
+                if (!empty($kyc_user_pic)) {
+                    $postData['kyc_user_pic'] = $kyc_user_pic;
+                }
+                if (!empty($kyc_doc_file)) {
+                    $postData['kyc_doc_file'] = $kyc_doc_file;
+                }
+                if (!empty($kyc_doc_file_back)) {
+                    $postData['kyc_doc_file_back'] = $kyc_doc_file_back;
+                }
+                $postData['kyc_completed'] = 1;
+                $postData['kyc_submitted'] = DATE;
+
+                $chkBlog = $this->Users->patchEntity($getBlog, $postData, $val);
+            }
+            if ($chkBlog->getErrors()) {
+                $st = null;
+                foreach ($chkBlog->getErrors() as $elist) {
+                    foreach ($elist as $k => $v); {
+                        $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                    }
+                }
+                echo $st;
+                exit;
+            } else {
+                if ($this->Users->save($chkBlog)) {
+                    $admin = 'support@superpad.finance';
+                    $this->Data->AppMail($admin, 8, ['NAME' => $chkBlog->first_name, 'LINK' => SITEURL . "pages/manage_kyc/" . $chkBlog->id]);
+                    $u = SITEURL . "users/kyc";
+                    echo '<div class="alert alert-success" role="alert"> Saved.</div>';
+                    echo "<script>window.location.href ='" . $u . "'; </script>";
+                } else {
+                    echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                }
+            }
+            exit;
+        }
+
+
+        $user_data = $this->Users->findById($this->Auth->user('id'))->first();
+        if (!empty($user_data)) {
+            $this->set(compact('user_data'));
+        } else {
+            $this->viewBuilder()->setLayout('error_404');
+        }
+    }
+
+
     public function doStake()
     {
         $this->autoRender = false;
@@ -746,62 +748,36 @@ class UsersController extends AppController
             //$all_levels = $this->Levels->find()->all()->toArray();
 
             $get_satak = $this->Stakes->find()
-            ->contain(['allStakes' => ['fields' => ['id', 'stake_id', 'type', 'days', 'percentage']]])
-            ->select(['id', 'stake_id', 'type', 'days', 'percentage'])
-            ->where(['Stakes.type' => 1,'Stakes.days' => $post_data['days']])
-            ->first()->toArray();
+                ->contain(['allStakes' => ['fields' => ['id', 'stake_id', 'type', 'days', 'percentage']]])
+                ->select(['id', 'stake_id', 'type', 'days', 'percentage'])
+                ->where(['Stakes.type' => 1, 'Stakes.days' => $post_data['days']])
+                ->first()->toArray();
 
             if (!empty($get_satak)) {
                 $post_data['stake_info'] = json_encode($get_satak);
                 $post_data['stake_date'] = DATE;
+                $post_data['staked_token'] =  $post_data['bal'];
                 $post_data['taken_balance'] =  $post_data['bal'];
                 $post_data['reward_token'] = $post_data['unstaked_token'] = $post_data['taken_penalty'] = 0;
-                
+
                 $saveData = $this->UserStakes->newEntity($post_data, ['validate' => false]);
                 if ($this->UserStakes->save($saveData)) {
-                    $q_url = SITEURL."users/staking";
+                    $q_url = SITEURL . "users/staking";
                     echo '<script>window.location.href = "' . $q_url . '"</script>';
                     exit;
                 }
             }
-
-            ec($get_satak);die;
-            $stakes = null;
-            if (!empty($all_satakes)) {
-                foreach ($all_satakes as $b) {
-                    if (!empty($b['days'])) {
-                        $stakes[$b['days']] = ['id' => $b['id'], 'per' => $b['percentage']];
-                    }
-                }
-            }
-
-            /*
-            $closest = null;
-            if (!empty($stakes)) {
-                foreach ($stakes as $threshold => $stake) {
-                    if ($post_data['days'] <= $threshold) {
-                        $closest = $stake['id'];
-                        break;
-                    }
-                }
-                if ($closest === null) {
-                    $l = end($stakes);
-                    $closest = $l['id'];
-                }
-                if (!empty($closest)) {
-                    $get_satake = $this->Stakes->find()
-                        ->contain(['allStakes' => ['fields' => ['id', 'stake_id', 'type', 'days', 'percentage']]])
-                        ->where(['Stakes.id' => $closest])
-                        ->select(['id', 'stake_id', 'type', 'days', 'percentage'])
-                        ->first()->toArray();
-                }
-            }
-            */
         }
         exit;
     }
 
-    public function staking(){
+    public function staking()
+    {
+        $query = $this->UserStakes->find('all', [
+            'conditions' => ['UserStakes.user_id' => $this->Auth->User('id')]
+        ]);
+        $data =  $query->all();
         
+        $this->set(compact('data'));
     }
 }

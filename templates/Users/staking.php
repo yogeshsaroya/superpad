@@ -1,6 +1,6 @@
 <?php
 $this->assign('title', 'Staking');
-echo $this->element('profile/header', ['title' => 'Staking']); ?>
+echo $this->element('profile/header', ['title' => 'My Stakes']); ?>
 <section class="profile-section section-space">
     <div class="container">
         <div class="row">
@@ -14,70 +14,28 @@ echo $this->element('profile/header', ['title' => 'Staking']); ?>
                                 <table class="table mb-0 table-s2">
                                     <thead class="fs-14">
                                         <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Customer</th>
-                                            <th scope="col">Issue Date</th>
-                                            <th scope="col">Total</th>
-                                            <th scope="col">Type</th>
-                                            <th scope="col">Status</th>
+                                            <th scope="col">Total Stakced</th>
+                                            <th scope="col">Staked On</th>
+                                            <th scope="col">Stake Period <small>(no penality after)</small></th>
+                                            <th scope="col">APY</th>
+                                            <th scope="col">Rewards to Date</th>
+                                            <th scope="col">Ticket Multiplier</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody class="fs-13">
+                                    <?php if (!$data->isEmpty()) {
+                        foreach ($data as $list) { ?>
                                         <tr>
-                                            <th scope="row"><a href="#">4947</a></th>
-                                            <td>Patternlicious</td>
-                                            <td>10-05-2019</td>
-                                            <td>$599.00</td>
-                                            <td><img src="images/brand/visa.png" alt=""></td>
-                                            <td><span class="badge bg-success">Approved</span></td>
-                                            <td><a href="#" class="icon-btn" title="Remore"><em class="ni ni-trash"></em></a></td>
+                                            <th scope="row"><?php echo $list->staked_token;?></th>
+                                            <td><?php echo $list->staked_token;?></td>
+                                            <td><?php echo $list->staked_token;?></td>
+                                            <td><?php echo $list->staked_token;?></td>
+                                            <td><?php echo $list->staked_token;?></td>
+                                            <td><?php echo $list->staked_token;?></td>
+                                            <td><?php echo $list->staked_token;?></td>
                                         </tr>
-                                        <tr>
-                                            <th scope="row"><a href="#">4904</a></th>
-                                            <td>Alex Smith</td>
-                                            <td>10-05-2019</td>
-                                            <td>$355.00</td>
-                                            <td><img src="images/brand/paypal.png" alt=""></td>
-                                            <td><span class="badge bg-success">Approved</span></td>
-                                            <td><a href="#" class="icon-btn" title="Remore"><em class="ni ni-trash"></em></a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><a href="#">4829</a></th>
-                                            <td>Alex Smith</td>
-                                            <td>10-05-2019</td>
-                                            <td>$99.00</td>
-                                            <td><img src="images/brand/a-express.png" alt=""></td>
-                                            <td><span class="badge bg-danger">Declined</span></td>
-                                            <td><a href="#" class="icon-btn" title="Remore"><em class="ni ni-trash"></em></a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><a href="#">4840</a></th>
-                                            <td>Patternlicious</td>
-                                            <td>10-05-2019</td>
-                                            <td>$399.00</td>
-                                            <td><img src="images/brand/visa.png" alt=""></td>
-                                            <td><span class="badge bg-success">Approved</span></td>
-                                            <td><a href="#" class="icon-btn" title="Remore"><em class="ni ni-trash"></em></a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><a href="#">4844</a></th>
-                                            <td>Alex Smith</td>
-                                            <td>10-05-2019</td>
-                                            <td>$355.00</td>
-                                            <td><img src="images/brand/paypal.png" alt=""></td>
-                                            <td><span class="badge bg-success">Approved</span></td>
-                                            <td><a href="#" class="icon-btn" title="Remore"><em class="ni ni-trash"></em></a></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><a href="#">4847</a></th>
-                                            <td>Alex Smith</td>
-                                            <td>10-05-2019</td>
-                                            <td>$99.00</td>
-                                            <td><img src="images/brand/a-express.png" alt=""></td>
-                                            <td><span class="badge bg-danger">Declined</span></td>
-                                            <td><a href="#" class="icon-btn" title="Remore"><em class="ni ni-trash"></em></a></td>
-                                        </tr>
+                                    <?php }}?>   
                                     </tbody>
                                 </table>
                             </div><!-- end table-responsive -->
