@@ -340,7 +340,7 @@ $(document).ready(function(){
                 var min_t = $("#bal").attr('data_min');
 
                 $("#app_err").html('');
-                if( bal >= min_t ){
+                if( bal >= 1 ){
                     var per = obj_stakes[days];
                     if ( days > 0 && bal > 0){
                     var rew = Math.round( (bal*per/100)/365*days );
@@ -352,28 +352,29 @@ $(document).ready(function(){
                     }
 
                     
-                var ti = findNearestMinObj(obj_tires,bal);
-                ec(ti);
-                if (ti === undefined || ti === null) {  
-                    
-                    $("#tier_spad").html('0');
-                    $("#tier_name").html('Not Active yet');
-                    $("#tier_all").html('0');
-                    $("#tier_cha").html("0%");
-                    $("#tier_cooldown").html('N/A');
-                    $("#tier_sm").html('N/A');
-                    $("#tier_gua").html('N/A');
-                    
-                }else{
-                    $("#tier_spad").html(ti.ticket_multiplier);
-                    $("#tier_name").html(ti.title);
-                    $("#tier_all").html(ti.max_ticket_allocation);
-                    $("#tier_cha").html(ti.winning_chances+"%");
-                    $("#tier_cooldown").html(ti.cooldown);
-                    $("#tier_sm").html(ti.social_task);
-                    $("#tier_gua").html(ti.guaranteed_allocation);
-                    
-                }
+                    var ti = findNearestMinObj(obj_tires,bal);
+                
+                    if (ti === undefined || ti === null || ti === false) {  
+                        
+                        $("#tier_spad").html('0');
+                        $("#tier_name").html('Not Active yet');
+                        $("#tier_all").html('0');
+                        $("#tier_cha").html("0%");
+                        $("#tier_cooldown").html('N/A');
+                        $("#tier_sm").html('N/A');
+                        $("#tier_gua").html('N/A');
+                        
+                    }else{
+                        ec(ti);
+                        $("#tier_spad").html(ti.ticket_multiplier);
+                        $("#tier_name").html(ti.title);
+                        $("#tier_all").html(ti.max_ticket_allocation);
+                        $("#tier_cha").html(ti.winning_chances+"%");
+                        $("#tier_cooldown").html(ti.cooldown);
+                        $("#tier_sm").html(ti.social_task);
+                        $("#tier_gua").html(ti.guaranteed_allocation);
+                        
+                    }
                 }else{
                     $("#app_err").html('<div class="alert alert-danger">Minimum '+min_t+' token can be staked.</div>');
                     $("#est_apy").html('0%');
@@ -414,14 +415,14 @@ $(document).ready(function(){
         var bal = parseInt( $("#bal").val() );
         var days = parseInt( $("#days").val() );
         var min_t = $("#bal").attr('data_min');
-        if(bal >= min_t && days  > 0 ){ window.location.href = "sign-in?redirect=stake&days="+days+"&token="+bal; }
+        if(bal >= 1 && days  > 0 ){ window.location.href = "sign-in?redirect=stake&days="+days+"&token="+bal; }
         });
 
         $( "#doStake" ).click(function() {
             var bal = parseInt( $("#bal").val() );
             var days = parseInt( $("#days").val() );
             var min_t = $("#bal").attr('data_min');
-            if(bal >= min_t && days  > 0 ){
+            if(bal >= 1 && days  > 0 ){
 
             $.ajax({type: 'POST',
             headers : { 'X-CSRF-Token': $('[name="_csrfToken"]').val() },

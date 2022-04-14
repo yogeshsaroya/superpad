@@ -745,7 +745,7 @@ class UsersController extends AppController
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $post_data = $this->request->getData();
             $post_data['user_id'] = $this->Auth->User('id');
-            //$all_levels = $this->Levels->find()->all()->toArray();
+            $all_levels = $this->Levels->find()->order(['spad' => 'ASC'])->all()->toArray();
 
             $get_satak = $this->Stakes->find()
                 ->contain(['allStakes' => ['fields' => ['id', 'stake_id', 'type', 'days', 'percentage']]])
@@ -754,6 +754,34 @@ class UsersController extends AppController
                 ->first()->toArray();
 
             if (!empty($get_satak)) {
+                if (!empty($all_levels)) {
+                    foreach ($all_levels as $a) {
+                        if (!empty($a->spad)) {
+                            $tire[$a->spad] = [
+                                'spad' => $a->spad, 'title' => $a->title, 'ticket_multiplier' => $a->ticket_multiplier,
+                                'cooldown' => $a->cooldown, 'social_task' => $a->social_task, 'max_ticket_allocation' => $a->max_ticket_allocation,
+                                'winning_chances' => $a->winning_chances, 'guaranteed_allocation' => $a->guaranteed_allocation
+                            ];
+                        }
+                    }
+                }
+
+                $min_tier = min(array_keys($tire));
+
+                $closest_tier = null;
+                if( $post_data['bal'] > $post_data['bal']){
+                    if (!empty($tire)) {
+                        foreach ($tire as $a => $b) {
+                            if ($post_data['bal'] >= $a) {
+                                $closest_tier = $b;
+                            }
+                        }
+                        if ($closest_tier === null) {
+                            $closest_tier = end($tire);
+                        }
+                    }
+                }
+                $get_satak['tier'] = $closest_tier;
                 $post_data['stake_info'] = json_encode($get_satak);
                 $post_data['stake_date'] = DATE;
                 $post_data['staked_token'] =  $post_data['bal'];
@@ -777,7 +805,7 @@ class UsersController extends AppController
             'conditions' => ['UserStakes.user_id' => $this->Auth->User('id')]
         ]);
         $data =  $query->all();
-        
+
         $this->set(compact('data'));
     }
 }
