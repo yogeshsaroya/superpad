@@ -151,7 +151,7 @@ class HomesController extends AppController
         $query = $this->Levels->find()->order(['position' => 'ASC']);
         $data = $query->all();
         $tire = $stake = [];
-        $min = $max = $min_return = $max_return = 0;
+        $min = $max = $min_return = $max_return = $min_token = $max_token = 0;
 
         $chkStake = $this->Stakes
             ->find()
@@ -174,13 +174,22 @@ class HomesController extends AppController
                 }
             }
         }
+        
+        if(!empty($tire)){
+            $min_token = min(array_column($tire, 'spad'));
+            $max_token = max(array_column($tire, 'spad'));
+        }
+        
+        $days_list = [];
         if (!empty($chkStake)) {
             foreach ($chkStake as $b) {
                 if (!empty($b['days'])) {
                     $stake[$b['days']] = $b['percentage'];
+                    $days_list[$b['days']] = ($b['days'] < 365 ? $b['days']." Days" : ($b['days'] /365)." Year".(($b['days'] /365) > 1 ? 's':null) );
                 }
             }
         }
+        
 
         if (!empty($chkStake)) {
             $min = min(array_column($chkStake, 'days'));
@@ -189,7 +198,7 @@ class HomesController extends AppController
             $min_return = min(array_column($chkStake, 'percentage'));
             $max_return = max(array_column($chkStake, 'percentage'));
         }
-        $this->set(compact('data', 'chkStake', 'min', 'max', 'min_return', 'max_return', 'stake', 'tire','qr'));
+        $this->set(compact('data', 'chkStake', 'min', 'max', 'min_return', 'max_return', 'stake', 'tire','qr','days_list','min_token','max_token'));
     }
 
     public function spad()

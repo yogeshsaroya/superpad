@@ -4,18 +4,13 @@ echo $this->Html->css(['/assets/css/stake'], ['block' => 'css']);
 <?php
 echo $this->Form->create(null);
 echo $this->Form->end(); ?>
-<input type="hidden" id="max_token" value="100000" />
+<input type="hidden" id="max_token" value="10000" />
 <input type="hidden" id="max_days" value="<?php echo $max; ?>" />
 <input type="hidden" id="min_days" value="<?php echo $min; ?>" />
-
 <input type="hidden" id="min_return" value="<?php echo $min_return; ?>" />
 <input type="hidden" id="max_return" value="<?php echo $max_return; ?>" />
-
 <input type="hidden" id="tires" value='<?php echo json_encode($tire); ?>' />
 <input type="hidden" id="stakes" value='<?php echo json_encode($stake); ?>' />
-
-
-
 
 <div class="hero-wrap sub-header">
     <div class="container">
@@ -79,10 +74,11 @@ echo $this->Form->end(); ?>
 
                             <div class="col">
                                 <div class="input-group">
-                                    <span class="input-group-text setOninput" id="max_spad">Max</span>
-                                    <input type="number" min='0' class="form-control text-end" name="bal" id="bal" value="<?php echo (isset($qr['token']) ? $qr['token'] : null);?>" placeholder="0" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+                                <span class="input-group-text setOninput" id="max_spad">Max</span>
+                                <input type="number" min='0' class="form-control text-end" name="bal" id="bal" data_min="<?php echo (isset($min_token) ? (int)$min_token : 0);?>" value="<?php echo (isset($qr['token']) ? $qr['token'] : null);?>" placeholder="0" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+                                
                                 </div>
-                                <p class="text-end"><small class="d-flex align-items-center">Your balance: 100,000 SPAD
+                                <p class="text-end"><small class="d-flex align-items-center">Your balance: 10,000 SPAD
                                     </small></p>
                             </div>
                             <!-- end of colom -->
@@ -98,30 +94,16 @@ echo $this->Form->end(); ?>
 
                             <div class="col">
                                 <div class="input-group">
-                                    <span class="input-group-text setOninput" id="_days">Max</span>
-                                    <input type="number" min='<?php echo $min; ?>' class="form-control text-end" name="days" id="days" value="<?php echo (isset($qr['days']) ? $qr['days'] : $min);?>" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57">
+                                    <span class="input-group-text setOninput hide" id="_days">Max</span>
+                                    
+                                    <?php echo $this->Form->input('days',['type'=>'select', 'options'=>$days_list,
+                                    'default'=>(isset($qr['days']) ? $qr['days'] : null),
+                                    'class'=>'form-control form-choice-choices__input','id'=>'days']);?>
                                 </div>
                             </div>
                             <!-- end of colom -->
                         </div>
-
-                        <div class="d-flex align-items-center tooltipWrap mt-3 hide">
-                            <div class="toolTipImg me-2">
-                                <?php echo getToolTip('A longer staking timeframe will provide
-higher daily rewards. Users are given a 50%
-bonus in daily rewards for every additional
-30 days staking duration. to'); ?>
-
-                            </div>
-                            <span>Long Term Bonus: <strong class="txtHighlight"><?php echo $max_return; ?>%</strong></span>
-                        </div>
-
-                        <div class="btnWraper mt-5 d-flex justify-content-center">
-                            <ul class="steps2 d-flex col-8 mb-3 justify-content-center align-items-center" style="display: none !important;">
-                                <li>1</li>
-                                <li>2</li>
-                            </ul>
-                        </div>
+                        <div class="col-12 mt-3" id="app_err"></div>
 
                         <div class="row">
                         <?php if(isset($Auth)){ ?>
@@ -302,7 +284,7 @@ simulation model'); ?></small></p>
                                     <div class="block-pricing">
                                         <div class="table">
                                             <h4><?php echo $list->title; ?></h4>
-                                            <h2><?php echo (!empty($list->spad) ? $list->spad : "TBA"); ?></h2>
+                                            <h2><?php echo (!empty($list->spad) ? number_format($list->spad) : "TBA"); ?></h2>
                                             <ul class="list-unstyled">
                                                 <li><b>Ticket Multiplier</b> <?php echo (!empty($list->ticket_multiplier) ? $list->ticket_multiplier : "TBA"); ?></li>
                                                 <li><b>Cooldown</b> <?php echo (!empty($list->cooldown) ? $list->cooldown : "TBA");  ?></li>
@@ -326,68 +308,81 @@ simulation model'); ?></small></p>
 
 <?php $this->Html->scriptStart(array('block' => 'scriptBottom')); ?>
 $(document).ready(function(){
-function find(day, obj) 
-{
-    if(day > 0){
-  let keys = Object.keys(obj);
-  result = keys.concat(Number.MAX_SAFE_INTEGER).filter(key => {
-     return day <= key;
-  }).shift();
-  
-  if(result === Number.MAX_SAFE_INTEGER) {
-     result = keys.pop();
-  }
-  return obj[result];
-}
-}
+    function ec(s){ console.log(s); }
+        function find(day, obj) 
+        {
+            if(day > 0){
+                let keys = Object.keys(obj);
+                result = keys.concat(Number.MAX_SAFE_INTEGER).filter(key => {
+                    return day <= key;
+                }).shift();
+                
+                if(result === Number.MAX_SAFE_INTEGER) {
+                    result = keys.pop();
+                }
+                return obj[result];
+            }
+        }
 
-function cal(){
+        function cal(){
+                var tires = $("#tires").val();
+                var stakes = $("#stakes").val();
+                var obj_stakes = JSON.parse(stakes);
+                var obj_tires = JSON.parse(tires);
+                var bal = parseInt( $("#bal").val() );
+                var days = parseInt( $("#days").val() );
+                var min_t = $("#bal").attr('data_min');
 
-var tires = $("#tires").val();
-var stakes = $("#stakes").val();
-var obj_stakes = JSON.parse(stakes);
-var obj_tires = JSON.parse(tires);
+                $("#app_err").html('');
+                if( bal >= min_t ){
+                    var per = obj_stakes[days];
+                    if ( days > 0 && bal > 0){
+                    var rew = Math.round( (bal*per/100)/365*days );
+                        $("#est_apy").html(per+'%');
+                        $("#est_rewards").html(rew+' SPAD');
+                    }else{
+                        $("#est_apy").html('0%');
+                        $("#est_rewards").html('0 SPAD');
+                    }
 
-var bal = parseInt( $("#bal").val() );
-var days = parseInt( $("#days").val() );
-
-var par = find(days, obj_stakes);
-
-if ( days > 0 && bal > 0){
-var rew = Math.round( (bal*par/100)/365*days );
-$("#est_apy").html(par+'%');
-$("#est_rewards").html(rew+' SPAD');
-}else{
-$("#est_apy").html('0%');
-$("#est_rewards").html('0 SPAD');
-}
-
-var ti = find(bal, obj_tires);
-if (ti === undefined || ti === null) {  
-    
-    $("#tier_spad").html('0');
-    $("#tier_name").html('Not Active yet');
-    $("#tier_all").html('0');
-    $("#tier_cha").html("0%");
-    $("#tier_cooldown").html('N/A');
-    $("#tier_sm").html('N/A');
-}else{
-    $("#tier_spad").html(ti.ticket_multiplier);
-    $("#tier_name").html(ti.title);
-    $("#tier_all").html(ti.max_ticket_allocation);
-    $("#tier_cha").html(ti.winning_chances+"%");
-    $("#tier_cooldown").html(ti.cooldown);
-    $("#tier_sm").html(ti.social_task);
-    
-}
-
-}
+                    ec(obj_tires);
+                var ti = find(bal, obj_tires);
+                if (ti === undefined || ti === null) {  
+                    
+                    $("#tier_spad").html('0');
+                    $("#tier_name").html('Not Active yet');
+                    $("#tier_all").html('0');
+                    $("#tier_cha").html("0%");
+                    $("#tier_cooldown").html('N/A');
+                    $("#tier_sm").html('N/A');
+                }else{
+                    $("#tier_spad").html(ti.ticket_multiplier);
+                    $("#tier_name").html(ti.title);
+                    $("#tier_all").html(ti.max_ticket_allocation);
+                    $("#tier_cha").html(ti.winning_chances+"%");
+                    $("#tier_cooldown").html(ti.cooldown);
+                    $("#tier_sm").html(ti.social_task);
+                    
+                }
+                }else{
+                    $("#app_err").html('<div class="alert alert-danger">Minimum '+min_t+' token can be staked.</div>');
+                    $("#est_apy").html('0%');
+                    $("#est_rewards").html('0 SPAD');
+                    $("#tier_spad").html('0');
+                    $("#tier_name").html('Not Active yet');
+                    $("#tier_all").html('0');
+                    $("#tier_cha").html("0%");
+                    $("#tier_cooldown").html('N/A');
+                    $("#tier_sm").html('N/A');
+                }
+        }
 
 <?php if( isset($qr['days']) && isset($qr['token']) ){
     echo "cal();";
 }?>
 
 $('#bal, #days').on('input', function(e) { cal(); });
+$( "#days" ).change(function() { cal(); });
 
 
 $( "#max_spad" ).click(function() {
