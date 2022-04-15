@@ -77,7 +77,7 @@ $appStatus = getAppStatus();
                         <?php }
                     } else { ?>
                         <tr>
-                            <td colspan="7">
+                            <td colspan="11">
                                 <div class="alert alert-danger d-flex mb-4" role="alert">
                                     <p class="fs-14">You have not staked yet.</p>
                                 </div>
