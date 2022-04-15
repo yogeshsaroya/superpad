@@ -769,7 +769,7 @@ class UsersController extends AppController
                 $min_tier = min(array_keys($tire));
 
                 $closest_tier = null;
-                if( $post_data['bal'] > $post_data['bal']){
+                if ($post_data['bal'] > $post_data['bal']) {
                     if (!empty($tire)) {
                         foreach ($tire as $a => $b) {
                             if ($post_data['bal'] >= $a) {
@@ -799,10 +799,63 @@ class UsersController extends AppController
         exit;
     }
 
+    public function unStake($id = null)
+    {
+
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            if ($this->Auth->User('id') != "") {
+                $postData = $this->request->getData();
+                $val = ['validate' => false];
+
+                if (isset($postData['id']) && !empty($postData['id'])) {
+                    $getData = $this->UserStakes->get($postData['id']);
+                    
+                    $postData['unstaked_token'] = $getData['unstaked_token'] + $postData['final_token'];
+                    $postData['taken_penalty'] = $getData['taken_penalty'] + $postData['penalty'];
+                    $postData['taken_balance'] = $getData['taken_balance'] - $postData['unstake'];
+                    $postData['unstake_date'] = DATE;
+                    $unstake_info = [];
+                    if(!empty($getData['unstake_info'])){ $unstake_info = json_decode($getData['unstake_info'],true); }
+                    $unstake_info[strtotime(DATE)] = [ 'date'=>DATE,'token'=>$postData['unstake'],'penalty_token'=>$postData['penalty'],'penalty_percentage'=>$postData['penalty_percentage'],
+                        'total_token'=>$postData['final_token'],'days'=>$postData['hold'],'bf_token'=>$getData['taken_balance'],'af_token'=>$postData['taken_balance']];
+                    $postData['unstake_info'] = json_encode($unstake_info);
+                    $chkData = $this->UserStakes->patchEntity($getData, $postData, $val);
+                }else{
+                    echo '<div class="alert alert-danger" role="alert">An error occurred, please try again later.</div>'; exit;
+                }
+                if ($chkData->getErrors()) {
+                    $st = null;
+                    foreach ($chkData->getErrors() as $elist) {
+                        foreach ($elist as $k => $v); {
+                            $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                        }
+                    }
+                    echo $st; exit;
+                } else {
+                    
+                    if ($this->UserStakes->save($chkData)) {
+                        $u = SITEURL . "users/staking";
+                        echo '<div class="alert alert-success" role="alert">unStaked.</div>';
+                        echo "<script>window.location.href ='" . $u . "'; </script>";
+                    } else {
+                        echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                    }
+                }
+            }
+            exit;
+        }
+
+        if (!empty($id)) {
+            $getStake = $this->UserStakes->find()->where(['id' => $id, 'user_id' => $this->Auth->User('id')])->first();
+            $this->set(compact('getStake'));
+        }
+    }
+
     public function staking()
     {
         $query = $this->UserStakes->find('all', [
-            'conditions' => ['UserStakes.user_id' => $this->Auth->User('id')]
+            'conditions' => ['UserStakes.user_id' => $this->Auth->User('id')],
+            'order'=>['UserStakes.stake_date'=>'ASC']
         ]);
         $data =  $query->all();
 

@@ -108,7 +108,7 @@ echo $this->Form->end(); ?>
                         <div class="row">
                         <?php if(isset($Auth)){ ?>
                             <div class="col-6"> <input type="button" class="w-100 btn btn-lg btn-dark" value="Stake Now" id="doStake" /> </div>
-                            <div class="col-6"> <input type="button" class="w-100 btn btn-lg btn-outline-dark" value="unStake" id="doUnStake" /> </div>
+                            <div class="col-6"><?php echo $this->Html->link('unStake','/users/staking',['class'=>'w-100 btn btn-lg btn-outline-dark']);?></div>
                         <?php }else{ ?>
                             <div class="col-12"> <input type="button" class="w-100 btn btn-lg btn-dark" value="Stake Now" id="doLogin"/> </div>
                        <?php } ?>
