@@ -376,7 +376,7 @@ $(document).ready(function(){
                         
                     }
                 }else{
-                    $("#app_err").html('<div class="alert alert-danger">Minimum '+min_t+' token can be staked.</div>');
+                    $("#app_err").html('<div class="alert alert-danger">Minimum 1 token can be staked.</div>');
                     $("#est_apy").html('0%');
                     $("#est_rewards").html('0 SPAD');
                     $("#tier_spad").html('0');
