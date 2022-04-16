@@ -148,7 +148,7 @@ class HomesController extends AppController
         if (isset($q['days']) && isset($q['token'])) {
             $qr = ['days'=>$q['days'],'token'=>$q['token']];
         }
-        $query = $this->Levels->find()->order(['position' => 'ASC']);
+        $query = $this->Levels->find()->order(['spad' => 'ASC']);
         $data = $query->all();
         $tire = $stake = [];
         $min = $max = $min_return = $max_return = $min_token = $max_token = 0;

@@ -809,19 +809,24 @@ class UsersController extends AppController
 
                 if (isset($postData['id']) && !empty($postData['id'])) {
                     $getData = $this->UserStakes->get($postData['id']);
-                    
+
                     $postData['unstaked_token'] = $getData['unstaked_token'] + $postData['final_token'];
                     $postData['taken_penalty'] = $getData['taken_penalty'] + $postData['penalty'];
                     $postData['taken_balance'] = $getData['taken_balance'] - $postData['unstake'];
                     $postData['unstake_date'] = DATE;
                     $unstake_info = [];
-                    if(!empty($getData['unstake_info'])){ $unstake_info = json_decode($getData['unstake_info'],true); }
-                    $unstake_info[strtotime(DATE)] = [ 'date'=>DATE,'token'=>$postData['unstake'],'penalty_token'=>$postData['penalty'],'penalty_percentage'=>$postData['penalty_percentage'],
-                        'total_token'=>$postData['final_token'],'days'=>$postData['hold'],'bf_token'=>$getData['taken_balance'],'af_token'=>$postData['taken_balance']];
+                    if (!empty($getData['unstake_info'])) {
+                        $unstake_info = json_decode($getData['unstake_info'], true);
+                    }
+                    $unstake_info[strtotime(DATE)] = [
+                        'date' => DATE, 'token' => $postData['unstake'], 'penalty_token' => $postData['penalty'], 'penalty_percentage' => $postData['penalty_percentage'],
+                        'total_token' => $postData['final_token'], 'days' => $postData['hold'], 'bf_token' => $getData['taken_balance'], 'af_token' => $postData['taken_balance']
+                    ];
                     $postData['unstake_info'] = json_encode($unstake_info);
                     $chkData = $this->UserStakes->patchEntity($getData, $postData, $val);
-                }else{
-                    echo '<div class="alert alert-danger" role="alert">An error occurred, please try again later.</div>'; exit;
+                } else {
+                    echo '<div class="alert alert-danger" role="alert">An error occurred, please try again later.</div>';
+                    exit;
                 }
                 if ($chkData->getErrors()) {
                     $st = null;
@@ -830,9 +835,10 @@ class UsersController extends AppController
                             $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
                         }
                     }
-                    echo $st; exit;
+                    echo $st;
+                    exit;
                 } else {
-                    
+
                     if ($this->UserStakes->save($chkData)) {
                         $u = SITEURL . "users/staking";
                         echo '<div class="alert alert-success" role="alert">unStaked.</div>';
@@ -855,10 +861,44 @@ class UsersController extends AppController
     {
         $query = $this->UserStakes->find('all', [
             'conditions' => ['UserStakes.user_id' => $this->Auth->User('id')],
-            'order'=>['UserStakes.stake_date'=>'ASC']
+            'order' => ['UserStakes.stake_date' => 'ASC']
         ]);
         $data =  $query->all();
 
         $this->set(compact('data'));
+    }
+
+    public function tier()
+    {
+        $bal = $this->UserStakes->find()->select(['sum' => 'SUM(UserStakes.taken_balance)'])->where(['UserStakes.user_id' => $this->Auth->User('id')])->toArray();
+        $tot_stake = 0;
+        if (isset($bal[0]->sum)) {
+            $tot_stake = $bal[0]->sum;
+        }
+        $query = $this->Levels->find()->order(['spad' => 'ASC']);
+        $data = $query->all();
+        $tire = null;
+        if (!empty($data)) {
+            foreach ($data as $a) {
+                if (!empty($a->spad)) {
+                    $tire[$a->spad] = $a;
+                }
+            }
+        }
+
+        $my_tier = null;
+        if ($tot_stake > 0) {
+            if (!empty($tire)) {
+                foreach ($tire as $a => $b) {
+                    if ($tot_stake >= $a) {
+                        $my_tier = $b;
+                    }
+                }
+                if ($my_tier === null) {
+                    $my_tier = end($tire);
+                }
+            }
+        }
+        $this->set(compact('data', 'tot_stake','my_tier'));
     }
 }

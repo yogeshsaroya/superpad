@@ -16,7 +16,8 @@
                 <li class="<?php echo (isset($menu_act) && $menu_act == 'profile' ? 'active' : null); ?>"><a href="<?php echo SITEURL; ?>dashboard"><em class="ni ni-edit me-2"></em>Edit Profile</a></li>
                 <li class="<?php echo (isset($menu_act) && $menu_act == 'kyc' ? 'active' : null); ?>"><a href="<?php echo SITEURL; ?>users/kyc"><em class="ni ni-money me-2"></em>KYC</a></li>
                 <li class="<?php echo (isset($menu_act) && $menu_act == 'wallet' ? 'active' : null); ?>"><a href="<?php echo SITEURL; ?>users/wallet"><em class="ni ni-user me-2"></em>Walllet</a></li>
-                <li class="<?php echo (isset($menu_act) && $menu_act == 'staking' ? 'active' : null); ?>"><a href="<?php echo SITEURL; ?>users/staking"><em class="icon ni ni-invest me-2"></em>Staking</a></li>
+                <li class="<?php echo (isset($menu_act) && $menu_act == 'staking' ? 'active' : null); ?>"><a href="<?php echo SITEURL; ?>users/staking"><em class="icon ni ni-invest me-2"></em>My Staking</a></li>
+                <li class="<?php echo (isset($menu_act) && $menu_act == 'tier' ? 'active' : null); ?>"><a href="<?php echo SITEURL; ?>users/tier"><em class="icon ni ni-coin-alt me-2"></em>My Tier</a></li>
                 <li class="<?php echo (isset($menu_act) && $menu_act == 'application_status' ? 'active' : null); ?>"><a href="<?php echo SITEURL; ?>users/application_status"><em class="ni ni-archive me-2"></em>Applications</a></li>
                 <li><a href="<?php echo SITEURL; ?>users/logout"><em class="ni ni-setting-alt me-2"></em>Logout</a></li>
             </ul>

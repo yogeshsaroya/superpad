@@ -268,11 +268,11 @@ simulation model'); ?></small></p>
             </div>
             <div class="header-container">
                 <div class="icon-container ng-star-inserted"><img _ngcontent-kha-c106="" src="<?php echo SITEURL; ?>img/Warning.svg"></div>
-                <span class="title-black">Minimum staking for 10 days . Early unstaking will cause penalty. (<?php echo $this->Html->link('FAQ', '/page/faq'); ?>).</span>
+                <span class="title-black ft_14">Minimum staking for 10 days . Early unstaking will cause penalty. (<?php echo $this->Html->link('FAQ', '/page/faq'); ?>).</span>
                 
             </div>
             <div class="header-container">
-                <span class="title-black">If You stack for 2-3 years then no cooldown (Applicable from Asteroid Tier)</span>
+                <span class="title-black ft_14">If You stack for 2-3 years then no cooldown (Applicable from Moon Tier)</span>
             </div>
         </div>
 
@@ -282,7 +282,7 @@ simulation model'); ?></small></p>
     <div class="container">
         <div class="row section-space-b">
             <div class="col-lg-12">
-                <section id="pricing" class="padd-section text-center wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
+                <section id="pricing" class="padd-section text-center">
                     <div class="container">
                         <div class="section-title text-center">
                             <h2 class="hero-title mb-4">SUPERPAD - TIERS</h2>

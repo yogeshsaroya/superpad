@@ -56,7 +56,7 @@ h2 {
     text-align: center;
 }
 
-li {
+#pricing li {
     color: #626262;
     font-size: 13px;
     font-weight: 400;
@@ -473,4 +473,8 @@ body .btn-approve:hover {
 
 .setOninput {
     cursor: pointer;
+}
+
+.ft_14 {
+    font-size: 14px;
 }
