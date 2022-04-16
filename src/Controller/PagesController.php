@@ -1448,8 +1448,7 @@ class PagesController extends AppController
             $this->Users->save($saveData);
             $this->redirect('/pages/users');
         }
-
-        $this->paginate = ['limit' => 100, 'conditions' => ['Users.role' => 2], 'order' => ['id' => 'desc']];
+        $this->paginate = ['contain' => ['UserStakes'],'limit' => 100, 'conditions' => ['Users.role' => 2], 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Users->find('all'));
         $paging = $this->request->getAttribute('paging');
         $this->set(compact('data', 'paging'));

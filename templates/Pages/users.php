@@ -26,6 +26,7 @@
                                         <th><?php echo $this->Paginator->sort('first_name'); ?></th>
                                         <th><?php echo $this->Paginator->sort('last_name'); ?></th>
                                         <th><?php echo $this->Paginator->sort('email'); ?></th>
+                                        <th>Staked</th>
                                         <th><?php echo $this->Paginator->sort('kyc_completed','KYC Status'); ?></th>
                                         <th><?php echo $this->Paginator->sort('status'); ?></th>
                                         <th><?php echo $this->Paginator->sort('created') ?></th>
@@ -35,11 +36,13 @@
                                 <tbody>
                                     <?php
                                     if (!empty($data)) {
-                                        foreach ($data as $list) { ?>
+                                        foreach ($data as $list) { 
+                                           $taken_balance = array_sum(array_column($list->user_stakes, 'taken_balance')); ?>
                                             <tr>
                                                 <td><?php echo $list->first_name; ?></td>
                                                 <td><?php echo $list->last_name; ?></td>
                                                 <td><?php echo $list->email; ?></td>
+                                                <td><?php echo (isset($taken_balance) ? number_format($taken_balance) : null ); ?></td>
                                                 <td><?php 
                                                 if($list->kyc_completed == 0){ } 
                                                 elseif($list->kyc_completed == 1){ echo '<span class="badge rounded-pill bg-warning text-dark">In Review</span>';} 

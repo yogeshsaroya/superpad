@@ -15,6 +15,8 @@ class UsersTable extends Table
     {
         $this->addBehavior('Timestamp');
         $this->belongsTo('Countries');
+        $this->hasMany('UserStakes');
+        
     }
     
     public function validationDefault(Validator $validator): Validator
