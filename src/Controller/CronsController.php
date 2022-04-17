@@ -89,4 +89,25 @@ class CronsController extends AppController
         }
         exit;
     }
+
+
+    public function mkLottery(){
+        $data = $this->Projects->find()
+        ->contain(['Applications'=>['conditions'=>['Applications.status'=>1], 'Users'=>['UserStakes']]])
+        ->select(['id','title','product_status','status','end_date'])
+        ->where(['Projects.product_status'=>'Whitelist Closed'])->all();
+        if(!empty($data)){
+            foreach ($data as $list){
+                if(!empty($list['applications'])){
+                    foreach ($list['applications'] as $app ){
+                        $token_bal = 0;
+                        if( isset($app->user->user_stakes)){
+                            $token_bal = array_sum(array_column($app->user->user_stakes, 'taken_balance'));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

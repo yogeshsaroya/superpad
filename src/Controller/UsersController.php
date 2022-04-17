@@ -785,8 +785,8 @@ class UsersController extends AppController
                 $post_data['stake_info'] = json_encode($get_satak);
                 $post_data['stake_date'] = DATE;
                 $post_data['staked_token'] =  $post_data['bal'];
-                $post_data['taken_balance'] =  $post_data['bal'];
-                $post_data['reward_token'] = $post_data['unstaked_token'] = $post_data['taken_penalty'] = 0;
+                $post_data['balance'] =  $post_data['bal'];
+                $post_data['reward_token'] = $post_data['unstaked_token'] = $post_data['penalty'] = 0;
 
                 $saveData = $this->UserStakes->newEntity($post_data, ['validate' => false]);
                 if ($this->UserStakes->save($saveData)) {
@@ -811,16 +811,16 @@ class UsersController extends AppController
                     $getData = $this->UserStakes->get($postData['id']);
 
                     $postData['unstaked_token'] = $getData['unstaked_token'] + $postData['final_token'];
-                    $postData['taken_penalty'] = $getData['taken_penalty'] + $postData['penalty'];
-                    $postData['taken_balance'] = $getData['taken_balance'] - $postData['unstake'];
+                    $postData['penalty'] = $getData['penalty'] + $postData['penalty'];
+                    $postData['balance'] = $getData['balance'] - $postData['unstake'];
                     $postData['unstake_date'] = DATE;
                     $unstake_info = [];
                     if (!empty($getData['unstake_info'])) {
                         $unstake_info = json_decode($getData['unstake_info'], true);
                     }
                     $unstake_info[strtotime(DATE)] = [
-                        'date' => DATE, 'token' => $postData['unstake'], 'penalty_token' => $postData['penalty'], 'penalty_percentage' => $postData['penalty_percentage'],
-                        'total_token' => $postData['final_token'], 'days' => $postData['hold'], 'bf_token' => $getData['taken_balance'], 'af_token' => $postData['taken_balance']
+                        'date' => DATE, 'token' => $postData['unstake'], 'penalty' => $postData['penalty'], 'penalty_percentage' => $postData['penalty_percentage'],
+                        'total_token' => $postData['final_token'], 'days' => $postData['hold'], 'bf_token' => $getData['balance'], 'af_token' => $postData['balance']
                     ];
                     $postData['unstake_info'] = json_encode($unstake_info);
                     $chkData = $this->UserStakes->patchEntity($getData, $postData, $val);
@@ -870,7 +870,7 @@ class UsersController extends AppController
 
     public function tier()
     {
-        $bal = $this->UserStakes->find()->select(['sum' => 'SUM(UserStakes.taken_balance)'])->where(['UserStakes.user_id' => $this->Auth->User('id')])->toArray();
+        $bal = $this->UserStakes->find()->select(['sum' => 'SUM(UserStakes.balance)'])->where(['UserStakes.user_id' => $this->Auth->User('id')])->toArray();
         $tot_stake = 0;
         if (isset($bal[0]->sum)) {
             $tot_stake = $bal[0]->sum;

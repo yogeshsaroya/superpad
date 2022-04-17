@@ -58,8 +58,8 @@ $appStatus = getAppStatus();
                                 <td data-title="Stakced"><?php echo number_format($list->staked_token);?></td>
                                 <td data-title="Rewarded"><?php echo number_format($list->reward_token);?></td>
                                 <td data-title="Unstaked"><?php echo number_format($list->unstaked_token);?></td>
-                                <td data-title="Penalty"><?php echo number_format($list->taken_penalty);?></td>
-                                <td data-title="Available Stake"><?php echo number_format($list->taken_balance);?></td>
+                                <td data-title="Penalty"><?php echo number_format($list->penalty);?></td>
+                                <td data-title="Available Stake"><?php echo number_format($list->balance);?></td>
 
                                 <td data-title="Staked On"><?php echo $list->stake_date->format("Y-m-d H:i A"); ?></td>
                                 <td class="text-center" data-title="Stake Period"><?php echo ( $ob->days < 365 ? $ob->days." days" : ($ob->days/365)." year<small>(s)</small> " ); ?><br>
@@ -69,7 +69,7 @@ $appStatus = getAppStatus();
                                 <td class="text-center" data-title="Rewards to Date"><?php echo number_format(round($reward)); ?></td>
                                 <td class="text-center" data-title="Ticket Multiplier"><?php echo (isset($ob->tier->ticket_multiplier) ? $ob->tier->ticket_multiplier."x" : 'N.A');?></td>
                                 <td data-title="Action"> 
-                                    <?php if( (int)$list->taken_balance > 0){?>
+                                    <?php if( (int)$list->balance > 0){?>
                                     <input type="button" class="btn btn-dark" value="unStake" onclick="unStake(<?php echo $list->id;?>);"/> 
                                     <?php }?>
                                 </td>

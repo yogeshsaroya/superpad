@@ -36,7 +36,7 @@
 
                 echo $this->Form->create($getStake, ['autocomplete' => 'off', 'id' => 'e_frm',]);
                 echo $this->Form->hidden('id');
-                echo $this->Form->hidden('taken_balance', ['id' => 'max_token']);
+                echo $this->Form->hidden('balance', ['id' => 'max_token']);
                 echo $this->Form->hidden('penalty_percentage', ['id' => 'penalty_percentage']);
                 echo $this->Form->hidden('final_token', ['id' => 'final_token']);
                 echo $this->Form->hidden('penalty', ['id' => 'penalty']);
@@ -46,10 +46,10 @@
 
                 <label class="form-label">Enter Unstake Amount</label>
                 <div class="input-group mb-3">
-                    <input type="number" name="unstake" id="setToken" min='1' max='<?php echo $getStake->taken_balance; ?>' class="form-control input_box" />
+                    <input type="number" name="unstake" id="setToken" min='1' max='<?php echo $getStake->balance; ?>' class="form-control input_box" />
                     <div class="input-group-append" id="setMax"><span class="input-group-text input_box">Set Max</span></div>
                 </div>
-                <small>Amount Staked <?php echo number_format($getStake->taken_balance); ?></small>
+                <small>Amount Staked <?php echo number_format($getStake->balance); ?></small>
                 <hr>
                 <ul class="total-bid-list mb-4">
                     <li><span>Penalty Percentage</span> <span id="setPer">TBA</span></li>
@@ -57,7 +57,7 @@
                     <li><span>You will Receive</span> <span id="setBal">TBA</span></li>
                 </ul>
                 <div id="f_err"></div>
-                <?php if( (int)$getStake->taken_balance > 0  ){?>
+                <?php if( (int)$getStake->balance > 0  ){?>
                 <input type="button" class="w-100 btn btn-lg btn-outline-dark" value="unStake" id="reg_sbtn" />
                 <?php }?>
                 <?php echo $this->Form->end(); ?>

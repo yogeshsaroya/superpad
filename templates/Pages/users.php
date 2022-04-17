@@ -37,12 +37,12 @@
                                     <?php
                                     if (!empty($data)) {
                                         foreach ($data as $list) { 
-                                           $taken_balance = array_sum(array_column($list->user_stakes, 'taken_balance')); ?>
+                                           $token_balance = array_sum(array_column($list->user_stakes, 'balance')); ?>
                                             <tr>
                                                 <td><?php echo $list->first_name; ?></td>
                                                 <td><?php echo $list->last_name; ?></td>
                                                 <td><?php echo $list->email; ?></td>
-                                                <td><?php echo (isset($taken_balance) ? number_format($taken_balance) : null ); ?></td>
+                                                <td><?php echo (isset($token_balance) ? number_format($token_balance) : null ); ?></td>
                                                 <td><?php 
                                                 if($list->kyc_completed == 0){ } 
                                                 elseif($list->kyc_completed == 1){ echo '<span class="badge rounded-pill bg-warning text-dark">In Review</span>';} 
