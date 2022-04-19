@@ -239,27 +239,29 @@ if (!empty($end_date)) {
                         </div>
                     </div>
 
-                    
+
                     <div class="item-detail-btns mt-4">
                         <ul class="btns-group d-flex">
-                        <?php if(strtolower($list->product_status) == 'whitelist open'){?>
-                            <?php if (isset($Auth->role) && $Auth->role == 2 ) {
-                                if(empty($data_app)) {?> 
-                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="apply_sale(<?php echo $list->id;?>);">Whitelist Now</a></li>
-                                <?php }else{?>
-                                <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="<?php echo SITEURL;?>users/application_status">Application Status</a> </li>
-                                <?php }?>
-                            <?php }else{?>
-                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL;?>sign-in?redirect=explore/<?php echo $list->slug;?>/apply">Login to Whitelist</a></li>
-                            <?php }?>
-                            
-                            <?php }else if(strtolower($list->product_status) == 'whitelist closed' && !empty($timer_end)){?>
-                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="joinNow(<?php echo $list->id;?>);">Join Now</a> </li>
-                            <?php }else if(strtolower($list->product_status) == 'sold out'){?>
-                                <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Sold Out</a> </li>
-                            <?php }?>    
-                            
+                            <?php if (strtolower($list->product_status) == 'whitelist open') { ?>
+                                <?php if (isset($Auth->role) && $Auth->role == 2) {
+                                    if (empty($data_app)) { ?>
+                                        <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="apply_sale(<?php echo $list->id; ?>);">Whitelist Now</a></li>
+                                    <?php } else { ?>
+                                        <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="<?php echo SITEURL; ?>users/application_status">Application Status</a> </li>
+                                    <?php } ?>
+                                <?php } else { ?>
+                                    <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL; ?>sign-in?redirect=explore/<?php echo $list->slug; ?>/apply">Login to Whitelist</a></li>
+                                <?php } ?>
 
+                                <?php } else if (strtolower($list->product_status) == 'whitelist closed' && !empty($timer_end)) {
+                                if (isset($Auth->role) && $Auth->role == 2) { ?>
+                                    <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="joinNow(<?php echo $list->id; ?>);">Join Now</a> </li>
+                                <?php } else { ?>
+                                    <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL; ?>sign-in?redirect=explore/<?php echo $list->slug; ?>/join_now">Login to Join Now</a></li>
+                                <?php } ?>
+                            <?php } else if (strtolower($list->product_status) == 'sold out') { ?>
+                                <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Sold Out</a> </li>
+                            <?php } ?>
                         </ul>
                     </div>
                 </div>
@@ -302,33 +304,33 @@ if (!$this->request->is('mobile')) {
 ?>
 <?php $this->Html->scriptStart(array('block' => 'scriptBottom')); ?>
 function apply_sale(id) {
-        var d = "<?php echo urlencode(SITEURL . "homes/apply_now/");?>"+id;
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo SITEURL; ?>homes/open_pop/1',
-            data: {url:d},
-            success: function(data) {
-                $("#cover").html(data);
-            },
-            error: function(comment) {
-                $("#cover").html(comment);
-            }
-        });
+var d = "<?php echo urlencode(SITEURL . "homes/apply_now/"); ?>"+id;
+$.ajax({
+type: 'POST',
+url: '<?php echo SITEURL; ?>homes/open_pop/1',
+data: {url:d},
+success: function(data) {
+$("#cover").html(data);
+},
+error: function(comment) {
+$("#cover").html(comment);
+}
+});
 }
 
 function joinNow(id) {
-        var d = "<?php echo urlencode(SITEURL . "homes/join_now/");?>"+id;
-        $.ajax({
-            type: 'POST',
-            url: '<?php echo SITEURL; ?>homes/open_pop/1',
-            data: {url:d},
-            success: function(data) {
-                $("#cover").html(data);
-            },
-            error: function(comment) {
-                $("#cover").html(comment);
-            }
-        });
+var d = "<?php echo urlencode(SITEURL . "homes/join_now/"); ?>"+id;
+$.ajax({
+type: 'POST',
+url: '<?php echo SITEURL; ?>homes/open_pop/1',
+data: {url:d},
+success: function(data) {
+$("#cover").html(data);
+},
+error: function(comment) {
+$("#cover").html(comment);
+}
+});
 }
 
 <?php if (!empty($timer_st)) { ?>
@@ -367,11 +369,16 @@ function joinNow(id) {
     });
 <?php }
 
-if(!empty($op_pop) && isset( $Auth ) && isset($list->id) ){ ?>
-    
-    $(function () {
-        apply_sale(<?php echo $list->id;?>);
-    });
- <?php }
+if (!empty($op_pop) && isset($Auth) && isset($list->id)) { ?>
 
+    $(function () {
+    apply_sale(<?php echo $list->id; ?>);
+    });
+<?php }
+if (!empty($join_pop) && isset($Auth) && isset($list->id)) { ?>
+
+    $(function () {
+        joinNow(<?php echo $list->id; ?>);
+    });
+<?php }
 $this->Html->scriptEnd(); ?>

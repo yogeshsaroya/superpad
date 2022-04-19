@@ -217,9 +217,11 @@ class HomesController extends AppController
     public function explore($id = null, $is_pop = null)
     {
         $q = $this->request->getQuery();
-        $op_pop = null;
-        if (isset($is_pop) && $is_pop == 'apply') {
-            $op_pop = 'yes';
+        $op_pop = $join_pop = null;
+        if (isset($is_pop) ) {
+            if($is_pop == 'apply'){ $op_pop = 'yes'; }
+            elseif($is_pop == 'join_now'){ $join_pop = 'yes'; }
+            
         }
 
         if (!empty($id)) {
@@ -238,7 +240,7 @@ class HomesController extends AppController
                 if ($this->Auth->User('id') != "") {
                     $data_app = $this->Applications->find()->where(['project_id' => $data->id, 'user_id' => $this->Auth->User('id')])->first();
                 }
-                $this->set(compact('data', 'data_app', 'op_pop', 'data_app'));
+                $this->set(compact('data', 'data_app', 'op_pop', 'data_app','join_pop'));
                 $this->render('project_details');
             } else {
                 $this->viewBuilder()->setLayout('error_404');
@@ -308,6 +310,50 @@ class HomesController extends AppController
     }
 
     public function joinNow($id = null){
+
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            if ($this->Auth->User('id') != "") {
+                $postData = $this->request->getData();
+                ec($postData);die;
+                $appData = $this->Applications->find('all', [
+                    'contain' => ['Projects'=>['Blockchains'] ,'Users','Tickets'=>['conditions'=>['Tickets.status'=>1]]],
+                    'conditions' => ['Applications.project_id' => $postData['id'], 'Applications.user_id' => $this->Auth->User('id') ]
+                ]);
+
+                if (empty($appData)) {
+                    echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
+                    exit;
+                }
+                
+                    $getEnt = $this->Applications->newEmptyEntity();
+                    $chkEnt = $this->Applications->patchEntity($getEnt, $postData, ['validate' => true]);
+                    if ($chkEnt->getErrors()) {
+                        $st = null;
+                        foreach ($chkEnt->getErrors() as $elist) {
+                            foreach ($elist as $k => $v); {
+                                $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                            }
+                        }
+                        echo $st;
+                        exit;
+                    } else {
+                        if ($this->Applications->save($chkEnt)) {
+                            $u = SITEURL . "users/application_status";
+                            echo "<script>$('#save_frm').remove();</script>";
+                            echo "<div class='alert alert-success'>Your application is successfully submitted </div>";
+                            echo "<script> setTimeout(function(){ window.location.href ='" . $u . "'; }, 2000);</script>";
+                        } else {
+                            echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
+                            exit;
+                        }
+                    }
+                
+            } else {
+                echo '<div class="alert alert-danger">Please login or register to apply.</div>';
+                exit;
+            }
+            exit;
+        }
 
         if (!empty($id)) {
             $max_amt = $max_tickets = 0;
