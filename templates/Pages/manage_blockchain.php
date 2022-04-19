@@ -38,9 +38,11 @@ $getStatus = getStatus();
                                 ?>
 
                                 <div class="row">
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('name', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('short_name', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-4 col-12 form-group mb-2"><?php echo $this->Form->control('status', ['options' => $getStatus,'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('name', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('short_name', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('price', ['label' => ['escape' => false, 'text' => 'Price <small>(USD)</small>'],'class' => 'form-control amt', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div></div>
+                                    
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('status', ['options' => $getStatus,'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-4 mb-2 form-group">
                                         <h4 class="mb-1">Blockchain Logo</h4>
                                         <?php echo $this->Form->file('logo_img', ['label' => 'Logo', 'required' => $file_req]) ?><div class="help-block with-errors"></div>
@@ -76,6 +78,23 @@ $getStatus = getStatus();
 
 <script>
     $(document).ready(function() {
+            // THE SCRIPT THAT CHECKS IF THE KEY PRESSED IS A NUMERIC OR DECIMAL VALUE.
+    function isNumber(evt, element) {
+
+var charCode = (evt.which) ? evt.which : event.keyCode
+
+if (
+    (charCode != 45 || $(element).val().indexOf('-') != -1) && // Check minus and only once.
+    (charCode != 46 || $(element).val().indexOf('.') != -1) && // Check dot and only once.
+    (charCode < 48 || charCode > 57))
+    return false;
+
+return true;
+}
+$('.amt').keypress(function(event) {
+            return isNumber(event, this)
+        });
+
 
         $("#e_frm").validator();
 

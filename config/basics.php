@@ -182,7 +182,7 @@ function number_format_short( $n ) {
 }
 
 function getAppStatus(){
-    return ['1'=>'Whitelist Successfully','2'=>'Lucky','3'=>'Unlucky','4'=>'Allocated'];
+    return ['1'=>'Whitelist Successfully','2'=>'Selected in Lottery','3'=>'Not Selected in Lottery','4'=>'Allocated'];
 }
 
 function getToolTip($str = null ){

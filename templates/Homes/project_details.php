@@ -253,8 +253,8 @@ if (!empty($end_date)) {
                                 <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL;?>sign-in?redirect=explore/<?php echo $list->slug;?>/apply">Login to Whitelist</a></li>
                             <?php }?>
                             
-                            <?php }else if(strtolower($list->product_status) == 'whitelist closed'){?>
-                                <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Sale Ended</a> </li>
+                            <?php }else if(strtolower($list->product_status) == 'whitelist closed' && !empty($timer_end)){?>
+                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="joinNow(<?php echo $list->id;?>);">Join Now</a> </li>
                             <?php }else if(strtolower($list->product_status) == 'sold out'){?>
                                 <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Sold Out</a> </li>
                             <?php }?>    
@@ -303,6 +303,21 @@ if (!$this->request->is('mobile')) {
 <?php $this->Html->scriptStart(array('block' => 'scriptBottom')); ?>
 function apply_sale(id) {
         var d = "<?php echo urlencode(SITEURL . "homes/apply_now/");?>"+id;
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo SITEURL; ?>homes/open_pop/1',
+            data: {url:d},
+            success: function(data) {
+                $("#cover").html(data);
+            },
+            error: function(comment) {
+                $("#cover").html(comment);
+            }
+        });
+}
+
+function joinNow(id) {
+        var d = "<?php echo urlencode(SITEURL . "homes/join_now/");?>"+id;
         $.ajax({
             type: 'POST',
             url: '<?php echo SITEURL; ?>homes/open_pop/1',

@@ -5910,3 +5910,7 @@ form .required label:after {
         content: attr(data-title);
     }
 }
+
+.text-bold {
+    font-weight: bold;
+}

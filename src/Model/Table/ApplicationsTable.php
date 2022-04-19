@@ -10,6 +10,8 @@ class ApplicationsTable extends Table{
         $this->addBehavior('Timestamp');
         $this->belongsTo('Projects');
         $this->belongsTo('Users');
+        $this->hasMany('Tickets');
+        
     }
 
     public function validationDefault(Validator $validator): Validator {

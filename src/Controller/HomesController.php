@@ -307,6 +307,29 @@ class HomesController extends AppController
         }
     }
 
+    public function joinNow($id = null){
+
+        if (!empty($id)) {
+            $max_amt = $max_tickets = 0;
+            $data = $short_name = null;
+            if ($this->Auth->User('id') != "") {
+                $query = $this->Applications->find('all', [
+                    'contain' => ['Projects'=>['Blockchains'] ,'Users','Tickets'=>['conditions'=>['Tickets.status'=>1]]],
+                    'conditions' => ['Applications.project_id' => $id, 'Applications.user_id' => $this->Auth->User('id') ]
+                ]);
+                $data =  $query->first();
+                $max_tickets = count ($data->tickets);
+                $ticket_allocation = $data->project->ticket_allocation;
+                $coin_price = $data->project->blockchain->price;
+                $max_usd = $ticket_allocation * $max_tickets;
+                $max_amt = $max_usd / $coin_price;
+                $short_name = $data->project->blockchain->short_name;
+            }
+            
+            $this->set(compact('data', 'id','max_amt','max_tickets','short_name'));
+        }
+    }
+
     public function contact()
     {
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
