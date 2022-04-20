@@ -50,7 +50,7 @@
                         <li><span>You have </span> <span class="text-bold"><?php echo $max_tickets; ?> winning ticket(s)</span></li>
                     </ul>
                     <div id="f_err"></div>
-                    <?php if ($max_amt > 0 && $max_tickets > 0) { ?>
+                    <?php if ($data->remaining > 0 && $max_tickets > 0) { ?>
                         <input type="button" class="w-100 btn btn-lg btn-outline-dark" value="Join Now" id="reg_sbtn" />
                     <?php } else { ?>
                         <input type="button" class="w-100 btn btn-lg btn-outline-dark" value="Close" onclick="$.magnificPopup.close();"/>
@@ -102,7 +102,7 @@
                         },
                     }).submit();
                 } else {
-                    $('#f_err').html('<div class="alert alert-danger">Please enter amount between 1 to ' + max_amt + '</div>');
+                    $('#f_err').html('<div class="alert alert-danger">Please enter amount between 0.1 to ' + max_amt + '</div>');
                 }
             });
         });
