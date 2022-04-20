@@ -146,7 +146,7 @@ class HomesController extends AppController
         $q = $this->request->getQuery();
         $qr = null;
         if (isset($q['days']) && isset($q['token'])) {
-            $qr = ['days'=>$q['days'],'token'=>$q['token']];
+            $qr = ['days' => $q['days'], 'token' => $q['token']];
         }
         $query = $this->Levels->find()->order(['spad' => 'ASC']);
         $data = $query->all();
@@ -170,27 +170,27 @@ class HomesController extends AppController
                         'social_task' => $a->social_task,
                         'max_ticket_allocation' => $a->max_ticket_allocation,
                         'winning_chances' => $a->winning_chances,
-                        'guaranteed_allocation'=>$a->guaranteed_allocation
+                        'guaranteed_allocation' => $a->guaranteed_allocation
                     ];
                 }
             }
         }
-        
-        if(!empty($tire)){
+
+        if (!empty($tire)) {
             $min_token = min(array_column($tire, 'spad'));
             $max_token = max(array_column($tire, 'spad'));
         }
-        
+
         $days_list = [];
         if (!empty($chkStake)) {
             foreach ($chkStake as $b) {
                 if (!empty($b['days'])) {
                     $stake[$b['days']] = $b['percentage'];
-                    $days_list[$b['days']] = ($b['days'] < 365 ? $b['days']." Days" : ($b['days'] /365)." Year".(($b['days'] /365) > 1 ? 's':null) );
+                    $days_list[$b['days']] = ($b['days'] < 365 ? $b['days'] . " Days" : ($b['days'] / 365) . " Year" . (($b['days'] / 365) > 1 ? 's' : null));
                 }
             }
         }
-        
+
 
         if (!empty($chkStake)) {
             $min = min(array_column($chkStake, 'days'));
@@ -199,7 +199,7 @@ class HomesController extends AppController
             $min_return = min(array_column($chkStake, 'percentage'));
             $max_return = max(array_column($chkStake, 'percentage'));
         }
-        $this->set(compact('data', 'chkStake', 'min', 'max', 'min_return', 'max_return', 'stake', 'tire','qr','days_list','min_token','max_token'));
+        $this->set(compact('data', 'chkStake', 'min', 'max', 'min_return', 'max_return', 'stake', 'tire', 'qr', 'days_list', 'min_token', 'max_token'));
     }
 
     public function spad()
@@ -218,10 +218,12 @@ class HomesController extends AppController
     {
         $q = $this->request->getQuery();
         $op_pop = $join_pop = null;
-        if (isset($is_pop) ) {
-            if($is_pop == 'apply'){ $op_pop = 'yes'; }
-            elseif($is_pop == 'join_now'){ $join_pop = 'yes'; }
-            
+        if (isset($is_pop)) {
+            if ($is_pop == 'apply') {
+                $op_pop = 'yes';
+            } elseif ($is_pop == 'join_now') {
+                $join_pop = 'yes';
+            }
         }
 
         if (!empty($id)) {
@@ -240,7 +242,7 @@ class HomesController extends AppController
                 if ($this->Auth->User('id') != "") {
                     $data_app = $this->Applications->find()->where(['project_id' => $data->id, 'user_id' => $this->Auth->User('id')])->first();
                 }
-                $this->set(compact('data', 'data_app', 'op_pop', 'data_app','join_pop'));
+                $this->set(compact('data', 'data_app', 'op_pop', 'data_app', 'join_pop'));
                 $this->render('project_details');
             } else {
                 $this->viewBuilder()->setLayout('error_404');
@@ -309,45 +311,46 @@ class HomesController extends AppController
         }
     }
 
-    public function joinNow($id = null){
+    public function joinNow($id = null)
+    {
 
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             if ($this->Auth->User('id') != "") {
                 $postData = $this->request->getData();
-                ec($postData);die;
-                $appData = $this->Applications->find('all', [
-                    'contain' => ['Projects'=>['Blockchains'] ,'Users','Tickets'=>['conditions'=>['Tickets.status'=>1]]],
-                    'conditions' => ['Applications.project_id' => $postData['id'], 'Applications.user_id' => $this->Auth->User('id') ]
-                ]);
 
+                $query = $this->Applications->find('all', [
+                    'contain' => ['Projects', 'Users'],
+                    'conditions' => ['Applications.id' => $postData['id'], 'Applications.user_id' => $this->Auth->User('id')]
+                ]);
+                $appData =  $query->first();
                 if (empty($appData)) {
                     echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
                     exit;
                 }
+                $postData['joined'] = $appData->joined + $postData['amt'];
+                $postData['remaining'] = $appData->allocationed - $postData['joined']; 
                 
-                    $getEnt = $this->Applications->newEmptyEntity();
-                    $chkEnt = $this->Applications->patchEntity($getEnt, $postData, ['validate' => true]);
-                    if ($chkEnt->getErrors()) {
-                        $st = null;
-                        foreach ($chkEnt->getErrors() as $elist) {
-                            foreach ($elist as $k => $v); {
-                                $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
-                            }
-                        }
-                        echo $st;
-                        exit;
-                    } else {
-                        if ($this->Applications->save($chkEnt)) {
-                            $u = SITEURL . "users/application_status";
-                            echo "<script>$('#save_frm').remove();</script>";
-                            echo "<div class='alert alert-success'>Your application is successfully submitted </div>";
-                            echo "<script> setTimeout(function(){ window.location.href ='" . $u . "'; }, 2000);</script>";
-                        } else {
-                            echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
-                            exit;
+                $chkEnt = $this->Applications->patchEntity($appData, $postData, ['validate' => false]);
+                if ($chkEnt->getErrors()) {
+                    $st = null;
+                    foreach ($chkEnt->getErrors() as $elist) {
+                        foreach ($elist as $k => $v); {
+                            $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
                         }
                     }
-                
+                    echo $st;
+                    exit;
+                } else {
+                    if ($this->Applications->save($chkEnt)) {
+                        $u = SITEURL . "allocation";
+                        echo "<script>$('#reg_sbtn').remove();</script>";
+                        echo "<div class='alert alert-success'>Completed</div>";
+                        echo "<script> setTimeout(function(){ window.location.href ='" . $u . "'; }, 2000);</script>";
+                    } else {
+                        echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
+                        exit;
+                    }
+                }
             } else {
                 echo '<div class="alert alert-danger">Please login or register to apply.</div>';
                 exit;
@@ -360,19 +363,28 @@ class HomesController extends AppController
             $data = $short_name = null;
             if ($this->Auth->User('id') != "") {
                 $query = $this->Applications->find('all', [
-                    'contain' => ['Projects'=>['Blockchains'] ,'Users','Tickets'=>['conditions'=>['Tickets.status'=>1]]],
-                    'conditions' => ['Applications.project_id' => $id, 'Applications.user_id' => $this->Auth->User('id') ]
+                    'contain' => ['Projects' => ['Blockchains'], 'Users', 'Tickets' => ['conditions' => ['Tickets.status' => 1]]],
+                    'conditions' => ['Applications.project_id' => $id, 'Applications.user_id' => $this->Auth->User('id')]
                 ]);
                 $data =  $query->first();
-                $max_tickets = count ($data->tickets);
+                $max_tickets = count($data->tickets);
                 $ticket_allocation = $data->project->ticket_allocation;
-                $coin_price = $data->project->blockchain->price;
+                $coin_price = 1; /*default will be USD 1*/
+                if( isset($data->project->blockchain->price) && $data->project->blockchain->price > 0 ){
+                    $coin_price = $data->project->blockchain->price;
+                }
+                
                 $max_usd = $ticket_allocation * $max_tickets;
                 $max_amt = $max_usd / $coin_price;
                 $short_name = $data->project->blockchain->short_name;
+                if($max_amt > 0){
+                    $data->allocationed = $max_amt;
+                    $this->Applications->save($data);
+                }
+                
             }
-            
-            $this->set(compact('data', 'id','max_amt','max_tickets','short_name'));
+
+            $this->set(compact('data', 'id', 'max_amt', 'max_tickets', 'short_name'));
         }
     }
 

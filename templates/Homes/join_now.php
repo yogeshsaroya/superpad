@@ -29,6 +29,10 @@
                     echo $this->Form->create($data, ['autocomplete' => 'off', 'id' => 'e_frm',]);
                     echo $this->Form->hidden('id');
                     echo $this->Form->hidden('max_amt', ['id' => 'max_amt', 'value' => $max_amt]);
+
+                    echo $this->Form->hidden('joined', ['id' => 'joined', 'value' => $data->joined]);
+                    echo $this->Form->hidden('remaining', ['id' => 'remaining', 'value' => $data->remaining]);
+
                     echo $this->Form->hidden('max_tickets', ['id' => 'max_tickets', 'value' => $max_tickets]);
                     ?>
 
@@ -41,6 +45,8 @@
                     <hr>
                     <ul class="total-bid-list mb-4">
                         <li><span>Max allocation: </span> <span class="text-bold"><?php echo $max_amt . " " . $short_name; ?></span></li>
+                        <li><span>Joined: </span> <span class="text-bold"><?php echo $data->joined . " " . $short_name; ?></span></li>
+                        <li><span>Remaining: </span> <span class="text-bold"><?php echo $data->remaining . " " . $short_name; ?></span></li>
                         <li><span>You have </span> <span class="text-bold"><?php echo $max_tickets; ?> winning ticket(s)</span></li>
                     </ul>
                     <div id="f_err"></div>
@@ -68,11 +74,11 @@
                 return n;
             }
             $("#setMax").click(function() {
-                $("#setAmt").val($("#max_amt").val());
+                $("#setAmt").val($("#remaining").val());
             })
 
             $("#reg_sbtn").click(function() {
-                var max_amt = $("#max_amt").val();
+                var max_amt = $("#remaining").val();
                 var setAmt = $("#setAmt").val();
                 if (setAmt > 0 && setAmt <= max_amt) {
                     $("#e_frm").ajaxForm({
@@ -87,16 +93,16 @@
                         },
                         success: function(response) {
                             $("#reg_sbtn").prop("disabled", false);
-                            $("#reg_sbtn").val('unStake');
+                            $("#reg_sbtn").val('Join Now');
                         },
                         error: function(response) {
                             $('#f_err').html('<div class="alert alert-danger">Sorry, this is not working at the moment. Please try again later.</div>');
                             $("#reg_sbtn").prop("disabled", false);
-                            $("#reg_sbtn").val('unStake');
+                            $("#reg_sbtn").val('Join Now');
                         },
                     }).submit();
                 } else {
-                    $('#f_err').html('<div class="alert alert-danger">Please enter amount between 1 to ' + maxToken + '</div>');
+                    $('#f_err').html('<div class="alert alert-danger">Please enter amount between 1 to ' + max_amt + '</div>');
                 }
             });
         });
