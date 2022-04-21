@@ -916,6 +916,14 @@ class PagesController extends AppController
                     $data = $this->paginate($this->Applications->find('all'))->toArray();
                     $paging = $this->request->getAttribute('paging');
                     $this->set(compact('data', 'paging'));
+                } elseif ($tab == 'token_distributions') {
+                    $this->paginate = [
+                        'limit' => 100,
+                        'conditions' => ['TokenDistributions.project_id' => $id], 'order' => ['claim_date' => 'ASC']
+                    ];
+                    $data = $this->paginate($this->TokenDistributions->find('all'))->toArray();
+                    $paging = $this->request->getAttribute('paging');
+                    $this->set(compact('data', 'paging'));
                 }
             }
         }
@@ -1119,6 +1127,69 @@ class PagesController extends AppController
         }
     }
 
+    public function tokenDistributions()
+    {
+        $form_data = null;
+        if ($this->request->is('ajax')) {
+
+            if (!empty($this->request->getData())) {
+                $postData = $this->request->getData();
+
+
+                if (isset($postData['id']) && !empty($postData['id'])) {
+                    $bal = $this->TokenDistributions->find()->select(['sum' => 'SUM(TokenDistributions.percentage)'])
+                        ->where(['TokenDistributions.id <>' => $postData['id'],'TokenDistributions.project_id' => $postData['project_id']])->toArray();
+
+                    if (((float)$bal[0]->sum + $postData['percentage']) > 100) {
+                        echo '<div class="alert alert-danger" role="alert">Token Distributions cannot exceed more than 100%</div>';
+                        exit;
+                    }
+                    $getBlog = $this->TokenDistributions->get($postData['id']);
+                    $chkBlog = $this->TokenDistributions->patchEntity($getBlog, $postData, ['validate' => false]);
+                } else {
+                    $bal = $this->TokenDistributions->find()->select(['sum' => 'SUM(TokenDistributions.percentage)'])
+                        ->where(['TokenDistributions.project_id' => $postData['project_id']])->toArray();
+                    if (((float)$bal[0]->sum + $postData['percentage']) > 100) {
+                        echo '<div class="alert alert-danger" role="alert">Token Distributions cannot exceed more than 100%</div>';
+                        exit;
+                    }
+                    $getBlog = $this->TokenDistributions->newEmptyEntity();
+                    $chkBlog = $this->TokenDistributions->patchEntity($getBlog, $postData, ['validate' => false]);
+                }
+
+                if ($chkBlog->getErrors()) {
+                    $st = null;
+                    foreach ($chkBlog->getErrors() as $elist) {
+                        foreach ($elist as $k => $v); {
+                            $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                        }
+                    }
+                    echo $st;
+                    exit;
+                } else {
+                    if ($this->TokenDistributions->save($chkBlog)) {
+                        echo "<script>$('#save_frm').remove();</script>";
+                        echo "<div class='alert alert-success'>Saved</div>";
+                        echo "<script> setTimeout(function(){ location.reload(); }, 2000);</script>";
+                    } else {
+                        echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
+                    }
+                }
+                exit;
+            } else {
+
+                $id = $this->request->getQuery('id');
+                $pro_id = $this->request->getQuery('pro_id');
+                if (!empty($id)) {
+                    $form_data = $this->TokenDistributions->findById($id)->firstOrFail();
+                } else {
+                    $form_data = $this->TokenDistributions->newEmptyEntity();
+                }
+                $this->set(compact('form_data', 'pro_id'));
+            }
+        }
+    }
+
     public function tiers()
     {
         $menu_act = 'tiers';
@@ -1191,7 +1262,7 @@ class PagesController extends AppController
 
         if ($this->request->getQuery('del')  && !empty($this->request->getQuery('del'))) {
             $readData = $this->Stakes->findById($this->request->getQuery('del'))->first();
-            if(!empty($readData)){
+            if (!empty($readData)) {
                 if ($this->Stakes->delete($readData)) {
                     $this->Stakes->deleteAll(['stake_id' => $readData->id]);
                 }
@@ -1265,22 +1336,22 @@ class PagesController extends AppController
             if (!empty($this->request->getData())) {
                 $postData = $this->request->getData();
                 $postData['type'] = 2;
-                
+
 
                 if (isset($postData['id']) && !empty($postData['id'])) {
                     $chk = $this->Stakes->find()->where(['type' => 2, 'stake_id' => $postData['stake_id'], 'days' => $postData['days'], 'id <>' => $postData['id']])->first();
-                if (!empty($chk)) {
-                    echo '<div class="alert alert-danger" role="alert"> unStake already added for ' . $postData['days'] . ' days</div>';
-                    exit;
-                }
+                    if (!empty($chk)) {
+                        echo '<div class="alert alert-danger" role="alert"> unStake already added for ' . $postData['days'] . ' days</div>';
+                        exit;
+                    }
                     $getBlog = $this->Stakes->get($postData['id']);
                     $chkBlog = $this->Stakes->patchEntity($getBlog, $postData, ['validate' => true]);
                 } else {
                     $chk = $this->Stakes->find()->where(['type' => 2, 'stake_id' => $postData['stake_id'], 'days' => $postData['days']])->first();
-                if (!empty($chk)) {
-                    echo '<div class="alert alert-danger" role="alert"> unStake already added for ' . $postData['days'] . ' days</div>';
-                    exit;
-                }
+                    if (!empty($chk)) {
+                        echo '<div class="alert alert-danger" role="alert"> unStake already added for ' . $postData['days'] . ' days</div>';
+                        exit;
+                    }
                     $getBlog = $this->Stakes->newEmptyEntity();
                     $chkBlog = $this->Stakes->patchEntity($getBlog, $postData, ['validate' => true]);
                 }
@@ -1448,7 +1519,7 @@ class PagesController extends AppController
             $this->Users->save($saveData);
             $this->redirect('/pages/users');
         }
-        $this->paginate = ['contain' => ['UserStakes'],'limit' => 100, 'conditions' => ['Users.role' => 2], 'order' => ['id' => 'desc']];
+        $this->paginate = ['contain' => ['UserStakes'], 'limit' => 100, 'conditions' => ['Users.role' => 2], 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Users->find('all'));
         $paging = $this->request->getAttribute('paging');
         $this->set(compact('data', 'paging'));

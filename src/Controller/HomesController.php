@@ -136,9 +136,7 @@ class HomesController extends AppController
         }
     }
 
-    public function allocation()
-    {
-    }
+
 
     public function stake()
     {
@@ -320,7 +318,7 @@ class HomesController extends AppController
 
                 $query = $this->Applications->find('all', [
                     'contain' => ['Projects', 'Users'],
-                    'conditions' => ['Applications.id' => $postData['id'], 'Applications.user_id' => $this->Auth->User('id')]
+                    'conditions' => ['Applications.status'=>4,'Applications.id' => $postData['id'], 'Applications.user_id' => $this->Auth->User('id')]
                 ]);
                 $appData =  $query->first();
                 if (empty($appData)) {
@@ -328,7 +326,7 @@ class HomesController extends AppController
                     exit;
                 }
                 $postData['joined'] = $appData->joined + $postData['amt'];
-                $postData['remaining'] = $appData->allocationed - $postData['joined'];
+                $postData['remaining'] = $appData->allocation - $postData['joined'];
 
                 $allocation_data = [];
                 if (!empty($appData['allocation_data'])) {
@@ -336,7 +334,7 @@ class HomesController extends AppController
                 }
                 $allocation_data[strtotime(DATE)] = [
                     'date' => DATE, 'amount' => $postData['amt'], 'joined' => $appData->joined,
-                    'allocationed' => $appData->allocationed, 'remaining' => $appData->remaining
+                    'allocation' => $appData->allocation, 'remaining' => $appData->remaining
                 ];
                 $postData['allocation_data'] = json_encode($allocation_data);
 
@@ -374,30 +372,30 @@ class HomesController extends AppController
             if ($this->Auth->User('id') != "") {
                 $query = $this->Applications->find('all', [
                     'contain' => ['Projects' => ['Blockchains'], 'Users', 'Tickets' => ['conditions' => ['Tickets.status' => 1]]],
-                    'conditions' => ['Applications.project_id' => $id, 'Applications.user_id' => $this->Auth->User('id')]
+                    'conditions' => ['Applications.status'=>4,'Applications.project_id' => $id, 'Applications.user_id' => $this->Auth->User('id')]
                 ]);
                 $data =  $query->first();
-
-                if ($data->allocationed > 0 && (float)$data->remaining == 0) {
-                    $u = SITEURL . "allocation";
-                    echo "<script>window.location.href ='" . $u . "'; </script>";
-                    exit;
-                }
-
-                $max_tickets = count($data->tickets);
-                $ticket_allocation = $data->project->ticket_allocation;
-                $coin_price = 1; /*default will be USD 1*/
-                if (isset($data->project->blockchain->price) && $data->project->blockchain->price > 0) {
-                    $coin_price = $data->project->blockchain->price;
-                }
-                $max_usd = $ticket_allocation * $max_tickets;
-                $max_amt = $max_usd / $coin_price;
-                $short_name = $data->project->blockchain->short_name;
-                if ((float)$data->allocationed <= 0) {
-                    $data->allocationed = $max_amt;
-                    $data->remaining = $max_amt;
-                    $data->joined = 0;
-                    $this->Applications->save($data);
+                if (!empty($data)) {
+                    if (!empty($data->allocation) && (float)$data->allocation > 0 && (float)$data->remaining == 0) {
+                        $u = SITEURL . "allocation";
+                        echo "<script>window.location.href ='" . $u . "'; </script>";
+                        exit;
+                    }
+                    $max_tickets = count($data->tickets);
+                    $ticket_allocation = $data->project->ticket_allocation;
+                    $coin_price = 1; /*default will be USD 1*/
+                    if (isset($data->project->blockchain->price) && $data->project->blockchain->price > 0) {
+                        $coin_price = $data->project->blockchain->price;
+                    }
+                    $max_usd = $ticket_allocation * $max_tickets;
+                    $max_amt = $max_usd / $coin_price;
+                    $short_name = $data->project->blockchain->short_name;
+                    if ((float)$data->allocation <= 0) {
+                        $data->allocation = $max_amt;
+                        $data->remaining = $max_amt;
+                        $data->joined = 0;
+                        $this->Applications->save($data);
+                    }
                 }
             }
             $this->set(compact('data', 'id', 'max_amt', 'max_tickets', 'short_name'));

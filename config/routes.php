@@ -60,7 +60,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
 
     $builder->connect('/dashboard/*', ['controller' => 'Users', 'action' => 'dashboard']);
     $builder->connect('/contact-us/*', ['controller' => 'Homes', 'action' => 'contact_us']);
-    $builder->connect('/allocation/*', ['controller' => 'Homes', 'action' => 'allocation']);
+    $builder->connect('/allocation/*', ['controller' => 'Users', 'action' => 'allocation']);
     $builder->connect('/stake/*', ['controller' => 'Homes', 'action' => 'stake']);
     $builder->connect('/buy-spad/*', ['controller' => 'Homes', 'action' => 'spad']);
     $builder->connect('/allocation/*', ['controller' => 'Homes', 'action' => 'allocation']);

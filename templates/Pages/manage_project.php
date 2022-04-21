@@ -32,6 +32,7 @@ $this->assign('title', 'Manage Projects'); ?>
                             <?php echo $this->Html->link('Add New Team', 'javascript:void(0);', ['onclick' => 'addTeam('.$get_data->id.')', 'class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
                             <?php echo $this->Html->link('Add New Partner', 'javascript:void(0);', ['onclick' => 'addPartner('.$get_data->id.')', 'class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
                             <?php echo $this->Html->link('Add New Social Media Account', 'javascript:void(0);', ['onclick' => 'addMedia('.$get_data->id.')', 'class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
+                            <?php echo $this->Html->link('Add Token Distributions', 'javascript:void(0);', ['onclick' => 'tokenDistributions('.$get_data->id.')', 'class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
                         <?php } ?>
                     </div>
                 </div>
@@ -48,6 +49,8 @@ $this->assign('title', 'Manage Projects'); ?>
                         <li class="nav-item"><a class="nav-link <?php echo ($tab == 'partner' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=partner"; ?>">Partner and Investor</a></li>
                         <li class="nav-item"><a class="nav-link <?php echo ($tab == 'media' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=media"; ?>">Social Media Accounts</a></li>
                         <li class="nav-item"><a class="nav-link <?php echo ($tab == 'applications' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=applications"; ?>">Applications</a></li>
+                        <li class="nav-item"><a class="nav-link <?php echo ($tab == 'token_distributions' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=token_distributions"; ?>">Token Distributions</a></li>
+                        
                         
                     </ul>
                 </div>
@@ -385,13 +388,52 @@ $this->assign('title', 'Manage Projects'); ?>
                                         </div>
                                     </div>
                                 </div>
+                            <?php }
+                            elseif ($tab == 'token_distributions') {?>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th><?php echo $this->Paginator->sort('percentage'); ?></th>
+                                                <th><?php echo $this->Paginator->sort('claim_date'); ?></th>
+                                                <th>Action</th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            if (!empty($data)) {
+                                                foreach ($data as $list) { ?>
+                                                    <tr>
+                                                        <td><?php echo $list->percentage; ?></td>
+                                                        <td><?php echo $list->claim_date->format('Y-m-d H:i A'); ?></td>
+                                                        <td><?php echo $this->Html->link('Edit', "javascript:void(0);", ['onclick'=>"tokenDistributions(".$get_data->id.",".$list->id.")"]); ?></td>
+                                                    </tr>
+                                            <?php }
+                                            } ?>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="card-header">
+                                        <?php echo $this->Paginator->counter('Page {{page}} of {{pages}}, showing {{current}} records out of {{count}} total, starting on record {{start}}, ending on {{end}}'); ?>
+                                        <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+                                            <ul class="pagination">
+                                                <?php
+                                                echo $this->Paginator->first(__('First', true), array('tag' => 'li', 'escape' => false), array('type' => "button", 'class' => "btn btn-default"));
+                                                echo $this->Paginator->prev('&laquo;', array('tag' => 'li', 'escape' => false), '<a href="#">&laquo;</a>', array('class' => 'prev disabled', 'tag' => 'li', 'escape' => false));
+                                                echo $this->Paginator->numbers(array('separator' => '', 'tag' => 'li', 'currentLink' => true, 'currentClass' => 'active', 'currentTag' => 'a'));
+                                                echo $this->Paginator->next('&raquo;', array('tag' => 'li', 'escape' => false), '<a href="#">&raquo;</a>', array('class' => 'prev disabled', 'tag' => 'li', 'escape' => false));
+                                                echo $this->Paginator->last(__('Last', true), array('tag' => 'li', 'escape' => false), array('type' => "button", 'class' => "btn btn-default"));
+                                                ?>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                             <?php }?>
                         </div>
                     </div>
                 </div>
             </div>
-            <!--/ Blog Edit -->
-
         </div>
     </div>
 </div>
@@ -414,6 +456,23 @@ echo $this->Html->script(['//cdn.ckeditor.com/4.18.0/full-all/ckeditor.js']);
 ?>
 
 <script>
+    
+    function tokenDistributions(pro_id,row_id) {
+        if ( row_id == null ){ row_id = ''; }
+        var d = "<?php echo urlencode(SITEURL . "pages/token_distributions?");?>pro_id="+pro_id+"&id="+row_id;
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo SITEURL; ?>pages/open_pop/',
+            data: {url:d},
+            success: function(data) {
+                $("#cover").html(data);
+            },
+            error: function(comment) {
+                $("#cover").html(comment);
+            }
+        });
+    }
+
     function addTeam(pro_id,row_id) {
         if ( row_id == null ){ row_id = ''; }
         var d = "<?php echo urlencode(SITEURL . "pages/add_team?");?>pro_id="+pro_id+"&team_id="+row_id;
@@ -460,23 +519,7 @@ echo $this->Html->script(['//cdn.ckeditor.com/4.18.0/full-all/ckeditor.js']);
             }
         });
     }
-    
 
-
-
-    // THE SCRIPT THAT CHECKS IF THE KEY PRESSED IS A NUMERIC OR DECIMAL VALUE.
-    function isNumber(evt, element) {
-
-        var charCode = (evt.which) ? evt.which : event.keyCode
-
-        if (
-            (charCode != 45 || $(element).val().indexOf('-') != -1) && // Check minus and only once.
-            (charCode != 46 || $(element).val().indexOf('.') != -1) && // Check dot and only once.
-            (charCode < 48 || charCode > 57))
-            return false;
-
-        return true;
-    }
 
     $(document).ready(function() {
         $('.amt').keypress(function(event) {

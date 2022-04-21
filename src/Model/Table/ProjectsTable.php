@@ -16,6 +16,8 @@ class ProjectsTable extends Table
         $this->hasMany('Partners');
         $this->hasMany('SmAccounts');
         $this->hasMany('Applications');
+        $this->hasMany('TokenDistributions');
+        
     }
 
     public function validationDefault(Validator $validator): Validator
