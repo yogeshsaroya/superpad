@@ -899,28 +899,74 @@ class UsersController extends AppController
                 }
             }
         }
-        $this->set(compact('data', 'tot_stake','my_tier'));
+        $this->set(compact('data', 'tot_stake', 'my_tier'));
     }
 
     public function allocation()
     {
         $average = 0;
         $query = $this->Applications->find('all', [
-            'contain' => ['Projects'=>['Blockchains'],'Tickets' => ['conditions' => ['Tickets.status' => 1]] ],
-            'conditions' => ['Applications.status' =>4,'Applications.user_id' => $this->Auth->User('id')]
+            'contain' => ['Projects' => ['Blockchains'], 'Tickets' => ['conditions' => ['Tickets.status' => 1]]],
+            'conditions' => ['Applications.status' => 4, 'Applications.user_id' => $this->Auth->User('id')]
         ]);
         $data =  $query->all();
-        $stakes = $this->UserStakes->find('all', [ 'conditions' => ['UserStakes.balance >'=>0, 'UserStakes.user_id' => $this->Auth->User('id')]])->all();
+        $stakes = $this->UserStakes->find('all', ['conditions' => ['UserStakes.balance >' => 0, 'UserStakes.user_id' => $this->Auth->User('id')]])->all();
         $apy_arr = [];
         if (!$stakes->isEmpty()) {
-            foreach($stakes as $list ){
+            foreach ($stakes as $list) {
                 $arr = json_decode($list->stake_info);
                 $apy_arr[] = $arr->percentage;
             }
         }
-        if(count($apy_arr) > 0){
-        $average = array_sum($apy_arr)/count($apy_arr);
+        if (count($apy_arr) > 0) {
+            $average = array_sum($apy_arr) / count($apy_arr);
         }
-        $this->set(compact('data','average'));
+        $this->set(compact('data', 'average'));
+    }
+
+    public function doClaim($id = null)
+    {
+        $query = $this->Applications->find('all', [
+            'contain' => ['Projects' => ['TokenDistributions' => ['sort' => ['TokenDistributions.claim_date' => 'ASC']]]],
+            'conditions' => ['Applications.id' => $id, 'Applications.status' => 4, 'Applications.user_id' => $this->Auth->User('id')]
+        ]);
+        $data =  $query->first();
+        $arr = [];
+        if (empty($data->info) && isset($data->project->token_distributions) && !empty($data->project->token_distributions)) {
+            foreach ($data->project->token_distributions as $list) {
+                $arr[strtotime($list->claim_date->format("Y-m-d H:i:s"))] = [
+                    'percentage' => $list->percentage, 'total_token' => $data->total_token * $list->percentage / 100,
+                    'claim_before' => $list->claim_date->format("Y-m-d H:i:s"), 'claim_on' => null
+                ];
+            }
+            $data->info = json_encode($arr);
+            $this->Applications->save($data);
+        }
+        $this->set(compact('data'));
+    }
+
+    public function updateClaim()
+    {
+        $this->autoRender = false;
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $postData = $this->request->getData();
+            $query = $this->Applications->find('all', ['conditions' => ['Applications.id' => $postData['app_id'],'Applications.status' => 4]]);
+            $data =  $query->first();
+            $claimed_token = 0;
+            if( !empty($data->info) ){
+                $arr = json_decode($data->info,true);
+                if( isset($arr[$postData['id']]) && !empty($arr[$postData['id']]) ){
+                    $arr[$postData['id']]['claim_on'] = DATE;
+                    $claimed_token = $arr[$postData['id']]['total_token'];
+                }
+                $data->claimed_token = $data->claimed_token + $claimed_token;
+                $data->available_token = $data->available_token - $claimed_token;
+                $data->info = json_encode($arr);
+                //ec($claimed_token);ec($data);die;
+                $this->Applications->save($data);
+                echo "<script>$('#btn_".$postData['id']."').remove(); $('#on_".$postData['id']."').html('".DATE."'); </script>";
+            }
+        }
+        exit;
     }
 }

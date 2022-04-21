@@ -317,26 +317,39 @@ class HomesController extends AppController
                 $postData = $this->request->getData();
 
                 $query = $this->Applications->find('all', [
-                    'contain' => ['Projects', 'Users'],
-                    'conditions' => ['Applications.status'=>4,'Applications.id' => $postData['id'], 'Applications.user_id' => $this->Auth->User('id')]
+                    'contain' => ['Projects' => ['Blockchains'], 'Users'],
+                    'conditions' => ['Applications.status' => 4, 'Applications.id' => $postData['id'], 'Applications.user_id' => $this->Auth->User('id')]
                 ]);
                 $appData =  $query->first();
                 if (empty($appData)) {
                     echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
                     exit;
                 }
-                $postData['joined'] = $appData->joined + $postData['amt'];
-                $postData['remaining'] = $appData->allocation - $postData['joined'];
 
+                $coin_price = 1; /*default will be USD 1*/
+                if (isset($appData->project->blockchain->price) && $appData->project->blockchain->price > 0) {
+                    $coin_price = $appData->project->blockchain->price;
+                }
+
+                $postData['joined'] = ($appData->joined + $postData['amt']);
+                $postData['joined_usd'] = round($appData->joined_usd + ($postData['amt'] * $coin_price));
+                $postData['remaining'] = ((float)$appData->allocation - $postData['joined']);
                 $allocation_data = [];
                 if (!empty($appData['allocation_data'])) {
                     $allocation_data = json_decode($appData['allocation_data'], true);
                 }
                 $allocation_data[strtotime(DATE)] = [
                     'date' => DATE, 'amount' => $postData['amt'], 'joined' => $appData->joined,
-                    'allocation' => $appData->allocation, 'remaining' => $appData->remaining
+                    'joined_usd' => $postData['joined_usd'], 'allocation' => $appData->allocation, 'remaining' => $appData->remaining
                 ];
                 $postData['allocation_data'] = json_encode($allocation_data);
+
+                /*
+                $postData['total_token'] = $appData->total_token + 0;
+                $postData['available_token'] = $appData->available_token + 0;
+                */
+
+                //ec($postData); die;
 
                 $chkEnt = $this->Applications->patchEntity($appData, $postData, ['validate' => false]);
                 if ($chkEnt->getErrors()) {
@@ -372,7 +385,7 @@ class HomesController extends AppController
             if ($this->Auth->User('id') != "") {
                 $query = $this->Applications->find('all', [
                     'contain' => ['Projects' => ['Blockchains'], 'Users', 'Tickets' => ['conditions' => ['Tickets.status' => 1]]],
-                    'conditions' => ['Applications.status'=>4,'Applications.project_id' => $id, 'Applications.user_id' => $this->Auth->User('id')]
+                    'conditions' => ['Applications.status' => 4, 'Applications.project_id' => $id, 'Applications.user_id' => $this->Auth->User('id')]
                 ]);
                 $data =  $query->first();
                 if (!empty($data)) {
@@ -388,7 +401,7 @@ class HomesController extends AppController
                         $coin_price = $data->project->blockchain->price;
                     }
                     $max_usd = $ticket_allocation * $max_tickets;
-                    $max_amt = $max_usd / $coin_price;
+                    $max_amt = number_format($max_usd / $coin_price, 3);
                     $short_name = $data->project->blockchain->short_name;
                     if ((float)$data->allocation <= 0) {
                         $data->allocation = $max_amt;

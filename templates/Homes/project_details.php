@@ -19,7 +19,7 @@ if (!empty($st_date) && $st_date > $today) {
     $timer_st = $st_date;
 }
 
-if (!empty($end_date)) {
+if (!empty($end_date) && strtolower($list->product_status) == 'whitelist closed' ) {
     if (!empty($st_date)) {
         if ($end_date > $st_date && $end_date > $today && $st_date <= $today) {
             $timer_end = $end_date;

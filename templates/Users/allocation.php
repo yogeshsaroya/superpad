@@ -1,4 +1,8 @@
-<?php $this->assign('title', 'Allocations'); ?>
+<?php $this->assign('title', 'Allocations');
+echo $this->Html->css(['magnific-popup'], ['block' => 'css']);
+echo $this->Html->script(['jquery.magnific-popup.min'], ['block' => 'scriptBottom']);
+
+?>
 <section class="about-section pt-5 mt-3 cta-section section-space-b bg-pattern">
     <div class="container pt-5 pb-5">
         <?php if ($data->isEmpty()) { ?>
@@ -34,26 +38,42 @@
                                         </div>
                                         <div class="card-media mb-3">
                                             <div class="card-media-body"><span class="fw-medium fs-13">Staking APR</span></div>
-                                            <div class="card-media-body"><p class="fw-medium text-black text-right fs-14"><?php echo ($average > 0 ? number_format($average,2)."%" : 'N/A'); ?></p></div>
+                                            <div class="card-media-body">
+                                                <p class="fw-medium text-black text-right fs-14"><?php echo ($average > 0 ? number_format($average, 2) . "%" : 'N/A'); ?></p>
+                                            </div>
                                         </div>
                                         <div class="card-media mb-3">
                                             <div class="card-media-body"><span class="fw-medium fs-13">Available Now</span></div>
-                                            <div class="card-media-body"><p class="fw-medium text-black text-right fs-14">N/A</p></div>
+                                            <div class="card-media-body">
+                                                <p class="fw-medium text-black text-right fs-14"><?php echo number_format($list->available_token) . " " . $list->project->ticker; ?></p>
+                                            </div>
                                         </div>
                                         <div class="card-media mb-3">
                                             <div class="card-media-body"><span class="fw-medium fs-13">Claimed</span></div>
-                                            <div class="card-media-body"><p class="fw-medium text-black text-right fs-14">N/A</p></div>
+                                            <div class="card-media-body">
+                                                <p class="fw-medium text-black text-right fs-14"><?php echo number_format($list->claimed_token) . " " . $list->project->ticker; ?></p>
+                                            </div>
                                         </div>
                                         <div class="card-media mb-3">
                                             <div class="card-media-body"><span class="fw-medium fs-13">Total</span></div>
-                                            <div class="card-media-body"><p class="fw-medium text-black text-right fs-14">N/A</p></div>
+                                            <div class="card-media-body">
+                                                <p class="fw-medium text-black text-right fs-14"><?php echo number_format($list->total_token) . " " . $list->project->ticker; ?></p>
+                                            </div>
                                         </div>
                                         <div class="card-media mb-3">
                                             <div class="card-media-body"><span class="fw-medium fs-13">Contribution</span></div>
-                                            <div class="card-media-body"><p class="fw-medium text-black text-right fs-14"><?php echo $list->joined." ".$list->project->blockchain->short_name; ?></p></div>
+                                            <div class="card-media-body">
+                                                <p class="fw-medium text-black text-right fs-14"><?php echo $list->joined . " " . $list->project->blockchain->short_name; ?></p>
+                                            </div>
                                         </div>
                                         <hr>
-                                        <a href="javascript:void(0);" id="to_project" class="btn btn-lg btn-dark">Claim Token</a>
+                                        <?php if ($list->project->product_status == 'Sold Out') {
+                                            if ((int)$list->available_token > 0) {
+                                                echo $this->Html->link('Claim Tokens', 'javascript:void(0);', ['onclick' => 'doClaim(' . $list->id . ');', 'class' => 'btn btn-lg btn-dark']);
+                                            } elseif ((int)$list->available_token == 0) {
+                                                echo $this->Html->link('Check History', 'javascript:void(0);', ['onclick' => 'doClaim(' . $list->id . ');', 'class' => 'btn btn-lg btn-dark']);
+                                            }
+                                        } ?>
                                     </div>
                                 </div>
                             </div>
@@ -65,3 +85,21 @@
         <?php } ?>
     </div>
 </section>
+
+<?php $this->Html->scriptStart(array('block' => 'scriptBottom')); ?>
+function doClaim(id) {
+var d = "<?php echo urlencode(SITEURL . "users/do_claim/"); ?>"+id;
+$.ajax({
+type: 'POST',
+url: '<?php echo SITEURL; ?>homes/open_pop/1',
+data: {url:d},
+success: function(data) {
+$("#cover").html(data);
+},
+error: function(comment) {
+$("#cover").html(comment);
+}
+});
+}
+
+<?php $this->Html->scriptEnd(); ?>

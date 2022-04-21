@@ -118,10 +118,31 @@ class CronsController extends AppController
 
         return $results;
     }
-
+    public function setTokens()
+    {
+        $data = $this->Applications->find()->contain(['Projects'=>['Blockchains']])->select()
+        ->where(['Applications.total_token'=>0,'Applications.joined_usd >'=>0, 'Applications.status' => 4,
+        'Projects.product_status'=>'Sold Out','Projects.price_per_token > '=>0])
+        ->all();
+        if (!$data->isEmpty()) {
+            foreach($data as $list){
+                $tokens = $list->joined_usd / $list->project->price_per_token;
+                if($tokens > 0){
+                    $list->total_token = $tokens;
+                    $list->available_token = $tokens;
+                    $list->claimed_token = 0;
+                    $this->Applications->save($list);
+                    ec($tokens." added for Application ID - ".$list->id);
+                }
+                
+            }
+        }
+        exit;
+        
+    }
     public function mkLottery()
     {
-        //$data = $this->Applications->find()->contain(['Tickets'])->select()->where(['Applications.status' => 2])->all();
+
 
         $data = $this->Projects->find()
             ->contain(['Applications' => ['conditions' => ['Applications.status' => 2], 'Tickets']])
@@ -156,7 +177,7 @@ class CronsController extends AppController
                             $chkEnt = $this->Tickets->find()->where(['id IN' => $ticket_ids])->all();
                             $setEnt = $this->Tickets->patchEntities($chkEnt, $saveTickets, ['validate' => false]);
                             $res = $this->Tickets->saveMany($setEnt);
-                            ec('Tickets Saved for application id '.$applications->id);
+                            ec('Tickets Saved for application id ' . $applications->id);
                         }
                     }
                 }

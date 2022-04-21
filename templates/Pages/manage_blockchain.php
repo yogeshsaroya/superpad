@@ -40,7 +40,7 @@ $getStatus = getStatus();
                                 <div class="row">
                                     <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('name', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('short_name', ['class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('price', ['label' => ['escape' => false, 'text' => 'Price <small>(USD)</small>'],'class' => 'form-control amt', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div></div>
+                                    <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('price', ['label' => ['escape' => false, 'text' => 'Coin Price <small>(equal to 1 USD)</small>'],'class' => 'form-control amt', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div></div>
                                     
                                     <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('status', ['options' => $getStatus,'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                     <div class="col-4 mb-2 form-group">

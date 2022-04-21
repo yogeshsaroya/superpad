@@ -45,7 +45,7 @@
                                             <td><?php echo $this->Html->image(SITEURL.'cdn/blockchains/'.$list->logo, ['alt' => 'logo','width'=>24]); ?></td>
                                                 <td><?php echo $list->name; ?></td>
                                                 <td><?php echo strtoupper($list->short_name); ?></td>
-                                                <td><?php echo number_format($list->price,2); ?></td>
+                                                <td><?php echo $list->price; ?></td>
                                                 <td><?php 
                                                 if($list->status == 1){ echo $this->Html->link('Active',SITEURL . "pages/blockchain?st=".$list->id,['class'=>'text-success'] );  }
                                                 else{ echo $this->Html->link('Inactive',SITEURL . "pages/blockchain?st=".$list->id,['class'=>'text-danger'] );  }?>
