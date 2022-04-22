@@ -173,6 +173,7 @@ class CronsController extends AppController
                         $this->Tickets->updateAll(['status' => 2], ['application_id' => $applications->id]);
                         if (!empty($saveTickets)) {
                             $applications->status = 4;
+                            $applications->is_notified = 1;
                             $app_res = $this->Applications->save($applications);
                             $chkEnt = $this->Tickets->find()->where(['id IN' => $ticket_ids])->all();
                             $setEnt = $this->Tickets->patchEntities($chkEnt, $saveTickets, ['validate' => false]);
