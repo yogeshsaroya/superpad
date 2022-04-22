@@ -120,25 +120,25 @@ class CronsController extends AppController
     }
     public function setTokens()
     {
-        $data = $this->Applications->find()->contain(['Projects'=>['Blockchains']])->select()
-        ->where(['Applications.total_token'=>0,'Applications.joined_usd >'=>0, 'Applications.status' => 4,
-        'Projects.product_status'=>'Sold Out','Projects.price_per_token > '=>0])
-        ->all();
+        $data = $this->Applications->find()->contain(['Projects' => ['Blockchains']])->select()
+            ->where([
+                'Applications.total_token' => 0, 'Applications.joined_usd >' => 0, 'Applications.status' => 4,
+                'Projects.product_status' => 'Sold Out', 'Projects.price_per_token > ' => 0
+            ])
+            ->all();
         if (!$data->isEmpty()) {
-            foreach($data as $list){
+            foreach ($data as $list) {
                 $tokens = $list->joined_usd / $list->project->price_per_token;
-                if($tokens > 0){
+                if ($tokens > 0) {
                     $list->total_token = $tokens;
                     $list->available_token = $tokens;
                     $list->claimed_token = 0;
                     $this->Applications->save($list);
-                    ec($tokens." added for Application ID - ".$list->id);
+                    ec($tokens . " added for Application ID - " . $list->id);
                 }
-                
             }
         }
         exit;
-        
     }
     public function mkLottery()
     {
@@ -185,6 +185,23 @@ class CronsController extends AppController
             }
         }
 
+        exit;
+    }
+
+    public function lotteryNoti()
+    {
+        $data = $this->Applications->find()
+            ->contain(['Users'])
+            ->where(['Applications.status' => 4, 'Applications.is_notified' => 1])->all();
+        if (!$data->isEmpty()) {
+            foreach ($data as $list) {
+                $this->Data->AppMail($list->user->email,13,['NAME' => $list->user->first_name]);
+                $list->is_notified = 2;
+                $this->Applications->save($list);
+                ec("Lottery noti sent to user ".$list->user->email);
+
+            }
+        }
         exit;
     }
 
