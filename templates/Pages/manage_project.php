@@ -1,4 +1,7 @@
 <?php
+
+use Cake\I18n\Number;
+
 $getStatus = getStatus();
 $type = getProjectType();
 $status = getProjectStatus();
@@ -341,12 +344,14 @@ $this->assign('title', 'Manage Projects'); ?>
                                             <tr>
                                                 <th><?php echo $this->Paginator->sort('user.first_name','First Name'); ?></th>
                                                 <th><?php echo $this->Paginator->sort('user.last_name','Last Name'); ?></th>
-                                                <th><?php echo $this->Paginator->sort('user.kyc_address','Address'); ?></th>
-                                                
                                                 <th><?php echo $this->Paginator->sort('user.kyc_completed','KYC Status'); ?></th>
                                                 <th><?php echo $this->Paginator->sort('twitter'); ?></th>
                                                 <th><?php echo $this->Paginator->sort('telegram') ?></th>
                                                 <th><?php echo $this->Paginator->sort('status','Application Status') ?></th>
+                                                <th><?php echo $this->Paginator->sort('joined_usd','Joined $') ?></th>
+                                                <th><?php echo $this->Paginator->sort('actual_spad','SPAD Staked') ?></th>
+                                                <th><?php echo $this->Paginator->sort('available_token') ?></th>
+                                                <th><?php echo $this->Paginator->sort('claimed_token') ?></th>
                                                 <th><?php echo $this->Paginator->sort('created'); ?></th>
                                             </tr>
                                         </thead>
@@ -355,8 +360,7 @@ $this->assign('title', 'Manage Projects'); ?>
                                             if (!empty($data)) {
                                                 foreach ($data as $list) { ?>
                                                     <tr>
-                                                        <td><?php echo $list->user->first_name; ?></td>
-                                                        <td><?php echo $list->user->last_name; ?></td>
+                                                        <td><?php echo $list->user->first_name." ".$list->user->last_name; ?></td>
                                                         <td><?php echo $list->user->kyc_address." <br>".$list->user->kyc_city." ".$list->user->kyc_state."<br>".@$list->user->country->name; ?></td>
                                                         <td><?php 
                                                         if($list->user->kyc_completed == 1){ echo "In-Review";}
@@ -366,6 +370,10 @@ $this->assign('title', 'Manage Projects'); ?>
                                                         <td><?php echo $list->twitter; ?></td>
                                                         <td><?php echo $list->telegram; ?></td>
                                                         <td><?php echo (isset($appStatus[$list->status]) ?  $appStatus[$list->status] : null ); ?></td>
+                                                        <td><?php echo number_format($list->joined_usd,2);?></td>
+                                                        <td><?php echo number_format($list->actual_spad);?></td>
+                                                        <td><?php echo number_format($list->available_token);?></td>
+                                                        <td><?php echo number_format($list->claimed_token);?></td>
                                                         <td><?php echo $list->created->format('Y-m-d'); ?></td>
                                                     </tr>
                                             <?php }
