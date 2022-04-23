@@ -271,7 +271,7 @@ class CronsController extends AppController
                             ec('Tickets Saved for application id ' . $applications->id);
                         }
                     }
-                }
+                }else{ ec('No applications found');}
             }
         }else{ ec('empty');}
 
