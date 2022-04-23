@@ -5,7 +5,9 @@
         }
     </style>
     <?php
-    $arr = json_decode($data->info, true);
+    $arr = null;
+    if(!empty($data)){$arr = json_decode($data->info, true);}
+    
     echo $this->Form->create(null);
     echo $this->Form->end();
     ?>
@@ -48,7 +50,9 @@
                                                 </td>
                                             </tr>
                                     <?php }
-                                    } ?>
+                                    }else{ ?>
+                                    <tr> <td colspan="5" class="text-center text-danger"> Tokens not available for claim yet. </td> </tr>
+                                    <?php } ?>
 
                                 </tbody>
                             </table>

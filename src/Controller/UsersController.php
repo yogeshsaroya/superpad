@@ -928,19 +928,22 @@ class UsersController extends AppController
     {
         $query = $this->Applications->find('all', [
             'contain' => ['Projects' => ['TokenDistributions' => ['sort' => ['TokenDistributions.claim_date' => 'ASC']]]],
-            'conditions' => ['Applications.id' => $id, 'Applications.status' => 4, 'Applications.user_id' => $this->Auth->User('id')]
+            'conditions' => ['Applications.id' => $id, 'Applications.status' => 4, 'Applications.total_token > '=>0,
+            'Applications.user_id' => $this->Auth->User('id')]
         ]);
         $data =  $query->first();
-        $arr = [];
-        if (empty($data->info) && isset($data->project->token_distributions) && !empty($data->project->token_distributions)) {
-            foreach ($data->project->token_distributions as $list) {
-                $arr[strtotime($list->claim_date->format("Y-m-d H:i:s"))] = [
-                    'percentage' => $list->percentage, 'total_token' => $data->total_token * $list->percentage / 100,
-                    'claim_before' => $list->claim_date->format("Y-m-d H:i:s"), 'claim_on' => null
-                ];
+        if(!empty($data)){
+            $arr = [];
+            if (empty($data->info) && isset($data->project->token_distributions) && !empty($data->project->token_distributions)) {
+                foreach ($data->project->token_distributions as $list) {
+                    $arr[strtotime($list->claim_date->format("Y-m-d H:i:s"))] = [
+                        'percentage' => $list->percentage, 'total_token' => $data->total_token * $list->percentage / 100,
+                        'claim_before' => $list->claim_date->format("Y-m-d H:i:s"), 'claim_on' => null
+                    ];
+                }
+                $data->info = json_encode($arr);
+                $this->Applications->save($data);
             }
-            $data->info = json_encode($arr);
-            $this->Applications->save($data);
         }
         $this->set(compact('data'));
     }
