@@ -273,7 +273,7 @@ class CronsController extends AppController
                     }
                 }
             }
-        }
+        }else{ ec('empty');}
 
         exit;
     }
@@ -293,7 +293,7 @@ class CronsController extends AppController
                 $this->Applications->save($list);
                 ec("Lottery noti sent to user " . $list->user->email);
             }
-        }
+        }else{ ec('empty');}
         exit;
     }
 
@@ -319,7 +319,7 @@ class CronsController extends AppController
                     ec($tokens . " added for Application ID - " . $list->id);
                 }
             }
-        }
+        }else{ ec('empty');}
         exit;
     }
 }
