@@ -118,100 +118,18 @@ class CronsController extends AppController
 
         return $results;
     }
-    public function setTokens()
-    {
-        $data = $this->Applications->find()->contain(['Projects' => ['Blockchains']])->select()
-            ->where([
-                'Applications.total_token' => 0, 'Applications.joined_usd >' => 0, 'Applications.status' => 4,
-                'Projects.product_status' => 'Sold Out', 'Projects.price_per_token > ' => 0
-            ])
-            ->all();
-        if (!$data->isEmpty()) {
-            foreach ($data as $list) {
-                $tokens = $list->joined_usd / $list->project->price_per_token;
-                if ($tokens > 0) {
-                    $list->total_token = $tokens;
-                    $list->available_token = $tokens;
-                    $list->claimed_token = 0;
-                    $this->Applications->save($list);
-                    ec($tokens . " added for Application ID - " . $list->id);
-                }
-            }
-        }
-        exit;
-    }
-    public function mkLottery()
-    {
 
 
-        $data = $this->Projects->find()
-            ->contain(['Applications' => ['conditions' => ['Applications.status' => 2], 'Tickets']])
-            ->select(['id', 'title', 'product_status', 'status', 'end_date', 'total_raise', 'ticket_allocation', 'price_per_token'])
-            ->where(['Projects.product_status' => 'Whitelist Closed'])->all();
-        $saveTickets = $ticket_ids = [];
-        if (!$data->isEmpty()) {
-            foreach ($data as $projects) {
-                if (!empty($projects->applications)) {
-                    foreach ($projects->applications as $applications) {
-                        $tot = count($applications->tickets);
-                        $num = $tot;
-                        if ($tot > $applications->max_ticket_allocation) {
-                            $num = (int)$applications->max_ticket_allocation;
-                        }
-
-                        $rand_keys = array_rand($applications->tickets, $num);
-                        if ($rand_keys === 0) {
-                            $saveTickets[] = ['id' => $applications->tickets[0]->id, 'status' => 1];
-                            $ticket_ids[] = $applications->tickets[0]->id;
-                        } else {
-                            foreach ($rand_keys as $k => $v) {
-                                $saveTickets[] = ['id' => $applications->tickets[$v]->id, 'status' => 1];
-                                $ticket_ids[] = $applications->tickets[$v]->id;
-                            }
-                        }
-
-                        $this->Tickets->updateAll(['status' => 2], ['application_id' => $applications->id]);
-                        if (!empty($saveTickets)) {
-                            $applications->status = 4;
-                            $applications->is_notified = 1;
-                            $app_res = $this->Applications->save($applications);
-                            $chkEnt = $this->Tickets->find()->where(['id IN' => $ticket_ids])->all();
-                            $setEnt = $this->Tickets->patchEntities($chkEnt, $saveTickets, ['validate' => false]);
-                            $res = $this->Tickets->saveMany($setEnt);
-                            ec('Tickets Saved for application id ' . $applications->id);
-                        }
-                    }
-                }
-            }
-        }
-
-        exit;
-    }
-
-    public function lotteryNoti()
-    {
-        $data = $this->Applications->find()
-            ->contain(['Users'])
-            ->where(['Applications.status' => 4, 'Applications.is_notified' => 1])->all();
-        if (!$data->isEmpty()) {
-            foreach ($data as $list) {
-                $this->Data->AppMail($list->user->email,13,['NAME' => $list->user->first_name]);
-                $list->is_notified = 2;
-                $this->Applications->save($list);
-                ec("Lottery noti sent to user ".$list->user->email);
-
-            }
-        }
-        exit;
-    }
-
+    /* Setp 1  //  mk_ticket
+    Create tickets when sales status is Whitelist Closed and Applications status is 1
+    */
     public function mkTicket()
     {
         $levels = $this->Levels->find()
             ->order(['spad' => 'ASC'])
             ->all();
         $tire = null;
-        if (!empty($levels)) {
+        if (!$levels->isEmpty()) {
             foreach ($levels as $a) {
                 if (!empty($a->spad)) {
                     $tire[$a->spad] = [
@@ -233,10 +151,8 @@ class CronsController extends AppController
             ->contain(['Applications' => ['conditions' => ['Applications.status' => 1], 'Users' => ['UserStakes']]])
             ->select(['id', 'title', 'product_status', 'status', 'end_date'])
             ->where(['Projects.product_status' => 'Whitelist Closed'])->all();
-
         $saveMany = $saveManyApp = [];
-        if (!empty($data)) {
-
+        if (!$data->isEmpty()) {
             foreach ($data as $list) {
                 if (!empty($list['applications'])) {
                     foreach ($list['applications'] as $app) {
@@ -309,6 +225,100 @@ class CronsController extends AppController
             }
         } else {
             ec('Empty');
+        }
+        exit;
+    }
+
+    /* Setp 2  // mk_lottery
+    do lottery when sales status is Whitelist Closed and Applications status is 2
+    */
+    public function mkLottery()
+    {
+        $data = $this->Projects->find()
+            ->contain(['Applications' => ['conditions' => ['Applications.status' => 2], 'Tickets']])
+            ->select(['id', 'title', 'product_status', 'status', 'end_date', 'total_raise', 'ticket_allocation', 'price_per_token'])
+            ->where(['Projects.product_status' => 'Whitelist Closed'])->all();
+        $saveTickets = $ticket_ids = [];
+        if (!$data->isEmpty()) {
+            foreach ($data as $projects) {
+                if (!empty($projects->applications)) {
+                    foreach ($projects->applications as $applications) {
+                        $tot = count($applications->tickets);
+                        $num = $tot;
+                        if ($tot > $applications->max_ticket_allocation) {
+                            $num = (int)$applications->max_ticket_allocation;
+                        }
+
+                        $rand_keys = array_rand($applications->tickets, $num);
+                        if ($rand_keys === 0) {
+                            $saveTickets[] = ['id' => $applications->tickets[0]->id, 'status' => 1];
+                            $ticket_ids[] = $applications->tickets[0]->id;
+                        } else {
+                            foreach ($rand_keys as $k => $v) {
+                                $saveTickets[] = ['id' => $applications->tickets[$v]->id, 'status' => 1];
+                                $ticket_ids[] = $applications->tickets[$v]->id;
+                            }
+                        }
+
+                        $this->Tickets->updateAll(['status' => 2], ['application_id' => $applications->id]);
+                        if (!empty($saveTickets)) {
+                            $applications->status = 4;
+                            $applications->is_notified = 1;
+                            $app_res = $this->Applications->save($applications);
+                            $chkEnt = $this->Tickets->find()->where(['id IN' => $ticket_ids])->all();
+                            $setEnt = $this->Tickets->patchEntities($chkEnt, $saveTickets, ['validate' => false]);
+                            $res = $this->Tickets->saveMany($setEnt);
+                            ec('Tickets Saved for application id ' . $applications->id);
+                        }
+                    }
+                }
+            }
+        }
+
+        exit;
+    }
+
+    /* Setp 3 // lottery_noti
+    send email to those selected for lottery 
+    */
+    public function lotteryNoti()
+    {
+        $data = $this->Applications->find()
+            ->contain(['Users'])
+            ->where(['Applications.status' => 4, 'Applications.is_notified' => 1])->all();
+        if (!$data->isEmpty()) {
+            foreach ($data as $list) {
+                $this->Data->AppMail($list->user->email, 13, ['NAME' => $list->user->first_name]);
+                $list->is_notified = 2;
+                $this->Applications->save($list);
+                ec("Lottery noti sent to user " . $list->user->email);
+            }
+        }
+        exit;
+    }
+
+    /* Setp 4  // set_tokens
+        Set number of tokens when sales status is sold out and application joined_usd is >0 
+        */
+    public function setTokens()
+    {
+        $data = $this->Applications->find()->contain(['Projects' => ['Blockchains']])->select()
+            ->where([
+                'Applications.total_token' => 0, 'Applications.joined_usd >' => 0, 'Applications.status' => 4,
+                'Projects.product_status' => 'Sold Out', 'Projects.price_per_token > ' => 0
+            ])
+            ->all();
+        if (!$data->isEmpty()) {
+            foreach ($data as $list) {
+                $tokens = $list->joined_usd / $list->project->price_per_token;
+                if ($tokens > 0) {
+                    $list->total_token = $tokens;
+                    $list->available_token = $tokens;
+                    $list->claimed_token = 0;
+                    $this->Applications->save($list);
+                    ec($tokens . " added for Application ID - " . $list->id);
+                }
+            }
         }
         exit;
     }

@@ -400,6 +400,7 @@ class HomesController extends AppController
                     if (isset($data->project->blockchain->price) && $data->project->blockchain->price > 0) {
                         $coin_price = $data->project->blockchain->price;
                     }
+                    
                     $max_usd = $ticket_allocation * $max_tickets;
                     $max_amt = number_format($max_usd / $coin_price, 3);
                     $short_name = $data->project->blockchain->short_name;
