@@ -78,7 +78,7 @@ $this->assign('title', 'Manage Projects'); ?>
                                         $file_req = false;
                                     }
                                     $pro_st = true;
-                                    if( in_array($get_data->product_status,['Whitelist Closed','Sold Out']) ){
+                                    if( in_array($get_data->product_status,['Whitelist Closed']) ){
                                         $pro_st = false; 
                                     } ?>
 
