@@ -79,7 +79,7 @@ $this->assign('title', 'Manage Projects'); ?>
                                     }
                                     $pro_st = true;
                                     if( in_array($get_data->product_status,['Whitelist Closed']) ){
-                                        $pro_st = false; 
+                                       // $pro_st = false; 
                                     } ?>
 
                                     <div class="row">
