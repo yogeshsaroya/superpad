@@ -90,6 +90,35 @@ class CronsController extends AppController
         exit;
     }
 
+    /*
+    To update sale status ##  update_sales_status
+    */
+    public function updateSalesStatus()
+    {
+        $query = $this->Projects->find()->where(['product_status' => 'Whitelist Open', 'start_date <=' => DATE]);
+        $data = $query->all();
+        if (!$data->isEmpty()) {
+            foreach ($data as $list) {
+                $list->product_status = 'Whitelist Closed';
+                $this->Projects->save($list);
+                ec("Sale " . $list->title . " status has been changed to Whitelist Closed");
+            }
+        } else { ec("Whitelist Open sales not found"); }
+
+        $query1 = $this->Projects->find()->where(['product_status' => 'Whitelist Closed', 'end_date <=' => DATE]);
+        $data1 = $query1->all();
+        if (!$data1->isEmpty()) {
+            foreach ($data1 as $list1) {
+                $list1->product_status = 'Sold Out';
+                $this->Projects->save($list1);
+                ec("Sale " . $list1->title . " status has been changed to Slod Out");
+            }
+        } else { ec("Whitelist Closed sales not found"); }
+
+        exit;
+    }
+
+
     function array_random($array, $number = null)
     {
         $requested = ($number === null) ? 1 : $number;
@@ -271,9 +300,13 @@ class CronsController extends AppController
                             ec('Tickets Saved for application id ' . $applications->id);
                         }
                     }
-                }else{ ec('No applications found');}
+                } else {
+                    ec('No applications found');
+                }
             }
-        }else{ ec('empty');}
+        } else {
+            ec('empty');
+        }
 
         exit;
     }
@@ -293,7 +326,9 @@ class CronsController extends AppController
                 $this->Applications->save($list);
                 ec("Lottery noti sent to user " . $list->user->email);
             }
-        }else{ ec('empty');}
+        } else {
+            ec('empty');
+        }
         exit;
     }
 
@@ -319,7 +354,9 @@ class CronsController extends AppController
                     ec($tokens . " added for Application ID - " . $list->id);
                 }
             }
-        }else{ ec('empty');}
+        } else {
+            ec('empty');
+        }
         exit;
     }
 }

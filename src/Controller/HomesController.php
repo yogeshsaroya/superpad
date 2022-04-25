@@ -236,6 +236,20 @@ class HomesController extends AppController
             ]);
             $data =  $query->first();
             if (!empty($data)) {
+                /* Change status on whitelist open  to whitelist Closed*/
+                if ($data->product_status == 'Whitelist Open' && !empty($data->start_date) && strtotime($data->start_date->format('Y-m-d H:i:s')) <= strtotime(DATE) ) 
+                {
+                    $data->product_status = 'Whitelist Closed';
+                    $this->Projects->save($data);
+                }
+                /* Change status on whitelist close  to Sold Out*/
+                if ($data->product_status == 'Whitelist Closed' && !empty($data->end_date) && strtotime($data->end_date->format('Y-m-d H:i:s')) <= strtotime(DATE) ) 
+                {
+                    $data->product_status = 'Sold Out';
+                    $this->Projects->save($data);
+                }
+
+
                 $data_app = null;
                 if ($this->Auth->User('id') != "") {
                     $data_app = $this->Applications->find()->where(['project_id' => $data->id, 'user_id' => $this->Auth->User('id')])->first();
@@ -400,7 +414,7 @@ class HomesController extends AppController
                     if (isset($data->project->blockchain->price) && $data->project->blockchain->price > 0) {
                         $coin_price = $data->project->blockchain->price;
                     }
-                    
+
                     $max_usd = $ticket_allocation * $max_tickets;
                     $max_amt = number_format($max_usd / $coin_price, 3);
                     $short_name = $data->project->blockchain->short_name;

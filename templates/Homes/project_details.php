@@ -32,6 +32,11 @@ if (!empty($end_date) && strtolower($list->product_status) == 'whitelist closed'
 }
 ?>
 <?php echo $this->Html->css(['/assets/css/pro_dt']); ?>
+<div id="cssLoader">
+
+</div>
+
+
 <section class="item-detail-section ">
     <div class="container">
         <div class="ps--project-show">
@@ -261,6 +266,7 @@ if (!empty($end_date) && strtolower($list->product_status) == 'whitelist closed'
                                 <?php } ?>
                             <?php } else if (strtolower($list->product_status) == 'sold out') { ?>
                                 <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Sold Out</a> </li>
+                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL;?>allocation">Claim Now</a> </li>  
                             <?php } ?>
                         </ul>
                     </div>
@@ -269,7 +275,7 @@ if (!empty($end_date) && strtolower($list->product_status) == 'whitelist closed'
                 <?php if (!empty($timer_st)) { ?>
                     <div class="timers">
                         <div class="rounded">
-                            <p class="mb-2 text-uppercase">SALE STARTS IN</p>
+                            <p class="mb-2 text-uppercase"> WHITELIST ENDS IN</p>
                             <div id="clock" class="countdown"></div>
                         </div>
                     </div>
@@ -342,7 +348,12 @@ $("#cover").html(comment);
     + '<span class="clockbx"><span class="h1 font-weight-bold h1">%M</span> Min</span>'
     + '<span class="clockbx"><span class="h1 font-weight-bold h1">%S</span>Sec</span>'));
     })
-    .on('finish.countdown', function(event) { location.reload(); });
+    .on('finish.countdown', function(event) { 
+        $("#cssLoader").html('<div id="loader" class="loader loader-curtain is-active" data-curtain-text="Whitelist Ended"></div>');
+        setTimeout(function(){ 
+            location.reload(); 
+        }, 2000);
+    });
     });
 <?php }  ?>
 
@@ -356,7 +367,12 @@ $("#cover").html(comment);
     + '<span class="clockbx"><span class="h1 font-weight-bold h1">%S</span>Sec</span>'));
     })
     .on('finish.countdown', function(event) {
-    $("#sales_end").html('<p class="mb-2 text-uppercase">This sale has ended!</p>');
+        $("#cssLoader").html('<div id="loader" class="loader loader-curtain is-active" data-curtain-text="Saled Ended"></div>');
+        $("#sales_end").html('<p class="mb-2 text-uppercase">This sale has ended!</p>');
+        setTimeout(function(){ 
+            location.reload(); 
+        }, 2000);
+        
     });
     });
 <?php }  ?>

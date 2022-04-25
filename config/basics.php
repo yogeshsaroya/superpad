@@ -131,8 +131,8 @@ function getProjectStatus()
         'Coming Soon' => 'Coming Soon',
         'Whitelist Open' => 'Whitelist Open',
         'Whitelist Closed' => 'Whitelist Closed',
-        'Live Now' => 'Live now',
         'Sold Out' => 'Sold Out',
+        'Live Now' => 'Live now',
         'TBA' => 'TBA'
     ];
 }

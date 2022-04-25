@@ -4,7 +4,11 @@ use Cake\I18n\Number;
 
 $getStatus = getStatus();
 $type = getProjectType();
-$status = getProjectStatus();
+$status = [
+    'TBA' => 'TBA',
+    'Coming Soon' => 'Coming Soon',
+    'Whitelist Open' => 'Whitelist Open',
+    'Live Now' => 'Live now'];
 $appStatus = getAppStatus();
 $this->assign('title', 'Manage Projects'); ?>
 
@@ -73,7 +77,10 @@ $this->assign('title', 'Manage Projects'); ?>
                                     if (isset($get_data->id) && !empty($get_data->id)) {
                                         $file_req = false;
                                     }
-                                    ?>
+                                    $pro_st = true;
+                                    if( in_array($get_data->product_status,['Whitelist Closed','Sold Out']) ){
+                                        $pro_st = false; 
+                                    } ?>
 
                                     <div class="row">
                                         <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('title', ['label' => ['escape' => false, 'text' => 'Title <small>(unique project title)</small>'], 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div>
@@ -89,7 +96,7 @@ $this->assign('title', 'Manage Projects'); ?>
                                         <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('type', ['options' => $type, 'empty' => 'Select Type', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div>
                                         </div>
                                         
-                                        <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('product_status', ['options' => $status, 'empty' => 'Select Status', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div>
+                                        <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('product_status', ['options' =>($pro_st === true ? $status : null ) , 'empty' => 'Select Status', 'class' => 'form-control', 'required' => $pro_st, 'disabled'=>($pro_st === true ? false : true) ]); ?><div class="help-block with-errors"></div>
                                         </div>
                                         <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('blockchain_id', ['options' => $this->Data->getBlockchains('list'), 'empty' => 'Select Blockchain Network', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div>
                                         </div>
