@@ -95,26 +95,43 @@ class CronsController extends AppController
     */
     public function updateSalesStatus()
     {
-        $query = $this->Projects->find()->where(['product_status' => 'Whitelist Open', 'start_date <=' => DATE]);
+        ec(DATE);
+        $query = $this->Projects->find()->where(['product_status IN' => ['Coming Soon','Whitelist Open','Whitelist Closed','Live Now','Sold Out']]);
         $data = $query->all();
         if (!$data->isEmpty()) {
             foreach ($data as $list) {
-                $list->product_status = 'Whitelist Closed';
-                $this->Projects->save($list);
-                ec("Sale " . $list->title . " status has been changed to Whitelist Closed");
-            }
-        } else { ec("Whitelist Open sales not found"); }
+                $dateArr = [
+                    'whitelist_starts' => $list->whitelist_starts, 'whitelist_ends' => $list->whitelist_ends,
+                    'sale_starts' => $list->sale_starts, 'sale_ends' => $list->sale_ends, 'token_distribution_starts' => $list->token_distribution_starts
+                ];
+                ec($dateArr);
+                /* Change status from comming soon to whitelist Open*/
+                if ($list->product_status == 'Coming Soon' && !empty($list->whitelist_starts) && strtotime($list->whitelist_starts->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
+                    $list->product_status = 'Whitelist Open';
+                    $this->Projects->save($list);
+                    ec("Sale " . $list->title . " status has been changed to Whitelist Open");
+                }
+                /* Change status from whitelist open to whitelist Closed*/
+                elseif ($list->product_status == 'Whitelist Open' && !empty($list->whitelist_ends) && strtotime($list->whitelist_ends->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
+                    $list->product_status = 'Whitelist Closed';
+                    $this->Projects->save($list);
+                    ec("Sale " . $list->title . " status has been changed to Whitelist Closed");
+                }
+                /* Change status from whitelist Closed to whitelist end*/
+                elseif ($list->product_status == 'Whitelist Closed' && !empty($list->sale_starts) && strtotime($list->sale_starts->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
+                    $list->product_status = 'Live Now';
+                    $this->Projects->save($list);
+                    ec("Sale " . $list->title . " status has been changed to Live Now");
+                }
+                /* Change status from whitelist Closed to whitelist end*/
+                elseif ($list->product_status == 'Live Now' && !empty($list->sale_ends) && strtotime($list->sale_ends->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
+                    $list->product_status = 'Sold Out';
+                    $this->Projects->save($list);
+                    ec("Sale " . $list->title . " status has been changed to Sold Out");
+                }
 
-        $query1 = $this->Projects->find()->where(['product_status' => 'Whitelist Closed', 'end_date <=' => DATE]);
-        $data1 = $query1->all();
-        if (!$data1->isEmpty()) {
-            foreach ($data1 as $list1) {
-                $list1->product_status = 'Sold Out';
-                $this->Projects->save($list1);
-                ec("Sale " . $list1->title . " status has been changed to Slod Out");
             }
-        } else { ec("Whitelist Closed sales not found"); }
-
+        } else { ec("Sales not found"); }
         exit;
     }
 

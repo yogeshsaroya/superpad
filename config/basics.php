@@ -128,12 +128,12 @@ function getProjectType()
 function getProjectStatus()
 {
     return [
+        'TBA' => 'TBA',
         'Coming Soon' => 'Coming Soon',
         'Whitelist Open' => 'Whitelist Open',
         'Whitelist Closed' => 'Whitelist Closed',
-        'Sold Out' => 'Sold Out',
         'Live Now' => 'Live now',
-        'TBA' => 'TBA'
+        'Sold Out' => 'Sold Out',
     ];
 }
 

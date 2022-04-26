@@ -74,7 +74,7 @@ $this->assign('title', 'Manage Projects'); ?>
                                         $file_req = false;
                                     }
                                     $pro_st = true;
-                                    if( !in_array($get_data->product_status,['TBA']) ){
+                                    if( !in_array($get_data->product_status,['TBA','Coming Soon']) ){
                                         $pro_st = false; 
                                     } ?>
 

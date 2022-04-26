@@ -238,30 +238,26 @@ class HomesController extends AppController
             
             if (!empty($data)) {
                 /* Change status from comming soon to whitelist Open*/
-                if (!empty($data->whitelist_starts) && strtotime($data->whitelist_starts->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
+                if ($data->product_status == 'Coming Soon' && !empty($data->whitelist_starts) && strtotime($data->whitelist_starts->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
                     $data->product_status = 'Whitelist Open';
                     $this->Projects->save($data);
                 }
                 /* Change status from whitelist open to whitelist Closed*/
-                if (!empty($data->whitelist_ends) && strtotime($data->whitelist_ends->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
+                elseif ($data->product_status == 'Whitelist Open' && !empty($data->whitelist_ends) && strtotime($data->whitelist_ends->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
                     $data->product_status = 'Whitelist Closed';
                     $this->Projects->save($data);
                 }
                 /* Change status from whitelist Closed to whitelist end*/
-                if (!empty($data->sale_starts) && strtotime($data->sale_starts->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
+                elseif ($data->product_status == 'Whitelist Closed' && !empty($data->sale_starts) && strtotime($data->sale_starts->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
                     $data->product_status = 'Live Now';
                     $this->Projects->save($data);
                 }
                 /* Change status from whitelist Closed to whitelist end*/
-                if (!empty($data->sale_ends) && strtotime($data->sale_ends->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
+                elseif ($data->product_status == 'Live Now' && !empty($data->sale_ends) && strtotime($data->sale_ends->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
                     $data->product_status = 'Sold Out';
                     $this->Projects->save($data);
                 }
-                /* Change status from whitelist Closed to whitelist end*/
-                if (!empty($data->token_distribution_starts) && strtotime($data->token_distribution_starts->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
-                    /*$data->product_status = 'Whitelist Closed';
-                    $this->Projects->save($data); */
-                }
+                
                 $data_app = null;
                 if ($this->Auth->User('id') != "") {
                     $data_app = $this->Applications->find()->where(['project_id' => $data->id, 'user_id' => $this->Auth->User('id')])->first();
