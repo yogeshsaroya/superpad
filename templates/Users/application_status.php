@@ -42,7 +42,7 @@ $appStatus = getAppStatus();
                         foreach ($data as $list) { ?>
                             <tr>
                                 <th scope="row" class="fw-regular ps--project-show__logo"><img src="<?php echo SITEURL . "cdn/project_logo/" . $list->project->logo; ?>" class="st_img hero_img" alt="<?php echo $list->project->title; ?>"></th>
-                                <td><?php echo $list->project->title; ?></td>
+                                <td><?php echo $this->Html->link($list->project->title, SITEURL."explore/".$list->project->slug); ?></td>
                                 <td><?php echo ($list->project->price_per_token > 0 ?  $this->Number->currency($list->project->price_per_token, 'USD') : 'TBA'); ?></td>
                                 <td><?php if (isset($appStatus[$list->status])) {
                                         if ($list->status == 4) {

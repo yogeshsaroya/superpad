@@ -6,30 +6,19 @@ echo $this->Html->css(['magnific-popup'], ['block' => 'css']);
 echo $this->Html->script(['jquery.magnific-popup.min'], ['block' => 'scriptBottom']);
 
 $today = strtotime(DATE);
-$st_date = $end_date = null;
-if (!empty($list->start_date)) {
-    $st_date = strtotime($list->start_date->format('Y-m-d H:i:s'));
-}
-if (!empty($list->end_date)) {
-    $end_date = strtotime($list->end_date->format('Y-m-d H:i:s'));
-}
-$timer_st = $timer_end = null;
+$steps = $step_1 = $step_2 = $step_3 = $step_4 = $step_5 = null;
+$date_1 = $date_2 = $date_3 = $date_4 = $date_5 = null;
+if (!empty($list->whitelist_starts)) { $date_1 = strtotime($list->whitelist_starts->format('Y-m-d H:i:s')); }
+if (!empty($list->whitelist_ends)) { $date_2 = strtotime($list->whitelist_ends->format('Y-m-d H:i:s')); }
+if (!empty($list->sale_starts)) { $date_3 = strtotime($list->sale_starts->format('Y-m-d H:i:s')); }
+if (!empty($list->sale_ends)) { $date_4 = strtotime($list->sale_ends->format('Y-m-d H:i:s')); }
+if (!empty($list->token_distribution_starts)) { $date_5 = strtotime($list->token_distribution_starts->format('Y-m-d H:i:s')); }
 
-if (!empty($st_date) && $st_date > $today) {
-    $timer_st = $st_date;
-}
-
-if (!empty($end_date) && strtolower($list->product_status) == 'whitelist closed' ) {
-    if (!empty($st_date)) {
-        if ($end_date > $st_date && $end_date > $today && $st_date <= $today) {
-            $timer_end = $end_date;
-        }
-    } else {
-        if ($end_date > $today) {
-            $timer_end = $end_date;
-        }
-    }
-}
+if (!empty($date_1) && $date_1 > $today) { $steps = $step_1 = $date_1; }
+if (!empty($date_2) && $date_2 > $today) { $steps = $step_2 = $date_2; }
+if (!empty($date_3) && $date_3 > $today) { $steps = $step_3 = $date_3; }
+if (!empty($date_4) && $date_4 > $today) { $steps = $step_4 = $date_4; }
+if (!empty($date_5) && $date_5 > $today) { $steps = $step_5 = $date_5; }
 ?>
 <?php echo $this->Html->css(['/assets/css/pro_dt']); ?>
 <div id="cssLoader">
@@ -271,8 +260,6 @@ if (!empty($end_date) && strtolower($list->product_status) == 'whitelist closed'
                             </div>
                         </div>
                     </div>
-
-
                     <div class="item-detail-btns mt-4">
                         <ul class="btns-group d-flex">
                             <?php if (strtolower($list->product_status) == 'whitelist open') { ?>
@@ -286,7 +273,7 @@ if (!empty($end_date) && strtolower($list->product_status) == 'whitelist closed'
                                     <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL; ?>sign-in?redirect=explore/<?php echo $list->slug; ?>/apply">Login to Whitelist</a></li>
                                 <?php } ?>
 
-                                <?php } else if (strtolower($list->product_status) == 'whitelist closed' && !empty($timer_end)) {
+                                <?php } else if (strtolower($list->product_status) == 'live now' ) {
                                 if (isset($Auth->role) && $Auth->role == 2) { ?>
                                     <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="joinNow(<?php echo $list->id; ?>);">Join Now</a> </li>
                                 <?php } else { ?>
@@ -294,29 +281,24 @@ if (!empty($end_date) && strtolower($list->product_status) == 'whitelist closed'
                                 <?php } ?>
                             <?php } else if (strtolower($list->product_status) == 'sold out') { ?>
                                 <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Sold Out</a> </li>
+                                <?php if(empty($step_5)){?>
                                 <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL;?>allocation">Claim Now</a> </li>  
+                                <?php }?>
                             <?php } ?>
                         </ul>
                     </div>
                 </div>
-
-                <?php if (!empty($timer_st)) { ?>
-                    <div class="timers">
-                        <div class="rounded">
-                            <p class="mb-2 text-uppercase"> WHITELIST ENDS IN</p>
-                            <div id="clock" class="countdown"></div>
-                        </div>
-                    </div>
-                <?php }
-
-                if (!empty($timer_end)) { ?>
-                    <div class="timers">
-                        <div class="rounded" id="sales_end">
-                            <p class="mb-2 text-uppercase">SALE ENDS IN</p>
-                            <div id="clock" class="countdown"></div>
-                        </div>
-                    </div>
-                <?php } ?>
+                <?php if (!empty($step_1)) { ?>
+                <div class="timers"><div class="rounded"><p class="mb-2 text-uppercase">Whitelist Starts In</p><div id="clock" class="countdown step_1"></div></div></div>
+                <?php }elseif (!empty($step_2)) { ?>
+                <div class="timers"><div class="rounded"><p class="mb-2 text-uppercase">Whitelist Ends In</p><div id="clock" class="countdown step_2"></div></div></div>
+                <?php }elseif (!empty($step_3)) { ?>
+                <div class="timers"><div class="rounded"><p class="mb-2 text-uppercase">Sales Starts In</p><div id="clock" class="countdown step_3"></div></div></div>
+                <?php }elseif (!empty($step_4)) { ?>
+                <div class="timers"><div class="rounded"><p class="mb-2 text-uppercase">Sales Ends In</p><div id="clock" class="countdown step_4"></div></div></div>
+                <?php }elseif (!empty($step_5)) { ?>
+                <div class="timers"><div class="rounded"><p class="mb-2 text-uppercase">Token Distribution Starts in</p><div id="clock" class="countdown step_5"></div></div></div>
+                <?php }?>
             </div>
         </div>
     </div>
@@ -325,10 +307,7 @@ if (!empty($end_date) && strtolower($list->product_status) == 'whitelist closed'
     <div class="container"></div>
 </section>
 <?php
-if (!empty($timer_st)) {
-    echo $this->Html->script(['jquery.countdown.min'], ['block' => 'scriptBottom']);
-}
-if (!empty($timer_end)) {
+if (!empty($steps)) {
     echo $this->Html->script(['jquery.countdown.min'], ['block' => 'scriptBottom']);
 }
 
@@ -367,43 +346,31 @@ $("#cover").html(comment);
 });
 }
 
-<?php if (!empty($timer_st)) { ?>
-    $(function () {
-    $('#clock').countdown('<?php echo date("Y-m-d H:i:s", $timer_st); ?>').on('update.countdown', function(event) {
-    var $this = $(this).html(event.strftime(''
-    + '<span class="clockbx"><span class="font-weight-bold h1">%D</span> Day%!d</span> '
-    + '<span class=" clockbx"><span class="h1 font-weight-bold h1">%H</span> Hr</span> '
-    + '<span class="clockbx"><span class="h1 font-weight-bold h1">%M</span> Min</span>'
-    + '<span class="clockbx"><span class="h1 font-weight-bold h1">%S</span>Sec</span>'));
-    })
-    .on('finish.countdown', function(event) { 
-        $("#cssLoader").html('<div id="loader" class="loader loader-curtain is-active" data-curtain-text="Whitelist Ended"></div>');
-        setTimeout(function(){ 
-            location.reload(); 
-        }, 2000);
-    });
-    });
-<?php }  ?>
+$(function () {
 
-<?php if (!empty($timer_end)) { ?>
-    $(function () {
-    $('#clock').countdown('<?php echo date("Y-m-d H:i:s", $timer_end); ?>').on('update.countdown', function(event) {
-    var $this = $(this).html(event.strftime(''
-    + '<span class="clockbx"><span class="font-weight-bold h1">%D</span> Day%!d</span> '
-    + '<span class=" clockbx"><span class="h1 font-weight-bold h1">%H</span> Hr</span> '
-    + '<span class="clockbx"><span class="h1 font-weight-bold h1">%M</span> Min</span>'
-    + '<span class="clockbx"><span class="h1 font-weight-bold h1">%S</span>Sec</span>'));
-    })
-    .on('finish.countdown', function(event) {
-        $("#cssLoader").html('<div id="loader" class="loader loader-curtain is-active" data-curtain-text="Saled Ended"></div>');
-        $("#sales_end").html('<p class="mb-2 text-uppercase">This sale has ended!</p>');
-        setTimeout(function(){ 
-            location.reload(); 
-        }, 2000);
-        
-    });
-    });
-<?php }  ?>
+    function set_timer(className, datetime, str){
+        $('.'+className+'').countdown(datetime).on('update.countdown', function(event) {
+        var $this = $(this).html(event.strftime(''
+        + '<span class="clockbx"><span class="font-weight-bold h1">%D</span> Day%!d</span> '
+        + '<span class=" clockbx"><span class="h1 font-weight-bold h1">%H</span> Hr</span> '
+        + '<span class="clockbx"><span class="h1 font-weight-bold h1">%M</span> Min</span>'
+        + '<span class="clockbx"><span class="h1 font-weight-bold h1">%S</span>Sec</span>'));
+        })
+        .on('finish.countdown', function(event) { 
+            $("#cssLoader").html('<div id="loader" class="loader loader-curtain is-active" data-curtain-text="'+str+'"></div>');
+            setTimeout(function(){ 
+                location.reload(); 
+            }, 2000);
+        });
+    }
+<?php 
+    if (!empty($step_1)) { echo "set_timer('step_1', '".date("Y-m-d H:i:s", $step_1)."', 'Whitelist Started');"; }  
+    elseif (!empty($step_2)) { echo "set_timer('step_2', '".date("Y-m-d H:i:s", $step_2)."', 'Whitelist Ended');"; }
+    elseif (!empty($step_3)) { echo "set_timer('step_3', '".date("Y-m-d H:i:s", $step_3)."', 'Sale Started');"; }  
+    elseif (!empty($step_4)) { echo "set_timer('step_4', '".date("Y-m-d H:i:s", $step_4)."', 'Sale Ended');"; }    
+    elseif (!empty($step_5)) { echo "set_timer('step_5', '".date("Y-m-d H:i:s", $step_5)."', 'Token Distribution Started');"; }  
+?>
+});
 
 <?php if (!$this->request->is('mobile')) { ?>
     var a = new StickySidebar('.sidebarFixed', {

@@ -237,20 +237,31 @@ class HomesController extends AppController
             $data =  $query->first();
             
             if (!empty($data)) {
-                /* Change status on whitelist open  to whitelist Closed*/
-                if ($data->product_status == 'Whitelist Open' && !empty($data->start_date) && strtotime($data->start_date->format('Y-m-d H:i:s')) <= strtotime(DATE) ) 
-                {
+                /* Change status from comming soon to whitelist Open*/
+                if (!empty($data->whitelist_starts) && strtotime($data->whitelist_starts->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
+                    $data->product_status = 'Whitelist Open';
+                    $this->Projects->save($data);
+                }
+                /* Change status from whitelist open to whitelist Closed*/
+                if (!empty($data->whitelist_ends) && strtotime($data->whitelist_ends->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
                     $data->product_status = 'Whitelist Closed';
                     $this->Projects->save($data);
                 }
-                /* Change status on whitelist close  to Sold Out*/
-                if ($data->product_status == 'Whitelist Closed' && !empty($data->end_date) && strtotime($data->end_date->format('Y-m-d H:i:s')) <= strtotime(DATE) ) 
-                {
+                /* Change status from whitelist Closed to whitelist end*/
+                if (!empty($data->sale_starts) && strtotime($data->sale_starts->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
+                    $data->product_status = 'Live Now';
+                    $this->Projects->save($data);
+                }
+                /* Change status from whitelist Closed to whitelist end*/
+                if (!empty($data->sale_ends) && strtotime($data->sale_ends->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
                     $data->product_status = 'Sold Out';
                     $this->Projects->save($data);
                 }
-
-
+                /* Change status from whitelist Closed to whitelist end*/
+                if (!empty($data->token_distribution_starts) && strtotime($data->token_distribution_starts->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
+                    /*$data->product_status = 'Whitelist Closed';
+                    $this->Projects->save($data); */
+                }
                 $data_app = null;
                 if ($this->Auth->User('id') != "") {
                     $data_app = $this->Applications->find()->where(['project_id' => $data->id, 'user_id' => $this->Auth->User('id')])->first();
@@ -326,13 +337,12 @@ class HomesController extends AppController
 
     public function joinNow($id = null)
     {
-
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             if ($this->Auth->User('id') != "") {
                 $postData = $this->request->getData();
 
                 $query = $this->Applications->find('all', [
-                    'contain' => ['Projects' => ['Blockchains'], 'Users'],
+                    'contain' => ['Projects','Users'],
                     'conditions' => ['Applications.status' => 4, 'Applications.id' => $postData['id'], 'Applications.user_id' => $this->Auth->User('id')]
                 ]);
                 $appData =  $query->first();
@@ -342,8 +352,8 @@ class HomesController extends AppController
                 }
 
                 $coin_price = 1; /*default will be USD 1*/
-                if (isset($appData->project->blockchain->price) && $appData->project->blockchain->price > 0) {
-                    $coin_price = $appData->project->blockchain->price;
+                if (isset($appData->project->coin_price) && $appData->project->coin_price > 0) {
+                    $coin_price = $appData->project->coin_price;
                 }
 
                 $postData['joined'] = ($appData->joined + $postData['amt']);
@@ -358,14 +368,7 @@ class HomesController extends AppController
                     'joined_usd' => $postData['joined_usd'], 'allocation' => $appData->allocation, 'remaining' => $appData->remaining
                 ];
                 $postData['allocation_data'] = json_encode($allocation_data);
-
-                /*
-                $postData['total_token'] = $appData->total_token + 0;
-                $postData['available_token'] = $appData->available_token + 0;
-                */
-
                 //ec($postData); die;
-
                 $chkEnt = $this->Applications->patchEntity($appData, $postData, ['validate' => false]);
                 if ($chkEnt->getErrors()) {
                     $st = null;
@@ -399,7 +402,7 @@ class HomesController extends AppController
             $data = $short_name = null;
             if ($this->Auth->User('id') != "") {
                 $query = $this->Applications->find('all', [
-                    'contain' => ['Projects' => ['Blockchains'], 'Users', 'Tickets' => ['conditions' => ['Tickets.status' => 1]]],
+                    'contain' => ['Projects', 'Users', 'Tickets' => ['conditions' => ['Tickets.status' => 1]]],
                     'conditions' => ['Applications.status' => 4, 'Applications.project_id' => $id, 'Applications.user_id' => $this->Auth->User('id')]
                 ]);
                 $data =  $query->first();
@@ -412,13 +415,15 @@ class HomesController extends AppController
                     $max_tickets = count($data->tickets);
                     $ticket_allocation = $data->project->ticket_allocation;
                     $coin_price = 1; /*default will be USD 1*/
-                    if (isset($data->project->blockchain->price) && $data->project->blockchain->price > 0) {
-                        $coin_price = $data->project->blockchain->price;
+                    $short_name = 'USD';
+                    if (isset($data->project->coin_price) && $data->project->coin_price > 0) {
+                        $coin_price = $data->project->coin_price;
                     }
+                    if(!empty($data->project->coin_name)){ $short_name = $data->project->coin_name; }
 
                     $max_usd = $ticket_allocation * $max_tickets;
                     $max_amt = number_format($max_usd / $coin_price, 3);
-                    $short_name = $data->project->blockchain->short_name;
+                    
                     if ((float)$data->allocation <= 0) {
                         $data->allocation = $max_amt;
                         $data->remaining = $max_amt;

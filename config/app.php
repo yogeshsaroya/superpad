@@ -417,10 +417,10 @@ return [
      */
     'Session' => [
         'defaults' => 'php',
+        'cookie' => 'super_pad',
         'ini' => [
-            // Invalidate the cookie after 30 minutes without visiting
-            // any page on the site.
-            'session.cookie_lifetime' => 3600
-        ]
+            'session.cookie_lifetime' => 604800 // 7 days
+        ],
+        'timeout' => 10080 // 7 days
     ],
 ];

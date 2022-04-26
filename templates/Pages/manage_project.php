@@ -4,7 +4,7 @@ use Cake\I18n\Number;
 
 $getStatus = getStatus();
 $type = getProjectType();
-$status = ['TBA' => 'TBA'];
+$status = ['TBA' => 'TBA','Coming Soon' => 'Coming Soon'];
 $appStatus = getAppStatus();
 $this->assign('title', 'Manage Projects'); ?>
 

@@ -150,7 +150,7 @@ class CronsController extends AppController
 
 
     /* Setp 1  //  mk_ticket
-    Create tickets when sales status is Whitelist Closed and Applications status is 1
+    Create tickets when sales status is Live Now and Applications status is 1
     */
     public function mkTicket()
     {
@@ -178,8 +178,9 @@ class CronsController extends AppController
 
         $data = $this->Projects->find()
             ->contain(['Applications' => ['conditions' => ['Applications.status' => 1], 'Users' => ['UserStakes']]])
-            ->select(['id', 'title', 'product_status', 'status', 'end_date'])
-            ->where(['Projects.product_status' => 'Whitelist Closed'])->all();
+            ->select(['id', 'title', 'product_status', 'status', 'sale_starts','sale_ends'])
+            ->where(['Projects.product_status' => 'Live Now'])->all();
+
         $saveMany = $saveManyApp = [];
         if (!$data->isEmpty()) {
             foreach ($data as $list) {
@@ -259,14 +260,14 @@ class CronsController extends AppController
     }
 
     /* Setp 2  // mk_lottery
-    do lottery when sales status is Whitelist Closed and Applications status is 2
+    do lottery when sales status is Live Now and Applications status is 2
     */
     public function mkLottery()
     {
         $data = $this->Projects->find()
             ->contain(['Applications' => ['conditions' => ['Applications.status' => 2], 'Tickets']])
-            ->select(['id', 'title', 'product_status', 'status', 'end_date', 'total_raise', 'ticket_allocation', 'price_per_token'])
-            ->where(['Projects.product_status' => 'Whitelist Closed'])->all();
+            ->select(['id', 'title', 'product_status', 'status', 'sale_starts','sale_ends', 'total_raise', 'ticket_allocation', 'price_per_token'])
+            ->where(['Projects.product_status' => 'Live Now'])->all();
         $saveTickets = $ticket_ids = [];
         if (!$data->isEmpty()) {
             foreach ($data as $projects) {
@@ -340,7 +341,7 @@ class CronsController extends AppController
         $data = $this->Applications->find()->contain(['Projects' => ['Blockchains']])->select()
             ->where([
                 'Applications.total_token' => 0, 'Applications.joined_usd >' => 0, 'Applications.status' => 4,
-                'Projects.product_status' => 'Sold Out', 'Projects.price_per_token > ' => 0
+                'Projects.product_status' => 'Sold Out', 'Projects.price_per_token >' => 0
             ])
             ->all();
         if (!$data->isEmpty()) {
