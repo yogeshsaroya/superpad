@@ -716,6 +716,16 @@ progress {
     }
 }
 
+@media (min-width: 1440px) {
+    .container,
+    .container-sm,
+    .container-md,
+    .container-lg,
+    .container-xl {
+        max-width: 1300px;
+    }
+}
+
 .row {
     --bs-gutter-x: 2rem;
     --bs-gutter-y: 0;

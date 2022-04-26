@@ -226,7 +226,7 @@ class HomesController extends AppController
 
         if (!empty($id)) {
             $query = $this->Projects->find('all', [
-                'contain' => [
+                'contain' => ['TokenDistributions',
                     'Blockchains' => ['conditions' => ['Blockchains.status' => 1]],
                     'Teams' => ['conditions' => ['Teams.status' => 1]],
                     'SmAccounts' => ['conditions' => ['SmAccounts.featured' => 2]],
@@ -235,6 +235,7 @@ class HomesController extends AppController
                 'conditions' => ['Projects.slug' => $id, 'Projects.status' => 1]
             ]);
             $data =  $query->first();
+            
             if (!empty($data)) {
                 /* Change status on whitelist open  to whitelist Closed*/
                 if ($data->product_status == 'Whitelist Open' && !empty($data->start_date) && strtotime($data->start_date->format('Y-m-d H:i:s')) <= strtotime(DATE) ) 

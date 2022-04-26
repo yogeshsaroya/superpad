@@ -28,7 +28,6 @@ class PagesController extends AppController
         $this->loadComponent('Paginator');
     }
 
-
     public function index()
     {
         $this->redirect('/pages/users');
@@ -772,17 +771,29 @@ class PagesController extends AppController
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $file_name = $file_name_img = null;
             $postData = $this->request->getData();
-
-            if (!empty($postData['start_date']) && !empty($postData['end_date'])) {
-                if (strtotime($postData['start_date']) > strtotime($postData['end_date'])) {
-                    echo '<div class="alert alert-danger">Sale START DATE/TIME should be smaller to sale END DATE/TIME.</div>';
-                    exit;
-                } elseif (strtotime($postData['end_date']) < strtotime($postData['start_date'])) {
-                    echo '<div class="alert alert-danger">END DATE/TIME should be greater than START DATE/TIME.</div>';
-                    exit;
-                }
+            $dateArr = [
+                'whitelist_starts' => $postData['whitelist_starts'], 'whitelist_ends' => $postData['whitelist_ends'],
+                'sale_starts' => $postData['sale_starts'], 'sale_ends' => $postData['sale_ends'], 'token_distribution_starts ' => $postData['token_distribution_starts']
+            ];
+            
+            if (empty($postData['whitelist_starts']) && !empty($postData['whitelist_ends'])) { exit('<div class="alert alert-danger">Please enter whitelist starts in date</div>'); }
+            if (empty($postData['whitelist_ends']) && !empty($postData['sale_starts'])) { exit('<div class="alert alert-danger">Please enter whitelist ends in date</div>'); }
+            if (empty($postData['sale_starts']) && !empty($postData['sale_ends'])) { exit('<div class="alert alert-danger">Please enter sale starts in date</div>'); }
+            if (empty($postData['sale_ends']) && !empty($postData['token_distribution_starts'])) { exit('<div class="alert alert-danger">Please enter sale ends in date</div>'); }
+            
+            if (!empty($postData['whitelist_starts']) && !empty($postData['whitelist_ends']) && strtotime($postData['whitelist_starts']) >= strtotime($postData['whitelist_ends']) ) {
+                exit('<div class="alert alert-danger">Whitelist ends in DATE/TIME should be greater than to whitelist starts in</div>');
             }
-
+            if (!empty($postData['whitelist_ends']) && !empty($postData['sale_starts']) && strtotime($postData['whitelist_ends']) >= strtotime($postData['sale_starts']) ) {
+                exit('<div class="alert alert-danger">Sale starts in DATE/TIME should be greater than to whitelist ends in</div>');
+            }
+            if (!empty($postData['sale_starts']) && !empty($postData['sale_ends']) && strtotime($postData['sale_starts']) >= strtotime($postData['sale_ends']) ) {
+                exit('<div class="alert alert-danger">Sale ends in DATE/TIME should be greater than to sale starts in</div>');
+            }
+            if (!empty($postData['sale_ends']) && !empty($postData['token_distribution_starts']) && strtotime($postData['sale_ends']) >= strtotime($postData['token_distribution_starts']) ) {
+                exit('<div class="alert alert-danger">Token distribution starts ends in DATE/TIME should be greater than to sale ends in</div>');
+            }
+            
 
             $uploadPath = 'cdn/project_logo/';
             $uploadImg = 'cdn/project_img/';
@@ -1138,7 +1149,7 @@ class PagesController extends AppController
 
                 if (isset($postData['id']) && !empty($postData['id'])) {
                     $bal = $this->TokenDistributions->find()->select(['sum' => 'SUM(TokenDistributions.percentage)'])
-                        ->where(['TokenDistributions.id <>' => $postData['id'],'TokenDistributions.project_id' => $postData['project_id']])->toArray();
+                        ->where(['TokenDistributions.id <>' => $postData['id'], 'TokenDistributions.project_id' => $postData['project_id']])->toArray();
 
                     if (((float)$bal[0]->sum + $postData['percentage']) > 100) {
                         echo '<div class="alert alert-danger" role="alert">Token Distributions cannot exceed more than 100%</div>';

@@ -87,6 +87,7 @@ if (!empty($end_date) && strtolower($list->product_status) == 'whitelist closed'
                             <li class="nav-item" role="presentation"><button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true"> Description </button></li>
                             <li class="nav-item" role="presentation"><button class="nav-link" id="token_sale-tab" data-bs-toggle="tab" data-bs-target="#token_sale" type="button" role="tab" aria-controls="token_sale" aria-selected="false"> Token Sale </button></li>
                             <li class="nav-item" role="presentation"><button class="nav-link" id="tokenomics-tab" data-bs-toggle="tab" data-bs-target="#tokenomics" type="button" role="tab" aria-controls="tokenomics" aria-selected="false"> Tokenomics </button></li>
+                            <li class="nav-item" role="presentation"><button class="nav-link" id="token_distribution-tab" data-bs-toggle="tab" data-bs-target="#token_distribution" type="button" role="tab" aria-controls="token_distribution" aria-selected="false"> Token Distribution </button></li>
                             <li class="nav-item" role="presentation"><button class="nav-link" id="team-tab" data-bs-toggle="tab" data-bs-target="#team" type="button" role="tab" aria-controls="team" aria-selected="false"> Team </button></li>
                             <li class="nav-item" role="presentation"><button class="nav-link" id="partner-tab" data-bs-toggle="tab" data-bs-target="#partner" type="button" role="tab" aria-controls="partner" aria-selected="false"> Partner and Investor </button></li>
                         </ul>
@@ -105,6 +106,33 @@ if (!empty($end_date) && strtolower($list->product_status) == 'whitelist closed'
                                                                     } else {
                                                                         echo "<h3>Not Available</h3>";
                                                                     } ?></div>
+                            </div>
+
+                            <div class="tab-pane fade show" id="token_distribution" role="tabpanel" aria-labelledby="token_distribution-tab">
+                                <div class="item-detail-tab-wrap">
+                                    <?php 
+                                    if (!empty($list->token_distributions)) { ?>
+                                    <div class="table-responsive1" id="no-more-tables">
+                            <table class="table mb-0 table-s1">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left" scope="col">Claimable</th>
+                                        <th class="text-center" scope="col"> %</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php 
+                                        foreach ($list->token_distributions as $tList) {
+                                    ?>
+                                            <tr>
+                                                <td data-title="Claimable" class="text-left"><?php echo $tList->claim_date->format("Y-m-d H:i A"); ?></td>
+                                                <td data-title="%" class="text-center"><?php echo $tList->percentage; ?>%</td>
+                                            </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                         <?php } else { echo "<h3>Not Available</h3>"; } ?></div>
                             </div>
 
                             <div class="tab-pane fade show" id="team" role="tabpanel" aria-labelledby="team-tab">

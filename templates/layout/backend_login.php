@@ -39,7 +39,7 @@
 </head>
 <body class="horizontal-layout horizontal-menu blank-page navbar-floating footer-static  " data-open="hover" data-menu="horizontal-menu" data-col="blank-page">
 
-    <?php echo $this->Flash->render(); ?>
+    <?php //echo $this->Flash->render(); ?>
     <?php echo $this->fetch('content'); ?>
     <script>
         $(window).on('load', function() {
