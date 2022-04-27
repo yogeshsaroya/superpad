@@ -17,23 +17,23 @@
                 </button>
             </div>
             <div class="modal-body">
-                <?php
-                if ($data->user->kyc_completed != 2) { ?>
-                    <div class="alert alert-danger d-flex mb-4" role="alert">
-                        <svg class="flex-shrink-0 me-3" width="30" height="30" viewBox="0 0 24 24" fill="#ff6a8e">
-                            <path d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20, 12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10, 10 0 0,0 12,2M11,17H13V11H11V17Z"></path>
-                        </svg>
-                        <p class="fs-14">Please complete your KYC to join this sale. <br><a href="<?php echo SITEURL;?>users/kyc">Click Here</a> to complete KYC.</p>
-                    </div>
-                    <?php } else {
-                    if (empty($data)) { ?>
+                    <?php  if (empty($data)) { ?>
                         <div class="alert alert-danger d-flex mb-4" role="alert">
                             <svg class="flex-shrink-0 me-3" width="30" height="30" viewBox="0 0 24 24" fill="#ff6a8e">
                                 <path d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20, 12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10, 10 0 0,0 12,2M11,17H13V11H11V17Z"></path>
                             </svg>
                             <p class="fs-14">You have not applied for this sale or lottery ticket not allocated yet. check your email for lottery status</p>
                         </div>
-                    <?php } else { ?>
+                    <?php } 
+                    elseif ($data->user->kyc_completed != 2) { ?>
+<div class="alert alert-danger d-flex mb-4" role="alert">
+                        <svg class="flex-shrink-0 me-3" width="30" height="30" viewBox="0 0 24 24" fill="#ff6a8e">
+                            <path d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20, 12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10, 10 0 0,0 12,2M11,17H13V11H11V17Z"></path>
+                        </svg>
+                        <p class="fs-14">Please complete your KYC to join this sale. <br><a href="<?php echo SITEURL;?>users/kyc">Click Here</a> to complete KYC.</p>
+                    </div>
+                    <?php }
+                    elseif ($data->user->kyc_completed == 2) {  ?>
                         <?php
                         echo $this->Form->create($data, ['autocomplete' => 'off', 'id' => 'e_frm',]);
                         echo $this->Form->hidden('id');
@@ -67,7 +67,7 @@
 
                 <?php echo $this->Form->end();
                     }
-                } ?>
+                 ?>
             </div>
         </div>
     </div>
