@@ -31,6 +31,7 @@
     font-size: 16px;
     font-weight: 600;
     padding: 10px 12px;
+    width: 100%;
 }
 .filter-item button.btn-dark:hover {
     background: #434fa7;
