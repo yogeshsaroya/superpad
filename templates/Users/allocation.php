@@ -63,7 +63,7 @@ echo $this->Html->script(['jquery.magnific-popup.min'], ['block' => 'scriptBotto
                                         <div class="card-media mb-3">
                                             <div class="card-media-body"><span class="fw-medium fs-13">Contribution</span></div>
                                             <div class="card-media-body">
-                                                <p class="fw-medium text-black text-right fs-14"><?php echo $list->joined . " " . $list->project->blockchain->short_name; ?></p>
+                                                <p class="fw-medium text-black text-right fs-14"><?php echo $list->joined . " " . $list->project->coin_name; ?></p>
                                             </div>
                                         </div>
                                         <hr>
