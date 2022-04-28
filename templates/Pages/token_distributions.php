@@ -26,7 +26,13 @@
                                     ?>
                                     <div class="row">
                                         <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('percentage', ['class' => 'form-control amt', 'required' => true]); ?><div class="help-block with-errors"></div></div>
-                                        <div class="col-md-12 col-12 form-group mb-2"><?php echo $this->Form->control('claim_date', ['class' => 'form-control flatpickr-date-time', 'placeholder' => 'YYY-MM-DD HH:MM','required' => true]); ?>
+                                        <div class="col-md-12 col-12 form-group mb-2">
+                                        <label for="basic-url" class="form-label">Claim Date</label>
+                                        <div class="input-group "><?php echo $this->Form->control('claim_date', ['id'=>'ste_1_date', 'type' => 'text', 'value' => $form_data->claim_date ? $form_data->claim_date->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
+                                        <span class="input-group-text" id="step_1">Clear</span></div><div class="help-block with-errors"></div>
+                                    </div>
+
+
                                         <div class="help-block with-errors"></div></div>
                                         <div class="col-12 mt-50">
                                             <div id="f_err"></div>
@@ -47,6 +53,13 @@
 
     <script>
         $(document).ready(function() {
+            $("#step_1").click(function() {
+            $("#ste_1_date").val('');
+        });
+            $('.datetimepicker').datetimepicker({
+            format: 'Y-m-d H:i',
+            minDate: 0 
+        });
             $('.amt').keypress(function(event) {
             return isNumber(event, this)
         });

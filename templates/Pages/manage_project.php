@@ -152,13 +152,13 @@ $this->assign('title', 'Manage Projects'); ?>
                                     
                                     <div class="col-md-2 col-12 form-group mb-2">
                                         <label for="basic-url" class="form-label">Sale Ends In <small>(status will be Live Now)</small></label>
-                                        <div class="input-group "><?php echo $this->Form->control('sale_ends', ['id'=>'ste_3_date', 'type' => 'text', 'value' => $get_data->sale_ends ? $get_data->sale_ends->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
-                                        <span class="input-group-text" id="step_3">Clear</span></div><div class="help-block with-errors"></div>
+                                        <div class="input-group "><?php echo $this->Form->control('sale_ends', ['id'=>'ste_4_date', 'type' => 'text', 'value' => $get_data->sale_ends ? $get_data->sale_ends->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
+                                        <span class="input-group-text" id="step_4">Clear</span></div><div class="help-block with-errors"></div>
                                     </div>
                                     <div class="col-md-2 col-12 form-group mb-2">
                                         <label for="basic-url" class="form-label">Token Distribution Starts In <small>(status will sold out)</small></label>
-                                        <div class="input-group "><?php echo $this->Form->control('token_distribution_starts', ['id'=>'ste_3_date', 'type' => 'text', 'value' => $get_data->token_distribution_starts ? $get_data->token_distribution_starts->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
-                                        <span class="input-group-text" id="step_3">Clear</span></div><div class="help-block with-errors"></div>
+                                        <div class="input-group "><?php echo $this->Form->control('token_distribution_starts', ['id'=>'ste_5_date', 'type' => 'text', 'value' => $get_data->token_distribution_starts ? $get_data->token_distribution_starts->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
+                                        <span class="input-group-text" id="step_5">Clear</span></div><div class="help-block with-errors"></div>
                                     </div>
                                         
                                     </div>
@@ -449,7 +449,8 @@ $this->assign('title', 'Manage Projects'); ?>
                                             <tr>
                                                 <th><?php echo $this->Paginator->sort('percentage'); ?></th>
                                                 <th><?php echo $this->Paginator->sort('claim_date'); ?></th>
-                                                <th>Action</th>
+                                                <th>Edit</th>
+                                                <th>Delete</th>
 
                                             </tr>
                                         </thead>
@@ -459,8 +460,9 @@ $this->assign('title', 'Manage Projects'); ?>
                                                 foreach ($data as $list) { ?>
                                                     <tr>
                                                         <td><?php echo $list->percentage; ?></td>
-                                                        <td><?php echo $list->claim_date->format('Y-m-d H:i A'); ?></td>
+                                                        <td><?php echo ( !empty($list->claim_date) ? $list->claim_date->format('Y-m-d H:i A') : null); ?></td>
                                                         <td><?php echo $this->Html->link('Edit', "javascript:void(0);", ['onclick' => "tokenDistributions(" . $get_data->id . "," . $list->id . ")"]); ?></td>
+                                                        <td><?php echo $this->Html->link(' Delete', SITEURL . "pages/manage_project/$get_data->id?type=token_distributions&del=" . $list->id, ['escape' => false,  'onclick' => "return confirm('Are you sure you want to delete?')"]); ?></td>
                                                     </tr>
                                             <?php }
                                             } ?>
@@ -591,13 +593,15 @@ echo $this->Html->script(['//cdn.ckeditor.com/4.18.0/full-all/ckeditor.js']);
     $(document).ready(function() {
         $('.datetimepicker').datetimepicker({
             format: 'Y-m-d H:i',
-            minDate: 0,
-
+            minDate: 0 
         });
 
-        $("#step_1").click(function() {
-            $("#ste_1_date").val('');
-        });
+        $("#step_1").click(function() { $("#ste_1_date").val(''); });
+        $("#step_2").click(function() { $("#ste_2_date").val(''); });
+        $("#step_3").click(function() { $("#ste_3_date").val(''); });
+        $("#step_4").click(function() { $("#ste_4_date").val(''); });
+        $("#step_5").click(function() { $("#ste_5_date").val(''); });
+        
 
         $('.amt').keypress(function(event) {
             return isNumber(event, this)

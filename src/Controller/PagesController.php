@@ -725,6 +725,14 @@ class PagesController extends AppController
                 $this->redirect($url);
             }
         }
+        if (isset($get['type']) && $get['type'] == 'token_distributions') {
+            $url = SITEURL . "pages/manage_project/$id?type=token_distributions";
+            if (isset($get['del'])  && !empty($get['del'])) {
+                $del_data =  $this->TokenDistributions->find()->where(['TokenDistributions.id' => $get['del']])->first();
+                $this->TokenDistributions->delete($del_data);
+                $this->redirect($url);
+            }
+        }
         if (isset($get['type']) && $get['type'] == 'team') {
             $url = SITEURL . "pages/manage_project/$id?type=team";
             if (isset($get['del'])  && !empty($get['del'])) {
