@@ -910,18 +910,7 @@ class UsersController extends AppController
             'conditions' => ['Applications.status' => 4, 'Applications.user_id' => $this->Auth->User('id')]
         ]);
         $data =  $query->all();
-        $stakes = $this->UserStakes->find('all', ['conditions' => ['UserStakes.balance >' => 0, 'UserStakes.user_id' => $this->Auth->User('id')]])->all();
-        $apy_arr = [];
-        if (!$stakes->isEmpty()) {
-            foreach ($stakes as $list) {
-                $arr = json_decode($list->stake_info);
-                $apy_arr[] = $arr->percentage;
-            }
-        }
-        if (count($apy_arr) > 0) {
-            $average = array_sum($apy_arr) / count($apy_arr);
-        }
-        $this->set(compact('data', 'average'));
+        $this->set(compact('data'));
     }
 
     public function doClaim($id = null)

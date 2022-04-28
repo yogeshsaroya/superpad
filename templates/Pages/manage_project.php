@@ -105,7 +105,7 @@ $this->assign('title', 'Manage Projects'); ?>
                                         <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('whitelist_ends', ['label' => ['escape' => false, 'text' => 'Whitelist Ends In <small>(status will be whitelist open)</small>'], 'class' => 'form-control flatpickr-date-time', 'placeholder' => 'YYY-MM-DD HH:MM', 'required' => false]); ?><div class="help-block with-errors"></div></div>
                                         <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('sale_starts', ['label' => ['escape' => false, 'text' => 'Sale Starts In <small>(status will be Whitelist Closed)</small>'], 'class' => 'form-control flatpickr-date-time', 'placeholder' => 'YYY-MM-DD HH:MM', 'required' => false]); ?><div class="help-block with-errors"></div></div>  
                                         <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('sale_ends', ['label' => ['escape' => false, 'text' => 'Sale Ends In <small>(status will be Live Now)</small>'], 'class' => 'form-control flatpickr-date-time', 'placeholder' => 'YYY-MM-DD HH:MM', 'required' => false]); ?><div class="help-block with-errors"></div></div>
-                                        <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('token_distribution_starts', ['label' => ['escape' => false, 'text' => 'Token Distribution Stats In <small>(status will sold out)</small>'], 'class' => 'form-control flatpickr-date-time', 'placeholder' => 'YYY-MM-DD HH:MM', 'required' => false]); ?><div class="help-block with-errors"></div></div>  
+                                        <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('token_distribution_starts', ['label' => ['escape' => false, 'text' => 'Token Distribution Starts In <small>(status will sold out)</small>'], 'class' => 'form-control flatpickr-date-time', 'placeholder' => 'YYY-MM-DD HH:MM', 'required' => false]); ?><div class="help-block with-errors"></div></div>  
                                     </div>
                                     <hr><br>
                                     <div class="row">
@@ -326,8 +326,8 @@ $this->assign('title', 'Manage Projects'); ?>
                                     <table class="table">
                                         <thead>
                                             <tr>
-                                                <th><?php echo $this->Paginator->sort('user.first_name','First Name'); ?></th>
-                                                <th><?php echo $this->Paginator->sort('user.last_name','Last Name'); ?></th>
+                                                <th><?php echo $this->Paginator->sort('user.first_name','Full Name'); ?></th>
+                                                <th><?php echo $this->Paginator->sort('user.address','Address'); ?></th>
                                                 <th><?php echo $this->Paginator->sort('user.kyc_completed','KYC Status'); ?></th>
                                                 <th><?php echo $this->Paginator->sort('twitter'); ?></th>
                                                 <th><?php echo $this->Paginator->sort('telegram') ?></th>

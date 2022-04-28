@@ -36,12 +36,7 @@ echo $this->Html->script(['jquery.magnific-popup.min'], ['block' => 'scriptBotto
 
                                             </div>
                                         </div>
-                                        <div class="card-media mb-3">
-                                            <div class="card-media-body"><span class="fw-medium fs-13">Staking APR</span></div>
-                                            <div class="card-media-body">
-                                                <p class="fw-medium text-black text-right fs-14"><?php echo ($average > 0 ? number_format($average, 2) . "%" : 'N/A'); ?></p>
-                                            </div>
-                                        </div>
+                                        
                                         <div class="card-media mb-3">
                                             <div class="card-media-body"><span class="fw-medium fs-13">Available Now</span></div>
                                             <div class="card-media-body">
