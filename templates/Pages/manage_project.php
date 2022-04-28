@@ -392,6 +392,7 @@ $this->assign('title', 'Manage Projects'); ?>
                                                 <th><?php echo $this->Paginator->sort('available_token') ?></th>
                                                 <th><?php echo $this->Paginator->sort('claimed_token') ?></th>
                                                 <th><?php echo $this->Paginator->sort('created'); ?></th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -419,6 +420,7 @@ $this->assign('title', 'Manage Projects'); ?>
                                                         <td><?php echo number_format($list->available_token); ?></td>
                                                         <td><?php echo number_format($list->claimed_token); ?></td>
                                                         <td><?php echo $list->created->format('Y-m-d'); ?></td>
+                                                        <td><?php echo $this->Html->link(' Delete', SITEURL . "pages/manage_project/".$get_data->id."?type=applications&del=" . $list->id, ['escape' => false, 'class' => '', 'onclick' => "return confirm('Are you sure you want to delete?')"]); ?></td>
                                                     </tr>
                                             <?php }
                                             } ?>

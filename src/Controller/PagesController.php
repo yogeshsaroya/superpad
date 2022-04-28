@@ -715,7 +715,16 @@ class PagesController extends AppController
         $this->set(compact('menu_act', 'pro_menu'));
         $get_data = null;
         $get = $this->request->getQuery();
-
+        if (isset($get['type']) && $get['type'] == 'applications') {
+            $url = SITEURL . "pages/manage_project/$id?type=applications";
+            if (isset($get['del'])  && !empty($get['del'])) {
+                $del_data =  $this->Applications->find()->contain(['Tickets'])->where(['Applications.id' => $get['del']])->first();
+                if ($this->Applications->delete($del_data)) {
+                    $this->Tickets->deleteAll(['Tickets.application_id' => $del_data->id]);
+                }
+                $this->redirect($url);
+            }
+        }
         if (isset($get['type']) && $get['type'] == 'team') {
             $url = SITEURL . "pages/manage_project/$id?type=team";
             if (isset($get['del'])  && !empty($get['del'])) {
