@@ -196,7 +196,7 @@ class CronsController extends AppController
         $data = $this->Projects->find()
             ->contain(['Applications' => ['conditions' => ['Applications.status' => 1], 'Users' => ['UserStakes']]])
             ->select(['id', 'title', 'product_status', 'status', 'sale_starts','sale_ends'])
-            ->where(['Projects.product_status' => 'Live Now'])->all();
+            ->where(['Projects.product_status' => 'Whitelist Closed'])->all();
 
         $saveMany = $saveManyApp = [];
         if (!$data->isEmpty()) {
@@ -284,7 +284,7 @@ class CronsController extends AppController
         $data = $this->Projects->find()
             ->contain(['Applications' => ['conditions' => ['Applications.status' => 2], 'Tickets']])
             ->select(['id', 'title', 'product_status', 'status', 'sale_starts','sale_ends', 'total_raise', 'ticket_allocation', 'price_per_token'])
-            ->where(['Projects.product_status' => 'Live Now'])->all();
+            ->where(['Projects.product_status' => 'Whitelist Closed'])->all();
         $saveTickets = $ticket_ids = [];
         if (!$data->isEmpty()) {
             foreach ($data as $projects) {
