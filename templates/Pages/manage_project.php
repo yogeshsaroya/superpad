@@ -1,6 +1,8 @@
 <?php
-echo $this->Html->css(['https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css', 'https://cdn.jsdelivr.net/gh/Eonasdan/tempus-dominus@master/dist/css/tempus-dominus.css'], ['block' => 'css']);
-echo $this->Html->script(['https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.0/moment.min.js', 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.2/dist/umd/popper.min.js', 'https://cdn.jsdelivr.net/gh/Eonasdan/tempus-dominus@master/dist/js/tempus-dominus.js'], ['block' => 'script']);
+/*https://trentrichardson.com/examples/timepicker/#slider_examples */
+echo $this->Html->css(['//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css', 'jquery-ui-timepicker-addon'], ['block' => 'css']);
+echo $this->Html->script(['//code.jquery.com/ui/1.13.1/jquery-ui.js', 'jquery-ui-timepicker-addon'], ['block' => 'script']);
+
 
 $getStatus = getStatus();
 $type = getProjectType();
@@ -8,10 +10,22 @@ $status = ['TBA' => 'TBA', 'Coming Soon' => 'Coming Soon'];
 $appStatus = getAppStatus();
 $this->assign('title', 'Manage Projects'); ?>
 <style>
-    .bootstrap-datetimepicker-widget.dropdown-menu {
-        z-index: 999;
+    .input-group-text {
+        border-radius: 0px;
+        cursor: pointer;
+    }
+
+    .form-control.datetimepicker {
+        border-radius: 0px;
     }
 </style>
+<?php /* ?>
+<link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/vendors/css/pickers/pickadate/pickadate.css">
+<link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/vendors/css/pickers/flatpickr/flatpickr.min.css">
+<link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/css/plugins/forms/pickers/form-flat-pickr.css">
+<link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/css/plugins/forms/pickers/form-pickadate.css">
+<?php */ ?>
+
 <!-- BEGIN: Content-->
 <div class="app-content content ">
     <div class="content-overlay"></div>
@@ -122,22 +136,49 @@ $this->assign('title', 'Manage Projects'); ?>
                                     </div>
                                     <hr><br>
                                     <div class="row">
-                                        <?php // echo $this->Form->control('whitelist_ends', ['id' => 'ste_2_date', 'type' => 'text', 'value' => $get_data->whitelist_ends ? $get_data->whitelist_ends->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetime_picker', 'required' => false]); 
-                                        ?>
-                                        <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('whitelist_starts', ['id' => 'step_1', 'type' => 'text', 'value' => $get_data->whitelist_starts ? $get_data->whitelist_starts->format('m/d/Y, h:i A') : '','dateFormat' => 'm-d-Y h:i A', 'label' => ['escape' => false, 'text' => 'Whitelist Starts In <small>(status will be coming soon)</small>'], 'class' => 'form-control flatpickr-date-time', 'placeholder' => 'YYYY-MM-DD HH:mm', 'required' => false]); ?><div class="help-block with-errors"></div>
+
+                                        <div class="col-md-2 col-12 form-group mb-2">
+                                            <label for="basic-url" class="form-label">Whitelist Starts In <small>(status will be coming soon)</small></label>
+                                            <div class="input-group "><?php echo $this->Form->control('whitelist_starts', ['id' => 'ste_1_date', 'type' => 'text', 'value' => $get_data->whitelist_starts ? $get_data->whitelist_starts->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
+                                                <span class="input-group-text" id="step_1">Clear</span>
+                                            </div>
+                                            <div class="help-block with-errors"></div>
                                         </div>
-                                        <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('whitelist_ends', ['id' => 'step_2', 'type' => 'text', 'value' => $get_data->whitelist_ends ? $get_data->whitelist_ends->format('Y-m-d H:i') : '', 'label' => ['escape' => false, 'text' => 'Whitelist Ends In <small>(status will be whitelist open)</small>'], 'class' => 'form-control flatpickr-date-time', 'placeholder' => 'YYYY-MM-DD HH:mm', 'required' => false]); ?><div class="help-block with-errors"></div>
+
+                                        <div class="col-md-2 col-12 form-group mb-2">
+                                            <label for="basic-url" class="form-label">Whitelist Ends In <small>(status will be coming soon)</small></label>
+                                            <div class="input-group "><?php echo $this->Form->control('whitelist_ends', ['id' => 'ste_2_date', 'type' => 'text', 'value' => $get_data->whitelist_ends ? $get_data->whitelist_ends->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
+                                                <span class="input-group-text" id="step_2">Clear</span>
+                                            </div>
+                                            <div class="help-block with-errors"></div>
                                         </div>
-                                        <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('sale_starts', ['id' => 'step_3', 'type' => 'text', 'value' => $get_data->sale_starts ? $get_data->sale_starts->format('Y-m-d H:i') : '', 'label' => ['escape' => false, 'text' => 'Sale Starts In <small>(status will be Whitelist Closed)</small>'], 'class' => 'form-control flatpickr-date-time', 'placeholder' => 'YYYY-MM-DD HH:mm', 'required' => false]); ?><div class="help-block with-errors"></div>
+
+                                        <div class="col-md-2 col-12 form-group mb-2">
+                                            <label for="basic-url" class="form-label">Sale Starts In <small>(status will be Whitelist Closed)</small></label>
+                                            <div class="input-group "><?php echo $this->Form->control('sale_starts', ['id' => 'ste_3_date', 'type' => 'text', 'value' => $get_data->sale_starts ? $get_data->sale_starts->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
+                                                <span class="input-group-text" id="step_3">Clear</span>
+                                            </div>
+                                            <div class="help-block with-errors"></div>
                                         </div>
-                                        <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('sale_ends', ['id' => 'step_4', 'type' => 'text', 'value' => $get_data->sale_ends ? $get_data->sale_ends->format('Y-m-d H:i') : '', 'label' => ['escape' => false, 'text' => 'Sale Ends In <small>(status will be Live Now)</small>'], 'class' => 'form-control flatpickr-date-time', 'placeholder' => 'YYYY-MM-DD HH:mm', 'required' => false]); ?><div class="help-block with-errors"></div>
+
+                                        <div class="col-md-2 col-12 form-group mb-2">
+                                            <label for="basic-url" class="form-label">Sale Ends In <small>(status will be Live Now)</small></label>
+                                            <div class="input-group "><?php echo $this->Form->control('sale_ends', ['id' => 'ste_4_date', 'type' => 'text', 'value' => $get_data->sale_ends ? $get_data->sale_ends->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
+                                                <span class="input-group-text" id="step_4">Clear</span>
+                                            </div>
+                                            <div class="help-block with-errors"></div>
                                         </div>
-                                        <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('token_distribution_starts', ['id' => 'step_5', 'type' => 'text', 'value' => $get_data->token_distribution_starts ? $get_data->token_distribution_starts->format('Y-m-d H:i') : '', 'label' => ['escape' => false, 'text' => 'Token Distribution Stats In <small>(status will sold out)</small>'], 'class' => 'form-control flatpickr-date-time', 'placeholder' => 'YYYY-MM-DD HH:mm', 'required' => false]); ?><div class="help-block with-errors"></div>
+                                        <div class="col-md-2 col-12 form-group mb-2">
+                                            <label for="basic-url" class="form-label">Token Distribution Starts In <small>(status will sold out)</small></label>
+                                            <div class="input-group "><?php echo $this->Form->control('token_distribution_starts', ['id' => 'ste_5_date', 'type' => 'text', 'value' => $get_data->token_distribution_starts ? $get_data->token_distribution_starts->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
+                                                <span class="input-group-text" id="step_5">Clear</span>
+                                            </div>
+                                            <div class="help-block with-errors"></div>
                                         </div>
+
                                     </div>
                                     <hr><br>
                                     <div class="row">
-
                                         <div class="col-md-6 col-12 form-group mb-2"><?php echo $this->Form->control('meta_title', ['type' => 'text', 'class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div>
                                         </div>
                                         <div class="col-md-6 col-12 form-group mb-2"><?php echo $this->Form->control('meta_description', ['type' => 'text', 'class' => 'form-control', 'required' => false]); ?><div class="help-block with-errors"></div>
@@ -467,7 +508,9 @@ $this->assign('title', 'Manage Projects'); ?>
     </div>
 </div>
 
-<?php echo $this->Html->script(['//cdn.ckeditor.com/4.18.0/full-all/ckeditor.js']); ?>
+<?php
+echo $this->Html->script(['//cdn.ckeditor.com/4.18.0/full-all/ckeditor.js']);
+?>
 
 <script>
     function tokenDistributions(pro_id, row_id) {
@@ -550,40 +593,27 @@ $this->assign('title', 'Manage Projects'); ?>
 
 
     $(document).ready(function() {
-        var f = {
-            display: {
-                icons: {
-                    time: 'bi bi-clock',
-                    date: 'bi bi-calendar',
-                    up: 'bi bi-arrow-up',
-                    down: 'bi bi-arrow-down',
-                    previous: 'bi bi-chevron-left',
-                    next: 'bi bi-chevron-right',
-                    today: 'bi bi-calendar-check',
-                    clear: 'bi bi-trash',
-                    close: 'bi bi-x',
-                },
-                buttons: {
-                    today: true,
-                    clear: true,
-                    close: true,
-                },
-            }
-        };
-        //Y-m-d H:i
-        const td1 = new tempusDominus.TempusDominus(document.getElementById('step_1'), f);
-        const td2 = new tempusDominus.TempusDominus(document.getElementById('step_2'), f);
-        const td3 = new tempusDominus.TempusDominus(document.getElementById('step_3'), f);
-        const td4 = new tempusDominus.TempusDominus(document.getElementById('step_4'), f);
-        const td5 = new tempusDominus.TempusDominus(document.getElementById('step_5'), f);
-
-       // td1.dates.formatInput = function(date) {{return moment(date).format('YYYYY-MM-DD HH:mm')} };
-        td2.dates.formatInput = function(date) {{return moment(date).format('YYYYY-MM-DD HH:mm')} };
-        td3.dates.formatInput = function(date) {{return moment(date).format('YYYYY-MM-DD HH:mm')} };
-        td4.dates.formatInput = function(date) {{return moment(date).format('YYYYY-MM-DD HH:mm')} };
-        td5.dates.formatInput = function(date) {{return moment(date).format('YYYYY-MM-DD HH:mm')} };
+        $('.datetimepicker').datetimepicker({
+            dateFormat: 'yy-mm-dd',
+            timeFormat: 'HH:mm',
+        });
 
 
+        $("#step_1").click(function() {
+            $("#ste_1_date").val('');
+        });
+        $("#step_2").click(function() {
+            $("#ste_2_date").val('');
+        });
+        $("#step_3").click(function() {
+            $("#ste_3_date").val('');
+        });
+        $("#step_4").click(function() {
+            $("#ste_4_date").val('');
+        });
+        $("#step_5").click(function() {
+            $("#ste_5_date").val('');
+        });
 
 
         $('.amt').keypress(function(event) {

@@ -56,9 +56,9 @@
             $("#step_1").click(function() {
             $("#ste_1_date").val('');
         });
-            $('.datetimepicker').datetimepicker({
-            format: 'Y-m-d H:i',
-            minDate: 0 
+        $('.datetimepicker').datetimepicker({
+            dateFormat: 'yy-mm-dd',
+            timeFormat: 'HH:mm',
         });
             $('.amt').keypress(function(event) {
             return isNumber(event, this)
