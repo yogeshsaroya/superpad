@@ -8,17 +8,19 @@ echo $this->Html->script(['jquery.magnific-popup.min'], ['block' => 'scriptBotto
 $today = strtotime(DATE);
 $steps = $step_1 = $step_2 = $step_3 = $step_4 = $step_5 = null;
 $date_1 = $date_2 = $date_3 = $date_4 = $date_5 = null;
-if (!empty($list->whitelist_starts)) { $date_1 = strtotime($list->whitelist_starts->format('Y-m-d H:i:s')); }
-if (!empty($list->whitelist_ends)) { $date_2 = strtotime($list->whitelist_ends->format('Y-m-d H:i:s')); }
-if (!empty($list->sale_starts)) { $date_3 = strtotime($list->sale_starts->format('Y-m-d H:i:s')); }
-if (!empty($list->sale_ends)) { $date_4 = strtotime($list->sale_ends->format('Y-m-d H:i:s')); }
-if (!empty($list->token_distribution_starts)) { $date_5 = strtotime($list->token_distribution_starts->format('Y-m-d H:i:s')); }
+if( $list->product_status != 'TBA'){
+    if (!empty($list->whitelist_starts)) { $date_1 = strtotime($list->whitelist_starts->format('Y-m-d H:i:s')); }
+    if (!empty($list->whitelist_ends)) { $date_2 = strtotime($list->whitelist_ends->format('Y-m-d H:i:s')); }
+    if (!empty($list->sale_starts)) { $date_3 = strtotime($list->sale_starts->format('Y-m-d H:i:s')); }
+    if (!empty($list->sale_ends)) { $date_4 = strtotime($list->sale_ends->format('Y-m-d H:i:s')); }
+    if (!empty($list->token_distribution_starts)) { $date_5 = strtotime($list->token_distribution_starts->format('Y-m-d H:i:s')); }
 
-if (!empty($date_1) && $date_1 > $today) { $steps = $step_1 = $date_1; }
-if (!empty($date_2) && $date_2 > $today) { $steps = $step_2 = $date_2; }
-if (!empty($date_3) && $date_3 > $today) { $steps = $step_3 = $date_3; }
-if (!empty($date_4) && $date_4 > $today) { $steps = $step_4 = $date_4; }
-if (!empty($date_5) && $date_5 > $today) { $steps = $step_5 = $date_5; }
+    if (!empty($date_1) && $date_1 > $today) { $steps = $step_1 = $date_1; }
+    if (!empty($date_2) && $date_2 > $today) { $steps = $step_2 = $date_2; }
+    if (!empty($date_3) && $date_3 > $today) { $steps = $step_3 = $date_3; }
+    if (!empty($date_4) && $date_4 > $today) { $steps = $step_4 = $date_4; }
+    if (!empty($date_5) && $date_5 > $today) { $steps = $step_5 = $date_5; }
+}
 ?>
 <?php echo $this->Html->css(['/assets/css/pro_dt']); ?>
 <div id="cssLoader">

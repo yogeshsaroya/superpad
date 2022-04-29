@@ -343,7 +343,7 @@ class HomesController extends AppController
                     echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
                     exit;
                 }
-
+                
                 $coin_price = 1; /*default will be USD 1*/
                 if (isset($appData->project->coin_price) && $appData->project->coin_price > 0) {
                     $coin_price = $appData->project->coin_price;
@@ -422,7 +422,6 @@ class HomesController extends AppController
                         $max_usd = $ticket_allocation * $max_tickets;
                         $max_amt = round($max_usd / $coin_price, 3);
                     }
-                    
                     if ((float)$data->allocation <= 0) {
                         $data->allocation = $max_amt;
                         $data->remaining = $max_amt;

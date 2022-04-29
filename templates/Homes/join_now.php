@@ -37,7 +37,7 @@
                         <?php
                         echo $this->Form->create($data, ['autocomplete' => 'off', 'id' => 'e_frm',]);
                         echo $this->Form->hidden('id');
-                        echo $this->Form->hidden('max_amt', ['id' => 'max_amt', 'value' => $max_amt]);
+                        echo $this->Form->hidden('max_amt', ['id' => 'max_amt', 'value' => $data->allocation]);
 
                         echo $this->Form->hidden('joined', ['id' => 'joined', 'value' => $data->joined]);
                         echo $this->Form->hidden('remaining', ['id' => 'remaining', 'value' => $data->remaining]);
@@ -53,7 +53,7 @@
 
                         <hr>
                         <ul class="total-bid-list mb-4">
-                            <li><span>Max allocation: </span> <span class="text-bold"><?php echo $max_amt . " " . $short_name; ?></span></li>
+                            <li><span>Max allocation: </span> <span class="text-bold"><?php echo $data->allocation . " " . $short_name; ?></span></li>
                             <li><span>Joined: </span> <span class="text-bold"><?php echo $data->joined . " " . $short_name; ?></span></li>
                             <li><span>Remaining: </span> <span class="text-bold"><?php echo $data->remaining . " " . $short_name; ?></span></li>
                             <?php if($data->project->token_required == 1){?>
@@ -90,8 +90,8 @@
             })
 
             $("#reg_sbtn").click(function() {
-                var max_amt = $("#remaining").val();
-                var setAmt = $("#setAmt").val();
+                var max_amt = parseFloat ( $("#remaining").val());
+                var setAmt = parseFloat ( $("#setAmt").val());
                 if (setAmt > 0 && setAmt <= max_amt) {
                     $("#e_frm").ajaxForm({
                         target: '#f_err',
