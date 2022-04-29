@@ -21,13 +21,9 @@ namespace App\Controller;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 
-
-
 /**
  * Static content controller
- *
  * This controller will render views from templates/Pages/
- *
  * @link https://book.cakephp.org/4/en/controllers/pages-controller.html
  */
 class CronsController extends AppController
@@ -165,6 +161,36 @@ class CronsController extends AppController
         return $results;
     }
 
+    /* Setp 5  //  up_appliation
+    update apllocation if sale is not requried staking
+    */
+    public function upAppliation()
+    {
+        $data = $this->Projects->find()
+            ->contain(['Applications' => ['conditions' => ['Applications.status' => 1]]])
+            ->select(['id', 'title', 'product_status', 'status', 'sale_starts','sale_ends', 'total_raise', 'ticket_allocation', 'price_per_token','max_allocation','token_required','max_allocation'])
+            ->where(['Projects.token_required'=>2,'Projects.max_allocation >'=>0,'Projects.product_status' => 'Whitelist Closed'])->all();
+        if (!$data->isEmpty()) {
+            foreach ($data as $projects) {
+                if (!empty($projects->applications)) {
+                    foreach ($projects->applications as $applications) {
+                        
+                            $applications->status = 4;
+                            $applications->is_notified = 2;
+                            $app_res = $this->Applications->save($applications);
+                            ec('Applications update id ' . $applications->id);
+                       
+                    }
+                } else {
+                    ec('No applications found');
+                }
+            }
+        } else {
+            ec('empty');
+        }
+
+        exit;
+    }
 
     /* Setp 1  //  mk_ticket
     Create tickets when sales status is Live Now and Applications status is 1
@@ -195,8 +221,8 @@ class CronsController extends AppController
 
         $data = $this->Projects->find()
             ->contain(['Applications' => ['conditions' => ['Applications.status' => 1], 'Users' => ['UserStakes']]])
-            ->select(['id', 'title', 'product_status', 'status', 'sale_starts','sale_ends'])
-            ->where(['Projects.product_status' => 'Whitelist Closed'])->all();
+            ->select(['id', 'title', 'product_status', 'status', 'sale_starts','sale_ends','token_required'])
+            ->where(['Projects.token_required'=>1,'Projects.product_status' => 'Whitelist Closed'])->all();
 
         $saveMany = $saveManyApp = [];
         if (!$data->isEmpty()) {
@@ -283,8 +309,8 @@ class CronsController extends AppController
     {
         $data = $this->Projects->find()
             ->contain(['Applications' => ['conditions' => ['Applications.status' => 2], 'Tickets']])
-            ->select(['id', 'title', 'product_status', 'status', 'sale_starts','sale_ends', 'total_raise', 'ticket_allocation', 'price_per_token'])
-            ->where(['Projects.product_status' => 'Whitelist Closed'])->all();
+            ->select(['id', 'title', 'product_status', 'status', 'sale_starts','sale_ends', 'total_raise', 'ticket_allocation', 'price_per_token','token_required'])
+            ->where(['Projects.token_required'=>1,'Projects.product_status' => 'Whitelist Closed'])->all();
         $saveTickets = $ticket_ids = [];
         if (!$data->isEmpty()) {
             foreach ($data as $projects) {

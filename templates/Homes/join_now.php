@@ -56,10 +56,12 @@
                             <li><span>Max allocation: </span> <span class="text-bold"><?php echo $max_amt . " " . $short_name; ?></span></li>
                             <li><span>Joined: </span> <span class="text-bold"><?php echo $data->joined . " " . $short_name; ?></span></li>
                             <li><span>Remaining: </span> <span class="text-bold"><?php echo $data->remaining . " " . $short_name; ?></span></li>
+                            <?php if($data->project->token_required == 1){?>
                             <li><span>You have </span> <span class="text-bold"><?php echo $max_tickets; ?> winning ticket(s)</span></li>
+                            <?php } ?>
                         </ul>
                         <div id="f_err"></div>
-                        <?php if ($data->remaining > 0 && $max_tickets > 0) { ?>
+                        <?php if ($data->remaining > 0) { ?>
                             <input type="button" class="w-100 btn btn-lg btn-outline-dark" value="Join Now" id="reg_sbtn" />
                         <?php } else { ?>
                             <input type="button" class="w-100 btn btn-lg btn-outline-dark" value="Close" onclick="$.magnificPopup.close();" />

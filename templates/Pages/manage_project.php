@@ -128,6 +128,9 @@ $this->assign('title', 'Manage Projects'); ?>
                                         </div>
                                         <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('coin_price', ['label' => ['escape' => false, 'text' => 'Coin Price in Doller'], 'class' => 'form-control amt numeral-mask', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div>
                                         </div>
+                                        <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('max_allocation', ['label' => ['escape' => false, 'text' => 'Max Allocation in Doller <small>only if Token Required is No</small>'], 'class' => 'form-control amt numeral-mask', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div>
+                                        </div>
+                                        
                                     </div>
                                     <hr><br>
                                     <div class="row">

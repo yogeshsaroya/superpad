@@ -136,8 +136,6 @@ class HomesController extends AppController
         }
     }
 
-
-
     public function stake()
     {
 
@@ -336,7 +334,6 @@ class HomesController extends AppController
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             if ($this->Auth->User('id') != "") {
                 $postData = $this->request->getData();
-
                 $query = $this->Applications->find('all', [
                     'contain' => ['Projects','Users'],
                     'conditions' => ['Applications.status' => 4, 'Applications.id' => $postData['id'], 'Applications.user_id' => $this->Auth->User('id')]
@@ -408,17 +405,23 @@ class HomesController extends AppController
                         echo "<script>window.location.href ='" . $u . "'; </script>";
                         exit;
                     }
-                    $max_tickets = count($data->tickets);
-                    $ticket_allocation = $data->project->ticket_allocation;
+                    $max_allocation = $ticket_allocation = $data->project->ticket_allocation;
+                    if( (float)$data->project->max_allocation > 0 ){ $max_allocation = $data->project->max_allocation; }
                     $coin_price = 1; /*default will be USD 1*/
-                    $short_name = 'USD';
                     if (isset($data->project->coin_price) && $data->project->coin_price > 0) {
                         $coin_price = $data->project->coin_price;
                     }
+                    $short_name = 'USD';
                     if(!empty($data->project->coin_name)){ $short_name = $data->project->coin_name; }
 
-                    $max_usd = $ticket_allocation * $max_tickets;
-                    $max_amt = number_format($max_usd / $coin_price, 3);
+                    if($data->project->token_required == 2){
+                        $max_amt = round($max_allocation / $coin_price, 3);
+                    }
+                    elseif($data->project->token_required == 1){
+                        $max_tickets = count($data->tickets);
+                        $max_usd = $ticket_allocation * $max_tickets;
+                        $max_amt = round($max_usd / $coin_price, 3);
+                    }
                     
                     if ((float)$data->allocation <= 0) {
                         $data->allocation = $max_amt;

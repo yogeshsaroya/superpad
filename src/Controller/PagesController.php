@@ -792,7 +792,9 @@ class PagesController extends AppController
                 'whitelist_starts' => $postData['whitelist_starts'], 'whitelist_ends' => $postData['whitelist_ends'],
                 'sale_starts' => $postData['sale_starts'], 'sale_ends' => $postData['sale_ends'], 'token_distribution_starts ' => $postData['token_distribution_starts']
             ];
-           //ec($dateArr);die;
+            if($postData['token_required'] == 2 && (float)$postData['max_allocation'] == 0){
+                exit('<div class="alert alert-danger">Please enter max allocation amount</div>');
+            }
             if (empty($postData['whitelist_starts']) && !empty($postData['whitelist_ends'])) { exit('<div class="alert alert-danger">Please enter whitelist starts in date</div>'); }
             if (empty($postData['whitelist_ends']) && !empty($postData['sale_starts'])) { exit('<div class="alert alert-danger">Please enter whitelist ends in date</div>'); }
             if (empty($postData['sale_starts']) && !empty($postData['sale_ends'])) { exit('<div class="alert alert-danger">Please enter sale starts in date</div>'); }
