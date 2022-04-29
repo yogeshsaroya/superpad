@@ -155,7 +155,7 @@ if (!empty($date_5) && $date_5 > $today) { $steps = $step_5 = $date_5; }
                                     <?php if (!empty($list->partners)) { ?>
                                         <div class="row">
                                             <div class="col text-center">
-                                                <h2 class="">We are backed by</h2>
+                                                <h2 class=""> &nbsp; </h2>
                                             </div>
                                         </div>
                                         <div class="row mt-5">
