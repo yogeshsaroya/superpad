@@ -114,7 +114,7 @@ if (!empty($date_5) && $date_5 > $today) { $steps = $step_5 = $date_5; }
                                         foreach ($list->token_distributions as $tList) {
                                     ?>
                                             <tr>
-                                                <td data-title="Claimable" class="text-left"><?php echo $tList->claim_date->format("Y-m-d H:i A"); ?></td>
+                                                <td data-title="Claimable" class="text-left"><?php echo (!empty($tList->claim_date) ? $tList->claim_date->format("Y-m-d H:i A") : 'TBA'); ?></td>
                                                 <td data-title="%" class="text-center"><?php echo $tList->percentage; ?>%</td>
                                             </tr>
                                     <?php } ?>
