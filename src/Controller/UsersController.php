@@ -925,10 +925,12 @@ class UsersController extends AppController
             $arr = [];
             if (empty($data->info) && isset($data->project->token_distributions) && !empty($data->project->token_distributions)) {
                 foreach ($data->project->token_distributions as $list) {
-                    $arr[strtotime($list->claim_date->format("Y-m-d H:i:s"))] = [
-                        'percentage' => $list->percentage, 'total_token' => $data->total_token * $list->percentage / 100,
-                        'claim_before' => $list->claim_date->format("Y-m-d H:i:s"), 'claim_on' => null
-                    ];
+                    if(!empty($list->claim_date)){
+                        $arr[strtotime($list->claim_date->format("Y-m-d H:i:s"))] = [
+                            'percentage' => $list->percentage, 'total_token' => $data->total_token * $list->percentage / 100,
+                            'claim_before' => $list->claim_date->format("Y-m-d H:i:s"), 'claim_on' => null
+                        ];
+                    }
                 }
                 $data->info = json_encode($arr);
                 $this->Applications->save($data);
