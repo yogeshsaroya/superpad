@@ -54,9 +54,7 @@ class UsersController extends AppController
         /* https://codethepixel.com/tutorial/cakephp/cakephp-4-find-sort-count */
 
         $this->SiteSetting = $this->request->getSession()->read('Setting');
-        if ($this->Auth->user('role') == 1) {
-            $this->redirect('/pages');
-        }
+        
     }
 
 

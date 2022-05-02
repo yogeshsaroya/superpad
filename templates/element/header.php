@@ -24,7 +24,7 @@
                 </div>
                 <nav class="header-menu menu nav">
                     <ul class="menu-list ms-lg-auto">
-                        <li class="menu-item"><a href="<?php echo SITEURL;?>allocation" class="menu-link">Allocation</a></li>
+                        <li class="menu-item"><a href="<?php echo SITEURL; ?>allocation" class="menu-link">Allocation</a></li>
                         <li class="menu-item"><a href="javascript:void(0);" class="menu-link">Stake</a></li>
                         <li class="menu-item"><a href="javascript:void(0);" class="menu-link">Buy SPAD</a></li>
                         <?php /*?>
@@ -37,23 +37,28 @@
                                 </ul>
                             </div>
                         </li>
-                        <?php */?>
-                        
+                        <?php */ ?>
+
                         <?php if (isset($Auth->role) && !empty($Auth->role)) {
-                            if ($Auth->role == 2) { ?>
+                            if (in_array($Auth->role, [1, 2])) {
+                                if ($Auth->role == 1) {
+                                    echo '<li class="menu-item"><a href="' . SITEURL . 'pages" class="menu-link">Backend</a></li>';
+                                }
+                        ?>
                                 <li class="menu-item"><a href="<?php echo SITEURL; ?>dashboard" class="menu-link">Dashboard</a></li>
                                 <li class="menu-item"><a href="<?php echo SITEURL; ?>users/logout" class="menu-link">Logout</a></li>
-                            <?php }else{
-                                echo '<li class="menu-item"><a href="'.SITEURL.'pages" class="menu-link">Backend</a></li>';
-                            } 
-                            } else { ?>
+
+                            <?php }
+                        } else { ?>
                             <li class="menu-item"><a href="<?php echo SITEURL; ?>sign-in" class="menu-link">Sign In</a></li>
                             <li class="menu-item"><a href="<?php echo SITEURL; ?>register" class="menu-link">Register</a></li>
                         <?php } ?>
                     </ul>
-                    <?php if (isset($Auth->role) && $Auth->role == 2 && empty($Auth->metamask_wallet_id) ) { ?>
-                    <ul class="menu-btns"> <li><a href="<?php echo SITEURL;?>connect-wallet" class="btn btn-dark">Connect Wallet</a></li> </ul>
-                    <?php }?>
+                    <?php if (isset($Auth->role)  && empty($Auth->metamask_wallet_id)) { ?>
+                        <ul class="menu-btns">
+                            <li><a href="<?php echo SITEURL; ?>connect-wallet" class="btn btn-dark">Connect Wallet</a></li>
+                        </ul>
+                    <?php } ?>
                 </nav>
                 <div class="header-overlay"></div>
             </div>

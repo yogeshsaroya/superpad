@@ -265,7 +265,7 @@ if( $list->product_status != 'TBA'){
                     <div class="item-detail-btns mt-4">
                         <ul class="btns-group d-flex">
                             <?php if (strtolower($list->product_status) == 'whitelist open') { ?>
-                                <?php if (isset($Auth->role) && $Auth->role == 2) {
+                                <?php if (isset($Auth->role)) {
                                     if (empty($data_app)) { ?>
                                         <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="apply_sale(<?php echo $list->id; ?>);">Whitelist Now</a></li>
                                     <?php } else { ?>
@@ -276,7 +276,7 @@ if( $list->product_status != 'TBA'){
                                 <?php } ?>
 
                                 <?php } else if (strtolower($list->product_status) == 'live now' ) {
-                                if (isset($Auth->role) && $Auth->role == 2) { ?>
+                                if (isset($Auth->role)) { ?>
                                     <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="joinNow(<?php echo $list->id; ?>);">Join Now</a> </li>
                                 <?php } else { ?>
                                     <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL; ?>sign-in?redirect=explore/<?php echo $list->slug; ?>/join_now">Login to Join Now</a></li>
