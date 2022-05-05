@@ -88,7 +88,7 @@ class HomesController extends AppController
                 exit;
             }
             $postData = $this->request->getData();
-            if (isset($_SERVER['HTTP_SEC_FETCH_SITE']) && $_SERVER['HTTP_SEC_FETCH_SITE'] == 'same-origin') {
+            
                 if (isset($postData['g-recaptcha-response']) && !empty($postData['g-recaptcha-response'])) {
                     $response = $this->Data->fetch("https://www.google.com/recaptcha/api/siteverify?secret=" . $Setting['recaptcha_secret_key'] . "&response=" . $postData['g-recaptcha-response'] . "&remoteip=" . $_SERVER['REMOTE_ADDR']);
                     $arr = json_decode($response, true);
@@ -128,10 +128,7 @@ class HomesController extends AppController
                     echo '<script>grecaptcha.reset();</script>';
                     echo "<div class='alert alert-danger'>Please verify that you are not a robot.</div>";
                 }
-            } else {
-                echo '<script>grecaptcha.reset();</script>';
-                echo "<div class='alert alert-danger'>Server error [origin_error]. please try again later or contact to us</div>";
-            }
+           
             exit;
         }
     }
@@ -145,8 +142,6 @@ class HomesController extends AppController
                 exit;
             }
             $postData = $this->request->getData();
-            
-            if (isset($_SERVER['HTTP_SEC_FETCH_SITE']) && $_SERVER['HTTP_SEC_FETCH_SITE'] == 'same-origin') {
                 if (isset($postData['g-recaptcha-response']) && !empty($postData['g-recaptcha-response'])) {
                     $response = $this->Data->fetch("https://www.google.com/recaptcha/api/siteverify?secret=" . $Setting['recaptcha_secret_key'] . "&response=" . $postData['g-recaptcha-response'] . "&remoteip=" . $_SERVER['REMOTE_ADDR']);
                     $arr = json_decode($response, true);
@@ -184,10 +179,7 @@ class HomesController extends AppController
                     echo '<script>grecaptcha.reset();</script>';
                     echo "<div class='alert alert-danger'>Please verify that you are not a robot.</div>";
                 }
-            } else {
-                echo '<script>grecaptcha.reset();</script>';
-                echo "<div class='alert alert-danger'>Server error [origin_error]. please try again later or contact to us</div>";
-            }
+            
             exit;
         }
         $tbl_data = null;
