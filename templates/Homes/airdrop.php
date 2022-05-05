@@ -29,7 +29,7 @@ if(!empty($Setting['recaptcha_site_key']) && !empty($Setting['recaptcha_secret_k
                         </div>
                         <div class="mb-3 form-group"><?php echo $this->Form->control('telegram', ['label' => ['text' => 'Your Telegram Handle', 'class' => 'form-label'], 'placeholder' => '@handle name', 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
                         </div>
-                        <div class="mb-3 form-group"><?php echo $this->Form->control('wallet_address', ['label' => ['text' => 'Wallet Address', 'class' => 'form-label'], 'placeholder' => 'wallet adddress', 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
+                        <div class="mb-3 form-group"><?php echo $this->Form->control('wallet_address', ['label' => ['text' => 'BSC Wallet Address', 'class' => 'form-label'], 'placeholder' => 'wallet adddress', 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
                         </div>
 
                         <?php if (!empty($sm_accounts)) { ?>
@@ -71,31 +71,7 @@ if(!empty($Setting['recaptcha_site_key']) && !empty($Setting['recaptcha_secret_k
                             </div>
 
                         <?php } ?>
-                        <div class="col-md-12"></div>
                         <hr>
-                        <div class="col-lg-12 col-md-12">
-                            <div class="notification-item mb-4">
-                                <h5 class="mb-3">Do you agree with the <?php echo $this->Html->link('Terms and Conditions', '/page/term-and-condition', ['target' => '_blank']); ?>?</h5>
-                                <div class="form-check mb-2 form-group">
-                                    <?php
-                                    echo $this->Form->label('agree', ' I accept the terms of service', ['class' => 'form-check-label form-check-label-s1']);
-                                    echo $this->Form->checkbox('agree', ['id' => 'agree', 'hiddenField' => true, 'value' => 1, 'class' => 'form-check-input check-all-input', 'required' => true, 'checked' => false]);
-                                    ?>
-                                    <div class="help-block with-errors"></div>
-                                </div><!-- end form-check -->
-
-                            </div><!-- end notification-item -->
-                            <div class="notification-item">
-                                <h5 class="mb-3">Do you want to receive updates from SuperPAD</h5>
-                                <div class="form-check mb-2 form-group">
-                                    <?php
-                                    echo $this->Form->label('subscribe', 'Yes, I agree to receive updates from SuperPAD in the future.', ['class' => 'form-check-label form-check-label-s1']);
-                                    echo $this->Form->checkbox('subscribe', ['id' => 'subscribe', 'hiddenField' => true, 'value' => 1, 'class' => 'form-check-input check-all-input', 'required' => false, 'checked' => false]); ?>
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                     <div class="col-sm-12"><div id="g-recaptcha"></div>
                     <hr>

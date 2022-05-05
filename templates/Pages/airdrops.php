@@ -25,8 +25,7 @@
                                     <tr>
                                         <th><?php echo $this->Paginator->sort('twitter'); ?></th>
                                         <th><?php echo $this->Paginator->sort('telegram'); ?></th>
-                                        <th><?php echo $this->Paginator->sort('wallet_address'); ?></th>
-                                        <th><?php echo $this->Paginator->sort('subscribe'); ?></th>
+                                        <th><?php echo $this->Paginator->sort('wallet_address','BSC Wallet Address'); ?></th>
                                         <th><?php echo $this->Paginator->sort('created'); ?></th>
                                     </tr>
                                 </thead>
