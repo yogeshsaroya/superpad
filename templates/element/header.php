@@ -26,6 +26,7 @@
                     <ul class="menu-list ms-lg-auto">
                         <li class="menu-item"><a href="<?php echo SITEURL; ?>allocation" class="menu-link">Allocation</a></li>
                         <li class="menu-item"><a href="javascript:void(0);" class="menu-link">Stake</a></li>
+                        <li class="menu-item"><a href="<?php echo SITEURL; ?>airdrop" class="menu-link">Airdrop</a></li>
                         <li class="menu-item"><a href="javascript:void(0);" class="menu-link">Buy SPAD</a></li>
                         <?php /*?>
                         <li class="menu-item has-sub">

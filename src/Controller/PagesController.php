@@ -1292,6 +1292,12 @@ class PagesController extends AppController
         }
     }
 
+    public function airdrops(){
+        $this->paginate = ['limit' => 100, 'conditions' => [], 'order' => ['id' => 'desc']];
+        $data = $this->paginate($this->Airdrops->find('all'));
+        $paging = $this->request->getAttribute('paging');
+        $this->set(compact('data', 'paging'));
+    }
 
     public function stakes()
     {

@@ -56,7 +56,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/sign-in/*', ['controller' => 'Users', 'action' => 'login']);
     $builder->connect('/forget-password/*', ['controller' => 'Users', 'action' => 'forget_password']);
     $builder->connect('/connect-wallet/*', ['controller' => 'Users', 'action' => 'connect_wallet']);
-    
+       
 
     $builder->connect('/dashboard/*', ['controller' => 'Users', 'action' => 'dashboard']);
     $builder->connect('/contact-us/*', ['controller' => 'Homes', 'action' => 'contact_us']);
@@ -68,6 +68,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/project-details/*', ['controller' => 'Homes', 'action' => 'project_details']);
 
     $builder->connect('/new-project/*', ['controller' => 'Homes', 'action' => 'newProject']);
+    $builder->connect('/airdrop/*', ['controller' => 'homes', 'action' => 'airdrop']);
     
 
     $builder->connect('/page/*', ['controller' => 'Homes', 'action' => 'page']);

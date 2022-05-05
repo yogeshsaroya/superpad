@@ -78,6 +78,7 @@ class AppController extends Controller
         $this->loadModel('UserStakes');
         $this->loadModel('Tickets');
         $this->loadModel('TokenDistributions');
+        $this->loadModel('Airdrops');
         
         
                

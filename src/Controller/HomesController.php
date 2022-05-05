@@ -135,7 +135,66 @@ class HomesController extends AppController
             exit;
         }
     }
+    public function airdrop(){
+        $Setting = $this->request->getSession()->read('Setting');
 
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            if (empty($Setting['recaptcha_secret_key'])) {
+                echo '<script>grecaptcha.reset();</script>';
+                echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
+                exit;
+            }
+            $postData = $this->request->getData();
+            if (isset($_SERVER['HTTP_SEC_FETCH_SITE']) && $_SERVER['HTTP_SEC_FETCH_SITE'] == 'same-origin') {
+                if (isset($postData['g-recaptcha-response']) && !empty($postData['g-recaptcha-response'])) {
+                    $response = $this->Data->fetch("https://www.google.com/recaptcha/api/siteverify?secret=" . $Setting['recaptcha_secret_key'] . "&response=" . $postData['g-recaptcha-response'] . "&remoteip=" . $_SERVER['REMOTE_ADDR']);
+                    $arr = json_decode($response, true);
+                    if (isset($arr['success']) && $arr['success'] == 1) {
+                        $getEnt = $this->Airdrops->newEmptyEntity();
+                        $chkEnt = $this->Airdrops->patchEntity($getEnt, $postData, ['validate' => true]);
+                        if ($chkEnt->getErrors()) {
+                            $st = null;
+                            foreach ($chkEnt->getErrors() as $elist) {
+                                foreach ($elist as $k => $v); {
+                                    $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                                }
+                            }
+                            echo '<script>grecaptcha.reset();</script>';
+                            echo $st;
+                            exit;
+                        } else {
+                            if ($this->Airdrops->save($chkEnt)) {
+                                $admin = 'support@superpad.finance';
+                                
+                                $str = '<div class="alert alert-success d-flex mb-4" role="alert"><p class="fs-14">Your application has been submitted. Our team will review it shortly and get in touch with you.</p></div>';
+                                echo "<script>$('#ido_frm').html('$str');</script>";
+                                exit;
+                            } else {
+                                echo '<script>grecaptcha.reset();</script>';
+                                echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
+                                exit;
+                            }
+                        }
+                    } else {
+                        echo '<script>grecaptcha.reset();</script>';
+                        echo "<div class='alert alert-danger'>Please verify that you are not a robot.</div>";
+                    }
+                } else {
+                    echo '<script>grecaptcha.reset();</script>';
+                    echo "<div class='alert alert-danger'>Please verify that you are not a robot.</div>";
+                }
+            } else {
+                echo '<script>grecaptcha.reset();</script>';
+                echo "<div class='alert alert-danger'>Server error [origin_error]. please try again later or contact to us</div>";
+            }
+            exit;
+        }
+        $tbl_data = null;
+        $query = $this->SmAccounts->find('all', ['conditions' => ['SmAccounts.project_id' => 3]]);
+        $sm_accounts =  $query->all();
+        $this->set(compact('sm_accounts'));
+        
+    }
     public function stake()
     {
 
@@ -197,7 +256,8 @@ class HomesController extends AppController
         }
         $this->set(compact('data', 'chkStake', 'min', 'max', 'min_return', 'max_return', 'stake', 'tire', 'qr', 'days_list', 'min_token', 'max_token'));
     }
-
+  
+    
     public function spad()
     {
     }
