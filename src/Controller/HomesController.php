@@ -145,6 +145,7 @@ class HomesController extends AppController
                 exit;
             }
             $postData = $this->request->getData();
+            ec($_SERVER);die;
             if (isset($_SERVER['HTTP_SEC_FETCH_SITE']) && $_SERVER['HTTP_SEC_FETCH_SITE'] == 'same-origin') {
                 if (isset($postData['g-recaptcha-response']) && !empty($postData['g-recaptcha-response'])) {
                     $response = $this->Data->fetch("https://www.google.com/recaptcha/api/siteverify?secret=" . $Setting['recaptcha_secret_key'] . "&response=" . $postData['g-recaptcha-response'] . "&remoteip=" . $_SERVER['REMOTE_ADDR']);
