@@ -133,19 +133,24 @@ class HomesController extends AppController
         }
     }
     public function airdrop(){
+        
         $Setting = $this->request->getSession()->read('Setting');
 
-        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+        if (
+            //$this->request->is('ajax') && 
+        !empty($this->request->getData())) {
             if (empty($Setting['recaptcha_secret_key'])) {
                 echo '<script>grecaptcha.reset();</script>';
                 echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
                 exit;
             }
             $postData = $this->request->getData();
+            if(isset($_SERVER['HTTP_REFERER']) && in_array($_SERVER['HTTP_REFERER'],[SITEURL.'airdrop',SITEURL.'airdrop/'])){
                 if (isset($postData['g-recaptcha-response']) && !empty($postData['g-recaptcha-response'])) {
                     $response = $this->Data->fetch("https://www.google.com/recaptcha/api/siteverify?secret=" . $Setting['recaptcha_secret_key'] . "&response=" . $postData['g-recaptcha-response'] . "&remoteip=" . $_SERVER['REMOTE_ADDR']);
                     $arr = json_decode($response, true);
                     if (isset($arr['success']) && $arr['success'] == 1) {
+                        $postData['post_info'] = json_encode($_SERVER);
                         $getEnt = $this->Airdrops->newEmptyEntity();
                         $chkEnt = $this->Airdrops->patchEntity($getEnt, $postData, ['validate' => true]);
                         if ($chkEnt->getErrors()) {
@@ -179,6 +184,12 @@ class HomesController extends AppController
                     echo '<script>grecaptcha.reset();</script>';
                     echo "<div class='alert alert-danger'>Please verify that you are not a robot.</div>";
                 }
+            }else{
+                echo '<script>grecaptcha.reset();</script>';
+                echo '<div class="alert alert-danger" role="alert">Internal server error. please try again! </div>';
+                exit;
+            }
+                
             
             exit;
         }

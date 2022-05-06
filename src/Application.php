@@ -89,6 +89,10 @@ class Application extends BaseApplication
             if ($request->getParam('controller') === 'Homes' && $request->getParam('action') === 'openPop') {
                 return true;
             }
+            if ($request->getParam('controller') === 'Homes' && $request->getParam('action') === 'airdrop') {
+                return true;
+            }
+            
             if ($request->getParam('controller') === 'Users') {
                 // return true;
                 if ($request->getParam('action') === 'checkMetamask') {
