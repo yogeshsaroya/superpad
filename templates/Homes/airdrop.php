@@ -10,6 +10,9 @@ if (!empty($Setting['recaptcha_site_key']) && !empty($Setting['recaptcha_secret_
     </script>
     <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
 <?php } ?>
+<style>
+    #basic-addon3 { cursor: none;}
+</style>
 <section class="create-section section-space-b pt-70">
     <div class="container">
         <div class="row">
