@@ -25,7 +25,7 @@ if (!empty($Setting['recaptcha_site_key']) && !empty($Setting['recaptcha_secret_
                     <?php echo $this->Form->create(null, ['autocomplete' => 'off', 'id' => 'e_frm', 'class' => 'form-create mb-5 mb-lg-0', 'data-toggle' => 'validator']);
                     $a1 = rand(100,999);
                     $a2 = rand(999,100);
-                    $que = $a1." + ".$a2;
+                    $que = $a1." PLUS ".$a2;
                     echo $this->Form->hidden('id');
                     echo $this->Form->hidden('a1',['value'=>$a1]);
                     echo $this->Form->hidden('a2',['value'=>$a2]);
