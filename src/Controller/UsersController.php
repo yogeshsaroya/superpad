@@ -47,7 +47,7 @@ class UsersController extends AppController
         /* https://book.cakephp.org/4/en/controllers/components/authentication.html#AuthComponent::allow */
         $this->Auth->allow([
             'login', 'register', 'backend', 'backendRestPassword', 'logout', 'check', 'gAuth',
-            'forgetPassword', 'connectWallet', 'check_metamask'
+            'forgetPassword', 'check_metamask'
         ]);
 
         // Form helper https://codethepixel.com/tutorial/cakephp/cakephp-4-common-helpers
