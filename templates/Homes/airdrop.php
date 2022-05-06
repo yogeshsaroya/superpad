@@ -1,15 +1,14 @@
 <?php
 $this->assign('title', 'AirDrop Application');
-if(!empty($Setting['recaptcha_site_key']) && !empty($Setting['recaptcha_secret_key']) )
-{?>
-<script type="text/javascript">
-      var onloadCallback = function() {
-        grecaptcha.render('g-recaptcha', {
-          'sitekey' : '<?php echo $Setting['recaptcha_site_key'];?>'
-        });
-      };
+if (!empty($Setting['recaptcha_site_key']) && !empty($Setting['recaptcha_secret_key'])) { ?>
+    <script type="text/javascript">
+        var onloadCallback = function() {
+            grecaptcha.render('g-recaptcha', {
+                'sitekey': '<?php echo $Setting['recaptcha_site_key']; ?>'
+            });
+        };
     </script>
-<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
 <?php } ?>
 <section class="create-section section-space-b pt-70">
     <div class="container">
@@ -20,12 +19,17 @@ if(!empty($Setting['recaptcha_site_key']) && !empty($Setting['recaptcha_secret_k
                     <p></p>
                 </div>
                 <div id="ido_frm">
-                    <?php echo $this->Form->create(null, ['autocomplete' => 'off', 'id' => 'e_frm', 'class' => 'form-create mb-5 mb-lg-0', 'data-toggle' => 'validator']); 
+                    <?php echo $this->Form->create(null, ['autocomplete' => 'off', 'id' => 'e_frm', 'class' => 'form-create mb-5 mb-lg-0', 'data-toggle' => 'validator']);
+                    $a1 = rand(100,999);
+                    $a2 = rand(999,100);
+                    $que = $a1." + ".$a2;
                     echo $this->Form->hidden('id');
+                    echo $this->Form->hidden('a1',['value'=>$a1]);
+                    echo $this->Form->hidden('a2',['value'=>$a2]);
                     ?>
                     <div class="form-item mb-4">
 
-                    <div class="mb-3 form-group"><?php echo $this->Form->control('twitter', ['label' => ['text' => 'Your Twitter Handle', 'class' => 'form-label'], 'placeholder' => '@handle name', 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
+                        <div class="mb-3 form-group"><?php echo $this->Form->control('twitter', ['label' => ['text' => 'Your Twitter Handle', 'class' => 'form-label'], 'placeholder' => '@handle name', 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
                         </div>
                         <div class="mb-3 form-group"><?php echo $this->Form->control('telegram', ['label' => ['text' => 'Your Telegram Handle', 'class' => 'form-label'], 'placeholder' => '@handle name', 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
                         </div>
@@ -69,20 +73,33 @@ if(!empty($Setting['recaptcha_site_key']) && !empty($Setting['recaptcha_secret_k
                                     </div>
                                 <?php } ?>
                             </div>
-
                         <?php } ?>
                         <hr>
                     </div>
-                    <div class="col-sm-12"><div id="g-recaptcha"></div>
-                    <hr>
-                    <div id="f_err"></div>
+
+                    <div class="col-sm-12 form-group">
+
+                        <label for="basic-url" class="form-label">Solve this math questions </label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon3"><?php echo $que;?> = ? </span>
+                            <input type="text" name="ans" value="" aria-describedby="basic-addon3" class="form-control" required="required" id="ans">
+                        </div>
+                        <div class="help-block with-errors"></div>
+                    </div>
                     <br>
-                    <input type="button" class="btn btn-dark" id="reg_sbtn" value="Submit" />
-                    <?php echo $this->Form->end(); ?>
+                    <hr>
+
+                    <div class="col-sm-12">
+                        <div id="g-recaptcha"></div>
+                        <hr>
+                        <div id="f_err"></div>
+                        <br>
+                        <input type="button" class="btn btn-dark" id="reg_sbtn" value="Submit" />
+                        <?php echo $this->Form->end(); ?>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 </section>
 
 <?php $this->Html->scriptStart(array('block' => 'scriptBottom')); ?>

@@ -150,7 +150,9 @@ class HomesController extends AppController
                     $response = $this->Data->fetch("https://www.google.com/recaptcha/api/siteverify?secret=" . $Setting['recaptcha_secret_key'] . "&response=" . $postData['g-recaptcha-response'] . "&remoteip=" . $_SERVER['REMOTE_ADDR']);
                     $arr = json_decode($response, true);
                     if (isset($arr['success']) && $arr['success'] == 1) {
-                        $postData['post_info'] = json_encode($_SERVER);
+                        $v = (int)$postData['a1'] + (int)$postData['a2'];
+                        if( (int)$postData['ans'] ==  $v ){
+                            $postData['post_info'] = json_encode($_SERVER);
                         $getEnt = $this->Airdrops->newEmptyEntity();
                         $chkEnt = $this->Airdrops->patchEntity($getEnt, $postData, ['validate' => true]);
                         if ($chkEnt->getErrors()) {
@@ -176,6 +178,13 @@ class HomesController extends AppController
                                 exit;
                             }
                         }
+                        }else{
+                            echo '<script>grecaptcha.reset();</script>';
+                            echo '<div class="alert alert-danger" role="alert">Your answer is wrong for math questions.</div>';
+                            exit;
+                        }
+
+                        
                     } else {
                         echo '<script>grecaptcha.reset();</script>';
                         echo "<div class='alert alert-danger'>Please verify that you are not a robot.</div>";
