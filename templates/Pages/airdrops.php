@@ -38,7 +38,7 @@
                                                 <td><?php echo $list->twitter; ?></td>
                                                 <td><?php echo $list->telegram; ?></td>
                                                 <td><?php echo $list->wallet_address; ?></td>
-                                                <td><?php echo $list->created->format('m-d-Y'); ?></td>
+                                                <td><?php echo $list->created->format('Y-m-d H:i:s'); ?></td>
 
                                             </tr>
                                     <?php }
