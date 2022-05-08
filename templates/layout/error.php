@@ -39,9 +39,9 @@
         <h2>Not Found</h2>
         <p class="error">
             <strong>Error: </strong>
-            The requested address <strong>'/pages/propertiesasdf'</strong> was not found on this server.
+            The page you are looking for was not found.
         </p>
-        <?= $this->Html->link(__('Back'), 'javascript:history.back()') ?>
+        <a href="<?php echo SITEURL; ?>" class="btn btn-link">Back to Home</a>
     </div>
     
 </body>

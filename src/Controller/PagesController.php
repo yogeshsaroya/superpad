@@ -1293,6 +1293,8 @@ class PagesController extends AppController
     }
 
     public function airdrops(){
+        $menu_act = 'airdrops';
+        $this->set(compact('menu_act'));
         $this->paginate = ['limit' => 100, 'conditions' => [], 'order' => ['id' => 'desc']];
         $data = $this->paginate($this->Airdrops->find('all'));
         $paging = $this->request->getAttribute('paging');

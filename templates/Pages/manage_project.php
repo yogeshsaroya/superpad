@@ -39,14 +39,14 @@ $this->assign('title', 'Manage Projects'); ?>
                     </div>
                 </div>
             </div>
-            <div class="content-header-right text-md-right col-md-6 col-12 d-md-block d-none">
+            <div class="content-header-right text-md-right col-md-6 col-12  ">
                 <div class="form-group breadcrumb-right">
                     <div class="dropdown">
                         <?php if (isset($get_data->id) && !empty($get_data->id)) { ?>
-                            <?php echo $this->Html->link('Add New Team', 'javascript:void(0);', ['onclick' => 'addTeam(' . $get_data->id . ')', 'class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
-                            <?php echo $this->Html->link('Add New Partner', 'javascript:void(0);', ['onclick' => 'addPartner(' . $get_data->id . ')', 'class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
-                            <?php echo $this->Html->link('Add New Social Media Account', 'javascript:void(0);', ['onclick' => 'addMedia(' . $get_data->id . ')', 'class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
-                            <?php echo $this->Html->link('Add Token Distributions', 'javascript:void(0);', ['onclick' => 'tokenDistributions(' . $get_data->id . ')', 'class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
+                            <?php echo $this->Html->link('Add New Team', 'javascript:void(0);', ['onclick' => 'addTeam(' . $get_data->id . ')', 'class' => 'btn btn-primary']); ?>
+                            <?php echo $this->Html->link('Add New Partner', 'javascript:void(0);', ['onclick' => 'addPartner(' . $get_data->id . ')', 'class' => 'btn btn-primary']); ?>
+                            <?php echo $this->Html->link('Add New Social Media Account', 'javascript:void(0);', ['onclick' => 'addMedia(' . $get_data->id . ')', 'class' => 'btn btn-primary']); ?>
+                            <?php echo $this->Html->link('Add Token Distributions', 'javascript:void(0);', ['onclick' => 'tokenDistributions(' . $get_data->id . ')', 'class' => 'btn btn-primary']); ?>
                         <?php } ?>
                     </div>
                 </div>

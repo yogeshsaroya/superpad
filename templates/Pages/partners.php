@@ -17,10 +17,10 @@
                     </div>
                 </div>
             </div>
-            <div class="content-header-right text-md-right col-md-3 col-12 d-md-block d-none">
+            <div class="content-header-right text-md-right col-md-3 col-12">
                 <div class="form-group breadcrumb-right">
                     <div class="dropdown">
-                        <?php echo $this->Html->link('Add New Partner', '/pages/manage_partners', ['class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
+                        <?php echo $this->Html->link('Add New Partner', '/pages/manage_partners', ['class' => 'btn btn-primary']); ?>
 
                     </div>
                 </div>

@@ -2,7 +2,7 @@
 <div class="app-content content ">
     <div class="content-wrapper">
         <div class="content-header row">
-            <div class="content-header-left col-md-6 col-12 mb-2">
+            <div class="content-header-left col-md-6 col-12">
                 <div class="row breadcrumbs-top">
                     <div class="col-12">
                         <h2 class="content-header-title float-left mb-0">Manage Stakes</h2>
@@ -10,11 +10,11 @@
                     </div>
                 </div>
             </div>
-            <div class="content-header-right text-md-right col-md-6 col-12 d-md-block d-none">
+            <div class="content-header-right text-md-right col-md-6 col-12">
                 <div class="form-group breadcrumb-right">
                     <div class="dropdown">
-                        <?php echo $this->Html->link('Add New Stake Condition', 'javascript:void(0);', ['onclick' => 'stake()', 'class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
-                        <?php echo $this->Html->link('Add New UnStake Condition', 'javascript:void(0);', ['onclick' => 'unstake()', 'class' => 'btn btn-primary mr-1 waves-effect waves-float waves-light']); ?>
+                        <?php echo $this->Html->link('Add New Stake Condition', 'javascript:void(0);', ['onclick' => 'stake()', 'class' => 'btn btn-primary']); ?>
+                        <?php echo $this->Html->link('Add New UnStake Condition', 'javascript:void(0);', ['onclick' => 'unstake()', 'class' => 'btn btn-primary']); ?>
                     </div>
                 </div>
             </div>

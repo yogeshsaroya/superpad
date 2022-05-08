@@ -11,23 +11,38 @@
     <meta name="robots" content="noindex">
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600" rel="stylesheet">
-    <?php echo $this->Html->css([
-        '/app-assets/vendors/css/vendors.min',
-        '/app-assets/css/bootstrap',
-        '/app-assets/css/bootstrap-extended',
-        '/app-assets/css/colors',
-        '/app-assets/css/components',
-        '/app-assets/css/themes/bordered-layout',
-        '/app-assets/css/core/menu/menu-types/horizontal-menu',
-        'cake', 'magnific-popup'
+    <!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/vendors/css/vendors.min.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/vendors/css/charts/apexcharts.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/vendors/css/extensions/toastr.min.css">
+    <!-- END: Vendor CSS-->
 
-    ]); ?>
-    <?php echo $this->Html->script(['/app-assets/vendors/js/vendors.min.js', 'jquery.form.min.js', 'validator.min', 'jquery.magnific-popup.min']); ?>
+    <!-- BEGIN: Theme CSS-->
+    <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/css/bootstrap-extended.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/css/colors.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/css/components.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/css/themes/dark-layout.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/css/themes/bordered-layout.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/css/themes/semi-dark-layout.css">
+
+    <!-- BEGIN: Page CSS-->
+    <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/css/core/menu/menu-types/horizontal-menu.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/css/pages/dashboard-ecommerce.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/css/plugins/charts/chart-apex.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo SITEURL; ?>app-assets/css/plugins/extensions/ext-component-toastr.css">
+
+    <?php echo $this->Html->css(['cake', 'magnific-popup']); ?>
+
+    <!-- BEGIN: Vendor JS-->
+    <script src="<?php echo SITEURL; ?>app-assets/vendors/js/vendors.min.js"></script>
+    <?php echo $this->Html->script(['jquery.form.min.js', 'validator.min', 'jquery.magnific-popup.min']); ?>
+    <!-- BEGIN Vendor JS-->
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
     <script type="text/javascript">
-        var SITEURL = "<?php echo SITEURL ?>";
+        var SITEURL = "<?php echo SITEURL; ?>";
         $(document).ready(function() {
             $(".magnificAjax").magnificPopup({
                 type: "ajax",
@@ -47,7 +62,6 @@
                 return false;
             return true;
         };
-
     </script>
     <?php echo $this->Html->meta('csrfToken', $this->request->getAttribute('csrfToken')); ?>
 </head>
@@ -58,6 +72,23 @@
     <?php echo $this->fetch('content'); ?>
     <?php echo $this->element('backend/footer'); ?>
     <?php echo $this->fetch('scriptBottom'); ?>
+
+
+
+
+    <!-- BEGIN: Page Vendor JS-->
+    <script src="<?php echo SITEURL;?>app-assets/vendors/js/ui/jquery.sticky.js"></script>
+    <!-- END: Page Vendor JS-->
+
+    <!-- BEGIN: Theme JS-->
+    <script src="<?php echo SITEURL;?>app-assets/js/core/app-menu.js"></script>
+    <script src="<?php echo SITEURL;?>app-assets/js/core/app.js"></script>
+    <!-- END: Theme JS-->
+
+    <!-- BEGIN: Page JS-->
+    <script src="<?php echo SITEURL;?>app-assets/js/scripts/forms/form-tooltip-valid.js"></script>
+    <!-- END: Page JS-->
+
     <script>
         $(window).on('load', function() {
             if (feather) {
