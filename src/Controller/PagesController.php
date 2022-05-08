@@ -1293,6 +1293,17 @@ class PagesController extends AppController
     }
 
     public function airdrops(){
+
+        if ($this->request->is('ajax')) {
+            if (!empty($this->request->getData())) {
+                $data = $this->request->getData();
+                $array = explode(',',$data['ids']);
+                $this->Airdrops->deleteAll(['id IN' => $array]);
+                echo "<script> location.reload();</script>";
+            }
+            exit;
+        }
+
         $menu_act = 'airdrops';
         $this->set(compact('menu_act'));
         $this->paginate = ['limit' => 100, 'conditions' => [], 'order' => ['id' => 'desc']];
