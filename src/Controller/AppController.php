@@ -79,8 +79,6 @@ class AppController extends Controller
         $this->loadModel('Tickets');
         $this->loadModel('TokenDistributions');
         $this->loadModel('Airdrops');
-        
-        
                
                 
         $Setting = $this->Data->get_settings();
@@ -99,7 +97,7 @@ class AppController extends Controller
         
         // store user data to Auth variable.
         // we will use this Auth variable to get user data
-        if( $this->Auth->user() !== null ){ 
+        if( $this->Auth->user('id')){ 
             $userData = $this->Data->getUser($this->Auth->user('id'));
             $this->Auth->setUser($userData);
             $this->set("Auth", $this->Auth->user()); 
