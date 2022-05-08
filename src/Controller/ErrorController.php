@@ -33,6 +33,8 @@ class ErrorController extends AppController
     public function initialize(): void
     {
         $this->loadComponent('RequestHandler');
+        $this->loadComponent('Auth');
+        
     }
 
     /**
@@ -54,7 +56,6 @@ class ErrorController extends AppController
     public function beforeRender(EventInterface $event)
     {
         parent::beforeRender($event);
-
         //$this->viewBuilder()->setTemplatePath('Error');
         $this->viewBuilder()->setLayout('error_404');
     }
