@@ -56,7 +56,7 @@ if (!empty($Setting['recaptcha_site_key']) && !empty($Setting['recaptcha_secret_
                                         <div class="col-sm">
                                             <div class="card-media card-media-s2 mb-3">
                                                 <a href="author.html" class="card-media-img flex-shrink-0 d-block">
-                                                    <img src="<?php echo SITEURL . "web3/" . strtolower($sm->type) . ".svg"; ?>" alt="" title="" width="64">
+                                                    <img src="<?php echo SITEURL . "img/" . strtolower($sm->type) . ".svg"; ?>" alt="" title="" width="64">
                                                 </a>
                                                 <div class="card-media-body">
                                                     <p class="fw-semibold"><?php echo $sm->heading; ?></p>
