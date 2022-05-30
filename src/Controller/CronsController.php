@@ -403,4 +403,30 @@ class CronsController extends AppController
         }
         exit;
     }
+
+    public function getAirdrops()
+    {
+        $path = 'airdrops';
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+        $data = $this->Airdrops->find('all', ['order' => ['Airdrops.id' => 'DESC']])->all();
+        if ( !$data->isEmpty() ) {
+                $header_row = ['ID', 'twitter', 'telegram', 'wallet_address'];
+                $fname = 'airdrops.csv';
+                $csv_file = fopen("airdrops/" . $fname, 'w');
+                //fprintf($csv_file, chr(0xEF) . chr(0xBB) . chr(0xBF));
+                
+                fputcsv($csv_file, $header_row);
+                foreach ($data as $record) {
+                    $row = [];
+                    $row = [ $record->id, $record->twitter, $record->telegram, $record->wallet_address ];
+                    fputcsv($csv_file, $row);
+                }
+                fclose($csv_file);
+                ec(SITEURL."airdrops/".$fname);
+                
+        }
+        exit;
+    }
 }
