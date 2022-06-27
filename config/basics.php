@@ -192,5 +192,5 @@ return '<i data-bs-toggle="tooltip" data-bs-placement="top" title="'.$str.'" cla
 
 function getMediaType()
 {
-    return ['YouTube' => 'YouTube', 'Telegram' => 'Telegram'];
+    return ['YouTube' => 'YouTube', 'Telegram' => 'Telegram','Twitter'=>'Twitter'];
 }
