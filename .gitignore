@@ -42,3 +42,5 @@ nbproject/*
 .vscode
 # Sass preprocessor
 .sass-cache/
+config/bootstrap.php
+config/app_local.php
