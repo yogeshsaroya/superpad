@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Controller\Controller;
+use Cake\Routing\Router;
 
 /**
  * Application Controller
@@ -92,7 +93,22 @@ class AppController extends Controller
         if($this->request->isAjax())
         {
             $this->viewBuilder()->setLayout('ajax');
+        }
 
+        /* Redirect to www and https */
+        $url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+        if (in_array($_SERVER['SERVER_NAME'], ['superpad.finance', 'www.superpad.finance'])) {
+            if ($this->request->getParam('controller') != 'crons') {
+                $pos = strpos($url, 'www');
+                if ($pos === true) {
+                    $this->redirect('https://' . env('SERVER_NAME') . Router::url(null, false), 301);
+                } else {
+                    if (!isset($_SERVER['HTTPS'])) {
+                        $this->redirect('https://' . env('SERVER_NAME') . Router::url(null, false), 301);
+                    }
+                }
+            }
         }
         
         // store user data to Auth variable.
