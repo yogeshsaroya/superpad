@@ -3,7 +3,11 @@ $list = $data;
 $this->assign('title', $list->meta_title);
 $this->assign('description', $list->meta_description);
 echo $this->Html->css(['magnific-popup'], ['block' => 'css']);
-echo $this->Html->script(['jquery.magnific-popup.min'], ['block' => 'scriptBottom']);
+echo $this->Html->script(['jquery.magnific-popup.min',
+'https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.1/web3.min.js',
+'https://unpkg.com/@metamask/legacy-web3@latest/dist/metamask.web3.min.js'
+], ['block' => 'scriptBottom']);
+
 
 $today = strtotime(DATE);
 $steps = $step_1 = $step_2 = $step_3 = $step_4 = $step_5 = null;
@@ -23,10 +27,8 @@ if( $list->product_status != 'TBA'){
 }
 ?>
 <?php echo $this->Html->css(['/assets/css/pro_dt']); ?>
-<div id="cssLoader">
-
-</div>
-
+<div id="cssLoader"></div>
+<div id="btn_locader" class="loader loader-curtain" data-curtain-text="Updating..."></div>
 
 <section class="item-detail-section ">
     <div class="container">
@@ -359,7 +361,7 @@ $(function () {
         + '<span class="clockbx"><span class="h1 font-weight-bold h1">%S</span>Sec</span>'));
         })
         .on('finish.countdown', function(event) { 
-            $("#cssLoader").html('<div id="loader" class="loader loader-curtain is-active" data-curtain-text="'+str+'"></div>');
+            $("#cssLoader").html('<div id="loader" class="loader loader-curtain " data-curtain-text="'+str+'"></div>');
             setTimeout(function(){ 
                 location.reload(); 
             }, 2000);

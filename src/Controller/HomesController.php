@@ -402,11 +402,12 @@ class HomesController extends AppController
         }
     }
 
-    public function joinNow($id = null)
-    {
+    public function updateJoinNow(){
+        $this->autoRender = false;
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             if ($this->Auth->User('id') != "") {
                 $postData = $this->request->getData();
+                
                 $query = $this->Applications->find('all', [
                     'contain' => ['Projects','Users'],
                     'conditions' => ['Applications.status' => 4, 'Applications.id' => $postData['id'], 'Applications.user_id' => $this->Auth->User('id')]
@@ -416,6 +417,12 @@ class HomesController extends AppController
                     echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
                     exit;
                 }
+
+                if( (float)$postData['remaining'] != (float)$appData->remaining ) {
+                    echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
+                    exit;
+                }
+                
                 
                 $coin_price = 1; /*default will be USD 1*/
                 if (isset($appData->project->coin_price) && $appData->project->coin_price > 0) {
@@ -429,12 +436,11 @@ class HomesController extends AppController
                 if (!empty($appData['allocation_data'])) {
                     $allocation_data = json_decode($appData['allocation_data'], true);
                 }
-                $allocation_data[strtotime(DATE)] = [
-                    'date' => DATE, 'amount' => $postData['amt'], 'joined' => $appData->joined,
-                    'joined_usd' => $postData['joined_usd'], 'allocation' => $appData->allocation, 'remaining' => $appData->remaining
-                ];
+                $allocation_data[strtotime(DATE)] = ['transactionId'=>$postData['transaction_id'],'date' => DATE, 'amount' => $postData['amt'], 
+                'joined' => $appData->joined,'joined_usd' => $postData['joined_usd'], 'allocation' => $appData->allocation, 
+                'remaining' => $appData->remaining,'hash_data'=>json_encode($postData['tran_data']) ];
+
                 $postData['allocation_data'] = json_encode($allocation_data);
-                //ec($postData); die;
                 $chkEnt = $this->Applications->patchEntity($appData, $postData, ['validate' => false]);
                 if ($chkEnt->getErrors()) {
                     $st = null;
@@ -448,8 +454,8 @@ class HomesController extends AppController
                 } else {
                     if ($this->Applications->save($chkEnt)) {
                         $u = SITEURL . "allocation";
-                        echo "<script>$('#reg_sbtn').remove();</script>";
-                        echo "<div class='alert alert-success'>Completed</div>";
+                        echo "<script>$('#paybusd').remove();</script>";
+                        echo "<div class='alert alert-success'>Transaction Completed</div>";
                         echo "<script> setTimeout(function(){ window.location.href ='" . $u . "'; }, 2000);</script>";
                     } else {
                         echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
@@ -462,7 +468,10 @@ class HomesController extends AppController
             }
             exit;
         }
+    }
 
+    public function joinNow($id = null)
+    {
         if (!empty($id)) {
             $max_amt = $max_tickets = 0;
             $data = $short_name = null;

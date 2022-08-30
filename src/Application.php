@@ -86,11 +86,10 @@ class Application extends BaseApplication
             if ($request->getParam('controller') === 'Pages' && $request->getParam('action') === 'openPop') {
                 return true;
             }
-            if ($request->getParam('controller') === 'Homes' && $request->getParam('action') === 'openPop') {
+            if ($request->getParam('controller') === 'Homes' && in_array($request->getParam('action'), ['openPop', 'updateJoinNow'])) {
                 return true;
             }
             if ($request->getParam('controller') === 'Users') {
-                // return true;
                 if ($request->getParam('action') === 'checkMetamask') {
                     return true;
                 }

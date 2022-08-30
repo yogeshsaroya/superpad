@@ -161,45 +161,14 @@ class CronsController extends AppController
         return $results;
     }
 
-    /* Setp 5  //  up_appliation
-    update apllocation if sale is not requried staking
-    */
-    public function upAppliation()
-    {
-        $data = $this->Projects->find()
-            ->contain(['Applications' => ['conditions' => ['Applications.status' => 1]]])
-            ->select(['id', 'title', 'product_status', 'status', 'sale_starts','sale_ends', 'total_raise', 'ticket_allocation', 'price_per_token','max_allocation','token_required','max_allocation'])
-            ->where(['Projects.token_required'=>2,'Projects.max_allocation >'=>0,'Projects.product_status' => 'Whitelist Closed'])->all();
-        if (!$data->isEmpty()) {
-            foreach ($data as $projects) {
-                if (!empty($projects->applications)) {
-                    foreach ($projects->applications as $applications) {
-                        
-                            $applications->status = 4;
-                            $applications->is_notified = 2;
-                            $app_res = $this->Applications->save($applications);
-                            ec('Applications update id ' . $applications->id);
-                       
-                    }
-                } else {
-                    ec('No applications found');
-                }
-            }
-        } else {
-            ec('empty');
-        }
-
-        exit;
-    }
+    
 
     /* Setp 1  //  mk_ticket
     Create tickets when sales status is Live Now and Applications status is 1
     */
     public function mkTicket()
     {
-        $levels = $this->Levels->find()
-            ->order(['spad' => 'ASC'])
-            ->all();
+        $levels = $this->Levels->find()->order(['spad' => 'ASC'])->all();
         $tire = null;
         if (!$levels->isEmpty()) {
             foreach ($levels as $a) {
@@ -401,6 +370,37 @@ class CronsController extends AppController
         } else {
             ec('empty');
         }
+        exit;
+    }
+
+    /* Setp 5  //  up_appliation
+    update apllocation if sale is not requried staking
+    */
+    public function upAppliation()
+    {
+        $data = $this->Projects->find()
+            ->contain(['Applications' => ['conditions' => ['Applications.status' => 1]]])
+            ->select(['id', 'title', 'product_status', 'status', 'sale_starts','sale_ends', 'total_raise', 'ticket_allocation', 'price_per_token','max_allocation','token_required','max_allocation'])
+            ->where(['Projects.token_required'=>2,'Projects.max_allocation >'=>0,'Projects.product_status' => 'Whitelist Closed'])->all();
+        if (!$data->isEmpty()) {
+            foreach ($data as $projects) {
+                if (!empty($projects->applications)) {
+                    foreach ($projects->applications as $applications) {
+                        
+                            $applications->status = 4;
+                            $applications->is_notified = 2;
+                            $app_res = $this->Applications->save($applications);
+                            ec('Applications update id ' . $applications->id);
+                       
+                    }
+                } else {
+                    ec('No applications found');
+                }
+            }
+        } else {
+            ec('empty');
+        }
+
         exit;
     }
 
