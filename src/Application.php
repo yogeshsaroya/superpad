@@ -90,7 +90,7 @@ class Application extends BaseApplication
                 return true;
             }
             if ($request->getParam('controller') === 'Users') {
-                if ($request->getParam('action') === 'checkMetamask') {
+                if (in_array($request->getParam('action'),['updateClaim','checkMetamask']) ) {
                     return true;
                 }
             }

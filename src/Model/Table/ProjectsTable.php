@@ -32,14 +32,14 @@ class ProjectsTable extends Table
 
             ->requirePresence("coin_id")
             ->allowEmptyString("coin_id", "Coin ID is required")
-            ->minLength("coin_id", 3, "Coin ID must be 3-20 characters")
-            ->maxLength("coin_id", 20, "Coin ID must be 3-20 characters")
+            ->minLength("coin_id", 2, "Coin ID must be 2-20 characters")
+            ->maxLength("coin_id", 20, "Coin ID must be 2-20 characters")
             ->add("coin_id", ['unique' => ['rule' => 'validateUnique', 'provider' => 'table', 'message' => 'Coin ID already in use']])
 
             ->requirePresence("ticker")
             ->notEmptyString("ticker", "Ticker name is required")
-            ->minLength("ticker", 3, "Ticker name must be 3-20 characters")
-            ->maxLength("ticker", 20, "Ticker name must be 3-20 characters")
+            ->minLength("ticker", 2, "Ticker name must be 2-20 characters")
+            ->maxLength("ticker", 20, "Ticker name must be 2-20 characters")
             ->add("ticker", ['unique' => ['rule' => 'validateUnique', 'provider' => 'table', 'message' => 'Ticker is already in use']])
 
 
