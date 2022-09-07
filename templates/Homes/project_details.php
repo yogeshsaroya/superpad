@@ -256,7 +256,7 @@ if( $list->product_status != 'TBA'){
                             </div>
                             <div class="d-flex justify-content-between align-items-center col-12">
                                 <span class="card-price-title">Token Price</span>
-                                <span class="card-price-number text-end"><?php echo ($list->price_per_token > 0 ?  $this->Number->currency($list->price_per_token, 'USD') : 'TBA'); ?></span>
+                                <span class="card-price-number text-end"><?php echo ($list->price_per_token > 0 ?  "$".$list->price_per_token: 'TBA'); ?></span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center col-12">
                                 <span class="card-price-title">Ticket Allocation</span>
