@@ -196,7 +196,7 @@ if( $list->product_status != 'TBA'){
                                                 <td>Sale Price</td>
                                                 <td><?php
                                                     if ($list->price_per_token > 0) {
-                                                        echo "1 " . $list->ticker . " = " . $this->Number->currency($list->price_per_token, 'USD');
+                                                        echo "1 " . $list->ticker . " = $" . $list->price_per_token;
                                                     } else {
                                                         echo "TBA";
                                                     } ?></td>
