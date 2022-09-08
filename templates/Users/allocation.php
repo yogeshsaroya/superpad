@@ -3,6 +3,8 @@ echo $this->Html->css(['magnific-popup'], ['block' => 'css']);
 echo $this->Html->script(['jquery.magnific-popup.min'], ['block' => 'scriptBottom']);
 
 ?>
+<div id="btn_locader" class="loader loader-curtain" data-curtain-text="Updating..."></div>
+
 <section class="about-section pt-5 mt-3 cta-section section-space-b bg-pattern">
     <div class="container pt-5 pb-5">
         <?php if ($data->isEmpty()) { ?>

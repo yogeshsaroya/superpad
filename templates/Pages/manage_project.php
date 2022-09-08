@@ -114,7 +114,7 @@ $this->assign('title', 'Manage Projects'); ?>
                                         </div>
                                         <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('ticket_allocation', ['class' => 'form-control amt', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div>
                                         </div>
-                                        <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('price_per_token', ['label' => ['escape' => false, 'text' => 'Sale Price <small>(Price per token)</small>'], 'class' => 'form-control amt', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div>
+                                        <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('price_per_token', ['type'=>'text','label' => ['escape' => false, 'text' => 'Sale Price <small>(Price per token)</small>'], 'class' => 'form-control amt', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div>
                                         </div>
                                         <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('initial_market_cap', ['class' => 'form-control amt numeral-mask', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div>
                                         </div>

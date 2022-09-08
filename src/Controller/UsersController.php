@@ -941,22 +941,28 @@ class UsersController extends AppController
     {
         $this->autoRender = false;
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
-            $postData = $this->request->getData();
-            $query = $this->Applications->find('all', ['conditions' => ['Applications.id' => $postData['app_id'],'Applications.status' => 4]]);
-            $data =  $query->first();
-            $claimed_token = 0;
-            if( !empty($data->info) ){
-                $arr = json_decode($data->info,true);
-                if( isset($arr[$postData['id']]) && !empty($arr[$postData['id']]) ){
-                    $arr[$postData['id']]['claim_on'] = DATE;
-                    $claimed_token = $arr[$postData['id']]['total_token'];
+            if ($this->Auth->User('id') != "") {
+                $postData = $this->request->getData();
+                
+                $query = $this->Applications->find('all', ['conditions' => ['Applications.id' => $postData['app_id'], 'Applications.status' => 4]]);
+                $data =  $query->first();
+                $claimed_token = 0;
+                if (!empty($data->info)) {
+                    $arr = json_decode($data->info, true);
+                    if (isset($arr[$postData['id']]) && !empty($arr[$postData['id']])) {
+                        $arr[$postData['id']]['claim_on'] = DATE;
+                        $arr[$postData['id']]['claimed_token'] = $postData['amt'];
+                        $arr[$postData['id']]['transaction_id'] = $postData['transaction_id'];
+                        $arr[$postData['id']]['transaction_data'] = $postData['tran_data'];
+                        $claimed_token = $arr[$postData['id']]['total_token'];
+                    }
+                    
+                    $data->claimed_token = $data->claimed_token + $claimed_token;
+                    $data->available_token = $data->available_token - $claimed_token;
+                    $data->info = json_encode($arr);
+                    $this->Applications->save($data);
+                    echo "<script>$('#btn_" . $postData['id'] . "').remove(); $('#on_" . $postData['id'] . "').html('" . DATE . "'); </script>";
                 }
-                $data->claimed_token = $data->claimed_token + $claimed_token;
-                $data->available_token = $data->available_token - $claimed_token;
-                $data->info = json_encode($arr);
-                //ec($claimed_token);ec($data);die;
-                $this->Applications->save($data);
-                echo "<script>$('#btn_".$postData['id']."').remove(); $('#on_".$postData['id']."').html('".DATE."'); </script>";
             }
         }
         exit;

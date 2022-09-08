@@ -63,13 +63,13 @@ use Cake\Utility\Security;
  * security risks. See https://github.com/josegonzalez/php-dotenv#general-security-information
  * for more information for recommended practices.
 */
-// if (!env('APP_NAME') && file_exists(CONFIG . '.env')) {
-//     $dotenv = new \josegonzalez\Dotenv\Loader([CONFIG . '.env']);
-//     $dotenv->parse()
-//         ->putenv()
-//         ->toEnv()
-//         ->toServer();
-// }
+ if (!env('APP_NAME') && file_exists(CONFIG . '.env')) {
+     $dotenv = new \josegonzalez\Dotenv\Loader([CONFIG . '.env']);
+     $dotenv->parse()
+         ->putenv()
+         ->toEnv()
+         ->toServer();
+}
 
 /*
  * Read configuration file and inject configuration into various
@@ -221,13 +221,10 @@ TypeFactory::map('time', StringType::class);
 //Inflector::rules('irregular', ['red' => 'redlings']);
 //Inflector::rules('uninflected', ['dontinflectme']);
 
-
-
-define('SITEURL', 'http://localhost:8888/cake/superpad/');
-
 //date_default_timezone_set('US/Eastern');
 date_default_timezone_set('asia/kolkata');
-define('WEBTITLE','SuperPad');
+define('SITEURL', env('APP_SITEURL'));
+define('WEBTITLE', env('APP_NAME'));
 define("DATE", date("Y-m-d H:i:s"));
 define("TODAYDATE", date("Y-m-d"));
 

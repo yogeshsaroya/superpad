@@ -15,7 +15,7 @@ return [
      * Development Mode:
      * true: Errors and warnings shown.
      */
-    'debug' => true,//filter_var(env('DEBUG', true), FILTER_VALIDATE_BOOLEAN),
+    'debug' => filter_var(env('DEBUG', true), FILTER_VALIDATE_BOOLEAN),
 
     /*
      * Security and encryption configuration
@@ -44,10 +44,10 @@ return [
              */
             //'port' => 'non_standard_port_number',
 
-            'username' => 'root',
-            'password' => 'root',
-
-            'database' => 'superpad',
+            'username' => env('db_username'),
+            'password' => env('db_password'),
+            'database' => env('db_database'),
+            
             /*
              * If not using the default 'public' schema with the PostgreSQL driver
              * set it here.
