@@ -909,6 +909,7 @@ class UsersController extends AppController
         ]);
         $data =  $query->all();
         $this->set(compact('data'));
+        //$a = $this->fetchTable('Claims')->find('all')->all();
         
     }
 

@@ -56,8 +56,8 @@ class ErrorController extends AppController
     public function beforeRender(EventInterface $event)
     {
         parent::beforeRender($event);
-        //$this->viewBuilder()->setTemplatePath('Error');
-        $this->viewBuilder()->setLayout('error_404');
+        $this->viewBuilder()->setTemplatePath('Error');
+        //$this->viewBuilder()->setLayout('error_404');
     }
 
     /**
