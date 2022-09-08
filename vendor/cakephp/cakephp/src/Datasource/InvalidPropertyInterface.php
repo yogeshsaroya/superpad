@@ -36,8 +36,8 @@ interface InvalidPropertyInterface
      * This value could not be patched into the entity and is simply copied into the _invalid property for debugging
      * purposes or to be able to log it away.
      *
-     * @param array $fields The values to set.
-     * @param bool $overwrite Whether or not to overwrite pre-existing values for $field.
+     * @param array<string, mixed> $fields The values to set.
+     * @param bool $overwrite Whether to overwrite pre-existing values for $field.
      * @return $this
      */
     public function setInvalid(array $fields, bool $overwrite = false);

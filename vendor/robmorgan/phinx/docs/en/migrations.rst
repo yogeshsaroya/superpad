@@ -284,15 +284,15 @@ insert methods in your migrations.
              */
             public function up()
             {
+                $table = $this->table('status');
+
                 // inserting only one row
                 $singleRow = [
                     'id'    => 1,
                     'name'  => 'In Progress'
                 ];
 
-                $table = $this->table('status');
-                $table->insert($singleRow);
-                $table->saveData();
+                $table->insert($singleRow)->saveData();
 
                 // inserting multiple rows
                 $rows = [
@@ -306,7 +306,7 @@ insert methods in your migrations.
                     ]
                 ];
 
-                $this->table('status')->insert($rows)->save();
+                $table->insert($rows)->saveData();
             }
 
             /**
@@ -799,9 +799,12 @@ update   set an action to be triggered when the row is updated (use with ``CURRE
 timezone enable or disable the ``with time zone`` option for ``time`` and ``timestamp`` columns *(only applies to Postgres)*
 ======== ===========
 
-You can add ``created_at`` and ``updated_at`` timestamps to a table using the ``addTimestamps()`` method. This method also
-allows you to supply alternative names. The optional third argument allows you to change the ``timezone`` option for the
-columns being added. Additionally, you can use the ``addTimestampsWithTimezone()`` method, which is an alias to
+You can add ``created_at`` and ``updated_at`` timestamps to a table using the ``addTimestamps()`` method. This method accepts
+three arguments, where the first two allow setting alternative names for the columns while the third argument allows you to
+enable the ``timezone`` option for the columns. The defaults for these arguments are ``created_at``, ``updated_at``, and ``true``
+respectively. For the first and second argument, if you provide ``null``, then the default name will be used, and if you provide
+``false``, then that column will not be created. Please note that attempting to set both to ``false`` will throw a
+``\RuntimeException``. Additionally, you can use the ``addTimestampsWithTimezone()`` method, which is an alias to
 ``addTimestamps()`` that will always set the third argument to ``true`` (see examples below). The ``created_at`` column will
 have a default set to ``CURRENT_TIMESTAMP``. For MySQL only, ``update_at`` column will have update set to
 ``CURRENT_TIMESTAMP``.
@@ -831,6 +834,12 @@ have a default set to ``CURRENT_TIMESTAMP``. For MySQL only, ``update_at`` colum
                 // The two lines below do the same, the second one is simply cleaner.
                 $table = $this->table('books')->addTimestamps(null, 'amended_at', true)->create();
                 $table = $this->table('users')->addTimestampsWithTimezone(null, 'amended_at')->create();
+
+                // Only add the created_at column to the table
+                $table = $this->table('books')->addTimestamps(null, false);
+                // Only add the updated_at column to the table
+                $table = $this->table('users')->addTimestamps(false);
+                // Note, setting both false will throw a \RuntimeError
             }
         }
 
@@ -1117,7 +1126,8 @@ To rename a column, access an instance of the Table object then call the
             public function up()
             {
                 $table = $this->table('users');
-                $table->renameColumn('bio', 'biography');
+                $table->renameColumn('bio', 'biography')
+                      ->save();
             }
 
             /**
@@ -1126,14 +1136,16 @@ To rename a column, access an instance of the Table object then call the
             public function down()
             {
                 $table = $this->table('users');
-                $table->renameColumn('biography', 'bio');
+                $table->renameColumn('biography', 'bio')
+                       ->save();
             }
         }
 
 Adding a Column After Another Column
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When adding a column you can dictate its position using the ``after`` option.
+When adding a column with the MySQL adapter, you can dictate its position using the ``after`` option,
+where its value is the name of the column to position it after.
 
 .. code-block:: php
 
@@ -1153,6 +1165,10 @@ When adding a column you can dictate its position using the ``after`` option.
                       ->update();
             }
         }
+
+This would create the new column ``city`` and position it after the ``email`` column. You
+can use the `\Phinx\Db\Adapter\MysqlAdapter\FIRST` constant to specify that the new column should
+created as the first column in that table.
 
 Dropping a Column
 ~~~~~~~~~~~~~~~~~
@@ -1374,6 +1390,24 @@ The SQL Server and PostgreSQL adapters also supports ``include`` (non-key) colum
             }
         }
 
+In addition PostgreSQL adapters also supports Generalized Inverted Index ``gin`` indexes.
+
+.. code-block:: php
+
+        <?php
+
+        use Phinx\Migration\AbstractMigration;
+
+        class MyNewMigration extends AbstractMigration
+        {
+            public function change()
+            {
+                $table = $this->table('users');
+                $table->addColumn('address', 'string')
+                      ->addIndex('address', ['type' => 'gin'])
+                      ->create();
+            }
+        }
 
 Removing indexes is as easy as calling the ``removeIndex()`` method. You must
 call this method for each index.

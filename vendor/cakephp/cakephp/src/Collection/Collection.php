@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Cake\Collection;
 
 use ArrayIterator;
+use Exception;
 use IteratorIterator;
 use Serializable;
 
@@ -55,6 +56,16 @@ class Collection extends IteratorIterator implements CollectionInterface, Serial
     }
 
     /**
+     * Returns an array for serializing this of this object.
+     *
+     * @return array
+     */
+    public function __serialize(): array
+    {
+        return $this->buffered()->toArray();
+    }
+
+    /**
      * Unserializes the passed string and rebuilds the Collection instance
      *
      * @param string $collection The serialized collection
@@ -63,6 +74,17 @@ class Collection extends IteratorIterator implements CollectionInterface, Serial
     public function unserialize($collection): void
     {
         $this->__construct(unserialize($collection));
+    }
+
+    /**
+     * Rebuilds the Collection instance.
+     *
+     * @param array $data Data array.
+     * @return void
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->__construct($data);
     }
 
     /**
@@ -95,12 +117,18 @@ class Collection extends IteratorIterator implements CollectionInterface, Serial
      * Returns an array that can be used to describe the internal state of this
      * object.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function __debugInfo(): array
     {
+        try {
+            $count = $this->count();
+        } catch (Exception $e) {
+            $count = 'An exception occurred while getting count';
+        }
+
         return [
-            'count' => $this->count(),
+            'count' => $count,
         ];
     }
 }

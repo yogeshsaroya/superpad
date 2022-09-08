@@ -63,8 +63,8 @@ class MailPreviewController extends DebugKitController
      */
     public function sent($panelId, $number)
     {
-        $this->loadModel('DebugKit.Panels');
-        $panel = $this->Panels->get($panelId);
+        /** @var \DebugKit\Model\Entity\Panel $panel */
+        $panel = $this->fetchTable('DebugKit.Panels')->get($panelId);
 
         // @codingStandardsIgnoreStart
         $content = @unserialize($panel->content);
@@ -99,7 +99,7 @@ class MailPreviewController extends DebugKitController
      *
      * @param string $name The Mailer name
      * @param string $method The mailer preview method
-     * @return \Psr\Http\Message\ResponseInterface|null
+     * @return \Psr\Http\Message\ResponseInterface|void
      */
     public function email($name, $method)
     {
@@ -150,17 +150,16 @@ class MailPreviewController extends DebugKitController
     {
         $part = $this->findPart($email, $partType);
 
-        if ($part === false) {
+        if ($part === null) {
             throw new NotFoundException(__d('debug_kit', "Email part ''{0}'' not found in email", $partType));
         }
 
         $response = $this->response->withType($partType);
         if ($partType === 'text') {
-            $part = '<pre>' . (string)$part . '</pre>';
+            $part = '<pre>' . $part . '</pre>';
         }
-        $response = $response->withStringBody($part);
 
-        return $response;
+        return $response->withStringBody($part);
     }
 
     /**
@@ -188,7 +187,7 @@ class MailPreviewController extends DebugKitController
                 return [[CorePlugin::classPath($plugin) . 'Mailer/Preview/'], "$plugin."];
             });
 
-        $appPaths = [App::path('Mailer/Preview'), ''];
+        $appPaths = [App::classPath('Mailer/Preview'), ''];
 
         return collection([$appPaths])
             ->append($pluginPaths)

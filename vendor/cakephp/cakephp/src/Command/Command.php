@@ -30,6 +30,7 @@ use Cake\ORM\Locator\LocatorAwareTrait;
  * Includes traits that integrate logging
  * and ORM models to console commands.
  */
+#[\AllowDynamicProperties]
 class Command extends BaseCommand
 {
     use LocatorAwareTrait;
@@ -48,6 +49,9 @@ class Command extends BaseCommand
             return $this->getTableLocator()->get($alias);
         });
 
+        if ($this->defaultTable !== null) {
+            $this->modelClass = $this->defaultTable;
+        }
         if (isset($this->modelClass)) {
             $this->loadModel();
         }

@@ -35,16 +35,75 @@ class RoutesCommand extends Command
      */
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        $output = [
-            ['Route name', 'URI template', 'Defaults'],
-        ];
-        foreach (Router::routes() as $route) {
-            $name = $route->options['_name'] ?? $route->getName();
-            ksort($route->defaults);
-            $output[] = [$name, $route->template, json_encode($route->defaults)];
+        $header = ['Route name', 'URI template', 'Plugin', 'Prefix', 'Controller', 'Action', 'Method(s)'];
+        if ($args->getOption('verbose')) {
+            $header[] = 'Defaults';
         }
+
+        $availableRoutes = Router::routes();
+        $output = $duplicateRoutesCounter = [];
+
+        foreach ($availableRoutes as $route) {
+            $methods = $route->defaults['_method'] ?? '';
+
+            $item = [
+                $route->options['_name'] ?? $route->getName(),
+                $route->template,
+                $route->defaults['plugin'] ?? '',
+                $route->defaults['prefix'] ?? '',
+                $route->defaults['controller'] ?? '',
+                $route->defaults['action'] ?? '',
+                is_string($methods) ? $methods : implode(', ', $methods),
+            ];
+
+            if ($args->getOption('verbose')) {
+                ksort($route->defaults);
+                $item[] = json_encode($route->defaults);
+            }
+
+            $output[] = $item;
+
+            if (!isset($duplicateRoutesCounter[$route->template])) {
+                $duplicateRoutesCounter[$route->template] = 0;
+            }
+            $duplicateRoutesCounter[$route->template]++;
+        }
+
+        if ($args->getOption('sort')) {
+            usort($output, function ($a, $b) {
+                return strcasecmp($a[0], $b[0]);
+            });
+        }
+
+        array_unshift($output, $header);
+
         $io->helper('table')->output($output);
         $io->out();
+
+        $duplicateRoutes = [];
+
+        foreach ($availableRoutes as $route) {
+            if ($duplicateRoutesCounter[$route->template] > 1) {
+                $methods = $route->defaults['_method'] ?? '';
+
+                $duplicateRoutes[] = [
+                    $route->options['_name'] ?? $route->getName(),
+                    $route->template,
+                    $route->defaults['plugin'] ?? '',
+                    $route->defaults['prefix'] ?? '',
+                    $route->defaults['controller'] ?? '',
+                    $route->defaults['action'] ?? '',
+                    is_string($methods) ? $methods : implode(', ', $methods),
+                ];
+            }
+        }
+
+        if ($duplicateRoutes) {
+            array_unshift($duplicateRoutes, $header);
+            $io->warning('The following possible route collisions were detected.');
+            $io->helper('table')->output($duplicateRoutes);
+            $io->out();
+        }
 
         return static::CODE_SUCCESS;
     }
@@ -57,7 +116,13 @@ class RoutesCommand extends Command
      */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser->setDescription('Get the list of routes connected in this application.');
+        $parser
+            ->setDescription('Get the list of routes connected in this application.')
+            ->addOption('sort', [
+                'help' => 'Sorts alphabetically by route name A-Z',
+                'short' => 's',
+                'boolean' => true,
+            ]);
 
         return $parser;
     }

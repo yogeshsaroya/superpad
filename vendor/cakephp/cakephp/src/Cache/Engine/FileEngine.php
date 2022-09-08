@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace Cake\Cache\Engine;
 
 use Cake\Cache\CacheEngine;
-use Cake\Cache\InvalidArgumentException;
 use CallbackFilterIterator;
 use Exception;
 use FilesystemIterator;
@@ -57,7 +56,7 @@ class FileEngine extends CacheEngine
      *    cache::gc from ever being called automatically.
      * - `serialize` Should cache objects be serialized first.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $_defaultConfig = [
         'duration' => 3600,
@@ -81,7 +80,7 @@ class FileEngine extends CacheEngine
      *
      * Called automatically by the cache frontend.
      *
-     * @param array $config array of setting for the engine
+     * @param array<string, mixed> $config array of setting for the engine
      * @return bool True if the engine has been successfully initialized, false if not
      */
     public function init(array $config = []): bool
@@ -222,6 +221,10 @@ class FileEngine extends CacheEngine
         /** @psalm-suppress PossiblyNullReference */
         $path = $this->_File->getRealPath();
         $this->_File = null;
+
+        if ($path === false) {
+            return false;
+        }
 
         // phpcs:disable
         return @unlink($path);
@@ -437,14 +440,7 @@ class FileEngine extends CacheEngine
     {
         $key = parent::_key($key);
 
-        if (preg_match('/[\/\\<>?:|*"]/', $key)) {
-            throw new InvalidArgumentException(
-                "Cache key `{$key}` contains invalid characters. " .
-                'You cannot use /, \\, <, >, ?, :, |, *, or " in cache keys.'
-            );
-        }
-
-        return $key;
+        return rawurlencode($key);
     }
 
     /**

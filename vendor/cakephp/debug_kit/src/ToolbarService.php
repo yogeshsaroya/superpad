@@ -140,9 +140,8 @@ class ToolbarService
         $isIp = filter_var($host, FILTER_VALIDATE_IP) !== false;
         if ($isIp) {
             $flags = FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE;
-            $isPublicIp = filter_var($host, FILTER_VALIDATE_IP, $flags) !== false;
 
-            return $isPublicIp;
+            return filter_var($host, FILTER_VALIDATE_IP, $flags) !== false;
         }
 
         // So it's not an IP address. It must be a domain name.
@@ -230,19 +229,23 @@ class ToolbarService
      */
     public function saveData(ServerRequest $request, ResponseInterface $response)
     {
-        $ignorePathsPattern = $this->getConfig('ignorePathsPattern');
         $path = $request->getUri()->getPath();
-        $statusCode = $response->getStatusCode();
+        $dashboardUrl = '/debug-kit';
+        if (strpos($path, 'debug_kit') !== false || strpos($path, 'debug-kit') !== false) {
+            if (!($path === $dashboardUrl || $path === $dashboardUrl . '/')) {
+                // internal debug-kit request
+                return false;
+            }
+            // debug-kit dashboard, save request and show toolbar
+        }
 
+        $ignorePathsPattern = $this->getConfig('ignorePathsPattern');
+        $statusCode = $response->getStatusCode();
         if (
-            strpos($path, 'debug_kit') !== false ||
-            strpos($path, 'debug-kit') !== false ||
-            (
-                $ignorePathsPattern &&
-                $statusCode >= 200 &&
-                $statusCode <= 299 &&
-                preg_match($ignorePathsPattern, $path)
-            )
+            $ignorePathsPattern &&
+            $statusCode >= 200 &&
+            $statusCode <= 299 &&
+            preg_match($ignorePathsPattern, $path)
         ) {
             return false;
         }
@@ -307,7 +310,7 @@ class ToolbarService
      */
     public function getToolbarUrl()
     {
-        $url = 'js/toolbar.js';
+        $url = 'js/inject-iframe.js';
         $filePaths = [
             str_replace('/', DIRECTORY_SEPARATOR, WWW_ROOT . 'debug_kit/' . $url),
             str_replace('/', DIRECTORY_SEPARATOR, CorePlugin::path('DebugKit') . 'webroot/' . $url),
@@ -334,7 +337,7 @@ class ToolbarService
      */
     public function injectScripts($row, ResponseInterface $response)
     {
-        $response = $response->withHeader('X-DEBUGKIT-ID', $row->id);
+        $response = $response->withHeader('X-DEBUGKIT-ID', (string)$row->id);
         if (strpos($response->getHeaderLine('Content-Type'), 'html') === false) {
             return $response;
         }
@@ -352,7 +355,7 @@ class ToolbarService
 
         $url = Router::url('/', true);
         $script = sprintf(
-            '<script id="__debug_kit" data-id="%s" data-url="%s" src="%s"></script>',
+            '<script id="__debug_kit_script" data-id="%s" data-url="%s" type="module" src="%s"></script>',
             $row->id,
             $url,
             Router::url($this->getToolbarUrl())

@@ -40,21 +40,21 @@ class PluginCollection implements Iterator, Countable
     /**
      * Plugin list
      *
-     * @var \Cake\Core\PluginInterface[]
+     * @var array<\Cake\Core\PluginInterface>
      */
     protected $plugins = [];
 
     /**
      * Names of plugins
      *
-     * @var string[]
+     * @var array<string>
      */
     protected $names = [];
 
     /**
      * Iterator position stack.
      *
-     * @var int[]
+     * @var array<int>
      */
     protected $positions = [];
 
@@ -68,7 +68,7 @@ class PluginCollection implements Iterator, Countable
     /**
      * Constructor
      *
-     * @param \Cake\Core\PluginInterface[] $plugins The map of plugins to add to the collection.
+     * @param array<\Cake\Core\PluginInterface> $plugins The map of plugins to add to the collection.
      */
     public function __construct(array $plugins = [])
     {
@@ -115,7 +115,7 @@ class PluginCollection implements Iterator, Countable
      * This method is not part of the official public API as plugins with
      * no plugin class are being phased out.
      *
-     * @param string $name The plugin name to locate a path for. Will return '' when a plugin cannot be found.
+     * @param string $name The plugin name to locate a path for.
      * @return string
      * @throws \Cake\Core\Exception\MissingPluginException when a plugin path cannot be resolved.
      * @internal
@@ -226,7 +226,7 @@ class PluginCollection implements Iterator, Countable
      * Create a plugin instance from a name/classname and configuration.
      *
      * @param string $name The plugin name or classname
-     * @param array $config Configuration options for the plugin.
+     * @param array<string, mixed> $config Configuration options for the plugin.
      * @return \Cake\Core\PluginInterface
      * @throws \Cake\Core\Exception\MissingPluginException When plugin instance could not be created.
      */
@@ -238,15 +238,28 @@ class PluginCollection implements Iterator, Countable
         }
 
         $config += ['name' => $name];
-        /** @var class-string<\Cake\Core\PluginInterface> $className */
-        $className = str_replace('/', '\\', $name) . '\\' . 'Plugin';
+        $namespace = str_replace('/', '\\', $name);
+
+        $className = $namespace . '\\' . 'Plugin';
+        // Check for [Vendor/]Foo/Plugin class
         if (!class_exists($className)) {
-            $className = BasePlugin::class;
-            if (empty($config['path'])) {
-                $config['path'] = $this->findPath($name);
+            $pos = strpos($name, '/');
+            if ($pos === false) {
+                $className = $namespace . '\\' . $name . 'Plugin';
+            } else {
+                $className = $namespace . '\\' . substr($name, $pos + 1) . 'Plugin';
+            }
+
+            // Check for [Vendor/]Foo/FooPlugin
+            if (!class_exists($className)) {
+                $className = BasePlugin::class;
+                if (empty($config['path'])) {
+                    $config['path'] = $this->findPath($name);
+                }
             }
         }
 
+        /** @var class-string<\Cake\Core\PluginInterface> $className */
         return new $className($config);
     }
 
@@ -326,9 +339,8 @@ class PluginCollection implements Iterator, Countable
      * Filter the plugins to those with the named hook enabled.
      *
      * @param string $hook The hook to filter plugins by
-     * @return \Generator&\Cake\Core\PluginInterface[] A generator containing matching plugins.
+     * @return \Generator<\Cake\Core\PluginInterface> A generator containing matching plugins.
      * @throws \InvalidArgumentException on invalid hooks
-     * @psalm-return \Generator<\Cake\Core\PluginInterface>
      */
     public function with(string $hook): Generator
     {

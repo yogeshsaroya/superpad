@@ -909,6 +909,7 @@ class UsersController extends AppController
         ]);
         $data =  $query->all();
         $this->set(compact('data'));
+        
     }
 
     public function doClaim($id = null)
@@ -938,7 +939,8 @@ class UsersController extends AppController
     }
 
     public function updateClaim()
-    {
+    {   
+        
         $this->autoRender = false;
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             if ($this->Auth->User('id') != "") {

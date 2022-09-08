@@ -40,6 +40,7 @@ use RuntimeException;
  * @deprecated 3.6.0 ShellDispatcher and Shell will be removed in 5.0
  * @method int|bool|null|void main(...$args) Main entry method for the shell.
  */
+#[\AllowDynamicProperties]
 class Shell
 {
     use LocatorAwareTrait;
@@ -136,14 +137,14 @@ class Shell
      * Contains tasks to load and instantiate
      *
      * @var array|bool
-     * @link https://book.cakephp.org/4/en/console-and-shells.html#Shell::$tasks
+     * @link https://book.cakephp.org/4/en/console-commands/shells.html#shell-tasks
      */
     public $tasks = [];
 
     /**
      * Contains the loaded tasks
      *
-     * @var array
+     * @var array<string>
      */
     public $taskNames = [];
 
@@ -157,7 +158,7 @@ class Shell
     /**
      * Normalized map of tasks.
      *
-     * @var array
+     * @var array<string, array>
      */
     protected $_taskMap = [];
 
@@ -180,7 +181,7 @@ class Shell
      *
      * @param \Cake\Console\ConsoleIo|null $io An io instance.
      * @param \Cake\ORM\Locator\LocatorInterface|null $locator Table locator instance.
-     * @link https://book.cakephp.org/4/en/console-and-shells.html#Shell
+     * @link https://book.cakephp.org/4/en/console-commands/shells.html
      */
     public function __construct(?ConsoleIo $io = null, ?LocatorInterface $locator = null)
     {
@@ -394,9 +395,7 @@ class Shell
     {
         [$args, $extra] = $this->parseDispatchArguments(func_get_args());
 
-        if (!isset($extra['requested'])) {
-            $extra['requested'] = true;
-        }
+        $extra['requested'] = $extra['requested'] ?? true;
         /** @psalm-suppress DeprecatedClass */
         $dispatcher = new ShellDispatcher($args, false);
 
@@ -470,7 +469,7 @@ class Shell
         $command = isset($argv[0]) ? Inflector::underscore($argv[0]) : null;
         $this->OptionParser = $this->getOptionParser();
         try {
-            [$this->params, $this->args] = $this->OptionParser->parse($argv);
+            [$this->params, $this->args] = $this->OptionParser->parse($argv, $this->_io);
         } catch (ConsoleException $e) {
             $this->err('Error: ' . $e->getMessage());
 
@@ -615,18 +614,14 @@ class Shell
      */
     public function param(string $name)
     {
-        if (!isset($this->params[$name])) {
-            return null;
-        }
-
-        return $this->params[$name];
+        return $this->params[$name] ?? null;
     }
 
     /**
      * Prompts the user for input, and returns it.
      *
      * @param string $prompt Prompt text.
-     * @param string|array|null $options Array or string of options.
+     * @param array<string>|string|null $options Array or string of options.
      * @param string|null $default Default input value.
      * @return string|null Either the default value, or the user-provided input.
      * @link https://book.cakephp.org/4/en/console-and-shells.html#Shell::in
@@ -654,7 +649,7 @@ class Shell
      * - `indent` Indent the text with the string provided. Defaults to null.
      *
      * @param string $text Text the text to format.
-     * @param int|array $options Array of options to use, or an integer to wrap the text to.
+     * @param array<string, mixed>|int $options Array of options to use, or an integer to wrap the text to.
      * @return string Wrapped / indented text
      * @see \Cake\Utility\Text::wrap()
      * @link https://book.cakephp.org/4/en/console-and-shells.html#Shell::wrapText
@@ -667,7 +662,7 @@ class Shell
     /**
      * Output at the verbose level.
      *
-     * @param string|string[] $message A string or an array of strings to output
+     * @param array<string>|string $message A string or an array of strings to output
      * @param int $newlines Number of newlines to append
      * @return int|null The number of bytes returned from writing to stdout.
      */
@@ -679,7 +674,7 @@ class Shell
     /**
      * Output at all levels.
      *
-     * @param string|string[] $message A string or an array of strings to output
+     * @param array<string>|string $message A string or an array of strings to output
      * @param int $newlines Number of newlines to append
      * @return int|null The number of bytes returned from writing to stdout.
      */
@@ -699,7 +694,7 @@ class Shell
      * present in most shells. Using Shell::QUIET for a message means it will always display.
      * While using Shell::VERBOSE means it will only display when verbose output is toggled.
      *
-     * @param string|string[] $message A string or an array of strings to output
+     * @param array<string>|string $message A string or an array of strings to output
      * @param int $newlines Number of newlines to append
      * @param int $level The message's output level, see above.
      * @return int|null The number of bytes returned from writing to stdout.
@@ -714,7 +709,7 @@ class Shell
      * Outputs a single or multiple error messages to stderr. If no parameters
      * are passed outputs just a newline.
      *
-     * @param string|string[] $message A string or an array of strings to output
+     * @param array<string>|string $message A string or an array of strings to output
      * @param int $newlines Number of newlines to append
      * @return int The number of bytes returned from writing to stderr.
      */
@@ -726,7 +721,7 @@ class Shell
     /**
      * Convenience method for out() that wraps message between <info /> tag
      *
-     * @param string|string[] $message A string or an array of strings to output
+     * @param array<string>|string $message A string or an array of strings to output
      * @param int $newlines Number of newlines to append
      * @param int $level The message's output level, see above.
      * @return int|null The number of bytes returned from writing to stdout.
@@ -740,7 +735,7 @@ class Shell
     /**
      * Convenience method for err() that wraps message between <warning /> tag
      *
-     * @param string|string[] $message A string or an array of strings to output
+     * @param array<string>|string $message A string or an array of strings to output
      * @param int $newlines Number of newlines to append
      * @return int The number of bytes returned from writing to stderr.
      * @see https://book.cakephp.org/4/en/console-and-shells.html#Shell::err
@@ -753,7 +748,7 @@ class Shell
     /**
      * Convenience method for out() that wraps message between <success /> tag
      *
-     * @param string|string[] $message A string or an array of strings to output
+     * @param array<string>|string $message A string or an array of strings to output
      * @param int $newlines Number of newlines to append
      * @param int $level The message's output level, see above.
      * @return int|null The number of bytes returned from writing to stdout.
@@ -906,12 +901,12 @@ class Shell
      * object has not already been loaded, it will be loaded and constructed.
      *
      * @param string $name The name of the helper to render
-     * @param array $settings Configuration data for the helper.
+     * @param array<string, mixed> $config Configuration data for the helper.
      * @return \Cake\Console\Helper The created helper instance.
      */
-    public function helper(string $name, array $settings = []): Helper
+    public function helper(string $name, array $config = []): Helper
     {
-        return $this->_io->helper($name, $settings);
+        return $this->_io->helper($name, $config);
     }
 
     /**
@@ -931,7 +926,7 @@ class Shell
      * Returns an array that can be used to describe the internal state of this
      * object.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function __debugInfo(): array
     {

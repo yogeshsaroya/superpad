@@ -31,14 +31,14 @@ class ValidationRule
     /**
      * The method to be called for a given scope
      *
-     * @var string|callable
+     * @var callable|string
      */
     protected $_rule;
 
     /**
      * The 'on' key
      *
-     * @var string|callable
+     * @var callable|string
      */
     protected $_on;
 
@@ -74,7 +74,7 @@ class ValidationRule
     /**
      * Constructor
      *
-     * @param array $validator [optional] The validator properties
+     * @param array<string, mixed> $validator [optional] The validator properties
      */
     public function __construct(array $validator = [])
     {
@@ -98,15 +98,15 @@ class ValidationRule
      * it is assumed that the rule failed and the error message was given as a result.
      *
      * @param mixed $value The data to validate
-     * @param array $providers associative array with objects or class names that will
+     * @param array<string, mixed> $providers Associative array with objects or class names that will
      * be passed as the last argument for the validation method
-     * @param array $context A key value list of data that could be used as context
+     * @param array<string, mixed> $context A key value list of data that could be used as context
      * during validation. Recognized keys are:
-     * - newRecord: (boolean) whether or not the data to be validated belongs to a
+     * - newRecord: (boolean) whether the data to be validated belongs to a
      *   new record
      * - data: The full data that was passed to the validation process
      * - field: The name of the field that is being processed
-     * @return bool|string|array
+     * @return array|string|bool
      * @throws \InvalidArgumentException when the supplied rule is not a valid
      * callable for the configured scope
      */
@@ -155,9 +155,9 @@ class ValidationRule
     /**
      * Checks if the validation rule should be skipped
      *
-     * @param array $context A key value list of data that could be used as context
+     * @param array<string, mixed> $context A key value list of data that could be used as context
      * during validation. Recognized keys are:
-     * - newRecord: (boolean) whether or not the data to be validated belongs to a
+     * - newRecord: (boolean) whether the data to be validated belongs to a
      *   new record
      * - data: The full data that was passed to the validation process
      * - providers associative array with objects or class names that will
@@ -184,13 +184,13 @@ class ValidationRule
     /**
      * Sets the rule properties from the rule entry in validate
      *
-     * @param array $validator [optional]
+     * @param array<string, mixed> $validator [optional]
      * @return void
      */
     protected function _addValidatorProps(array $validator = []): void
     {
         foreach ($validator as $key => $value) {
-            if (!isset($value) || empty($value)) {
+            if (empty($value)) {
                 continue;
             }
             if ($key === 'rule' && is_array($value) && !is_callable($value)) {
@@ -212,8 +212,7 @@ class ValidationRule
     public function get(string $property)
     {
         $property = '_' . $property;
-        if (isset($this->{$property})) {
-            return $this->{$property};
-        }
+
+        return $this->{$property} ?? null;
     }
 }

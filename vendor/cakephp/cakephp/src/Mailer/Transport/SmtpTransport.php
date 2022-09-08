@@ -21,16 +21,20 @@ use Cake\Mailer\Message;
 use Cake\Network\Exception\SocketException;
 use Cake\Network\Socket;
 use Exception;
+use RuntimeException;
 
 /**
  * Send mail using SMTP protocol
  */
 class SmtpTransport extends AbstractTransport
 {
+    protected const AUTH_PLAIN = 'PLAIN';
+    protected const AUTH_LOGIN = 'LOGIN';
+
     /**
      * Default config for this class
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $_defaultConfig = [
         'host' => 'localhost',
@@ -53,7 +57,7 @@ class SmtpTransport extends AbstractTransport
     /**
      * Content of email to return
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $_content = [];
 
@@ -63,6 +67,13 @@ class SmtpTransport extends AbstractTransport
      * @var array
      */
     protected $_lastResponse = [];
+
+    /**
+     * Detected authentication type.
+     *
+     * @var string|null
+     */
+    protected $authType = null;
 
     /**
      * Destructor
@@ -114,7 +125,7 @@ class SmtpTransport extends AbstractTransport
      */
     public function connected(): bool
     {
-        return $this->_socket !== null && $this->_socket->connected;
+        return $this->_socket !== null && $this->_socket->isConnected();
     }
 
     /**
@@ -168,9 +179,8 @@ class SmtpTransport extends AbstractTransport
      * Send mail
      *
      * @param \Cake\Mailer\Message $message Message instance
-     * @return array
+     * @return array{headers: string, message: string}
      * @throws \Cake\Network\Exception\SocketException
-     * @psalm-return array{headers: string, message: string}
      */
     public function send(Message $message): array
     {
@@ -196,7 +206,7 @@ class SmtpTransport extends AbstractTransport
     /**
      * Parses and stores the response lines in `'code' => 'message'` format.
      *
-     * @param string[] $responseLines Response lines to parse.
+     * @param array<string> $responseLines Response lines to parse.
      * @return void
      */
     protected function _bufferResponseLines(array $responseLines): void
@@ -211,6 +221,36 @@ class SmtpTransport extends AbstractTransport
             }
         }
         $this->_lastResponse = array_merge($this->_lastResponse, $response);
+    }
+
+    /**
+     * Parses the last response line and extract the preferred authentication type.
+     *
+     * @return void
+     */
+    protected function _parseAuthType(): void
+    {
+        $this->authType = null;
+
+        $auth = '';
+        foreach ($this->_lastResponse as $line) {
+            if (strlen($line['message']) === 0 || substr($line['message'], 0, 5) === 'AUTH ') {
+                $auth = $line['message'];
+                break;
+            }
+        }
+
+        if (strpos($auth, self::AUTH_PLAIN) !== false) {
+            $this->authType = self::AUTH_PLAIN;
+
+            return;
+        }
+
+        if (strpos($auth, self::AUTH_LOGIN) !== false) {
+            $this->authType = self::AUTH_LOGIN;
+
+            return;
+        }
     }
 
     /**
@@ -231,6 +271,9 @@ class SmtpTransport extends AbstractTransport
 
         $host = 'localhost';
         if (isset($config['client'])) {
+            if (empty($config['client'])) {
+                throw new SocketException('Cannot use an empty client name.');
+            }
             $host = $config['client'];
         } else {
             /** @var string $httpHost */
@@ -261,6 +304,8 @@ class SmtpTransport extends AbstractTransport
                 throw new SocketException('SMTP server did not accept the connection.', null, $e2);
             }
         }
+
+        $this->_parseAuthType();
     }
 
     /**
@@ -277,13 +322,28 @@ class SmtpTransport extends AbstractTransport
 
         $username = $this->_config['username'];
         $password = $this->_config['password'];
+        if (empty($this->authType)) {
+            $replyCode = $this->_authPlain($username, $password);
+            if ($replyCode === '235') {
+                return;
+            }
 
-        $replyCode = $this->_authPlain($username, $password);
-        if ($replyCode === '235') {
+            $this->_authLogin($username, $password);
+
             return;
         }
 
-        $this->_authLogin($username, $password);
+        if ($this->authType === self::AUTH_PLAIN) {
+            $this->_authPlain($username, $password);
+
+            return;
+        }
+
+        if ($this->authType === self::AUTH_LOGIN) {
+            $this->_authLogin($username, $password);
+
+            return;
+        }
     }
 
     /**
@@ -411,7 +471,7 @@ class SmtpTransport extends AbstractTransport
     /**
      * Send emails
      *
-     * @param \Cake\Mailer\Message $message Message message
+     * @param \Cake\Mailer\Message $message Message instance
      * @throws \Cake\Network\Exception\SocketException
      * @return void
      */
@@ -429,7 +489,7 @@ class SmtpTransport extends AbstractTransport
     /**
      * Send Data
      *
-     * @param \Cake\Mailer\Message $message Message message
+     * @param \Cake\Mailer\Message $message Message instance
      * @return void
      * @throws \Cake\Network\Exception\SocketException
      */
@@ -463,6 +523,7 @@ class SmtpTransport extends AbstractTransport
     {
         $this->_smtpSend('QUIT', false);
         $this->_socket()->disconnect();
+        $this->authType = null;
     }
 
     /**
@@ -536,7 +597,7 @@ class SmtpTransport extends AbstractTransport
     protected function _socket(): Socket
     {
         if ($this->_socket === null) {
-            throw new \RuntimeException('Socket is null, but must be set.');
+            throw new RuntimeException('Socket is null, but must be set.');
         }
 
         return $this->_socket;

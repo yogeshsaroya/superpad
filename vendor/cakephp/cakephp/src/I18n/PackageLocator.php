@@ -33,22 +33,22 @@ class PackageLocator
      * key is a package name, the second key is a locale code, and the value
      * is a callable that returns a Package object for that name and locale.
      *
-     * @var array
+     * @var array<string, array<string, \Cake\I18n\Package|callable>>
      */
     protected $registry = [];
 
     /**
-     * Tracks whether or not a registry entry has been converted from a
+     * Tracks whether a registry entry has been converted from a
      * callable to a Package object.
      *
-     * @var array
+     * @var array<string, array<string, bool>>
      */
     protected $converted = [];
 
     /**
      * Constructor.
      *
-     * @param array $registry A registry of packages.
+     * @param array<string, array<string, \Cake\I18n\Package|callable>> $registry A registry of packages.
      * @see PackageLocator::$registry
      */
     public function __construct(array $registry = [])
@@ -65,7 +65,7 @@ class PackageLocator
      *
      * @param string $name The package name.
      * @param string $locale The locale for the package.
-     * @param callable|\Cake\I18n\Package $spec A callable that returns a package or Package instance.
+     * @param \Cake\I18n\Package|callable $spec A callable that returns a package or Package instance.
      * @return void
      */
     public function set(string $name, string $locale, $spec): void
@@ -88,11 +88,13 @@ class PackageLocator
         }
 
         if (!$this->converted[$name][$locale]) {
+            /** @var callable $func */
             $func = $this->registry[$name][$locale];
             $this->registry[$name][$locale] = $func();
             $this->converted[$name][$locale] = true;
         }
 
+        /** @var \Cake\I18n\Package */
         return $this->registry[$name][$locale];
     }
 

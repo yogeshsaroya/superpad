@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -29,7 +29,7 @@ class SyncHelper
      * @param PackageInterface      $package     the package to install
      * @param PackageInterface|null $prevPackage the previous package if this is an update and not an initial installation
      */
-    public static function downloadAndInstallPackageSync(Loop $loop, DownloaderInterface $downloader, $path, PackageInterface $package, PackageInterface $prevPackage = null)
+    public static function downloadAndInstallPackageSync(Loop $loop, DownloaderInterface $downloader, string $path, PackageInterface $package, ?PackageInterface $prevPackage = null): void
     {
         $type = $prevPackage ? 'update' : 'install';
 
@@ -39,7 +39,7 @@ class SyncHelper
             self::await($loop, $downloader->prepare($type, $package, $path, $prevPackage));
 
             if ($type === 'update') {
-                self::await($loop, $downloader->update($package, $path, $prevPackage));
+                self::await($loop, $downloader->update($package, $prevPackage, $path));
             } else {
                 self::await($loop, $downloader->install($package, $path));
             }
@@ -55,12 +55,11 @@ class SyncHelper
      * Waits for a promise to resolve
      *
      * @param Loop                  $loop    Loop instance which you can get from $composer->getLoop()
-     * @param PromiseInterface|null $promise
      */
-    public static function await(Loop $loop, PromiseInterface $promise = null)
+    public static function await(Loop $loop, ?PromiseInterface $promise = null): void
     {
         if ($promise) {
-            $loop->wait(array($promise));
+            $loop->wait([$promise]);
         }
     }
 }

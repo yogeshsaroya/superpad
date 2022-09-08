@@ -11,6 +11,7 @@
  * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
+ * @var \Cake\Core\Exception\CakeException $error
  */
 use Cake\Error\Debugger;
 ?>
@@ -259,6 +260,7 @@ use Cake\Error\Debugger;
         border-bottom: 1px solid #ccc;
     }
     </style>
+    <?php require CAKE . 'Error/Debug/dumpHeader.html'; ?>
 </head>
 <body>
     <header>

@@ -18,7 +18,7 @@ namespace Cake\View;
 
 /**
  * A view class that is used for AJAX responses.
- * Currently only switches the default layout and sets the response type - which just maps to
+ * Currently, only switches the default layout and sets the response type - which just maps to
  * text/html by default.
  */
 class AjaxView extends View
@@ -29,11 +29,12 @@ class AjaxView extends View
     protected $layout = 'ajax';
 
     /**
-     * @inheritDoc
+     * Get content type for this view.
+     *
+     * @return string
      */
-    public function initialize(): void
+    public static function contentType(): string
     {
-        parent::initialize();
-        $this->setResponse($this->getResponse()->withType('ajax'));
+        return 'text/html';
     }
 }

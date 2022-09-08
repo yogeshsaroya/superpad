@@ -17,8 +17,9 @@ namespace Cake\TestSuite;
 
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
+use Cake\Core\TestSuite\ContainerStubTrait;
 use Cake\Database\Exception\DatabaseException;
-use Cake\Error\ExceptionRenderer;
+use Cake\Error\Renderer\WebExceptionRenderer;
 use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
 use Cake\Form\FormProtector;
@@ -142,7 +143,7 @@ trait IntegrationTestTrait
     protected $_requestSession;
 
     /**
-     * Boolean flag for whether or not the request should have
+     * Boolean flag for whether the request should have
      * a SecurityComponent token added.
      *
      * @var bool
@@ -150,7 +151,7 @@ trait IntegrationTestTrait
     protected $_securityToken = false;
 
     /**
-     * Boolean flag for whether or not the request should have
+     * Boolean flag for whether the request should have
      * a CSRF token added.
      *
      * @var bool
@@ -158,7 +159,7 @@ trait IntegrationTestTrait
     protected $_csrfToken = false;
 
     /**
-     * Boolean flag for whether or not the request should re-store
+     * Boolean flag for whether the request should re-store
      * flash messages
      *
      * @var bool
@@ -180,9 +181,16 @@ trait IntegrationTestTrait
     /**
      * List of fields that are excluded from field validation.
      *
-     * @var string[]
+     * @var array<string>
      */
     protected $_unlockedFields = [];
+
+    /**
+     * The name that will be used when retrieving the csrf token.
+     *
+     * @var string
+     */
+    protected $_csrfKeyName = 'csrfToken';
 
     /**
      * Clears the state used for requests.
@@ -223,7 +231,7 @@ trait IntegrationTestTrait
     /**
      * Set list of fields that are excluded from field validation.
      *
-     * @param string[] $unlockedFields List of fields that are excluded from field validation.
+     * @param array<string> $unlockedFields List of fields that are excluded from field validation.
      * @return void
      */
     public function setUnlockedFields(array $unlockedFields = []): void
@@ -237,11 +245,13 @@ trait IntegrationTestTrait
      * Both the POST data and cookie will be populated when this option
      * is enabled. The default parameter names will be used.
      *
+     * @param string $cookieName The name of the csrf token cookie.
      * @return void
      */
-    public function enableCsrfToken(): void
+    public function enableCsrfToken(string $cookieName = 'csrfToken'): void
     {
         $this->_csrfToken = true;
+        $this->_csrfKeyName = $cookieName;
     }
 
     /**
@@ -262,6 +272,7 @@ trait IntegrationTestTrait
      *
      * You can call this method multiple times to append into
      * the current state.
+     * Sub-keys like 'headers' will be reset, though.
      *
      * @param array $data The request data to use.
      * @return void
@@ -315,11 +326,7 @@ trait IntegrationTestTrait
      */
     protected function _getCookieEncryptionKey(): string
     {
-        if (isset($this->_cookieEncryptionKey)) {
-            return $this->_cookieEncryptionKey;
-        }
-
-        return Security::getSalt();
+        return $this->_cookieEncryptionKey ?? Security::getSalt();
     }
 
     /**
@@ -349,7 +356,7 @@ trait IntegrationTestTrait
      * a property. You can use various assert methods to check the
      * response.
      *
-     * @param string|array $url The URL to request.
+     * @param array|string $url The URL to request.
      * @return void
      */
     public function get($url): void
@@ -364,8 +371,8 @@ trait IntegrationTestTrait
      * a property. You can use various assert methods to check the
      * response.
      *
-     * @param string|array $url The URL to request.
-     * @param string|array $data The data for the request.
+     * @param array|string $url The URL to request.
+     * @param array|string $data The data for the request.
      * @return void
      */
     public function post($url, $data = []): void
@@ -380,8 +387,8 @@ trait IntegrationTestTrait
      * a property. You can use various assert methods to check the
      * response.
      *
-     * @param string|array $url The URL to request.
-     * @param string|array $data The data for the request.
+     * @param array|string $url The URL to request.
+     * @param array|string $data The data for the request.
      * @return void
      */
     public function patch($url, $data = []): void
@@ -396,8 +403,8 @@ trait IntegrationTestTrait
      * a property. You can use various assert methods to check the
      * response.
      *
-     * @param string|array $url The URL to request.
-     * @param string|array $data The data for the request.
+     * @param array|string $url The URL to request.
+     * @param array|string $data The data for the request.
      * @return void
      */
     public function put($url, $data = []): void
@@ -412,7 +419,7 @@ trait IntegrationTestTrait
      * a property. You can use various assert methods to check the
      * response.
      *
-     * @param string|array $url The URL to request.
+     * @param array|string $url The URL to request.
      * @return void
      */
     public function delete($url): void
@@ -427,7 +434,7 @@ trait IntegrationTestTrait
      * a property. You can use various assert methods to check the
      * response.
      *
-     * @param string|array $url The URL to request.
+     * @param array|string $url The URL to request.
      * @return void
      */
     public function head($url): void
@@ -442,7 +449,7 @@ trait IntegrationTestTrait
      * a property. You can use various assert methods to check the
      * response.
      *
-     * @param string|array $url The URL to request.
+     * @param array|string $url The URL to request.
      * @return void
      */
     public function options($url): void
@@ -455,9 +462,9 @@ trait IntegrationTestTrait
      *
      * Receives and stores the response for future inspection.
      *
-     * @param string|array $url The URL
+     * @param array|string $url The URL
      * @param string $method The HTTP method
-     * @param string|array $data The request data.
+     * @param array|string $data The request data.
      * @return void
      * @throws \PHPUnit\Exception|\Throwable
      */
@@ -547,9 +554,9 @@ trait IntegrationTestTrait
     {
         $class = Configure::read('Error.exceptionRenderer');
         if (empty($class) || !class_exists($class)) {
-            $class = ExceptionRenderer::class;
+            $class = WebExceptionRenderer::class;
         }
-        /** @var \Cake\Error\ExceptionRenderer $instance */
+        /** @var \Cake\Error\Renderer\WebExceptionRenderer $instance */
         $instance = new $class($exception);
         $this->_response = $instance->render();
     }
@@ -559,7 +566,7 @@ trait IntegrationTestTrait
      *
      * @param string $url The URL
      * @param string $method The HTTP method
-     * @param string|array $data The request data.
+     * @param array|string $data The request data.
      * @return array The request context
      */
     protected function _buildRequest(string $url, $method, $data = []): array
@@ -621,9 +628,8 @@ trait IntegrationTestTrait
 
         $props['cookies'] = $this->_cookie;
         $session->write($this->_session);
-        $props = Hash::merge($props, $this->_request);
 
-        return $props;
+        return Hash::merge($props, $this->_request);
     }
 
     /**
@@ -654,21 +660,20 @@ trait IntegrationTestTrait
 
         if ($this->_csrfToken === true) {
             $middleware = new CsrfProtectionMiddleware();
-            $token = null;
-            if (!isset($this->_cookie['csrfToken']) && !isset($this->_session['csrfToken'])) {
+            if (!isset($this->_cookie[$this->_csrfKeyName]) && !isset($this->_session[$this->_csrfKeyName])) {
                 $token = $middleware->createToken();
-            } elseif (isset($this->_cookie['csrfToken'])) {
-                $token = $this->_cookie['csrfToken'];
+            } elseif (isset($this->_cookie[$this->_csrfKeyName])) {
+                $token = $this->_cookie[$this->_csrfKeyName];
             } else {
-                $token = $this->_session['csrfToken'];
+                $token = $this->_session[$this->_csrfKeyName];
             }
 
             // Add the token to both the session and cookie to cover
             // both types of CSRF tokens. We generate the token with the cookie
             // middleware as cookie tokens will be accepted by session csrf, but not
             // the inverse.
-            $this->_session['csrfToken'] = $token;
-            $this->_cookie['csrfToken'] = $token;
+            $this->_session[$this->_csrfKeyName] = $token;
+            $this->_cookie[$this->_csrfKeyName] = $token;
             if (!isset($data['_csrfToken'])) {
                 $data['_csrfToken'] = $token;
             }
@@ -817,7 +822,7 @@ trait IntegrationTestTrait
     /**
      * Asserts that the Location header is correct. Comparison is made against a full URL.
      *
-     * @param string|array|null $url The URL you expected the client to go to. This
+     * @param array|string|null $url The URL you expected the client to go to. This
      *   can either be a string URL or an array compatible with Router::url(). Use null to
      *   simply check for the existence of this header.
      * @param string $message The failure message that will be appended to the generated message.
@@ -844,7 +849,7 @@ trait IntegrationTestTrait
     /**
      * Asserts that the Location header is correct. Comparison is made against exactly the URL provided.
      *
-     * @param string|array|null $url The URL you expected the client to go to. This
+     * @param array|string|null $url The URL you expected the client to go to. This
      *   can either be a string URL or an array compatible with Router::url(). Use null to
      *   simply check for the existence of this header.
      * @param string $message The failure message that will be appended to the generated message.
@@ -1315,6 +1320,11 @@ trait IntegrationTestTrait
         $verboseMessage = $this->extractVerboseMessage($message);
         $this->assertThat(null, new FileSent($this->_response), $verboseMessage);
         $this->assertThat($expected, new FileSentAs($this->_response), $verboseMessage);
+
+        if (!$this->_response) {
+            return;
+        }
+        $this->_response->getBody()->close();
     }
 
     /**
@@ -1358,6 +1368,7 @@ trait IntegrationTestTrait
      */
     protected function getSession(): TestSession
     {
+        /** @psalm-suppress InvalidScalarArgument */
         return new TestSession($_SESSION);
     }
 }

@@ -32,8 +32,7 @@ class TranslatorRegistry
     /**
      * A registry to retain translator objects.
      *
-     * @var array
-     * @psalm-var array<string, array<string, \Cake\I18n\Translator>>
+     * @var array<string, array<string, \Cake\I18n\Translator>>
      */
     protected $registry = [];
 
@@ -64,7 +63,7 @@ class TranslatorRegistry
      * packages where none can be found for the combination of translator
      * name and locale.
      *
-     * @var callable[]
+     * @var array<callable>
      */
     protected $_loaders = [];
 
@@ -202,6 +201,11 @@ class TranslatorRegistry
         $keyName = str_replace('/', '.', $name);
         $key = "translations.{$keyName}.{$locale}";
         $translator = $this->_cacher->get($key);
+
+        // PHP <8.1 does not correctly garbage collect strings created
+        // by unserialized arrays.
+        gc_collect_cycles();
+
         if (!$translator || !$translator->getPackage()) {
             $translator = $this->_getTranslator($name, $locale);
             $this->_cacher->set($key, $translator);
@@ -336,7 +340,8 @@ class TranslatorRegistry
         if (!$this->_useFallback || $name === $fallbackDomain) {
             return $loader;
         }
-        $loader = function () use ($loader, $fallbackDomain) {
+
+        return function () use ($loader, $fallbackDomain) {
             /** @var \Cake\I18n\Package $package */
             $package = $loader();
             if (!$package->getFallback()) {
@@ -345,7 +350,5 @@ class TranslatorRegistry
 
             return $package;
         };
-
-        return $loader;
     }
 }

@@ -94,7 +94,6 @@ class SQLiteAdapter extends PdoAdapter
     protected static $unsupportedColumnTypes = [
         self::PHINX_TYPE_BIT,
         self::PHINX_TYPE_CIDR,
-        self::PHINX_TYPE_DECIMAL,
         self::PHINX_TYPE_ENUM,
         self::PHINX_TYPE_FILESTREAM,
         self::PHINX_TYPE_GEOMETRY,
@@ -129,7 +128,6 @@ class SQLiteAdapter extends PdoAdapter
      * Indicates whether the database library version is at least the specified version
      *
      * @param string $ver The version to check against e.g. '3.28.0'
-     *
      * @return bool
      */
     public function databaseVersionAtLeast($ver)
@@ -144,7 +142,6 @@ class SQLiteAdapter extends PdoAdapter
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
-     *
      * @return void
      */
     public function connect()
@@ -158,11 +155,26 @@ class SQLiteAdapter extends PdoAdapter
 
             $options = $this->getOptions();
 
-            // use a memory database if the option was specified
-            if (!empty($options['memory']) || $options['name'] === static::MEMORY) {
-                $dsn = 'sqlite:' . static::MEMORY;
+            if (PHP_VERSION_ID < 80100 && (!empty($options['mode']) || !empty($options['cache']))) {
+                throw new RuntimeException('SQLite URI support requires PHP 8.1.');
+            } elseif ((!empty($options['mode']) || !empty($options['cache'])) && !empty($options['memory'])) {
+                throw new RuntimeException('Memory must not be set when cache or mode are.');
+            } elseif (PHP_VERSION_ID >= 80100 && (!empty($options['mode']) || !empty($options['cache']))) {
+                $params = [];
+                if (!empty($options['cache'])) {
+                    $params[] = 'cache=' . $options['cache'];
+                }
+                if (!empty($options['mode'])) {
+                    $params[] = 'mode=' . $options['mode'];
+                }
+                $dsn = 'sqlite:file:' . ($options['name'] ?? '') . '?' . implode('&', $params);
             } else {
-                $dsn = 'sqlite:' . $options['name'] . $this->suffix;
+                // use a memory database if the option was specified
+                if (!empty($options['memory']) || $options['name'] === static::MEMORY) {
+                    $dsn = 'sqlite:' . static::MEMORY;
+                } else {
+                    $dsn = 'sqlite:' . $options['name'] . $this->suffix;
+                }
             }
 
             $driverOptions = [];
@@ -170,6 +182,11 @@ class SQLiteAdapter extends PdoAdapter
             // use custom data fetch mode
             if (!empty($options['fetch_mode'])) {
                 $driverOptions[PDO::ATTR_DEFAULT_FETCH_MODE] = constant('\PDO::FETCH_' . strtoupper($options['fetch_mode']));
+            }
+
+            // pass \PDO::ATTR_PERSISTENT to driver options instead of useless setting it after instantiation
+            if (isset($options['attr_persistent'])) {
+                $driverOptions[PDO::ATTR_PERSISTENT] = $options['attr_persistent'];
             }
 
             $db = $this->createPdoConnection($dsn, null, null, $driverOptions);
@@ -256,7 +273,6 @@ class SQLiteAdapter extends PdoAdapter
     /**
      * @param string $tableName Table name
      * @param bool $quoted Whether to return the schema name and table name escaped and quoted. If quoted, the schema (if any) will also be appended with a dot
-     *
      * @return array
      */
     protected function getSchemaName($tableName, $quoted = false)
@@ -282,7 +298,6 @@ class SQLiteAdapter extends PdoAdapter
      *
      * @param string $tableName The table to query
      * @param string $pragma The pragma to query
-     *
      * @return array
      */
     protected function getTableInfo($tableName, $pragma = 'table_info')
@@ -298,7 +313,6 @@ class SQLiteAdapter extends PdoAdapter
      * If no schema was specified and the table does not exist the "main" schema is returned
      *
      * @param string $tableName The name of the table to find
-     *
      * @return array
      */
     protected function resolveTable($tableName)
@@ -524,7 +538,6 @@ class SQLiteAdapter extends PdoAdapter
      *
      * @param mixed $v The default-value expression to interpret
      * @param string $t The Phinx type of the column
-     *
      * @return mixed
      */
     protected function parseDefaultValue($v, $t)
@@ -597,7 +610,6 @@ PCRE_PATTERN;
      * The process of finding an identity column is somewhat convoluted as SQLite has no direct way of querying whether a given column is an alias for the table's row ID
      *
      * @param string $tableName The name of the table
-     *
      * @return string|null
      */
     protected function resolveIdentity($tableName)
@@ -651,7 +663,8 @@ PCRE_PATTERN;
             $default = $this->parseDefaultValue($columnInfo['dflt_value'], $type['name']);
 
             $column->setName($columnInfo['name'])
-                   ->setNull($columnInfo['notnull'] !== '1')
+                // SQLite on PHP 8.1 returns int for notnull, older versions return a string
+                   ->setNull((int)$columnInfo['notnull'] !== 1)
                    ->setDefault($default)
                    ->setType($type['name'])
                    ->setLimit($type['limit'])
@@ -728,7 +741,6 @@ PCRE_PATTERN;
      * Returns the original CREATE statement for the give table
      *
      * @param string $tableName The table name to get the create statement for
-     *
      * @return string
      */
     protected function getDeclaringSql($tableName)
@@ -741,6 +753,21 @@ PCRE_PATTERN;
                 $sql = $table['sql'];
             }
         }
+
+        $columnsInfo = $this->getTableInfo($tableName);
+
+        foreach ($columnsInfo as $column) {
+            $columnName = $column['name'];
+            $columnNamePattern = "\"$columnName\"|`$columnName`|\\[$columnName\\]|$columnName";
+            $columnNamePattern = "#([\(,]+\\s*)($columnNamePattern)(\\s)#iU";
+
+            $sql = preg_replace($columnNamePattern, "$1`$columnName`$3", $sql);
+        }
+
+        $tableNamePattern = "\"$tableName\"|`$tableName`|\\[$tableName\\]|$tableName";
+        $tableNamePattern = "#^(CREATE TABLE)\s*($tableNamePattern)\s*(\()#Ui";
+
+        $sql = preg_replace($tableNamePattern, "$1 `$tableName` $3", $sql, 1);
 
         return $sql;
     }
@@ -773,7 +800,6 @@ PCRE_PATTERN;
      * @param string $tmpTableName The tmp table name where the data is stored
      * @param string[] $writeColumns The list of columns in the target table
      * @param string[] $selectColumns The list of columns in the tmp table
-     *
      * @return void
      */
     protected function copyDataToNewTable($tableName, $tmpTableName, $writeColumns, $selectColumns)
@@ -794,7 +820,6 @@ PCRE_PATTERN;
      *
      * @param \Phinx\Db\Util\AlterInstructions $instructions The instructions to modify
      * @param string $tableName The table name to copy the data to
-     *
      * @return \Phinx\Db\Util\AlterInstructions
      */
     protected function copyAndDropTmpTable($instructions, $tableName)
@@ -827,9 +852,7 @@ PCRE_PATTERN;
      * @param string $tableName The table to modify
      * @param string|false $columnName The column name that is about to change
      * @param string|false $newColumnName Optionally the new name for the column
-     *
      * @throws \InvalidArgumentException
-     *
      * @return array
      */
     protected function calculateNewTableColumns($tableName, $columnName, $newColumnName)
@@ -874,7 +897,6 @@ PCRE_PATTERN;
      * create-copy-drop strategy
      *
      * @param string $tableName The table to modify
-     *
      * @return \Phinx\Db\Util\AlterInstructions
      */
     protected function beginAlterByCopyTable($tableName)
@@ -997,7 +1019,6 @@ PCRE_PATTERN;
      * Get an array of indexes from a particular table.
      *
      * @param string $tableName Table name
-     *
      * @return array
      */
     protected function getIndexes($tableName)
@@ -1023,7 +1044,6 @@ PCRE_PATTERN;
      *
      * @param string $tableName The table to which the index belongs
      * @param string|string[] $columns The columns of the index
-     *
      * @return array
      */
     protected function resolveIndex($tableName, $columns)
@@ -1162,7 +1182,6 @@ PCRE_PATTERN;
      * Get the primary key from a particular table.
      *
      * @param string $tableName Table name
-     *
      * @return string[]
      */
     protected function getPrimaryKey($tableName)
@@ -1211,7 +1230,6 @@ PCRE_PATTERN;
      * Get an array of foreign keys from a particular table.
      *
      * @param string $tableName Table name
-     *
      * @return array
      */
     protected function getForeignKeys($tableName)
@@ -1233,7 +1251,6 @@ PCRE_PATTERN;
     /**
      * @param \Phinx\Db\Table\Table $table The Table
      * @param string $column Column Name
-     *
      * @return \Phinx\Db\Util\AlterInstructions
      */
     protected function getAddPrimaryKeyInstructions(Table $table, $column)
@@ -1277,7 +1294,6 @@ PCRE_PATTERN;
     /**
      * @param \Phinx\Db\Table\Table $table Table
      * @param string $column Column Name
-     *
      * @return \Phinx\Db\Util\AlterInstructions
      */
     protected function getDropPrimaryKeyInstructions($table, $column)
@@ -1420,9 +1436,9 @@ PCRE_PATTERN;
         $typeLC = strtolower($type);
         if ($type instanceof Literal) {
             $name = $type;
-        } elseif (isset(self::$supportedColumnTypes[$typeLC])) {
-            $name = self::$supportedColumnTypes[$typeLC];
-        } elseif (in_array($typeLC, self::$unsupportedColumnTypes, true)) {
+        } elseif (isset(static::$supportedColumnTypes[$typeLC])) {
+            $name = static::$supportedColumnTypes[$typeLC];
+        } elseif (in_array($typeLC, static::$unsupportedColumnTypes, true)) {
             throw new UnsupportedColumnTypeException('Column type "' . $type . '" is not supported by SQLite.');
         } else {
             throw new UnsupportedColumnTypeException('Column type "' . $type . '" is not known by SQLite.');
@@ -1435,7 +1451,6 @@ PCRE_PATTERN;
      * Returns Phinx type by SQL type
      *
      * @param string|null $sqlTypeDef SQL Type definition
-     *
      * @return array
      */
     public function getPhinxType($sqlTypeDef)
@@ -1459,13 +1474,13 @@ PCRE_PATTERN;
                 // the type is a MySQL-style boolean
                 $name = static::PHINX_TYPE_BOOLEAN;
                 $limit = null;
-            } elseif (isset(self::$supportedColumnTypes[$typeLC])) {
+            } elseif (isset(static::$supportedColumnTypes[$typeLC])) {
                 // the type is an explicitly supported type
                 $name = $typeLC;
-            } elseif (isset(self::$supportedColumnTypeAliases[$typeLC])) {
+            } elseif (isset(static::$supportedColumnTypeAliases[$typeLC])) {
                 // the type is an alias for a supported type
-                $name = self::$supportedColumnTypeAliases[$typeLC];
-            } elseif (in_array($typeLC, self::$unsupportedColumnTypes, true)) {
+                $name = static::$supportedColumnTypeAliases[$typeLC];
+            } elseif (in_array($typeLC, static::$unsupportedColumnTypes, true)) {
                 // unsupported but known types are passed through lowercased, and without appended affinity
                 $name = Literal::from($typeLC);
             } else {
@@ -1516,7 +1531,6 @@ PCRE_PATTERN;
      * Gets the SQLite Column Definition for a Column object.
      *
      * @param \Phinx\Db\Table\Column $column Column
-     *
      * @return string
      */
     protected function getColumnSqlDefinition(Column $column)
@@ -1552,7 +1566,6 @@ PCRE_PATTERN;
      * Gets the comment Definition for a Column object.
      *
      * @param \Phinx\Db\Table\Column $column Column
-     *
      * @return string
      */
     protected function getCommentDefinition(Column $column)
@@ -1569,7 +1582,6 @@ PCRE_PATTERN;
      *
      * @param \Phinx\Db\Table\Table $table Table
      * @param \Phinx\Db\Table\Index $index Index
-     *
      * @return string
      */
     protected function getIndexSqlDefinition(Table $table, Index $index)
@@ -1605,7 +1617,6 @@ PCRE_PATTERN;
      * Gets the SQLite Foreign Key Definition for an ForeignKey object.
      *
      * @param \Phinx\Db\Table\ForeignKey $foreignKey Foreign key
-     *
      * @return string
      */
     protected function getForeignKeySqlDefinition(ForeignKey $foreignKey)

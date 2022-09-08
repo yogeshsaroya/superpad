@@ -45,7 +45,7 @@ class AssetMiddleware implements MiddlewareInterface
     /**
      * Constructor.
      *
-     * @param array $options The options to use
+     * @param array<string, mixed> $options The options to use
      */
     public function __construct(array $options = [])
     {
@@ -150,13 +150,13 @@ class AssetMiddleware implements MiddlewareInterface
 
         $response = new Response(['stream' => $stream]);
 
-        $contentType = $response->getMimeType($file->getExtension()) ?: 'application/octet-stream';
+        $contentType = (array)($response->getMimeType($file->getExtension()) ?: 'application/octet-stream');
         $modified = $file->getMTime();
         $expire = strtotime($this->cacheTime);
         $maxAge = $expire - time();
 
         return $response
-            ->withHeader('Content-Type', $contentType)
+            ->withHeader('Content-Type', $contentType[0])
             ->withHeader('Cache-Control', 'public,max-age=' . $maxAge)
             ->withHeader('Date', gmdate(DATE_RFC7231, time()))
             ->withHeader('Last-Modified', gmdate(DATE_RFC7231, $modified))

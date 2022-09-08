@@ -56,7 +56,6 @@ class SqlServerAdapter extends PdoAdapter
      * {@inheritDoc}
      *
      * @throws \InvalidArgumentException
-     *
      * @return void
      */
     public function connect()
@@ -78,6 +77,14 @@ class SqlServerAdapter extends PdoAdapter
             }
             $dsn .= ';database=' . $options['name'] . ';MultipleActiveResultSets=false';
 
+            // option to add additional connection options
+            // https://docs.microsoft.com/en-us/sql/connect/php/connection-options?view=sql-server-ver15
+            if (isset($options['dsn_options'])) {
+                foreach ($options['dsn_options'] as $key => $option) {
+                    $dsn .= ';' . $key . '=' . $option;
+                }
+            }
+
             $driverOptions = [];
 
             // charset support
@@ -89,6 +96,9 @@ class SqlServerAdapter extends PdoAdapter
             if (!empty($options['fetch_mode'])) {
                 $driverOptions[PDO::ATTR_DEFAULT_FETCH_MODE] = constant('\PDO::FETCH_' . strtoupper($options['fetch_mode']));
             }
+
+            // Note, the PDO::ATTR_PERSISTENT attribute is not supported for sqlsrv and will throw an error when used
+            // See https://github.com/Microsoft/msphpsql/issues/65
 
             // support arbitrary \PDO::SQLSRV_ATTR_* driver options and pass them to PDO
             // http://php.net/manual/en/ref.pdo-sqlsrv.php#pdo-sqlsrv.constants
@@ -115,7 +125,6 @@ class SqlServerAdapter extends PdoAdapter
      *
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
-     *
      * @return void
      */
     protected function connectDblib()
@@ -336,7 +345,6 @@ class SqlServerAdapter extends PdoAdapter
      * @inheritDoc
      *
      * SqlServer does not implement this functionality, and so will always throw an exception if used.
-     *
      * @throws \BadMethodCallException
      */
     protected function getChangeCommentInstructions(Table $table, $newComment)
@@ -349,7 +357,6 @@ class SqlServerAdapter extends PdoAdapter
      *
      * @param \Phinx\Db\Table\Column $column Column
      * @param string $tableName Table name
-     *
      * @return string
      */
     protected function getColumnCommentSqlDefinition(Column $column, $tableName)
@@ -357,7 +364,7 @@ class SqlServerAdapter extends PdoAdapter
         // passing 'null' is to remove column comment
         $currentComment = $this->getColumnComment($tableName, $column->getName());
 
-        $comment = (strcasecmp($column->getComment(), 'NULL') !== 0) ? $this->getConnection()->quote($column->getComment()) : '\'\'';
+        $comment = strcasecmp($column->getComment(), 'NULL') !== 0 ? $this->getConnection()->quote($column->getComment()) : '\'\'';
         $command = $currentComment === false ? 'sp_addextendedproperty' : 'sp_updateextendedproperty';
 
         return sprintf(
@@ -412,7 +419,6 @@ class SqlServerAdapter extends PdoAdapter
     /**
      * @param string $tableName Table name
      * @param string $columnName Column name
-     *
      * @return string|false
      */
     public function getColumnComment($tableName, $columnName)
@@ -482,12 +488,18 @@ class SqlServerAdapter extends PdoAdapter
     }
 
     /**
-     * @param string $default Default
-     *
+     * @param string|null $default Default
      * @return int|string|null
      */
     protected function parseDefault($default)
     {
+        // if a column is non-nullable and has no default, the value of column_default is null,
+        // otherwise it should be a string value that we parse below, including "(NULL)" which
+        // also stands for a null default
+        if ($default === null) {
+            return null;
+        }
+
         $result = preg_replace(["/\('(.*)'\)/", "/\(\((.*)\)\)/", "/\((.*)\)/"], '$1', $default);
 
         if (strtoupper($result) === 'NULL') {
@@ -573,7 +585,6 @@ SQL;
      *
      * @param string $tableName The table where the column is
      * @param \Phinx\Db\Table\Column $newColumn The column to alter
-     *
      * @return \Phinx\Db\Util\AlterInstructions
      */
     protected function getChangeDefault($tableName, Column $newColumn)
@@ -662,7 +673,6 @@ SQL;
     /**
      * @param string $tableName Table name
      * @param string|null $columnName Column name
-     *
      * @return \Phinx\Db\Util\AlterInstructions
      */
     protected function getDropDefaultConstraint($tableName, $columnName)
@@ -679,7 +689,6 @@ SQL;
     /**
      * @param string $tableName Table name
      * @param string $columnName Column name
-     *
      * @return string|false
      */
     protected function getDefaultConstraint($tableName, $columnName)
@@ -714,7 +723,6 @@ WHERE
     /**
      * @param int $tableId Table ID
      * @param int $indexId Index ID
-     *
      * @return array
      */
     protected function getIndexColums($tableId, $indexId)
@@ -738,7 +746,6 @@ ORDER BY IC.[key_ordinal];";
      * Get an array of indexes from a particular table.
      *
      * @param string $tableName Table name
-     *
      * @return array
      */
     public function getIndexes($tableName)
@@ -882,7 +889,7 @@ ORDER BY T.[name], I.[index_id];";
         }
 
         if ($constraint) {
-            return ($primaryKey['constraint'] === $constraint);
+            return $primaryKey['constraint'] === $constraint;
         }
 
         if (is_string($columns)) {
@@ -897,7 +904,6 @@ ORDER BY T.[name], I.[index_id];";
      * Get the primary key from a particular table.
      *
      * @param string $tableName Table name
-     *
      * @return array
      */
     public function getPrimaryKey($tableName)
@@ -957,7 +963,6 @@ ORDER BY T.[name], I.[index_id];";
      * Get an array of foreign keys from a particular table.
      *
      * @param string $tableName Table name
-     *
      * @return array
      */
     protected function getForeignKeys($tableName)
@@ -1107,11 +1112,8 @@ ORDER BY T.[name], I.[index_id];";
      * Returns Phinx type by SQL type
      *
      * @internal param string $sqlType SQL type
-     *
      * @param string $sqlType SQL Type definition
-     *
      * @throws \Phinx\Db\Adapter\UnsupportedColumnTypeException
-     *
      * @return string Phinx type
      */
     public function getPhinxType($sqlType)
@@ -1212,7 +1214,6 @@ SQL;
      *
      * @param \Phinx\Db\Table\Column $column Column
      * @param bool $create Create column flag
-     *
      * @return string
      */
     protected function getColumnSqlDefinition(Column $column, $create = true)
@@ -1306,7 +1307,6 @@ SQL;
      *
      * @param \Phinx\Db\Table\ForeignKey $foreignKey Foreign key
      * @param string $tableName Table name
-     *
      * @return string
      */
     protected function getForeignKeySqlDefinition(ForeignKey $foreignKey, $tableName)
@@ -1340,7 +1340,6 @@ SQL;
      * @param string $direction Direction
      * @param string $startTime Start Time
      * @param string $endTime End Time
-     *
      * @return \Phinx\Db\Adapter\AdapterInterface
      */
     public function migrated(MigrationInterface $migration, $direction, $startTime, $endTime)

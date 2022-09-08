@@ -44,7 +44,7 @@ class ShellDispatcher
     /**
      * List of connected aliases.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected static $_aliases = [];
 
@@ -179,9 +179,7 @@ class ShellDispatcher
         try {
             $result = $this->_dispatch($extra);
         } catch (StopException $e) {
-            $code = $e->getCode();
-
-            return $code;
+            return $e->getCode();
         }
         if ($result === null || $result === true) {
             /** @psalm-suppress DeprecatedClass */
@@ -203,7 +201,7 @@ class ShellDispatcher
      * Built-in extra parameter is :
      *
      * - `requested` : if used, will prevent the Shell welcome message to be displayed
-     * @return bool|int|null
+     * @return int|bool|null
      * @throws \Cake\Console\Exception\MissingShellMethodException
      */
     protected function _dispatch(array $extra = [])
@@ -279,7 +277,6 @@ class ShellDispatcher
 
             $other = static::alias($shell);
             if ($other) {
-                $other = $aliases[$shell];
                 if ($other !== $plugin) {
                     Log::write(
                         'debug',

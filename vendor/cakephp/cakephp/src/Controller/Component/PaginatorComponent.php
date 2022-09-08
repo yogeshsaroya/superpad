@@ -18,11 +18,12 @@ namespace Cake\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Controller\ComponentRegistry;
-use Cake\Datasource\Exception\PageOutOfBoundsException;
-use Cake\Datasource\Paginator;
+use Cake\Datasource\Paging\Exception\PageOutOfBoundsException;
+use Cake\Datasource\Paging\NumericPaginator;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Http\Exception\NotFoundException;
 use InvalidArgumentException;
+use UnexpectedValueException;
 
 /**
  * This component is used to handle automatic model data pagination. The primary way to use this
@@ -33,36 +34,15 @@ use InvalidArgumentException;
  * You configure pagination when calling paginate(). See that method for more details.
  *
  * @link https://book.cakephp.org/4/en/controllers/components/pagination.html
- * @mixin \Cake\Datasource\Paginator
+ * @mixin \Cake\Datasource\Paging\NumericPaginator
+ * @deprecated 4.4.0 Use Cake\Datasource\Paging\Paginator directly.
  */
 class PaginatorComponent extends Component
 {
     /**
-     * Default pagination settings.
-     *
-     * When calling paginate() these settings will be merged with the configuration
-     * you provide.
-     *
-     * - `maxLimit` - The maximum limit users can choose to view. Defaults to 100
-     * - `limit` - The initial number of items per page. Defaults to 20.
-     * - `page` - The starting page, defaults to 1.
-     * - `allowedParameters` - A list of parameters users are allowed to set using request
-     *   parameters. Modifying this list will allow users to have more influence
-     *   over pagination, be careful with what you permit.
-     *
-     * @var array
-     */
-    protected $_defaultConfig = [
-        'page' => 1,
-        'limit' => 20,
-        'maxLimit' => 100,
-        'allowedParameters' => ['limit', 'sort', 'page', 'direction'],
-    ];
-
-    /**
      * Datasource paginator instance.
      *
-     * @var \Cake\Datasource\Paginator
+     * @var \Cake\Datasource\Paging\NumericPaginator
      */
     protected $_paginator;
 
@@ -71,14 +51,30 @@ class PaginatorComponent extends Component
      */
     public function __construct(ComponentRegistry $registry, array $config = [])
     {
+        deprecationWarning(
+            'PaginatorComponent is deprecated, use a Cake\Datasource\Pagination\NumericPaginator instance directly.'
+        );
+
+        if (!empty($this->_defaultConfig)) {
+            throw new UnexpectedValueException('Default configuration must be set using a custom Paginator class.');
+        }
+
         if (isset($config['paginator'])) {
-            if (!$config['paginator'] instanceof Paginator) {
-                throw new InvalidArgumentException('Paginator must be an instance of ' . Paginator::class);
+            $config['className'] = $config['paginator'];
+            deprecationWarning(
+                '`paginator` option is deprecated,'
+                . ' use `className` instead a specify a paginator name/FQCN.'
+            );
+        }
+
+        if (isset($config['className'])) {
+            if (!$config['className'] instanceof NumericPaginator) {
+                throw new InvalidArgumentException('Paginator must be an instance of ' . NumericPaginator::class);
             }
-            $this->_paginator = $config['paginator'];
-            unset($config['paginator']);
+            $this->_paginator = $config['className'];
+            unset($config['className']);
         } else {
-            $this->_paginator = new Paginator();
+            $this->_paginator = new NumericPaginator();
         }
 
         parent::__construct($registry, $config);
@@ -87,7 +83,7 @@ class PaginatorComponent extends Component
     /**
      * Events supported by this component.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function implementedEvents(): array
     {
@@ -103,7 +99,7 @@ class PaginatorComponent extends Component
      * These settings are used to build the queries made and control other pagination settings.
      *
      * If your settings contain a key with the current table's alias. The data inside that key will be used.
-     * Otherwise the top level configuration will be used.
+     * Otherwise, the top level configuration will be used.
      *
      * ```
      *  $settings = [
@@ -188,7 +184,7 @@ class PaginatorComponent extends Component
      * ```
      *
      * @param \Cake\Datasource\RepositoryInterface|\Cake\Datasource\QueryInterface $object Table or query to paginate.
-     * @param array $settings The settings/configuration used for pagination.
+     * @param array<string, mixed> $settings The settings/configuration used for pagination.
      * @return \Cake\Datasource\ResultSetInterface Query results
      * @throws \Cake\Http\Exception\NotFoundException
      */
@@ -226,8 +222,8 @@ class PaginatorComponent extends Component
      *
      * @param string $alias Model alias being paginated, if the general settings has a key with this value
      *   that key's settings will be used for pagination instead of the general ones.
-     * @param array $settings The settings to merge with the request data.
-     * @return array Array of merged options.
+     * @param array<string, mixed> $settings The settings to merge with the request data.
+     * @return array<string, mixed> Array of merged options.
      */
     public function mergeOptions(string $alias, array $settings): array
     {
@@ -242,10 +238,10 @@ class PaginatorComponent extends Component
     /**
      * Set paginator instance.
      *
-     * @param \Cake\Datasource\Paginator $paginator Paginator instance.
+     * @param \Cake\Datasource\Paging\NumericPaginator $paginator Paginator instance.
      * @return $this
      */
-    public function setPaginator(Paginator $paginator)
+    public function setPaginator(NumericPaginator $paginator)
     {
         $this->_paginator = $paginator;
 
@@ -255,9 +251,9 @@ class PaginatorComponent extends Component
     /**
      * Get paginator instance.
      *
-     * @return \Cake\Datasource\Paginator
+     * @return \Cake\Datasource\Paging\NumericPaginator
      */
-    public function getPaginator(): Paginator
+    public function getPaginator(): NumericPaginator
     {
         return $this->_paginator;
     }
@@ -279,7 +275,7 @@ class PaginatorComponent extends Component
     /**
      * Proxy setting config options to Paginator.
      *
-     * @param string|array $key The key to set, or a complete array of configs.
+     * @param array<string, mixed>|string $key The key to set, or a complete array of configs.
      * @param mixed|null $value The value to set.
      * @param bool $merge Whether to recursively merge or overwrite existing config, defaults to true.
      * @return $this
@@ -306,7 +302,7 @@ class PaginatorComponent extends Component
     /**
      * Proxy setting config options to Paginator.
      *
-     * @param string|array $key The key to set, or a complete array of configs.
+     * @param array<string, mixed>|string $key The key to set, or a complete array of configs.
      * @param mixed|null $value The value to set.
      * @return $this
      */

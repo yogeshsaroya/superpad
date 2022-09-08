@@ -37,7 +37,7 @@ abstract class BaseErrorHandler
     /**
      * Options to use for the Error handling.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $_defaultConfig = [
         'log' => true,
@@ -65,7 +65,7 @@ abstract class BaseErrorHandler
      * desired for the runtime they operate in.
      *
      * @param array $error An array of error data.
-     * @param bool $debug Whether or not the app is in debug mode.
+     * @param bool $debug Whether the app is in debug mode.
      * @return void
      */
     abstract protected function _displayError(array $error, bool $debug): void;
@@ -88,10 +88,13 @@ abstract class BaseErrorHandler
      */
     public function register(): void
     {
-        $level = -1;
-        if (isset($this->_config['errorLevel'])) {
-            $level = $this->_config['errorLevel'];
-        }
+        deprecationWarning(
+            'Use of `BaseErrorHandler` and subclasses are deprecated. ' .
+            'Upgrade to the new `ErrorTrap` and `ExceptionTrap` subsystem. ' .
+            'See https://book.cakephp.org/4/en/appendices/4-4-migration-guide.html'
+        );
+
+        $level = $this->_config['errorLevel'] ?? -1;
         error_reporting($level);
         set_error_handler([$this, 'handleError'], $level);
         set_exception_handler([$this, 'handleException']);
@@ -138,7 +141,7 @@ abstract class BaseErrorHandler
      * @param string $description Error description
      * @param string|null $file File on which error occurred
      * @param int|null $line Line that triggered the error
-     * @param array|null $context Context
+     * @param array<string, mixed>|null $context Context
      * @return bool True if error was handled
      */
     public function handleError(
@@ -272,7 +275,7 @@ abstract class BaseErrorHandler
     public function increaseMemoryLimit(int $additionalKb): void
     {
         $limit = ini_get('memory_limit');
-        if (!strlen($limit) || $limit === '-1') {
+        if ($limit === false || $limit === '' || $limit === '-1') {
             return;
         }
         $limit = trim($limit);
@@ -295,7 +298,7 @@ abstract class BaseErrorHandler
     /**
      * Log an error.
      *
-     * @param int|string $level The level name of the log.
+     * @param string|int $level The level name of the log.
      * @param array $data Array of error data.
      * @return bool
      */
@@ -325,13 +328,18 @@ abstract class BaseErrorHandler
      * Log an error for the exception if applicable.
      *
      * @param \Throwable $exception The exception to log a message for.
-     * @param \Psr\Http\Message\ServerRequestInterface $request The current request.
+     * @param \Psr\Http\Message\ServerRequestInterface|null $request The current request.
      * @return bool
      */
     public function logException(Throwable $exception, ?ServerRequestInterface $request = null): bool
     {
         if (empty($this->_config['log'])) {
             return false;
+        }
+        foreach ($this->_config['skipLog'] as $class) {
+            if ($exception instanceof $class) {
+                return false;
+            }
         }
 
         return $this->getLogger()->log($exception, $request ?? Router::getRequest());

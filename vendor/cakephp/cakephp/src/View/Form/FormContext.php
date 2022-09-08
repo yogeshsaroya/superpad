@@ -16,10 +16,12 @@ declare(strict_types=1);
  */
 namespace Cake\View\Form;
 
+use Cake\Core\Exception\CakeException;
+use Cake\Form\Form;
 use Cake\Utility\Hash;
 
 /**
- * Provides a context provider for Cake\Form\Form instances.
+ * Provides a context provider for {@link \Cake\Form\Form} instances.
  *
  * This context provider simply fulfils the interface requirements
  * that FormHelper has and allows access to the form data.
@@ -34,22 +36,36 @@ class FormContext implements ContextInterface
     protected $_form;
 
     /**
+     * Validator name.
+     *
+     * @var string|null
+     */
+    protected $_validator = null;
+
+    /**
      * Constructor.
      *
      * @param array $context Context info.
+     *
+     * Keys:
+     *
+     * - `entity` The Form class instance this context is operating on. **(required)**
+     * - `validator` Optional name of the validation method to call on the Form object.
      */
     public function __construct(array $context)
     {
-        $context += [
-            'entity' => null,
-        ];
+        if (!isset($context['entity']) || !$context['entity'] instanceof Form) {
+            throw new CakeException('`$context[\'entity\']` must be an instance of Cake\Form\Form');
+        }
+
         $this->_form = $context['entity'];
+        $this->_validator = $context['validator'] ?? null;
     }
 
     /**
      * Get the fields used in the context as a primary key.
      *
-     * @return string[]
+     * @return array<string>
      * @deprecated 4.0.0 Renamed to {@link getPrimaryKey()}.
      */
     public function primaryKey(): array
@@ -126,7 +142,7 @@ class FormContext implements ContextInterface
      */
     public function isRequired(string $field): ?bool
     {
-        $validator = $this->_form->getValidator();
+        $validator = $this->_form->getValidator($this->_validator);
         if (!$validator->hasField($field)) {
             return null;
         }
@@ -144,7 +160,7 @@ class FormContext implements ContextInterface
     {
         $parts = explode('.', $field);
 
-        $validator = $this->_form->getValidator();
+        $validator = $this->_form->getValidator($this->_validator);
         $fieldName = array_pop($parts);
         if (!$validator->hasField($fieldName)) {
             return null;
@@ -163,7 +179,7 @@ class FormContext implements ContextInterface
      */
     public function getMaxLength(string $field): ?int
     {
-        $validator = $this->_form->getValidator();
+        $validator = $this->_form->getValidator($this->_validator);
         if (!$validator->hasField($field)) {
             return null;
         }

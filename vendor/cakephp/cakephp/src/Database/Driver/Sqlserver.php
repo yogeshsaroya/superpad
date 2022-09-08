@@ -56,7 +56,7 @@ class Sqlserver extends Driver
     /**
      * Base configuration settings for Sqlserver driver
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $_baseConfig = [
         'host' => 'localhost\SQLEXPRESS',
@@ -75,6 +75,8 @@ class Sqlserver extends Driver
         'failoverPartner' => null,
         'loginTimeout' => null,
         'multiSubnetFailover' => null,
+        'encrypt' => null,
+        'trustServerCertificate' => null,
     ];
 
     /**
@@ -97,11 +99,6 @@ class Sqlserver extends Driver
      * @var string
      */
     protected $_endQuote = ']';
-
-    /**
-     * @inheritDoc
-     */
-    protected $supportsCTEs = true;
 
     /**
      * Establishes a connection to the database server.
@@ -156,6 +153,12 @@ class Sqlserver extends Driver
         if ($config['multiSubnetFailover'] !== null) {
             $dsn .= ";MultiSubnetFailover={$config['multiSubnetFailover']}";
         }
+        if ($config['encrypt'] !== null) {
+            $dsn .= ";Encrypt={$config['encrypt']}";
+        }
+        if ($config['trustServerCertificate'] !== null) {
+            $dsn .= ";TrustServerCertificate={$config['trustServerCertificate']}";
+        }
         $this->_connect($dsn, $config);
 
         $connection = $this->getConnection();
@@ -191,7 +194,7 @@ class Sqlserver extends Driver
     /**
      * Prepares a sql statement to be executed
      *
-     * @param string|\Cake\Database\Query $query The query to prepare.
+     * @param \Cake\Database\Query|string $query The query to prepare.
      * @return \Cake\Database\StatementInterface
      */
     public function prepare($query): StatementInterface
@@ -238,7 +241,8 @@ class Sqlserver extends Driver
      */
     public function releaseSavePointSQL($name): string
     {
-        return 'COMMIT TRANSACTION t' . $name;
+        // SQLServer has no release save point operation.
+        return '';
     }
 
     /**
@@ -263,6 +267,26 @@ class Sqlserver extends Driver
     public function enableForeignKeySQL(): string
     {
         return 'EXEC sp_MSforeachtable "ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all"';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function supports(string $feature): bool
+    {
+        switch ($feature) {
+            case static::FEATURE_CTE:
+            case static::FEATURE_TRUNCATE_WITH_CONSTRAINTS:
+            case static::FEATURE_WINDOW:
+                return true;
+
+            case static::FEATURE_QUOTE:
+                $this->connect();
+
+                return $this->_connection->getAttribute(PDO::ATTR_DRIVER_NAME) !== 'odbc';
+        }
+
+        return parent::supports($feature);
     }
 
     /**

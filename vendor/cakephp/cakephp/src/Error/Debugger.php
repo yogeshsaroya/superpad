@@ -31,6 +31,8 @@ use Cake\Error\Debug\ReferenceNode;
 use Cake\Error\Debug\ScalarNode;
 use Cake\Error\Debug\SpecialNode;
 use Cake\Error\Debug\TextFormatter;
+use Cake\Error\Renderer\HtmlErrorRenderer;
+use Cake\Error\Renderer\TextErrorRenderer;
 use Cake\Log\Log;
 use Cake\Utility\Hash;
 use Cake\Utility\Security;
@@ -58,7 +60,7 @@ class Debugger
     /**
      * Default configuration
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $_defaultConfig = [
         'outputMask' => [],
@@ -77,10 +79,11 @@ class Debugger
      * Templates used when generating trace or error strings. Can be global or indexed by the format
      * value used in $_outputFormat.
      *
-     * @var array
+     * @var array<string, array<string, mixed>>
      */
     protected $_templates = [
         'log' => [
+            // These templates are not actually used, as Debugger::log() is called instead.
             'trace' => '{:reference} - {:path}, line {:line}',
             'error' => '{:error} ({:code}): {:description} in [{:file}, line {:line}]',
         ],
@@ -111,9 +114,24 @@ class Debugger
     ];
 
     /**
+     * Mapping for error renderers.
+     *
+     * Error renderers are replacing output formatting with
+     * an object based system. Having Debugger handle and render errors
+     * will be deprecated and the new ErrorTrap system should be used instead.
+     *
+     * @var array<string, class-string>
+     */
+    protected $renderers = [
+        'txt' => TextErrorRenderer::class,
+        // The html alias currently uses no JS and will be deprecated.
+        'js' => HtmlErrorRenderer::class,
+    ];
+
+    /**
      * A map of editors to their link templates.
      *
-     * @var array
+     * @var array<string, string|callable>
      */
     protected $editors = [
         'atom' => 'atom://core/open/file?filename={file}&line={line}',
@@ -214,7 +232,7 @@ class Debugger
     /**
      * Read or write configuration options for the Debugger instance.
      *
-     * @param string|array|null $key The key to get/set, or a complete array of configs.
+     * @param array<string, mixed>|string|null $key The key to get/set, or a complete array of configs.
      * @param mixed|null $value The value to set.
      * @param bool $merge Whether to recursively merge or overwrite existing config, defaults to true.
      * @return mixed Config value being read, or the object itself on write operations.
@@ -236,7 +254,7 @@ class Debugger
     /**
      * Reads the current output masking.
      *
-     * @return array
+     * @return array<string, string>
      */
     public static function outputMask(): array
     {
@@ -250,7 +268,7 @@ class Debugger
      *
      * Debugger::setOutputMask(['password' => '[*************]');
      *
-     * @param array $value An array where keys are replaced by their values in output.
+     * @param array<string, string> $value An array where keys are replaced by their values in output.
      * @param bool $merge Whether to recursively merge or overwrite existing config, defaults to true.
      * @return void
      */
@@ -267,7 +285,7 @@ class Debugger
      * The file and line.
      *
      * @param string $name The name of the editor.
-     * @param string|\Closure $template The string template or closure
+     * @param \Closure|string $template The string template or closure
      * @return void
      */
     public static function addEditor(string $name, $template): void
@@ -335,10 +353,10 @@ class Debugger
 
     /**
      * Creates an entry in the log file. The log entry will contain a stack trace from where it was called.
-     * as well as export the variable using exportVar. By default the log is written to the debug log.
+     * as well as export the variable using exportVar. By default, the log is written to the debug log.
      *
      * @param mixed $var Variable or content to log.
-     * @param int|string $level Type of log to use. Defaults to 'debug'.
+     * @param string|int $level Type of log to use. Defaults to 'debug'.
      * @param int $maxDepth The depth to output to. Defaults to 3.
      * @return void
      */
@@ -348,7 +366,10 @@ class Debugger
         $source = static::trace(['start' => 1]);
         $source .= "\n";
 
-        Log::write($level, "\n" . $source . static::exportVar($var, $maxDepth));
+        Log::write(
+            $level,
+            "\n" . $source . static::exportVarAsPlainText($var, $maxDepth)
+        );
     }
 
     /**
@@ -363,8 +384,8 @@ class Debugger
      *   will be displayed.
      * - `start` - The stack frame to start generating a trace from. Defaults to 0
      *
-     * @param array $options Format for outputting stack trace.
-     * @return string|array Formatted stack trace.
+     * @param array<string, mixed> $options Format for outputting stack trace.
+     * @return array|string Formatted stack trace.
      * @link https://book.cakephp.org/4/en/development/debugging.html#generating-stack-traces
      */
     public static function trace(array $options = [])
@@ -384,9 +405,9 @@ class Debugger
      *   will be displayed.
      * - `start` - The stack frame to start generating a trace from. Defaults to 0
      *
-     * @param array|\Throwable $backtrace Trace as array or an exception object.
-     * @param array $options Format for outputting stack trace.
-     * @return string|array Formatted stack trace.
+     * @param \Throwable|array $backtrace Trace as array or an exception object.
+     * @param array<string, mixed> $options Format for outputting stack trace.
+     * @return array|string Formatted stack trace.
      * @link https://book.cakephp.org/4/en/development/debugging.html#generating-stack-traces
      */
     public static function formatTrace($backtrace, array $options = [])
@@ -439,9 +460,12 @@ class Debugger
             if (in_array($signature, $options['exclude'], true)) {
                 continue;
             }
-            if ($options['format'] === 'points' && $trace['file'] !== '[internal]') {
-                $back[] = ['file' => $trace['file'], 'line' => $trace['line']];
+            if ($options['format'] === 'points') {
+                $back[] = ['file' => $trace['file'], 'line' => $trace['line'], 'reference' => $reference];
             } elseif ($options['format'] === 'array') {
+                if (!$options['args']) {
+                    unset($trace['args']);
+                }
                 $back[] = $trace;
             } else {
                 if (isset($self->_templates[$options['format']]['traceLine'])) {
@@ -460,6 +484,7 @@ class Debugger
             return $back;
         }
 
+        /** @psalm-suppress InvalidArgument */
         return implode("\n", $back);
     }
 
@@ -495,14 +520,14 @@ class Debugger
      * ```
      *
      * The above would return an array of 8 items. The 4th item would be the provided line,
-     * and would be wrapped in `<span class="code-highlight"></span>`. All of the lines
+     * and would be wrapped in `<span class="code-highlight"></span>`. All the lines
      * are processed with highlight_string() as well, so they have basic PHP syntax highlighting
      * applied.
      *
      * @param string $file Absolute path to a PHP file.
      * @param int $line Line number to highlight.
      * @param int $context Number of lines of context to extract above and below $line.
-     * @return array Set of lines highlighted
+     * @return array<string> Set of lines highlighted
      * @see https://secure.php.net/highlight_string
      * @link https://book.cakephp.org/4/en/development/debugging.html#getting-an-excerpt-from-a-file
      */
@@ -624,6 +649,20 @@ class Debugger
         $node = static::export($var, $context);
 
         return static::getInstance()->getExportFormatter()->dump($node);
+    }
+
+    /**
+     * Converts a variable to a plain text string.
+     *
+     * @param mixed $var Variable to convert.
+     * @param int $maxDepth The depth to output to. Defaults to 3.
+     * @return string Variable as a string
+     */
+    public static function exportVarAsPlainText($var, int $maxDepth = 3): string
+    {
+        return (new TextFormatter())->dump(
+            static::export($var, new DebugContext($maxDepth))
+        );
     }
 
     /**
@@ -799,9 +838,12 @@ class Debugger
      * Get the output format for Debugger error rendering.
      *
      * @return string Returns the current format when getting.
+     * @deprecated 4.4.0 Update your application so use ErrorTrap instead.
      */
     public static function getOutputFormat(): string
     {
+        deprecationWarning('Debugger::getOutputFormat() is deprecated.');
+
         return Debugger::getInstance()->_outputFormat;
     }
 
@@ -811,9 +853,11 @@ class Debugger
      * @param string $format The format you want errors to be output as.
      * @return void
      * @throws \InvalidArgumentException When choosing a format that doesn't exist.
+     * @deprecated 4.4.0 Update your application so use ErrorTrap instead.
      */
     public static function setOutputFormat(string $format): void
     {
+        deprecationWarning('Debugger::setOutputFormat() is deprecated.');
         $self = Debugger::getInstance();
 
         if (!isset($self->_templates[$format])) {
@@ -864,9 +908,11 @@ class Debugger
      *    straight HTML output, or 'txt' for unformatted text.
      * @param array $strings Template strings, or a callback to be used for the output format.
      * @return array The resulting format string set.
+     * @deprecated 4.4.0 Update your application so use ErrorTrap instead.
      */
     public static function addFormat(string $format, array $strings): array
     {
+        deprecationWarning('Debugger::addFormat() is deprecated.');
         $self = Debugger::getInstance();
         if (isset($self->_templates[$format])) {
             if (isset($strings['links'])) {
@@ -880,8 +926,29 @@ class Debugger
         } else {
             $self->_templates[$format] = $strings;
         }
+        unset($self->renderers[$format]);
 
         return $self->_templates[$format];
+    }
+
+    /**
+     * Add a renderer to the current instance.
+     *
+     * @param string $name The alias for the the renderer.
+     * @param class-string<\Cake\Error\ErrorRendererInterface> $class The classname of the renderer to use.
+     * @return void
+     * @deprecated 4.4.0 Update your application so use ErrorTrap instead.
+     */
+    public static function addRenderer(string $name, string $class): void
+    {
+        deprecationWarning('Debugger::addRenderer() is deprecated.');
+        if (!in_array(ErrorRendererInterface::class, class_implements($class))) {
+            throw new InvalidArgumentException(
+                'Invalid renderer class. $class must implement ' . ErrorRendererInterface::class
+            );
+        }
+        $self = Debugger::getInstance();
+        $self->renderers[$name] = $class;
     }
 
     /**
@@ -889,6 +956,7 @@ class Debugger
      *
      * @param array $data Data to output.
      * @return void
+     * @deprecated 4.4.0 Update your application so use ErrorTrap instead.
      */
     public function outputError(array $data): void
     {
@@ -903,6 +971,17 @@ class Debugger
             'start' => 2,
         ];
         $data += $defaults;
+
+        $outputFormat = $this->_outputFormat;
+        if (isset($this->renderers[$outputFormat])) {
+            /** @var array $trace */
+            $trace = static::trace(['start' => $data['start'], 'format' => 'points']);
+            $error = new PhpError($data['code'], $data['description'], $data['file'], $data['line'], $trace);
+            $renderer = new $this->renderers[$outputFormat]();
+            echo $renderer->render($error, Configure::read('debug'));
+
+            return;
+        }
 
         $files = static::trace(['start' => $data['start'], 'format' => 'points']);
         $code = '';
@@ -938,7 +1017,7 @@ class Debugger
 
         $data['trace'] = $trace;
         $data['id'] = 'cakeErr' . uniqid();
-        $tpl = $this->_templates[$this->_outputFormat] + $this->_templates['base'];
+        $tpl = $this->_templates[$outputFormat] + $this->_templates['base'];
 
         if (isset($tpl['links'])) {
             foreach ($tpl['links'] as $key => $val) {
@@ -1046,9 +1125,8 @@ class Debugger
     {
         $message = h($message);
         $message = preg_replace('/`([^`]+)`/', '<code>$1</code>', $message);
-        $message = nl2br($message);
 
-        return $message;
+        return nl2br($message);
     }
 
     /**

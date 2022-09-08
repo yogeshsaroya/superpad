@@ -62,7 +62,7 @@ class Translator
      * @param string $locale The locale being used.
      * @param \Cake\I18n\Package $package The Package containing keys and translations.
      * @param \Cake\I18n\FormatterInterface $formatter A message formatter.
-     * @param \Cake\I18n\Translator $fallback A fallback translator.
+     * @param \Cake\I18n\Translator|null $fallback A fallback translator.
      */
     public function __construct(
         string $locale,
@@ -155,8 +155,13 @@ class Translator
             $message = $message[$form] ?? (string)end($message);
         }
 
-        if (strlen($message) === 0) {
+        if ($message === '') {
             $message = $key;
+
+            // If singular haven't been translated, fallback to the key.
+            if (isset($tokensValues['_singular']) && $tokensValues['_count'] === 1) {
+                $message = $tokensValues['_singular'];
+            }
         }
 
         unset($tokensValues['_count'], $tokensValues['_singular']);
@@ -170,7 +175,7 @@ class Translator
      * @param string $key The message key being handled.
      * @param array $message The message content.
      * @param array $vars The variables containing the `_context` key.
-     * @return string|array
+     * @return array|string
      */
     protected function resolveContext(string $key, array $message, array $vars)
     {
