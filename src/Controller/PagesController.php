@@ -25,7 +25,7 @@ class PagesController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        $this->loadComponent('Paginator');
+        
     }
 
     public function index()
