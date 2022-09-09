@@ -11,7 +11,7 @@ class ApplicationsTable extends Table{
         $this->belongsTo('Projects');
         $this->belongsTo('Users');
         $this->hasMany('Tickets');
-        
+        $this->hasMany('Claims');
     }
 
     public function validationDefault(Validator $validator): Validator {

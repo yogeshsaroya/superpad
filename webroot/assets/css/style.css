@@ -6688,3 +6688,6 @@ form .required label:after {
         transform: translateY(-1rem)
     }
 }
+
+
+.bg-light {color: #000;}

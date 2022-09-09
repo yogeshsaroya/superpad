@@ -1,4 +1,4 @@
-<div id="custom-content" class="white-popup-block offer-pop" style="max-width:900px; margin: 20px auto;">
+<div id="custom-content" class="white-popup-block offer-pop" style="max-width:1200px; margin: 20px auto;">
     <style>
         tr th {
             text-align: center;
@@ -27,49 +27,64 @@
             <div class="modal-body">
                 <section class="ranking-section section-space-b">
                     <div class="container">
-                        <div class="table-responsive1" id="no-more-tables">
-                            <table class="table mb-0 table-s1">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Claimable Tokens</th>
-                                        <th scope="col">Claim Before</th>
-                                        <th scope="col">Claimed On</th>
-                                        <th scope="col">Transaction Hash</th>
-                                        <th scope="col"> %</th>
-                                        <th scope="col">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (!empty($arr)) {
-                                        foreach ($arr as $key => $list) {
-                                    ?>
-                                            <tr>
-                                                <td data-title="Claimable Tokens" class="text-center"><?php echo $list['total_token']; ?></td>
-                                                <td data-title="Claim Before" class="text-center"><?php echo date("Y-m-d H:i A", strtotime($list['claim_before'])); ?></td>
-                                                <td data-title="Claim On" class="text-center" id="on_<?php echo $key; ?>"><?php echo (!empty($list['claim_on']) ? date("Y-m-d H:i A", strtotime($list['claim_on'])) : null); ?></td>
-                                                <td data-title="%" class="text-center"><?php echo $list['percentage']; ?>%</td>
-                                                <td data-title="%" class="text-center"><?php echo (isset($list['transaction_id']) ? $this->Html->link('View','https://bscscan.com/tx/'.$list['transaction_id'],['target'=>'_blank']) : null); ?></td>
-                                                <td data-title="Status" class="text-center">
-                                                    <?php if (empty($list['claim_on'])) { ?>
-                                                        <input type="button" class="btn btn-success" value="Claim" id="btn_<?php echo $key; ?>" onclick="token_claim(<?php echo $key . ',' . $data->id.','.$list['total_token']; ?>);" />
-                                                    <?php } else {
-                                                        echo "Claimed";
-                                                    } ?>
-
-                                                </td>
-                                            </tr>
-                                        <?php }
-                                    } else { ?>
+                        <?php if ($percentage == 100) { ?>
+                            <div class="table-responsive1" id="no-more-tables">
+                                <table class="table mb-0 table-s1">
+                                    <thead>
                                         <tr>
-                                            <td colspan="5" class="text-center text-danger"> Tokens not available for claim yet. </td>
+                                            <th scope="col">Claimable Tokens</th>
+                                            <th scope="col">Claim After</th>
+                                            <th scope="col">Claimed On</th>
+                                            <th scope="col"> %</th>
+                                            <th scope="col">Transaction Hash</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Action</th>
                                         </tr>
-                                    <?php } ?>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        if (isset($data->claims) && !empty($data->claims)) {
+                                            foreach ($data->claims as $list) { ?>
+                                                <tr>
+                                                    <td data-title="Claimable Tokens" class="text-center"><?php echo $list->total_token; ?></td>
+                                                    <td data-title="Claim After" class="text-center"><?php echo $list->claim_from->format("Y-m-d h:i A"); ?></td>
+                                                    <td data-title="Claim On" class="text-center" id="on_<?php echo $list->id; ?>"><?php echo (!empty($list->claimed_date) ? $list->claimed_date->format("Y-m-d h:i A") : null); ?></td>
+                                                    <td data-title="%" class="text-center"><?php echo $list->percentage; ?>%</td>
+                                                    <td data-title="Transaction Hash" class="text-center" id="hash_<?php echo $list->id; ?>"><?php echo (isset($list->transaction_id) ? $this->Html->link('View', env('bscscanHash') . 'tx/' . $list->transaction_id, ['target' => '_blank']) : null); ?></td>
+                                                    <td data-title="Status" class="text-center" id="st_<?php echo $list->id; ?>">
+                                                        <?php
+                                                        if ($list->transaction_status == 1) {
+                                                            echo '<span class="badge bg-light">Not Claimed</span>';
+                                                        } elseif ($list->transaction_status == 2) {
+                                                            echo '<span class="badge bg-warning">Panding</span>';
+                                                        } elseif ($list->transaction_status == 3) {
+                                                            echo '<span class="badge bg-success">Completed</span>';
+                                                        } elseif ($list->transaction_status == 4) {
+                                                            echo '<span class="badge bg-danger">Failed</span>';
+                                                        }
+                                                        ?> </td>
+                                                    <td data-title="Action" class="text-center">
+                                                        <?php if (in_array($list->transaction_status, [1, 4]) && strtotime(DATE) > strtotime($list->claim_from->format("Y-m-d H:i:s"))) { ?>
+                                                            <input type="button" class="btn btn-success" value="Claim" id="btn_<?php echo $list->id; ?>" onclick="chk_claim(<?php echo $list->id ?>);" />
+                                                        <?php } ?>
+                                                    </td>
+                                                </tr>
+                                            <?php }
+                                        } else { ?>
+                                            <tr>
+                                                <td colspan="5" class="text-center text-danger"> Tokens not available for claim yet. </td>
+                                            </tr>
+                                        <?php } ?>
 
-                                </tbody>
-                            </table>
-                            <br><br>
-                            <div id="sub_data"> </div>
-                        </div>
+                                    </tbody>
+                                </table>
+                                <br><br>
+                                <div id="sub_data"></div>
+                                <div id="aj_res"></div>
+                            </div>
+                        <?php  } else {
+                            echo '<h3 class="text-center text-danger">Allocation will be available soon.</h3>';
+                        } ?>
                     </div>
                 </section>
             </div>
@@ -188,82 +203,114 @@
             });
         }
 
-        async function token_claim(id, app_id,amt) {
+        async function token_claim(id, num) {
             $("#sub_data").html('');
             $("#btn_locader").addClass('is-active');
-           web3 = new Web3(Web3.givenProvider);
-           await Web3.givenProvider.enable(); // waiting for metamask provider connectivity
+            web3 = new Web3(Web3.givenProvider);
+            await Web3.givenProvider.enable(); // waiting for metamask provider connectivity
             //   Get your metamask wallet provider Chain ID
             chainId = await web3.eth.getChainId();
             //   Request for get wallet address from metamask
             await ethereum
-                .request({ method: "eth_requestAccounts" })
+                .request({
+                    method: "eth_requestAccounts"
+                })
                 .then(async (account) => {
-                    if (chainId != 97) { await changeToMain(); }
+                    if (chainId != 97) {
+                        await changeToMain();
+                    }
                     //   Claim contract web3 instance
-                    instance = new web3.eth.Contract( CLAIM_CONTRACT_ABI, CLAIM_CONTRACT_ADDRESS );
+                    instance = new web3.eth.Contract(CLAIM_CONTRACT_ABI, CLAIM_CONTRACT_ADDRESS);
                     //   sending claim function tx from metamask selected account
-                    instance.methods .claim(account[0], web3.utils.toWei('' + amt + '', "ether"))
-                        .send({ from: account[0] })
+                    instance.methods.claim(account[0], web3.utils.toWei('' + num + '', "ether"))
+                        .send({
+                            from: account[0]
+                        })
                         .on("transactionHash", async (hash) => {
+                            $("#btn_locader").attr('data-curtain-text', 'Processing...');
                             // get tx hash
                             console.log('Hello 1');
                             console.log(hash);
+                            update_claim(id, num, 2, hash, '');
+                            $('#sub_data').html('<div class="alert alert-info">Token claim process has been initiated. <a href="<?php echo env('bscscanHash'); ?>tx/' + hash + '" target="_blank">Click here </a> to check transaction status.</div>');
                         })
                         .on("receipt", async (receipt) => {
                             // receipt.status will return your tx status. true & false
                             console.log('Hello 2');
                             console.log(receipt);
-                            if( receipt.status === true){
-                                update_claim(id, app_id, amt, receipt.transactionHash,receipt)
-                            }else{
-                                $("#btn_locader").removeClass('is-active'); 
-                                $('#sub_data').html('<div class="alert alert-danger">Tokens claim process has been failed.</div>');
+                            if (receipt.status === true) {
+                                $("#btn_locader").attr('data-curtain-text', 'Token Claimed...');
+                                update_claim(id, num, 3, receipt.transactionHash, receipt);
+                                setTimeout(function() {
+                                    $("#btn_locader").removeClass('is-active');
+                                    $('#sub_data').html('<div class="alert alert-success">Tokens has been claimed successfully. <a href="<?php echo env('bscscanHash'); ?>tx/' + receipt.transactionHash + '" target="_blank">Click here </a> to check transaction status.</div>');
+                                }, 1000);
+                            } else {
+                                $("#btn_locader").attr('data-curtain-text', 'Transaction failed...');
+                                update_claim(id, num, 4, receipt.transactionHash, receipt);
+                                setTimeout(function() {
+                                    $("#btn_locader").removeClass('is-active');
+                                    $('#sub_data').html('<div class="alert alert-danger">Token claim process has been failed. <a href="<?php echo env('bscscanHash'); ?>tx/' + receipt.transactionHash + '" target="_blank">Click here </a> to check transaction status.</div>');
+                                }, 2000);
                             }
                         })
                         .on('confirmation', function(confirmationNumber, receipt) {
                             // console.log('Hello 3'); console.log(confirmationNumber);  console.log(receipt);
-
                         })
                         .on('error', function(error, receipt) {
-                            console.log(error);
-                            $("#btn_locader").removeClass('is-active');
-                            $('#sub_data').html('<div class="alert alert-danger">Tokens claim process has been failed.</div>');
+                            console.log('Hello 4');
+                            console.log(error); console.log(receipt);
+                            if (error.code === 4001) {
+                                $("#btn_locader").attr('data-curtain-text', 'Transaction Canceled...');
+                                setTimeout(function() {
+                                    $("#btn_locader").removeClass('is-active');
+                                    $('#sub_data').html('<div class="alert alert-danger">Token claim process has been failed.</div>');
+                                }, 3000);
+                            } else {
+                                $("#btn_locader").attr('data-curtain-text', 'Transaction failed...');
+                                update_claim(id, num, 4, receipt.transactionHash, receipt);
+                                setTimeout(function() {
+                                    $("#btn_locader").removeClass('is-active');
+                                    $('#sub_data').html('<div class="alert alert-danger">Token claim process has been failed. <a href="<?php echo env('bscscanHash'); ?>tx/' + receipt.transactionHash + '" target="_blank">Click here </a> to check transaction status.</div>');
+                                }, 3000);
+                            }
+
                         });
                 });
         }
 
-        function update_claim(id, app_id, amt, transaction, tran_data) {
+        function update_claim(id, num, status, transaction, tran_data) {
             $.ajax({
                 type: 'POST',
                 url: '<?php echo SITEURL; ?>users/update_claim',
                 data: {
-                    id: id, app_id: app_id, amt: amt, transaction_id: transaction, tran_data: tran_data
+                    id: id,
+                    amt: num,
+                    status: status,
+                    transaction_id: transaction,
+                    tran_data: tran_data
                 },
                 success: function(data) {
-                    $("#btn_locader").removeClass('is-active');
-                    $("#sub_data").html(data);
+                    $("#aj_res").html(data);
                 },
                 error: function(comment) {
-                    $("#btn_locader").removeClass('is-active');
-                    $("#sub_data").html(comment);
+                    $("#aj_res").html(comment);
                 }
             });
         }
 
-        function mk_claim_remvoe(id, app_id) {
-
+        function chk_claim(id) {
+            $("#btn_locader").attr('data-curtain-text', 'Updating...');
             $("#btn_" + id).prop("disabled", true);
             $("#btn_" + id).val('wait...');
             $.ajax({
                 type: 'POST',
-                url: SITEURL + 'users/update_claim',
+                url: SITEURL + 'users/check_claim',
                 headers: {
                     'X-CSRF-Token': $('[name="_csrfToken"]').val()
                 },
                 data: {
-                    id: id,
-                    app_id: app_id
+                    id: id
                 },
                 success: function(data) {
                     $("#sub_data").html(data);
@@ -274,7 +321,6 @@
                     $("#sub_data").html(comment);
                     $("#btn_" + id).prop("disabled", false);
                     $("#btn_" + id).val('Claim');
-
                 }
             });
 

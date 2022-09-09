@@ -54,7 +54,6 @@ class UsersController extends AppController
         /* https://codethepixel.com/tutorial/cakephp/cakephp-4-find-sort-count */
 
         $this->SiteSetting = $this->request->getSession()->read('Setting');
-        
     }
 
 
@@ -909,62 +908,105 @@ class UsersController extends AppController
         ]);
         $data =  $query->all();
         $this->set(compact('data'));
-        //$a = $this->fetchTable('Claims')->find('all')->all();
-        
     }
 
     public function doClaim($id = null)
     {
+
         $query = $this->Applications->find('all', [
-            'contain' => ['Projects' => ['TokenDistributions' => ['sort' => ['TokenDistributions.claim_date' => 'ASC']]]],
-            'conditions' => ['Applications.id' => $id, 'Applications.status' => 4, 'Applications.total_token > '=>0,
-            'Applications.user_id' => $this->Auth->User('id')]
+            'contain' => ['Claims', 'Projects' => ['TokenDistributions' => ['sort' => ['TokenDistributions.claim_date' => 'ASC']]]],
+            'conditions' => [
+                'Applications.id' => $id, 'Applications.status' => 4, 'Applications.total_token > ' => 0,
+                'Applications.user_id' => $this->Auth->User('id')
+            ]
         ]);
         $data =  $query->first();
-        if(!empty($data)){
-            $arr = [];
-            if (empty($data->info) && isset($data->project->token_distributions) && !empty($data->project->token_distributions)) {
-                foreach ($data->project->token_distributions as $list) {
-                    if(!empty($list->claim_date)){
-                        $arr[strtotime($list->claim_date->format("Y-m-d H:i:s"))] = [
-                            'percentage' => $list->percentage, 'total_token' => $data->total_token * $list->percentage / 100,
-                            'claim_before' => $list->claim_date->format("Y-m-d H:i:s"), 'claim_on' => null
-                        ];
+        $percentage = 0;
+        if (!empty($data)) {
+            if (isset($data->project->token_distributions) && !empty($data->project->token_distributions)) {
+                $percentage = array_sum(array_column($data->project->token_distributions, 'percentage'));
+
+                if ($percentage == 100 && empty($data->claims)) {
+                    $arr = [];
+                    foreach ($data->project->token_distributions as $list) {
+                        if (!empty($list->claim_date)) {
+                            $arr[] = ['id' => null, 'application_id' => $data->id, 'project_id' => $data->project_id, 'user_id' => $data->user_id, 'token_distribution_id' => $list->id, 'percentage' => $list->percentage, 'total_token' => $data->total_token * $list->percentage / 100, 'claim_from' => $list->claim_date->format("Y-m-d H:i:s")];
+                        }
+                    }
+                    if (!empty($arr)) {
+                        $claimsEnt = $this->fetchTable('Claims')->newEntities($arr);
+                        $result = $this->fetchTable('Claims')->saveMany($claimsEnt);
+
+                        $u = SITEURL . "allocation";
+                        echo "<script>window.location.href ='" . $u . "'; </script>";
+                        exit;
                     }
                 }
-                $data->info = json_encode($arr);
-                $this->Applications->save($data);
             }
         }
-        $this->set(compact('data'));
+        $this->set(compact('data', 'percentage'));
     }
 
-    public function updateClaim()
-    {   
-        
+    public function checkClaim()
+    {
         $this->autoRender = false;
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             if ($this->Auth->User('id') != "") {
                 $postData = $this->request->getData();
-                
-                $query = $this->Applications->find('all', ['conditions' => ['Applications.id' => $postData['app_id'], 'Applications.status' => 4]]);
-                $data =  $query->first();
-                $claimed_token = 0;
-                if (!empty($data->info)) {
-                    $arr = json_decode($data->info, true);
-                    if (isset($arr[$postData['id']]) && !empty($arr[$postData['id']])) {
-                        $arr[$postData['id']]['claim_on'] = DATE;
-                        $arr[$postData['id']]['claimed_token'] = $postData['amt'];
-                        $arr[$postData['id']]['transaction_id'] = $postData['transaction_id'];
-                        $arr[$postData['id']]['transaction_data'] = $postData['tran_data'];
-                        $claimed_token = $arr[$postData['id']]['total_token'];
+                $arr = $this->fetchTable('Claims')->find('all')->where(['id' => $postData['id']])->first();
+                if (!empty($arr)) {
+                    if (in_array($arr->transaction_status, [1, 4])) {
+                        if (strtotime(DATE) > strtotime($arr->claim_from->format("Y-m-d H:i:s"))) {
+                            echo "<script>token_claim(" . $arr->id . "," . $arr->total_token . ");</script>";
+                        } else {
+                            echo "<div class='alert alert-danger'>You can claim tokens " . $arr->claim_from->format("Y-m-d h:i A") . " after </div>";
+                            exit;
+                        }
+                    } elseif ($arr->transaction_status == 2) {
+                        echo "<div class='alert alert-danger'>This transaction is pending. Please check Transaction Hash	for details.</div>";
+                        exit;
+                    } elseif ($arr->transaction_status == 3) {
+                        echo "<div class='alert alert-success'>Tokens already claimed. Please check Transaction Hash	for more details.</div>";
+                        exit;
                     }
-                    
-                    $data->claimed_token = $data->claimed_token + $claimed_token;
-                    $data->available_token = $data->available_token - $claimed_token;
-                    $data->info = json_encode($arr);
-                    $this->Applications->save($data);
-                    echo "<script>$('#btn_" . $postData['id'] . "').remove(); $('#on_" . $postData['id'] . "').html('" . DATE . "'); </script>";
+                }
+            }
+        }
+        exit;
+    }
+
+    public function updateClaim()
+    {
+
+        $this->autoRender = false;
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            if ($this->Auth->User('id') != "") {
+                $postData = $this->request->getData();
+                $query = $this->fetchTable('Claims')->find('all', ['conditions' => ['id' => $postData['id']]]);
+                $data =  $query->first();
+                if (!empty($data)) {
+                    $data->transaction_id = $postData['transaction_id'];
+                    $data->transaction_data = json_encode($postData['tran_data']);
+                    $data->transaction_status = $postData['status'];
+                    if($postData['status'] == 3){
+                        $data->claimed_date = DATE;
+                    }else{
+                        $data->claimed_date = null;
+                    }
+
+                    $this->fetchTable('Claims')->save($data);
+
+                    if ( (int)$postData['status'] == 2) {
+                        /* If Pending */
+                        echo "<script>$('#btn_" . $postData['id'] . "').remove(); $('#on_" . $postData['id'] . "').html(''); $('#st_" . $postData['id'] . "').html('<span class=\'badge bg-warning\'>Pending</span>'); $('#hash_" . $postData['id'] . "').html('<a href=\'" . env('bscscanHash') . "tx/" . $postData['transaction_id'] . "\' target=\'_blank\'>View</a>'); </script>";
+                    } elseif ( (int)$postData['status'] == 3) {
+                        /* If Claimed */
+                        echo "<script>$('#btn_" . $postData['id'] . "').remove(); $('#on_" . $postData['id'] . "').html('" . DATE . "'); $('#st_" . $postData['id'] . "').html('<span class=\'badge bg-success\'>Completed</span>');  $('#hash_" . $postData['id'] . "').html('<a href=\'" . env('bscscanHash') . "tx/" . $postData['transaction_id'] . "\' target=\'_blank\'>View</a>'); </script>";
+                    }
+                    elseif ( (int)$postData['status'] == 4) {
+                        /* If Failed */
+                        echo "<script>$('#btn_" . $postData['id'] . "').remove(); $('#on_" . $postData['id'] . "').html(''); $('#st_" . $postData['id'] . "').html('<span class=\'badge bg-danger\'>Failed</span>');  $('#hash_" . $postData['id'] . "').html('<a href=\'" . env('bscscanHash') . "tx/" . $postData['transaction_id'] . "\' target=\'_blank\'>View</a>'); </script>";
+                    }
                 }
             }
         }

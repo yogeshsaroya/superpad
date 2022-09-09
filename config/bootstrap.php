@@ -229,4 +229,3 @@ define('SITEURL', env('APP_SITEURL'));
 define('WEBTITLE', env('APP_NAME'));
 define("DATE", date("Y-m-d H:i:s"));
 define("TODAYDATE", date("Y-m-d"));
-
