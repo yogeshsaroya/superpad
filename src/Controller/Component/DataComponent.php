@@ -13,6 +13,7 @@ class DataComponent extends Component
 
     public function fetch($url)
     {
+        $response = null;
         if (function_exists('curl_exec')) {
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);

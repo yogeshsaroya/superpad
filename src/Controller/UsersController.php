@@ -925,7 +925,6 @@ class UsersController extends AppController
         if (!empty($data)) {
             if (isset($data->project->token_distributions) && !empty($data->project->token_distributions)) {
                 $percentage = array_sum(array_column($data->project->token_distributions, 'percentage'));
-
                 if ($percentage == 100 && empty($data->claims)) {
                     $arr = [];
                     foreach ($data->project->token_distributions as $list) {
@@ -953,11 +952,17 @@ class UsersController extends AppController
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             if ($this->Auth->User('id') != "") {
                 $postData = $this->request->getData();
-                $arr = $this->fetchTable('Claims')->find('all')->where(['id' => $postData['id']])->first();
+                $arr = $this->fetchTable('Claims')->find('all')->contain(['Applications'])->where(['Claims.id' => $postData['id']])->first();
                 if (!empty($arr)) {
                     if (in_array($arr->transaction_status, [1, 4])) {
+                        //$arr->total_token
                         if (strtotime(DATE) > strtotime($arr->claim_from->format("Y-m-d H:i:s"))) {
-                            echo "<script>token_claim(" . $arr->id . "," . $arr->total_token . ");</script>";
+                            if( ($arr->application->available_token + $arr->application->claimed_token) ==  $arr->application->total_token){
+                                echo "<script>token_claim(" . $arr->id . "," . $arr->total_token . ");</script>";
+                            }else{
+                                echo "<div class='alert alert-danger'>Sorry, something went wrong. Please contact support.</div>";exit;    
+                            }
+                            
                         } else {
                             echo "<div class='alert alert-danger'>You can claim tokens " . $arr->claim_from->format("Y-m-d h:i A") . " after </div>";
                             exit;
@@ -982,20 +987,31 @@ class UsersController extends AppController
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             if ($this->Auth->User('id') != "") {
                 $postData = $this->request->getData();
-                $query = $this->fetchTable('Claims')->find('all', ['conditions' => ['id' => $postData['id']]]);
+                $query = $this->fetchTable('Claims')->find('all', ['conditions' => ['Claims.id' => $postData['id']]]);
+                $query->contain(['Applications']);
                 $data =  $query->first();
                 if (!empty($data)) {
                     $data->transaction_id = $postData['transaction_id'];
-                    $data->transaction_data = json_encode($postData['tran_data']);
+                    if(!empty($postData['tran_data'])){
+                        $data->transaction_data = json_encode($postData['tran_data']);
+                    }else{
+                        $data->transaction_data = null;
+                    }
+                    
                     $data->transaction_status = $postData['status'];
                     if($postData['status'] == 3){
+                        /* If Claimed */
                         $data->claimed_date = DATE;
+                        $total_claimed_token =  $data->application->claimed_token + $data->total_token;
+                        $available_token = $data->application->available_token - $data->total_token;
+                        $data->application->claimed_token = $total_claimed_token;
+                        $data->application->available_token = $available_token;
                     }else{
                         $data->claimed_date = null;
                     }
-
+                    
                     $this->fetchTable('Claims')->save($data);
-
+                    $this->Applications->save($data->application);
                     if ( (int)$postData['status'] == 2) {
                         /* If Pending */
                         echo "<script>$('#btn_" . $postData['id'] . "').remove(); $('#on_" . $postData['id'] . "').html(''); $('#st_" . $postData['id'] . "').html('<span class=\'badge bg-warning\'>Pending</span>'); $('#hash_" . $postData['id'] . "').html('<a href=\'" . env('bscscanHash') . "tx/" . $postData['transaction_id'] . "\' target=\'_blank\'>View</a>'); </script>";

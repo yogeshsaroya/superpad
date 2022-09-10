@@ -4,15 +4,14 @@
             text-align: center;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.1/web3.min.js"></script>
-    <script src="https://unpkg.com/@metamask/legacy-web3@latest/dist/metamask.web3.min.js"></script>
 
     <?php
-    $arr = null;
-    if (!empty($data)) {
-        $arr = json_decode($data->info, true);
+    if ($data->available_token > 0) {
+        echo $this->Html->script(['https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.1/web3.min.js', 'https://unpkg.com/@metamask/legacy-web3@latest/dist/metamask.web3.min.js']);
     }
+    ?>
 
+    <?php
     echo $this->Form->create(null);
     echo $this->Form->end();
     ?>
@@ -90,242 +89,245 @@
             </div>
         </div>
     </div>
-    <script>
-        const CLAIM_CONTRACT_ADDRESS = "0xb13ef804803b5aa8dd3aaf8ce4341a42421eeca4";
-        const CLAIM_CONTRACT_ABI = [{
-                inputs: [{
-                    internalType: "address",
-                    name: "_BEP20Address",
-                    type: "address",
-                }, ],
-                stateMutability: "nonpayable",
-                type: "constructor",
-            },
-            {
-                anonymous: false,
-                inputs: [{
-                        indexed: true,
+    <?php if ($data->available_token > 0) { ?>
+        <script>
+            const CLAIM_CONTRACT_ADDRESS = "<?php echo env('CLAIM_CONTRACT_ADDRESS'); ?>";
+            const CLAIM_CONTRACT_ABI = [{
+                    inputs: [{
                         internalType: "address",
-                        name: "previousOwner",
+                        name: "_BEP20Address",
                         type: "address",
-                    },
-                    {
-                        indexed: true,
+                    }, ],
+                    stateMutability: "nonpayable",
+                    type: "constructor",
+                },
+                {
+                    anonymous: false,
+                    inputs: [{
+                            indexed: true,
+                            internalType: "address",
+                            name: "previousOwner",
+                            type: "address",
+                        },
+                        {
+                            indexed: true,
+                            internalType: "address",
+                            name: "newOwner",
+                            type: "address",
+                        },
+                    ],
+                    name: "OwnershipTransferred",
+                    type: "event",
+                },
+                {
+                    inputs: [],
+                    name: "BEP20Address",
+                    outputs: [{
+                        internalType: "contract IBEP20",
+                        name: "",
+                        type: "address",
+                    }, ],
+                    stateMutability: "view",
+                    type: "function",
+                },
+                {
+                    inputs: [{
+                        internalType: "address",
+                        name: "_BEP20Address",
+                        type: "address",
+                    }, ],
+                    name: "ChangeTokenAddress",
+                    outputs: [],
+                    stateMutability: "nonpayable",
+                    type: "function",
+                },
+                {
+                    inputs: [{
+                            internalType: "address",
+                            name: "_claimer",
+                            type: "address",
+                        },
+                        {
+                            internalType: "uint256",
+                            name: "_amount",
+                            type: "uint256",
+                        },
+                    ],
+                    name: "claim",
+                    outputs: [],
+                    stateMutability: "nonpayable",
+                    type: "function",
+                },
+                {
+                    inputs: [],
+                    name: "owner",
+                    outputs: [{
+                        internalType: "address",
+                        name: "",
+                        type: "address",
+                    }, ],
+                    stateMutability: "view",
+                    type: "function",
+                },
+                {
+                    inputs: [],
+                    name: "renounceOwnership",
+                    outputs: [],
+                    stateMutability: "nonpayable",
+                    type: "function",
+                },
+                {
+                    inputs: [{
                         internalType: "address",
                         name: "newOwner",
                         type: "address",
-                    },
-                ],
-                name: "OwnershipTransferred",
-                type: "event",
-            },
-            {
-                inputs: [],
-                name: "BEP20Address",
-                outputs: [{
-                    internalType: "contract IBEP20",
-                    name: "",
-                    type: "address",
-                }, ],
-                stateMutability: "view",
-                type: "function",
-            },
-            {
-                inputs: [{
-                    internalType: "address",
-                    name: "_BEP20Address",
-                    type: "address",
-                }, ],
-                name: "ChangeTokenAddress",
-                outputs: [],
-                stateMutability: "nonpayable",
-                type: "function",
-            },
-            {
-                inputs: [{
-                        internalType: "address",
-                        name: "_claimer",
-                        type: "address",
-                    },
-                    {
-                        internalType: "uint256",
-                        name: "_amount",
-                        type: "uint256",
-                    },
-                ],
-                name: "claim",
-                outputs: [],
-                stateMutability: "nonpayable",
-                type: "function",
-            },
-            {
-                inputs: [],
-                name: "owner",
-                outputs: [{
-                    internalType: "address",
-                    name: "",
-                    type: "address",
-                }, ],
-                stateMutability: "view",
-                type: "function",
-            },
-            {
-                inputs: [],
-                name: "renounceOwnership",
-                outputs: [],
-                stateMutability: "nonpayable",
-                type: "function",
-            },
-            {
-                inputs: [{
-                    internalType: "address",
-                    name: "newOwner",
-                    type: "address",
-                }, ],
-                name: "transferOwnership",
-                outputs: [],
-                stateMutability: "nonpayable",
-                type: "function",
-            },
-        ];
+                    }, ],
+                    name: "transferOwnership",
+                    outputs: [],
+                    stateMutability: "nonpayable",
+                    type: "function",
+                },
+            ];
 
-        var web3 = null;
-        var instance = null;
-        var chainId = null;
+            var web3 = null;
+            var instance = null;
+            var chainId = null;
 
-        async function changeToMain() {
-            await ethereum.request({
-                method: "wallet_switchEthereumChain",
-                // params: [{ chainId: "0x38" }], //MAIN BSC
-                params: [{
-                    chainId: "0x61"
-                }], //TESTNET BSC
-            });
-        }
-
-        async function token_claim(id, num) {
-            $("#sub_data").html('');
-            $("#btn_locader").addClass('is-active');
-            web3 = new Web3(Web3.givenProvider);
-            await Web3.givenProvider.enable(); // waiting for metamask provider connectivity
-            //   Get your metamask wallet provider Chain ID
-            chainId = await web3.eth.getChainId();
-            //   Request for get wallet address from metamask
-            await ethereum
-                .request({
-                    method: "eth_requestAccounts"
-                })
-                .then(async (account) => {
-                    if (chainId != 97) {
-                        await changeToMain();
-                    }
-                    //   Claim contract web3 instance
-                    instance = new web3.eth.Contract(CLAIM_CONTRACT_ABI, CLAIM_CONTRACT_ADDRESS);
-                    //   sending claim function tx from metamask selected account
-                    instance.methods.claim(account[0], web3.utils.toWei('' + num + '', "ether"))
-                        .send({
-                            from: account[0]
-                        })
-                        .on("transactionHash", async (hash) => {
-                            $("#btn_locader").attr('data-curtain-text', 'Processing...');
-                            // get tx hash
-                            console.log('Hello 1');
-                            console.log(hash);
-                            update_claim(id, num, 2, hash, '');
-                            $('#sub_data').html('<div class="alert alert-info">Token claim process has been initiated. <a href="<?php echo env('bscscanHash'); ?>tx/' + hash + '" target="_blank">Click here </a> to check transaction status.</div>');
-                        })
-                        .on("receipt", async (receipt) => {
-                            // receipt.status will return your tx status. true & false
-                            console.log('Hello 2');
-                            console.log(receipt);
-                            if (receipt.status === true) {
-                                $("#btn_locader").attr('data-curtain-text', 'Token Claimed...');
-                                update_claim(id, num, 3, receipt.transactionHash, receipt);
-                                setTimeout(function() {
-                                    $("#btn_locader").removeClass('is-active');
-                                    $('#sub_data').html('<div class="alert alert-success">Tokens has been claimed successfully. <a href="<?php echo env('bscscanHash'); ?>tx/' + receipt.transactionHash + '" target="_blank">Click here </a> to check transaction status.</div>');
-                                }, 1000);
-                            } else {
-                                $("#btn_locader").attr('data-curtain-text', 'Transaction failed...');
-                                update_claim(id, num, 4, receipt.transactionHash, receipt);
-                                setTimeout(function() {
-                                    $("#btn_locader").removeClass('is-active');
-                                    $('#sub_data').html('<div class="alert alert-danger">Token claim process has been failed. <a href="<?php echo env('bscscanHash'); ?>tx/' + receipt.transactionHash + '" target="_blank">Click here </a> to check transaction status.</div>');
-                                }, 2000);
-                            }
-                        })
-                        .on('confirmation', function(confirmationNumber, receipt) {
-                            // console.log('Hello 3'); console.log(confirmationNumber);  console.log(receipt);
-                        })
-                        .on('error', function(error, receipt) {
-                            console.log('Hello 4');
-                            console.log(error); console.log(receipt);
-                            if (error.code === 4001) {
-                                $("#btn_locader").attr('data-curtain-text', 'Transaction Canceled...');
-                                setTimeout(function() {
-                                    $("#btn_locader").removeClass('is-active');
-                                    $('#sub_data').html('<div class="alert alert-danger">Token claim process has been failed.</div>');
-                                }, 3000);
-                            } else {
-                                $("#btn_locader").attr('data-curtain-text', 'Transaction failed...');
-                                update_claim(id, num, 4, receipt.transactionHash, receipt);
-                                setTimeout(function() {
-                                    $("#btn_locader").removeClass('is-active');
-                                    $('#sub_data').html('<div class="alert alert-danger">Token claim process has been failed. <a href="<?php echo env('bscscanHash'); ?>tx/' + receipt.transactionHash + '" target="_blank">Click here </a> to check transaction status.</div>');
-                                }, 3000);
-                            }
-
-                        });
+            async function changeToMain() {
+                await ethereum.request({
+                    method: "wallet_switchEthereumChain",
+                    // params: [{ chainId: "0x38" }], //MAIN BSC
+                    params: [{
+                        chainId: "0x61"
+                    }], //TESTNET BSC
                 });
-        }
+            }
 
-        function update_claim(id, num, status, transaction, tran_data) {
-            $.ajax({
-                type: 'POST',
-                url: '<?php echo SITEURL; ?>users/update_claim',
-                data: {
-                    id: id,
-                    amt: num,
-                    status: status,
-                    transaction_id: transaction,
-                    tran_data: tran_data
-                },
-                success: function(data) {
-                    $("#aj_res").html(data);
-                },
-                error: function(comment) {
-                    $("#aj_res").html(comment);
-                }
-            });
-        }
+            async function token_claim(id, num) {
+                $("#sub_data").html('');
+                $("#btn_locader").addClass('is-active');
+                web3 = new Web3(Web3.givenProvider);
+                await Web3.givenProvider.enable(); // waiting for metamask provider connectivity
+                //   Get your metamask wallet provider Chain ID
+                chainId = await web3.eth.getChainId();
+                //   Request for get wallet address from metamask
+                await ethereum
+                    .request({
+                        method: "eth_requestAccounts"
+                    })
+                    .then(async (account) => {
+                        if (chainId != 97) {
+                            await changeToMain();
+                        }
+                        //   Claim contract web3 instance
+                        instance = new web3.eth.Contract(CLAIM_CONTRACT_ABI, CLAIM_CONTRACT_ADDRESS);
+                        //   sending claim function tx from metamask selected account
+                        instance.methods.claim(account[0], web3.utils.toWei('' + num + '', "ether"))
+                            .send({
+                                from: account[0]
+                            })
+                            .on("transactionHash", async (hash) => {
+                                $("#btn_locader").attr('data-curtain-text', 'Processing...');
+                                // get tx hash
+                                console.log('Hello 1');
+                                console.log(hash);
+                                update_claim(id, num, 2, hash, '');
+                                $('#sub_data').html('<div class="alert alert-info">Token claim process has been initiated. <a href="<?php echo env('bscscanHash'); ?>tx/' + hash + '" target="_blank">Click here </a> to check transaction status.</div>');
+                            })
+                            .on("receipt", async (receipt) => {
+                                // receipt.status will return your tx status. true & false
+                                console.log('Hello 2');
+                                console.log(receipt);
+                                if (receipt.status === true) {
+                                    $("#btn_locader").attr('data-curtain-text', 'Token Claimed...');
+                                    update_claim(id, num, 3, receipt.transactionHash, receipt);
+                                    setTimeout(function() {
+                                        $("#btn_locader").removeClass('is-active');
+                                        $('#sub_data').html('<div class="alert alert-success">Tokens has been claimed successfully. <a href="<?php echo env('bscscanHash'); ?>tx/' + receipt.transactionHash + '" target="_blank">Click here </a> to check transaction status.</div>');
+                                    }, 1000);
+                                } else {
+                                    $("#btn_locader").attr('data-curtain-text', 'Transaction failed...');
+                                    update_claim(id, num, 4, receipt.transactionHash, receipt);
+                                    setTimeout(function() {
+                                        $("#btn_locader").removeClass('is-active');
+                                        $('#sub_data').html('<div class="alert alert-danger">Token claim process has been failed. <a href="<?php echo env('bscscanHash'); ?>tx/' + receipt.transactionHash + '" target="_blank">Click here </a> to check transaction status.</div>');
+                                    }, 2000);
+                                }
+                            })
+                            .on('confirmation', function(confirmationNumber, receipt) {
+                                // console.log('Hello 3'); console.log(confirmationNumber);  console.log(receipt);
+                            })
+                            .on('error', function(error, receipt) {
+                                console.log('Hello 4');
+                                console.log(error);
+                                console.log(receipt);
+                                if (error.code === 4001) {
+                                    $("#btn_locader").attr('data-curtain-text', 'Transaction Canceled...');
+                                    setTimeout(function() {
+                                        $("#btn_locader").removeClass('is-active');
+                                        $('#sub_data').html('<div class="alert alert-danger">Token claim process has been failed.</div>');
+                                    }, 3000);
+                                } else {
+                                    $("#btn_locader").attr('data-curtain-text', 'Transaction failed...');
+                                    update_claim(id, num, 4, receipt.transactionHash, receipt);
+                                    setTimeout(function() {
+                                        $("#btn_locader").removeClass('is-active');
+                                        $('#sub_data').html('<div class="alert alert-danger">Token claim process has been failed. <a href="<?php echo env('bscscanHash'); ?>tx/' + receipt.transactionHash + '" target="_blank">Click here </a> to check transaction status.</div>');
+                                    }, 3000);
+                                }
 
-        function chk_claim(id) {
-            $("#btn_locader").attr('data-curtain-text', 'Updating...');
-            $("#btn_" + id).prop("disabled", true);
-            $("#btn_" + id).val('wait...');
-            $.ajax({
-                type: 'POST',
-                url: SITEURL + 'users/check_claim',
-                headers: {
-                    'X-CSRF-Token': $('[name="_csrfToken"]').val()
-                },
-                data: {
-                    id: id
-                },
-                success: function(data) {
-                    $("#sub_data").html(data);
-                    $("#btn_" + id).prop("disabled", false);
-                    $("#btn_" + id).val('Claim');
-                },
-                error: function(comment) {
-                    $("#sub_data").html(comment);
-                    $("#btn_" + id).prop("disabled", false);
-                    $("#btn_" + id).val('Claim');
-                }
-            });
+                            });
+                    });
+            }
+
+            function update_claim(id, num, status, transaction, tran_data) {
+                $.ajax({
+                    type: 'POST',
+                    url: '<?php echo SITEURL; ?>users/update_claim',
+                    data: {
+                        id: id,
+                        amt: num,
+                        status: status,
+                        transaction_id: transaction,
+                        tran_data: tran_data
+                    },
+                    success: function(data) {
+                        $("#aj_res").html(data);
+                    },
+                    error: function(comment) {
+                        $("#aj_res").html(comment);
+                    }
+                });
+            }
+
+            function chk_claim(id) {
+                $("#btn_locader").attr('data-curtain-text', 'Updating...');
+                $("#btn_" + id).prop("disabled", true);
+                $("#btn_" + id).val('wait...');
+                $.ajax({
+                    type: 'POST',
+                    url: SITEURL + 'users/check_claim',
+                    headers: {
+                        'X-CSRF-Token': $('[name="_csrfToken"]').val()
+                    },
+                    data: {
+                        id: id
+                    },
+                    success: function(data) {
+                        $("#sub_data").html(data);
+                        $("#btn_" + id).prop("disabled", false);
+                        $("#btn_" + id).val('Claim');
+                    },
+                    error: function(comment) {
+                        $("#sub_data").html(comment);
+                        $("#btn_" + id).prop("disabled", false);
+                        $("#btn_" + id).val('Claim');
+                    }
+                });
 
 
-        };
-    </script>
+            };
+        </script>
+    <?php } ?>
 
 </div>
