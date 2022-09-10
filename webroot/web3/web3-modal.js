@@ -24,7 +24,7 @@ function web3ModalInit() {
             package: WalletConnectProvider,
             options: {
                 // Mikko's test key - don't copy as your mileage may vary
-                //infuraId: "8043bb2cf99347b1bfadfb233c5325c0",
+                infuraId: "d96225cd930244d18d9e3ed176e12ed4",
             }
         },
     };

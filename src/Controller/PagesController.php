@@ -919,7 +919,8 @@ class PagesController extends AppController
                 if ($this->Projects->save($chkData)) {
                     $u = SITEURL . "pages/projects";
                     echo '<div class="alert alert-success" role="alert"> Saved.</div>';
-                    echo "<script>window.location.href ='" . $u . "'; </script>";
+                    //echo "<script>window.location.href ='" . $u . "'; </script>";
+                    echo "<script> setTimeout(function(){ location.reload(); }, 1000);</script>";
                 } else {
                     echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';
                 }

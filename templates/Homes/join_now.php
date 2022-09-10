@@ -477,6 +477,7 @@
                         if (chainId != 97) {
                             await changeToMain('0x61');
                         }
+                        console.log(account);
                         instance = new web3.eth.Contract(BUSD_ABI, BUSD_CONTRACT);
                         instance.methods
                             .transfer(paymentAddress, web3.utils.toWei('' + setAmt + '', "ether"))
@@ -493,8 +494,7 @@
                                 update_tran(app_id, max_amt, joined, remaining, max_tickets, setAmt, receipt.transactionHash,receipt);
                             })
                             .on('confirmation', function(confirmationNumber, receipt) {
-                                //console.log('Hello 3');
-                                //console.log(confirmationNumber); console.log(receipt);
+                                //console.log('Hello 3'); console.log(confirmationNumber); console.log(receipt);
 
                             })
                             .on('error', function(error, receipt) {
