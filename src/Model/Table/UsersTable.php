@@ -40,10 +40,11 @@ class UsersTable extends Table
             "valid_email" => ["rule" => ["email"],"message" => "Email Address is not valid"]])
 
 
-        ->requirePresence("password")
+        /*->requirePresence("password")
         ->notEmptyString("password", "Password is required")
         ->minLength("password", 6, "Password must be 6-20 characters")
-        ->maxLength("password", 20, "Password must be 6-20 characters");
+        ->maxLength("password", 20, "Password must be 6-20 characters")*/
+        ;
         
         return $validator;
     }

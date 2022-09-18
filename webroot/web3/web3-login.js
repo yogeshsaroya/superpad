@@ -79,8 +79,24 @@ async function userLoginOut() {
     }
 }
 
+    /**
+     * Kick in the UI action after Web3modal dialog has chosen a provider
+     */
+     async function changeToMain(id) {
+        try {
+          await ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: id }],
+          });
+        } catch (error) {
+          console.log("Wrong network");
+          wrong_network();
+          
+        }
+      }
 
 async function userLogin() {
+    /*
     if (userLoginData.state == "loggedIn") {
         userLoginData.state = "loggedOut";
         showMsg(userLoginData.state);
@@ -94,6 +110,22 @@ async function userLogin() {
         showMsg(userLoginData.state);
         return;
     }
+    */
+
+    // Get connected chain id from Ethereum node
+    const chainId = await web3.eth.getChainId();
+    console.log("chain id", chainId);
+    //if (chainId != 56) { await changeToMain("0x38"); }
+    if (chainId != 97) {
+      try {
+        await changeToMain("0x61");
+      } catch (error) {
+        //wrong_network();
+      }
+    }
+    else{
+    }
+
     let accountsOnEnable = await web3.eth.getAccounts();
     let address = accountsOnEnable[0];
     address = address.toLowerCase();
@@ -184,6 +216,7 @@ async function userLogin() {
             console.log('Hello 8');
             console.error(error);
         });
+    
 }
 
 /*

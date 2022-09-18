@@ -46,8 +46,9 @@ class UsersController extends AppController
 
         /* https://book.cakephp.org/4/en/controllers/components/authentication.html#AuthComponent::allow */
         $this->Auth->allow([
-            'login', 'register', 'backend', 'backendRestPassword', 'logout', 'check', 'gAuth',
-            'forgetPassword', 'check_metamask'
+            'login', 'register', 'check', 'gAuth',
+            'backend', 'backendRestPassword', 'logout',
+            'forgetPassword', 'check_metamask', 'connectWallet', 'checkMetamask'
         ]);
 
         // Form helper https://codethepixel.com/tutorial/cakephp/cakephp-4-common-helpers
@@ -61,11 +62,72 @@ class UsersController extends AppController
     {
     }
 
+
+    public function checkMetamask()
+    {
+        $this->autoRender = false;
+        $session = $this->getRequest()->getSession();
+        $getData = $this->request->getData();
+        if (!empty($getData)) {
+            if ($getData['request'] == 'login') {
+                echo "Welcome to SuperPAD";
+            } elseif ($getData['request'] == 'auth') {
+                if (isset($getData['signature'])) {
+                    $verify = $this->Users->find('all')->where(['Users.status' => 1, 'Users.role' => 2, 'Users.metamask_wallet_id' => $getData['address']])->first();
+                    if (!empty($verify)) {
+                        $this->Auth->setUser($verify);
+                        echo (json_encode(["Success"]));
+                    } else {
+                        $postData['id'] = null;
+                        $postData['metamask_wallet_id'] = $getData['address'];
+                        $postData['status'] = 1;
+                        $postData['role'] = 2;
+                        $getEnt = $this->Users->newEmptyEntity();
+                        $setData = $this->Users->patchEntity($getEnt, $postData, ['validate' => false]);
+                        if ($this->Users->save($setData)) {
+                            $this->Auth->setUser($setData);
+                            echo (json_encode(["Success"]));
+                        } else {
+                            echo (json_encode(["Fail"]));
+                        }
+                    }
+                } else {
+                    echo (json_encode(["Cancel"]));
+                }
+            }
+        }
+        exit;
+    }
+    public function connectWallet()
+    {
+        $session = $this->getRequest()->getSession();
+        $q = $this->request->getQuery();
+        if (isset($q['redirect']) && !empty($q['redirect'])) {
+            $qr = $q['redirect'];
+            unset($q['redirect']);
+            if (!empty($q)) {
+                $qr .= "?" . http_build_query($q);
+            }
+            $session->write('redirect', $qr);
+        }
+        
+        if($this->Auth->user('id')){
+            $user_data = $this->Users->findById($this->Auth->user('id'))->first();
+            if (!empty($user_data->metamask_wallet_id)) {
+                return $this->redirect('/dashboard');
+                exit;
+            }
+    
+        }
+    }
+
     /**
      * Admin password reset page
      */
     public function register()
     {
+        return $this->redirect('/connect-wallet');
+        exit;
         $session = $this->getRequest()->getSession();
         $q = $this->request->getQuery();
 
@@ -119,6 +181,8 @@ class UsersController extends AppController
      */
     public function login()
     {
+        return $this->redirect('/connect-wallet');
+        exit;
         $session = $this->getRequest()->getSession();
         $q = $this->request->getQuery();
         if (isset($q['redirect']) && !empty($q['redirect'])) {
@@ -259,6 +323,8 @@ class UsersController extends AppController
 
     public function forgetPassword()
     {
+        return $this->redirect('/connect-wallet');
+        exit;
         $user_data = null;
         $this->set(compact('user_data'));
         if ($this->Auth->User('id') != "") {
@@ -314,6 +380,8 @@ class UsersController extends AppController
     /* Login via Google */
     public function gAuth()
     {
+        return $this->redirect('/connect-wallet');
+        exit;
         $session = $this->getRequest()->getSession();
         $q = $this->request->getQuery();
 
@@ -505,45 +573,6 @@ class UsersController extends AppController
         return null;
     }
 
-    public function checkMetamask()
-    {
-        $this->autoRender = false;
-        $getData = $this->request->getData();
-        if (!empty($getData)) {
-
-            if ($getData['request'] == 'login') {
-                //ec("Login : ");ec($getData);
-                echo "Welcome to SuperPAD";
-            } elseif ($getData['request'] == 'auth') {
-                if (isset($getData['signature'])) {
-                    if ($this->Auth->User('id') != "") {
-                        $verify = $this->Users->find('all')
-                            ->where(['Users.status' => 1, 'Users.role' => 2, 'Users.id' => $this->Auth->User('id')])
-                            ->first();
-                        if (!empty($verify)) {
-                            $up_arr = ['id' => $verify->id, 'metamask_wallet_id' => $getData['address']];
-                            $user1 = $this->Users->newEntity($up_arr, ['validate' => 'WalletAddress']);
-                            if ($user1->getErrors()) {
-                                echo (json_encode(['Error', 'This wallet address is already in use with other account.']));
-                                exit;
-                            } else {
-                                $this->Users->save($user1);
-                                echo (json_encode(["Success"]));
-                            }
-                        } else {
-                            echo (json_encode(["Fail"]));
-                        }
-                    } else {
-                        echo (json_encode(["Fail"]));
-                    }
-                } else {
-                    echo (json_encode(["Cancel"]));
-                }
-            }
-        }
-        exit;
-    }
-
 
     public function applicationStatus()
     {
@@ -555,24 +584,13 @@ class UsersController extends AppController
         $this->set(compact('data'));
     }
 
-    public function connectWallet()
-    {
-        $user_data = $this->Users->findById($this->Auth->user('id'))->first();
-        if (!empty($user_data->metamask_wallet_id)) {
-            //$this->redirect('/users/wallet');
-        }
-    }
+
 
     public function dashboard()
     {
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             $postData = $this->request->getData();
             $val = ['validate' => true];
-            if (!empty($postData['password1'])) {
-                $postData['password'] = $postData['password1'];
-            } else {
-                $val = ['validate' => 'OnlyCheck'];
-            }
             if (isset($postData['id']) && !empty($postData['id'])) {
                 $getBlog = $this->Users->get($postData['id']);
                 $chkBlog = $this->Users->patchEntity($getBlog, $postData, $val);
@@ -957,12 +975,12 @@ class UsersController extends AppController
                     if (in_array($arr->transaction_status, [1, 4])) {
                         //$arr->total_token
                         if (strtotime(DATE) > strtotime($arr->claim_from->format("Y-m-d H:i:s"))) {
-                            if( ($arr->application->available_token + $arr->application->claimed_token) ==  $arr->application->total_token){
+                            if (($arr->application->available_token + $arr->application->claimed_token) ==  $arr->application->total_token) {
                                 echo "<script>token_claim(" . $arr->id . "," . $arr->total_token . ");</script>";
-                            }else{
-                                echo "<div class='alert alert-danger'>Sorry, something went wrong. Please contact support.</div>";exit;    
+                            } else {
+                                echo "<div class='alert alert-danger'>Sorry, something went wrong. Please contact support.</div>";
+                                exit;
                             }
-                            
                         } else {
                             echo "<div class='alert alert-danger'>You can claim tokens " . $arr->claim_from->format("Y-m-d h:i A") . " after </div>";
                             exit;
@@ -992,34 +1010,33 @@ class UsersController extends AppController
                 $data =  $query->first();
                 if (!empty($data)) {
                     $data->transaction_id = $postData['transaction_id'];
-                    if(!empty($postData['tran_data'])){
+                    if (!empty($postData['tran_data'])) {
                         $data->transaction_data = json_encode($postData['tran_data']);
-                    }else{
+                    } else {
                         $data->transaction_data = null;
                     }
-                    
+
                     $data->transaction_status = $postData['status'];
-                    if($postData['status'] == 3){
+                    if ($postData['status'] == 3) {
                         /* If Claimed */
                         $data->claimed_date = DATE;
                         $total_claimed_token =  $data->application->claimed_token + $data->total_token;
                         $available_token = $data->application->available_token - $data->total_token;
                         $data->application->claimed_token = $total_claimed_token;
                         $data->application->available_token = $available_token;
-                    }else{
+                    } else {
                         $data->claimed_date = null;
                     }
-                    
+
                     $this->fetchTable('Claims')->save($data);
                     $this->Applications->save($data->application);
-                    if ( (int)$postData['status'] == 2) {
+                    if ((int)$postData['status'] == 2) {
                         /* If Pending */
                         echo "<script>$('#btn_" . $postData['id'] . "').remove(); $('#on_" . $postData['id'] . "').html(''); $('#st_" . $postData['id'] . "').html('<span class=\'badge bg-warning\'>Pending</span>'); $('#hash_" . $postData['id'] . "').html('<a href=\'" . env('bscscanHash') . "tx/" . $postData['transaction_id'] . "\' target=\'_blank\'>View</a>'); </script>";
-                    } elseif ( (int)$postData['status'] == 3) {
+                    } elseif ((int)$postData['status'] == 3) {
                         /* If Claimed */
                         echo "<script>$('#btn_" . $postData['id'] . "').remove(); $('#on_" . $postData['id'] . "').html('" . DATE . "'); $('#st_" . $postData['id'] . "').html('<span class=\'badge bg-success\'>Completed</span>');  $('#hash_" . $postData['id'] . "').html('<a href=\'" . env('bscscanHash') . "tx/" . $postData['transaction_id'] . "\' target=\'_blank\'>View</a>'); </script>";
-                    }
-                    elseif ( (int)$postData['status'] == 4) {
+                    } elseif ((int)$postData['status'] == 4) {
                         /* If Failed */
                         echo "<script>$('#btn_" . $postData['id'] . "').remove(); $('#on_" . $postData['id'] . "').html(''); $('#st_" . $postData['id'] . "').html('<span class=\'badge bg-danger\'>Failed</span>');  $('#hash_" . $postData['id'] . "').html('<a href=\'" . env('bscscanHash') . "tx/" . $postData['transaction_id'] . "\' target=\'_blank\'>View</a>'); </script>";
                     }

@@ -1,0 +1,1134 @@
+<html>
+
+<head>
+  <title>Simple vanilla JS example of Web3modal usage</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Get some bootstrap default styles -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+</head>
+
+<body>
+  <!-- Construct a Bootstrap layout -->
+  <div class="container" style="display: flex; justify-content: center">
+    <div class="row">
+      <div class="col-md-12" style="margin-top: 20px">
+        <!-- <h1>Web3modal vanilla JavaScript demo</h1>
+  
+            <p>No wallet connected. Connect wallet to show accounts and their ETH balances.</p> -->
+
+        <div id="prepare" class="mt-5">
+          <button class="btn btn-primary mt-5" id="btn-connect">
+            Connect wallet
+          </button>
+        </div>
+
+        <div id="connected" style="">
+          <button class="btn btn-primary" id="btn-disconnect">Disconnect wallet
+          </button>
+          </div>
+
+          <hr />
+
+          <div id="network">
+            <p>
+              <strong>Selected account:</strong>
+              <span id="selected-account"></span>
+            </p>
+          </div>
+
+          <hr />
+          <div>
+            <input type="number" id="busd_amount" />
+            <button class="btn btn-primary" id="btn-busd">Pay BUSD</button>
+            <button class="btn btn-primary" id="btn-bnb">Pay BNB</button>
+          </div>
+          <hr />
+          <div>
+            <input type="number" id="claimAmount" />
+            <button class="btn btn-primary" id="btn-claim">Claim Now</button>
+          </div>
+
+          <div>
+            <h4>Sign Msg</h4>
+            <input type="text" id="msg" />
+            <button class="btn btn-primary" id="btn-Sign">Sign Msg</button>
+
+            <p>
+              <strong>Sign Msg Hash: </strong>
+              <small id="smh"></small>
+            </p>
+
+            <p>
+              <strong>Signature: </strong>
+              <small id="signMsg"></small>
+            </p>
+          </div>
+
+          <div>
+            <h4>Verify Sign Msg</h4>
+            <input type="text" id="vmsg" placeholder="Msg" />
+            <input type="text" id="vmsgSign" placeholder="Signature" />
+            <button class="btn btn-primary" id="btn-vSign">Verify Msg</button>
+
+            <p>
+              <strong>Is Verified ? </strong>
+              <small id="vm"></small>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- We use simple <template> templating for the example -->
+  <div id="templates" style="display: none">
+    <template id="template-balance">
+      <tr>
+        <th class="address"></th>
+        <td class="balance"></td>
+      </tr>
+    </template>
+  </div>
+
+  <!--
+  
+        Use unpkg CDN to load all NPM packages to vanilla Javascript - read more at http://unpkg.com
+  
+        On your deployment, you properly either want to use a preprocessing tool like webpack
+        to include these files, or extract NPM archives and manually host the files inside.
+  
+        TODO: Pin down all versions.
+  
+      -->
+  <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
+  <script src="https://unpkg.com/web3@latest/dist/web3.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/web3modal"></script>
+  <script type="text/javascript" src="https://unpkg.com/@walletconnect/web3-provider"></script>
+
+  <!-- This is our example code -->
+  <script type="text/javascript">
+    "use strict";
+
+    /**
+     * Example JavaScript code that interacts with the page and Web3 wallets
+     */
+    const CLAIM_CONTRACT_ADDRESS =
+      "0xb13ef804803b5aa8dd3aaf8ce4341a42421eeca4";
+    const CLAIM_CONTRACT_ABI = [
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "_BEP20Address",
+            type: "address",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "constructor",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: "address",
+            name: "previousOwner",
+            type: "address",
+          },
+          {
+            indexed: true,
+            internalType: "address",
+            name: "newOwner",
+            type: "address",
+          },
+        ],
+        name: "OwnershipTransferred",
+        type: "event",
+      },
+      {
+        inputs: [],
+        name: "BEP20Address",
+        outputs: [
+          {
+            internalType: "contract IBEP20",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "_BEP20Address",
+            type: "address",
+          },
+        ],
+        name: "ChangeTokenAddress",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "_claimer",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "_amount",
+            type: "uint256",
+          },
+        ],
+        name: "claim",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "owner",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "renounceOwnership",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "newOwner",
+            type: "address",
+          },
+        ],
+        name: "transferOwnership",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+    ];
+
+    const paymentAddress = "0x819D387045e7853ce0C0126ee4D69ce61047593E";
+    const BUSD_CONTRACT = "0x50adc5ac7ba0c3676ecdb0a2e9cd448325e6f3a2";
+    const BUSD_ABI = [
+      {
+        inputs: [],
+        stateMutability: "nonpayable",
+        type: "constructor",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: "address",
+            name: "owner",
+            type: "address",
+          },
+          {
+            indexed: true,
+            internalType: "address",
+            name: "spender",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "value",
+            type: "uint256",
+          },
+        ],
+        name: "Approval",
+        type: "event",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "spender",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
+        name: "approve",
+        outputs: [
+          {
+            internalType: "bool",
+            name: "",
+            type: "bool",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
+        name: "burn",
+        outputs: [
+          {
+            internalType: "bool",
+            name: "",
+            type: "bool",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "spender",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "subtractedValue",
+            type: "uint256",
+          },
+        ],
+        name: "decreaseAllowance",
+        outputs: [
+          {
+            internalType: "bool",
+            name: "",
+            type: "bool",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "spender",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "addedValue",
+            type: "uint256",
+          },
+        ],
+        name: "increaseAllowance",
+        outputs: [
+          {
+            internalType: "bool",
+            name: "",
+            type: "bool",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
+        name: "mint",
+        outputs: [
+          {
+            internalType: "bool",
+            name: "",
+            type: "bool",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: "address",
+            name: "previousOwner",
+            type: "address",
+          },
+          {
+            indexed: true,
+            internalType: "address",
+            name: "newOwner",
+            type: "address",
+          },
+        ],
+        name: "OwnershipTransferred",
+        type: "event",
+      },
+      {
+        inputs: [],
+        name: "renounceOwnership",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "recipient",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
+        name: "transfer",
+        outputs: [
+          {
+            internalType: "bool",
+            name: "",
+            type: "bool",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        anonymous: false,
+        inputs: [
+          {
+            indexed: true,
+            internalType: "address",
+            name: "from",
+            type: "address",
+          },
+          {
+            indexed: true,
+            internalType: "address",
+            name: "to",
+            type: "address",
+          },
+          {
+            indexed: false,
+            internalType: "uint256",
+            name: "value",
+            type: "uint256",
+          },
+        ],
+        name: "Transfer",
+        type: "event",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "sender",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "recipient",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+        ],
+        name: "transferFrom",
+        outputs: [
+          {
+            internalType: "bool",
+            name: "",
+            type: "bool",
+          },
+        ],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "newOwner",
+            type: "address",
+          },
+        ],
+        name: "transferOwnership",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "_decimals",
+        outputs: [
+          {
+            internalType: "uint8",
+            name: "",
+            type: "uint8",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "_name",
+        outputs: [
+          {
+            internalType: "string",
+            name: "",
+            type: "string",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "_symbol",
+        outputs: [
+          {
+            internalType: "string",
+            name: "",
+            type: "string",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "owner",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "spender",
+            type: "address",
+          },
+        ],
+        name: "allowance",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "account",
+            type: "address",
+          },
+        ],
+        name: "balanceOf",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "decimals",
+        outputs: [
+          {
+            internalType: "uint8",
+            name: "",
+            type: "uint8",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "getOwner",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "name",
+        outputs: [
+          {
+            internalType: "string",
+            name: "",
+            type: "string",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "owner",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "symbol",
+        outputs: [
+          {
+            internalType: "string",
+            name: "",
+            type: "string",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+      {
+        inputs: [],
+        name: "totalSupply",
+        outputs: [
+          {
+            internalType: "uint256",
+            name: "",
+            type: "uint256",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+    ];
+
+    const signContract = "0x62275ddDa281fD63B76fe2a1875Ef904Da795F6E";
+    const signABI = [
+      {
+        inputs: [
+          {
+            internalType: "bytes32",
+            name: "_messageHash",
+            type: "bytes32",
+          },
+        ],
+        name: "getEthSignedMessageHash",
+        outputs: [
+          {
+            internalType: "bytes32",
+            name: "",
+            type: "bytes32",
+          },
+        ],
+        stateMutability: "pure",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "string",
+            name: "_message",
+            type: "string",
+          },
+        ],
+        name: "getMessageHash",
+        outputs: [
+          {
+            internalType: "bytes32",
+            name: "",
+            type: "bytes32",
+          },
+        ],
+        stateMutability: "pure",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "bytes32",
+            name: "_ethSignedMessageHash",
+            type: "bytes32",
+          },
+          {
+            internalType: "bytes",
+            name: "_signature",
+            type: "bytes",
+          },
+        ],
+        name: "recoverSigner",
+        outputs: [
+          {
+            internalType: "address",
+            name: "",
+            type: "address",
+          },
+        ],
+        stateMutability: "pure",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "bytes",
+            name: "sig",
+            type: "bytes",
+          },
+        ],
+        name: "splitSignature",
+        outputs: [
+          {
+            internalType: "bytes32",
+            name: "r",
+            type: "bytes32",
+          },
+          {
+            internalType: "bytes32",
+            name: "s",
+            type: "bytes32",
+          },
+          {
+            internalType: "uint8",
+            name: "v",
+            type: "uint8",
+          },
+        ],
+        stateMutability: "pure",
+        type: "function",
+      },
+      {
+        inputs: [
+          {
+            internalType: "address",
+            name: "_signer",
+            type: "address",
+          },
+          {
+            internalType: "string",
+            name: "_message",
+            type: "string",
+          },
+          {
+            internalType: "bytes",
+            name: "signature",
+            type: "bytes",
+          },
+        ],
+        name: "verify",
+        outputs: [
+          {
+            internalType: "bool",
+            name: "",
+            type: "bool",
+          },
+        ],
+        stateMutability: "pure",
+        type: "function",
+      },
+    ];
+
+    // Unpkg imports
+    const Web3Modal = window.Web3Modal.default;
+    const WalletConnectProvider = window.WalletConnectProvider.default;
+    // Web3modal instance
+    let web3Modal;
+    // Chosen wallet provider given by the dialog window
+    let provider;
+    // Address of the selected account
+    let selectedAccount;
+    /**
+     * Setup the orchestra
+     */
+    function init() {
+      // Tell Web3modal what providers we have available.
+      // Built-in web browser provider (only one can exist as a time)
+      // like MetaMask, Brave or Opera is added automatically by Web3modal
+      const options = new WalletConnectProvider({
+        rpc: {
+          97: "https://data-seed-prebsc-1-s1.binance.org:8545/",
+          // 56: 'https://bsc-dataseed1.binance.org',
+        },
+        infuraId: "6caa6ac543a94eacaf54e0ca062fcc99",
+      });
+      const providerOptions = {
+        walletconnect: {
+          package: WalletConnectProvider,
+          options: options,
+        },
+      };
+
+      web3Modal = new Web3Modal({
+        cacheProvider: false, // optional
+        providerOptions, // required
+      });
+    }
+
+    /**
+     * Kick in the UI action after Web3modal dialog has chosen a provider
+     */
+    async function changeToMain(id) {
+      try {
+        await ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: id }],
+        });
+      } catch (error) {
+        console.log("Wrong network");
+        document.querySelector("#btn-connect").removeAttribute("disabled");
+      }
+    }
+
+    async function payBNB() {
+      try {
+        let amount = document.getElementById("busd_amount").value;
+        if (amount != "") {
+          if (amount > 0) {
+            const web3 = new window.Web3(provider);
+            let chainId = await web3.eth.getChainId();
+            //if (chainId != 56) { await changeToMain("0x38"); }
+            if (chainId != 97) {
+              await changeToMain("0x61");
+            }
+            amount = web3.utils.toWei(amount.toString());
+            await web3.eth
+              .sendTransaction(
+                {
+                  from: selectedAccount,
+                  to: paymentAddress,
+                  value: amount,
+                },
+                (err, transactionId) => {
+                  if (err) {
+                    console.log("Payment failed", err);
+                  } else {
+                    console.log("Payment successful", transactionId);
+                  }
+                }
+              )
+              .on("transactionHash", function (hash) {
+                console.log("transactionHash", hash);
+              })
+              .on("receipt", function (receipt) {
+                console.log(receipt.transactionHash);
+              })
+              .on("confirmation", function (confirmationNumber, receipt) {
+                //console.log(confirmationNumber); console.log(receipt);
+              })
+              .on("error", function (error, receipt) {
+                console.log(error);
+                // $("#btn_locader").removeClass('is-active');
+                // $('#f_err').html('<div class="alert alert-danger">Payment Failed</div>');
+              });
+          } else {
+            alert("Enter amount should be greater than zero");
+          }
+        } else {
+          alert("Enter amount please");
+        }
+      } catch (error) {
+        console.error("error while pay bnb or busd", error);
+      }
+    }
+
+    async function paybusd() {
+      try {
+        let amount = document.getElementById("busd_amount").value;
+        if (amount != "") {
+          if (amount > 0) {
+            const web3 = new window.Web3(provider);
+            let chainId = await web3.eth.getChainId();
+            //if (chainId != 56) { await changeToMain("0x38"); }
+            if (chainId != 97) {
+              await changeToMain("0x61");
+            }
+            const contract = new web3.eth.Contract(BUSD_ABI, BUSD_CONTRACT);
+
+            await contract.methods
+              .transfer(
+                paymentAddress,
+                web3.utils.toWei(amount.toString(), "ether")
+              )
+              .send({
+                from: selectedAccount,
+              })
+              .on("transactionHash", function (hash) {
+                console.log("transactionHash", hash);
+              })
+              .on("receipt", function (receipt) {
+                console.log(receipt.transactionHash);
+              })
+              .on("confirmation", function (confirmationNumber, receipt) {
+                //console.log(confirmationNumber); console.log(receipt);
+              })
+              .on("error", function (error, receipt) {
+                console.log(error);
+                // $("#btn_locader").removeClass('is-active');
+                // $('#f_err').html('<div class="alert alert-danger">Payment Failed</div>');
+              });
+          } else {
+            alert("Enter amount should be greater than zero");
+          }
+        } else {
+          alert("Enter amount please");
+        }
+      } catch (error) {
+        console.error("error while pay bnb or busd", error);
+      }
+    }
+
+    async function claim(amount) {
+      try {
+        let amount = document.getElementById("claimAmount").value;
+        if (amount != "") {
+          if (amount > 0) {
+            const web3 = new window.Web3(provider);
+            let chainId = await web3.eth.getChainId();
+            //if (chainId != 56) { await changeToMain("0x38"); }
+            if (chainId != 97) {
+              await changeToMain("0x61");
+            }
+            const contract = new web3.eth.Contract(
+              CLAIM_CONTRACT_ABI,
+              CLAIM_CONTRACT_ADDRESS
+            );
+            amount = web3.utils.toWei(amount.toString());
+            await contract.methods
+              .claim(selectedAccount, amount)
+              .send({
+                from: selectedAccount,
+              })
+              .on("transactionHash", function (hash) {
+                console.log("transactionHash", hash);
+              })
+              .on("receipt", function (receipt) {
+                console.log(receipt.transactionHash);
+              })
+              .on("confirmation", function (confirmationNumber, receipt) {
+                console.log(confirmationNumber);
+                console.log(receipt);
+              })
+              .on("error", function (error, receipt) {
+                console.log(error);
+                // $("#btn_locader").removeClass('is-active');
+                // $('#f_err').html('<div class="alert alert-danger">Payment Failed</div>');
+              });
+          } else {
+            alert("Enter amount should be greater than zero");
+          }
+        } else {
+          alert("Enter amount please");
+        }
+      } catch (e) {
+        console.error("error while claim", e);
+      }
+    }
+
+    async function signMsg() {
+      let msg = document.getElementById("msg").value;
+
+      const web3 = new window.Web3(provider);
+      let chainId = await web3.eth.getChainId();
+      //if (chainId != 56) { await changeToMain("0x38"); }
+      if (chainId != 97) {
+        await changeToMain("0x61");
+      }
+      const contract = new web3.eth.Contract(signABI, signContract);
+
+      await contract.methods
+        .getMessageHash(msg)
+        .call()
+        .then((res) => {
+          document.querySelector("#smh").textContent = res;
+          ethereum
+            .request({
+              method: "personal_sign",
+              params: [selectedAccount, res],
+            })
+            .then((res) => {
+              console.log(res);
+              document.querySelector("#signMsg").textContent = res;
+            });
+        });
+    }
+
+    async function vSignMsg() {
+      let msg = document.getElementById("vmsg").value;
+      let sig = document.getElementById("vmsgSign").value;
+
+      const web3 = new window.Web3(provider);
+      let chainId = await web3.eth.getChainId();
+      //if (chainId != 56) { await changeToMain("0x38"); }
+      if (chainId != 97) {
+        await changeToMain("0x61");
+      }
+      const contract = new web3.eth.Contract(signABI, signContract);
+
+      await contract.methods
+        .verify(selectedAccount, msg, sig)
+        .call()
+        .then((res) => {
+          console.log(res);
+          document.querySelector("#vm").textContent = res;
+        });
+    }
+
+    async function fetchAccountData() {
+      // Get a Web3 instance for the wallet
+      const web3 = new window.Web3(provider);
+
+      console.log("Web3 instance is", web3);
+
+      // Get connected chain id from Ethereum node
+      const chainId = await web3.eth.getChainId();
+      console.log("chain id", chainId);
+      //if (chainId != 56) { await changeToMain("0x38"); }
+      if (chainId != 97) {
+        try {
+          await changeToMain("0x61");
+        } catch (error) {
+          document.querySelector("#btn-connect").removeAttribute("disabled");
+        }
+      }
+      // Get list of accounts of the connected wallet
+      const accounts = await web3.eth.getAccounts();
+
+      // MetaMask does not give you all accounts, only the selected account
+      console.log("Got accounts", accounts[0]);
+      selectedAccount = accounts[0];
+
+      document.querySelector("#selected-account").textContent = selectedAccount;
+
+      // document.querySelector("#prepare").style.display = "none";
+      // document.querySelector("#connected").style.display = "block";
+    }
+
+    async function refreshAccountData() {
+       document.querySelector("#connected").style.display = "none";
+       document.querySelector("#prepare").style.display = "block";
+      document.querySelector("#btn-connect").setAttribute("disabled", "disabled")
+      document.querySelector("#btn-connect").removeAttribute("disabled");
+      await fetchAccountData();
+    }
+
+    /**
+     * Connect wallet button pressed.
+     */
+    async function onConnect() {
+      console.log("Opening a dialog", web3Modal);
+      try {
+        provider = await web3Modal.connect();
+        console.log("provider", provider);
+      } catch (e) {
+        console.log("Error 123");
+        console.log("Could not get a wallet connection", e);
+        return;
+      }
+
+      // Subscribe to accounts change
+      provider.on("accountsChanged", (accounts) => {
+        console.log("Account Changed");
+        fetchAccountData();
+      });
+
+      // Subscribe to chainId change
+      provider.on("chainChanged", (chainId) => {
+        console.log("ChainID Changed");
+        fetchAccountData();
+      });
+
+      // Subscribe to networkId change
+      provider.on("networkChanged", (networkId) => {
+        console.log("Network Changed");
+        fetchAccountData();
+      });
+
+      await refreshAccountData();
+    }
+
+    /**
+     * Disconnect wallet button pressed.
+     */
+    async function onDisconnect() {
+      console.log("Killing the wallet connection", provider);
+
+      // TODO: Which providers have close method?
+      if (provider.close) {
+        await provider.close();
+
+        // If the cached provider is not cleared,
+        // WalletConnect will default to the existing session
+        // and does not allow to re-scan the QR code with a new wallet.
+        // Depending on your use case you may want or want not his behavir.
+        await web3Modal.clearCachedProvider();
+        provider = null;
+      }
+
+      selectedAccount = null;
+
+      // Set the UI back to the initial state
+       document.querySelector("#prepare").style.display = "block";
+       document.querySelector("#connected").style.display = "none";
+    }
+
+    /**
+     * Main entry point.
+     */
+    window.addEventListener("load", async () => {
+      init();
+      document.querySelector("#btn-connect").addEventListener("click", onConnect);
+      document.querySelector("#btn-disconnect").addEventListener("click", onDisconnect);
+      document.querySelector("#btn-claim").addEventListener("click", claim);
+      document.querySelector("#btn-busd").addEventListener("click", paybusd);
+      document.querySelector("#btn-bnb").addEventListener("click", payBNB);
+      document.querySelector("#btn-Sign").addEventListener("click", signMsg);
+      document.querySelector("#btn-vSign").addEventListener("click", vSignMsg);
+    });
+  </script>
+</body>
+
+</html>

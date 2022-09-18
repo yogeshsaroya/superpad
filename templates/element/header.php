@@ -44,22 +44,33 @@
                             if (in_array($Auth->role, [1, 2])) {
                                 if ($Auth->role == 1) {
                                     echo '<li class="menu-item"><a href="' . SITEURL . 'pages" class="menu-link">Backend</a></li>';
+                                    echo '<li class="menu-item"><a href="' . SITEURL . 'dashboard" class="menu-link">Dashboard</a></li>';
+                                    echo '<li class="menu-item"><a href="' . SITEURL . 'users/logout" class="menu-link">Logout</a></li>';
+                                } else {
+                                    echo '<li class="menu-item"><a href="' . SITEURL . 'dashboard" class="menu-link">Dashboard</a></li>';
                                 }
-                        ?>
-                                <li class="menu-item"><a href="<?php echo SITEURL; ?>dashboard" class="menu-link">Dashboard</a></li>
-                                <li class="menu-item"><a href="<?php echo SITEURL; ?>users/logout" class="menu-link">Logout</a></li>
-
-                            <?php }
-                        } else { ?>
-                            <li class="menu-item"><a href="<?php echo SITEURL; ?>sign-in" class="menu-link">Sign In</a></li>
-                            <li class="menu-item"><a href="<?php echo SITEURL; ?>register" class="menu-link">Register</a></li>
-                        <?php } ?>
+                            }
+                        } ?>
                     </ul>
-                    <?php if (isset($Auth->role)  && empty($Auth->metamask_wallet_id)) { ?>
-                        <ul class="menu-btns">
-                            <li><a href="<?php echo SITEURL; ?>connect-wallet" class="btn btn-dark">Connect Wallet</a></li>
-                        </ul>
-                    <?php } ?>
+                    <?php if (isset($Auth->role) && !empty($Auth->role)) {
+                        $wallet = substr($Auth->metamask_wallet_id,0,2)."...".substr($Auth->metamask_wallet_id,-4);
+                        ?>
+                        <li class="menu-item has-sub">
+                            <a href="#" class="menu-link menu-toggle"><?php echo $wallet;?></a>
+                            <div class="menu-sub">
+                                <ul class="menu-list">
+                                    <li class="menu-item"><a href="<?php echo SITEURL; ?>users/logout" class="menu-link">Disconnect</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <?php } else {
+                        if ($this->request->getParam('action') !== 'connectWallet') {
+                        ?>
+                            <ul class="menu-btns">
+                                <li><a href="<?php echo SITEURL; ?>connect-wallet" class="btn btn-dark">Connect Wallet</a></li>
+                            </ul>
+                    <?php }
+                    } ?>
                 </nav>
                 <div class="header-overlay"></div>
             </div>

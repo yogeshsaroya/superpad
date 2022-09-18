@@ -1,8 +1,11 @@
 <?php $this->assign('title', 'Connect Wallet'); ?>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-<script type="text/javascript" src="https://unpkg.com/web3modal@1.9.0/dist/index.js"></script>
-<script type="text/javascript" src="https://unpkg.com/@walletconnect/web3-provider@1.2.1/dist/umd/index.min.js"></script>
+<script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
+  <script src="https://unpkg.com/web3@latest/dist/web3.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/web3modal"></script>
+  <script type="text/javascript" src="https://unpkg.com/@walletconnect/web3-provider"></script>
+
+
 <?php /*https://github.com/giekaton/php-metamask-user-login*/ ?>
 <style>
     
@@ -38,31 +41,6 @@
                     </div>
                 </div>
             </div>
-
-            
-            
-            <div class="col-lg-4 col-md-6">
-                <a href="javascript:void(0);" class="card card-full text-center">
-                    <div class="card-body card-body-s1 d-block">
-                        <img class="mb-4" src="<?php echo SITEURL;?>images/brand/wallet-connect.svg" alt="">
-                        <h4 class="card-title mb-3">WalletConnect</h4>
-                        <p class="card-text card-text-s1 mb-4">Open source protocol for connecting decentralised applications to mobile wallets.</p>
-                        <span class="btn btn-dark" onclick="claim();">Connect</span>
-                    </div>
-                </a>
-            </div>
-            <?php /* ?>
-            <div class="col-lg-4 col-md-6">
-                <a href="javascript:void(0);" class="card card-full text-center">
-                    <div class="card-body card-body-s1 d-block">
-                        <img class="mb-4" src="<?php echo SITEURL;?>images/brand/coinbase.svg" alt="">
-                        <h4 class="card-title mb-3">Coinbase</h4>
-                        <p class="card-text card-text-s1 mb-4">The easiest and most secure crypto wallet. No Coinbase account required to connect EnftyMart.</p>
-                        <span class="btn btn-dark">Connect</span>
-                    </div>
-                </a>
-            </div>
-            <?php */ ?>
         </div>
     </div>
 </section>
@@ -76,10 +54,9 @@
       document.getElementById('buttonText').remove();
 
 
-       $('#signTheMessage').html('<div class="alert alert-success">Your MetaMask wallet address been linked with your account.</div>');
-       var s = SITEURL+"users/wallet";
-       
-       //setTimeout(function(){ window.location.href =s; }, 2000);
+       $('#signTheMessage').html('<div class="alert alert-success">Your MetaMask wallet address been connected.</div>');
+       var s = SITEURL+"users/dashboard";
+       setTimeout(function(){ window.location.href =s; }, 2000);
     }
 
     function err_wallet(){
@@ -88,6 +65,10 @@
 
     function can_wallet(){
         $('#signTheMessage').html('<div class="alert alert-danger">Your request has been canceled. Please try again.</div>');
+    }
+
+    function wrong_network(){
+        $('#signTheMessage').html('<div class="alert alert-danger">Network not switched. Please switch network to Binance Smart Chain.</div>');
     }
 
     function fail_wallet(){
