@@ -41,16 +41,19 @@ async function fetchAccountData() {
 
     // Subscribe to accounts change
     provider.on("accountsChanged", (accounts) => {
+        console.log('Hello 1');
         console.log(accounts);
     });
 
     // Subscribe to chainId change
     provider.on("chainChanged", (chainId) => {
+        console.log('Hello 2');
         console.log(chainId);
     });
 
     // Subscribe to session disconnection
     provider.on("disconnect", (code, reason) => {
+        console.log('Hello 3');
         console.log(code, reason);
     });
 }

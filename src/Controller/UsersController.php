@@ -559,7 +559,7 @@ class UsersController extends AppController
     {
         $user_data = $this->Users->findById($this->Auth->user('id'))->first();
         if (!empty($user_data->metamask_wallet_id)) {
-            $this->redirect('/users/wallet');
+            //$this->redirect('/users/wallet');
         }
     }
 

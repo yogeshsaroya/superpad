@@ -39,17 +39,19 @@
                 </div>
             </div>
 
-            <?php /* ?>
+            
+            
             <div class="col-lg-4 col-md-6">
                 <a href="javascript:void(0);" class="card card-full text-center">
                     <div class="card-body card-body-s1 d-block">
                         <img class="mb-4" src="<?php echo SITEURL;?>images/brand/wallet-connect.svg" alt="">
                         <h4 class="card-title mb-3">WalletConnect</h4>
                         <p class="card-text card-text-s1 mb-4">Open source protocol for connecting decentralised applications to mobile wallets.</p>
-                        <span class="btn btn-dark">Connect</span>
+                        <span class="btn btn-dark" onclick="claim();">Connect</span>
                     </div>
                 </a>
             </div>
+            <?php /* ?>
             <div class="col-lg-4 col-md-6">
                 <a href="javascript:void(0);" class="card card-full text-center">
                     <div class="card-body card-body-s1 d-block">
@@ -77,11 +79,10 @@
        $('#signTheMessage').html('<div class="alert alert-success">Your MetaMask wallet address been linked with your account.</div>');
        var s = SITEURL+"users/wallet";
        
-       setTimeout(function(){ window.location.href =s; }, 2000);
+       //setTimeout(function(){ window.location.href =s; }, 2000);
     }
 
     function err_wallet(){
-        //document.getElementById('buttonText').removeAttribute("onclick");
         $('#signTheMessage').html('<div class="alert alert-danger">This wallet address is already in use with other account. Please use other account.</div>');
     }
 
@@ -91,7 +92,7 @@
 
     function fail_wallet(){
         $('#signTheMessage').html('<div class="alert alert-danger">Your request has been failed. Please try again.</div>');
-        setTimeout(function(){ location.reload(); }, 1000);
+        //setTimeout(function(){ location.reload(); }, 1000);
 
     }
 

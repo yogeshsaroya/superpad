@@ -11,18 +11,6 @@ if (typeof(backendPath) == 'undefined') {
     var backendPath = '';
 }
 
-
-// https://medium.com/valist/how-to-connect-web3-js-to-metamask-in-2020-fee2b2edf58a
-const ethEnabled = async() => {
-    if (window.ethereum) {
-        await window.ethereum.send('eth_requestAccounts');
-        window.web3 = new Web3(window.ethereum);
-        // return true;
-        ethInit();
-    }
-    return false;
-}
-
 function ethInit() {
     ethereum.on('accountsChanged', (_chainId) => ethNetworkUpdate());
 
@@ -70,6 +58,7 @@ function showButtonText() {
 
 
 async function userLoginOut() {
+    console.log(userLoginData);
     if (userLoginData.state == "loggedOut" || userLoginData.state == "needMetamask") {
         await onConnectLoadWeb3Modal();
     }
@@ -78,6 +67,7 @@ async function userLoginOut() {
         try {
             userLogin();
         } catch (error) {
+            console.log('Hello 4');
             console.log(error);
             userLoginData.state = 'needLogInToMetaMask';
             showMsg(userLoginData.state);
@@ -156,6 +146,7 @@ async function userLogin() {
                             },
                         })
                         .then(function(response) {
+                            console.log('Hello 5');
                             console.log(response.data);
                             if (response.data[0] == "Success") {
                                 rd();
@@ -180,14 +171,17 @@ async function userLogin() {
                             }
                         })
                         .catch(function(error) {
+                            console.log('Hello 6');
                             console.error(error);
                         });
                 }
             } else {
+                console.log('Hello 7');
                 console.log("Error: " + response.data);
             }
         })
         .catch(function(error) {
+            console.log('Hello 8');
             console.error(error);
         });
 }
