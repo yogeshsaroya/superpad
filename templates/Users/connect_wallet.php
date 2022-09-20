@@ -1,15 +1,7 @@
 <?php $this->assign('title', 'Connect Wallet'); ?>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js"></script>
-  <script src="https://unpkg.com/web3@latest/dist/web3.min.js"></script>
-  <script type="text/javascript" src="https://unpkg.com/web3modal"></script>
-  <script type="text/javascript" src="https://unpkg.com/@walletconnect/web3-provider"></script>
-
-
 <?php /*https://github.com/giekaton/php-metamask-user-login*/ ?>
 <style>
-    
-.hkzEld {
+ .hkzEld {
     z-index: 999;
 }    
 </style>
@@ -46,9 +38,6 @@
 </section>
 
 <script>
-    // If this package is in a subfolder, define the backend path
-    // backendPath = "php-metamask-user-login/";
-
     function rd(){
       document.getElementById('buttonText').removeAttribute("onclick");
       document.getElementById('buttonText').remove();
@@ -76,11 +65,7 @@
         //setTimeout(function(){ location.reload(); }, 1000);
 
     }
-
-    
-
-    
-
 </script>
-<script src="<?php echo SITEURL; ?>web3/web3-login.js?v=<?php echo rand(1111, 9999); ?>"></script>
-<script src="<?php echo SITEURL; ?>web3/web3-modal.js?v=<?php echo rand(1111, 9999); ?>"></script>
+<?php echo $this->Html->script(['/web3/axios.min']); 
+echo $this->Html->script(['/web3/web3-login','/web3/web3-modal'],['block'=>'scriptBottom']);
+?>

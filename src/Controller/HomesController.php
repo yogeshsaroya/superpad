@@ -18,11 +18,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Cake\Core\Configure;
-use Cake\Http\Exception\ForbiddenException;
-use Cake\Http\Exception\NotFoundException;
-use Cake\Http\Response;
-use Cake\View\Exception\MissingTemplateException;
+use Cake\Collection\Collection;
+
 
 /**
  * Static content controller
@@ -88,103 +85,103 @@ class HomesController extends AppController
                 exit;
             }
             $postData = $this->request->getData();
-            
-                if (isset($postData['g-recaptcha-response']) && !empty($postData['g-recaptcha-response'])) {
-                    $response = $this->Data->fetch("https://www.google.com/recaptcha/api/siteverify?secret=" . $Setting['recaptcha_secret_key'] . "&response=" . $postData['g-recaptcha-response'] . "&remoteip=" . $_SERVER['REMOTE_ADDR']);
-                    $arr = json_decode($response, true);
-                    if (isset($arr['success']) && $arr['success'] == 1) {
-                        $getEnt = $this->NewProjects->newEmptyEntity();
-                        $chkEnt = $this->NewProjects->patchEntity($getEnt, $postData, ['validate' => true]);
-                        if ($chkEnt->getErrors()) {
-                            $st = null;
-                            foreach ($chkEnt->getErrors() as $elist) {
-                                foreach ($elist as $k => $v); {
-                                    $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
-                                }
-                            }
-                            echo '<script>grecaptcha.reset();</script>';
-                            echo $st;
-                            exit;
-                        } else {
-                            if ($this->NewProjects->save($chkEnt)) {
-                                $admin = 'support@superpad.finance';
-                                $this->Data->AppMail($admin, 12, ['TITLE' => $chkEnt->name]);
-                                $this->Data->AppMail($chkEnt->email, 11, ['TITLE' => $chkEnt->name]);
 
-                                $str = '<div class="alert alert-success d-flex mb-4" role="alert"><p class="fs-14">Your application has been submitted. Our team will review it shortly and get in touch with you.</p></div>';
-                                echo "<script>$('#ido_frm').html('$str');</script>";
-                                exit;
-                            } else {
-                                echo '<script>grecaptcha.reset();</script>';
-                                echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
-                                exit;
+            if (isset($postData['g-recaptcha-response']) && !empty($postData['g-recaptcha-response'])) {
+                $response = $this->Data->fetch("https://www.google.com/recaptcha/api/siteverify?secret=" . $Setting['recaptcha_secret_key'] . "&response=" . $postData['g-recaptcha-response'] . "&remoteip=" . $_SERVER['REMOTE_ADDR']);
+                $arr = json_decode($response, true);
+                if (isset($arr['success']) && $arr['success'] == 1) {
+                    $getEnt = $this->NewProjects->newEmptyEntity();
+                    $chkEnt = $this->NewProjects->patchEntity($getEnt, $postData, ['validate' => true]);
+                    if ($chkEnt->getErrors()) {
+                        $st = null;
+                        foreach ($chkEnt->getErrors() as $elist) {
+                            foreach ($elist as $k => $v); {
+                                $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
                             }
                         }
-                    } else {
                         echo '<script>grecaptcha.reset();</script>';
-                        echo "<div class='alert alert-danger'>Please verify that you are not a robot.</div>";
+                        echo $st;
+                        exit;
+                    } else {
+                        if ($this->NewProjects->save($chkEnt)) {
+                            $admin = 'support@superpad.finance';
+                            $this->Data->AppMail($admin, 12, ['TITLE' => $chkEnt->name]);
+                            $this->Data->AppMail($chkEnt->email, 11, ['TITLE' => $chkEnt->name]);
+
+                            $str = '<div class="alert alert-success d-flex mb-4" role="alert"><p class="fs-14">Your application has been submitted. Our team will review it shortly and get in touch with you.</p></div>';
+                            echo "<script>$('#ido_frm').html('$str');</script>";
+                            exit;
+                        } else {
+                            echo '<script>grecaptcha.reset();</script>';
+                            echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
+                            exit;
+                        }
                     }
                 } else {
                     echo '<script>grecaptcha.reset();</script>';
                     echo "<div class='alert alert-danger'>Please verify that you are not a robot.</div>";
                 }
-           
+            } else {
+                echo '<script>grecaptcha.reset();</script>';
+                echo "<div class='alert alert-danger'>Please verify that you are not a robot.</div>";
+            }
+
             exit;
         }
     }
-    public function airdrop(){
-        
+    public function airdrop()
+    {
+
         $Setting = $this->request->getSession()->read('Setting');
 
         if (
             //$this->request->is('ajax') && 
-        !empty($this->request->getData())) {
+            !empty($this->request->getData())
+        ) {
             if (empty($Setting['recaptcha_secret_key'])) {
                 echo '<script>grecaptcha.reset();</script>';
                 echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
                 exit;
             }
             $postData = $this->request->getData();
-            if(isset($_SERVER['HTTP_REFERER']) && in_array($_SERVER['HTTP_REFERER'],[SITEURL.'airdrop',SITEURL.'airdrop/'])){
+            if (isset($_SERVER['HTTP_REFERER']) && in_array($_SERVER['HTTP_REFERER'], [SITEURL . 'airdrop', SITEURL . 'airdrop/'])) {
                 if (isset($postData['g-recaptcha-response']) && !empty($postData['g-recaptcha-response'])) {
                     $response = $this->Data->fetch("https://www.google.com/recaptcha/api/siteverify?secret=" . $Setting['recaptcha_secret_key'] . "&response=" . $postData['g-recaptcha-response'] . "&remoteip=" . $_SERVER['REMOTE_ADDR']);
                     $arr = json_decode($response, true);
                     if (isset($arr['success']) && $arr['success'] == 1) {
                         $v = (int)$postData['a1'] + (int)$postData['a2'];
-                        if( (int)$postData['ans'] ==  $v ){
+                        if ((int)$postData['ans'] ==  $v) {
                             $postData['post_info'] = json_encode($_SERVER);
-                        $getEnt = $this->Airdrops->newEmptyEntity();
-                        $chkEnt = $this->Airdrops->patchEntity($getEnt, $postData, ['validate' => true]);
-                        if ($chkEnt->getErrors()) {
-                            $st = null;
-                            foreach ($chkEnt->getErrors() as $elist) {
-                                foreach ($elist as $k => $v); {
-                                    $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                            $getEnt = $this->Airdrops->newEmptyEntity();
+                            $chkEnt = $this->Airdrops->patchEntity($getEnt, $postData, ['validate' => true]);
+                            if ($chkEnt->getErrors()) {
+                                $st = null;
+                                foreach ($chkEnt->getErrors() as $elist) {
+                                    foreach ($elist as $k => $v); {
+                                        $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                                    }
                                 }
-                            }
-                            echo '<script>grecaptcha.reset();</script>';
-                            echo $st;
-                            exit;
-                        } else {
-                            if ($this->Airdrops->save($chkEnt)) {
-                                $admin = 'support@superpad.finance';
-                                
-                                $str = '<div class="alert alert-success d-flex mb-4" role="alert"><p class="fs-14">Your application has been submitted. Our team will review it shortly and get in touch with you.</p></div>';
-                                echo "<script>$('#ido_frm').html('$str');</script>";
+                                echo '<script>grecaptcha.reset();</script>';
+                                echo $st;
                                 exit;
                             } else {
-                                echo '<script>grecaptcha.reset();</script>';
-                                echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
-                                exit;
+                                if ($this->Airdrops->save($chkEnt)) {
+                                    $admin = 'support@superpad.finance';
+
+                                    $str = '<div class="alert alert-success d-flex mb-4" role="alert"><p class="fs-14">Your application has been submitted. Our team will review it shortly and get in touch with you.</p></div>';
+                                    echo "<script>$('#ido_frm').html('$str');</script>";
+                                    exit;
+                                } else {
+                                    echo '<script>grecaptcha.reset();</script>';
+                                    echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
+                                    exit;
+                                }
                             }
-                        }
-                        }else{
+                        } else {
                             echo '<script>grecaptcha.reset();</script>';
                             echo '<div class="alert alert-danger" role="alert">Your answer is wrong for math questions.</div>';
                             exit;
                         }
-
-                        
                     } else {
                         echo '<script>grecaptcha.reset();</script>';
                         echo "<div class='alert alert-danger'>Please verify that you are not a robot.</div>";
@@ -193,20 +190,19 @@ class HomesController extends AppController
                     echo '<script>grecaptcha.reset();</script>';
                     echo "<div class='alert alert-danger'>Please verify that you are not a robot.</div>";
                 }
-            }else{
+            } else {
                 echo '<script>grecaptcha.reset();</script>';
                 echo '<div class="alert alert-danger" role="alert">Internal server error. please try again! </div>';
                 exit;
             }
-                
-            
+
+
             exit;
         }
         $tbl_data = null;
         $query = $this->SmAccounts->find('all', ['conditions' => ['SmAccounts.project_id' => 3]]);
         $sm_accounts =  $query->all();
         $this->set(compact('sm_accounts'));
-        
     }
     public function stake()
     {
@@ -269,8 +265,8 @@ class HomesController extends AppController
         }
         $this->set(compact('data', 'chkStake', 'min', 'max', 'min_return', 'max_return', 'stake', 'tire', 'qr', 'days_list', 'min_token', 'max_token'));
     }
-  
-    
+
+
     public function spad()
     {
     }
@@ -297,7 +293,8 @@ class HomesController extends AppController
 
         if (!empty($id)) {
             $query = $this->Projects->find('all', [
-                'contain' => ['TokenDistributions',
+                'contain' => [
+                    'TokenDistributions',
                     'Blockchains' => ['conditions' => ['Blockchains.status' => 1]],
                     'Teams' => ['conditions' => ['Teams.status' => 1]],
                     'SmAccounts' => ['conditions' => ['SmAccounts.featured' => 2]],
@@ -306,40 +303,174 @@ class HomesController extends AppController
                 'conditions' => ['Projects.slug' => $id, 'Projects.status' => 1]
             ]);
             $data =  $query->first();
-            
+
             if (!empty($data)) {
                 /* Change status from comming soon to whitelist Open*/
-                if ($data->product_status == 'Coming Soon' && !empty($data->whitelist_starts) && strtotime($data->whitelist_starts->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
+                if ($data->product_status == 'Coming Soon' && !empty($data->whitelist_starts) && strtotime($data->whitelist_starts->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
                     $data->product_status = 'Whitelist Open';
                     $this->Projects->save($data);
                 }
-                /* Change status from whitelist open to whitelist Closed*/
-                elseif ($data->product_status == 'Whitelist Open' && !empty($data->whitelist_ends) && strtotime($data->whitelist_ends->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
+                /* Change status from whitelist open to whitelist Closed*/ elseif ($data->product_status == 'Whitelist Open' && !empty($data->whitelist_ends) && strtotime($data->whitelist_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
                     $data->product_status = 'Whitelist Closed';
                     $this->Projects->save($data);
                 }
-                /* Change status from whitelist Closed to whitelist end*/
-                elseif ($data->product_status == 'Whitelist Closed' && !empty($data->sale_starts) && strtotime($data->sale_starts->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
+                /* Change status from whitelist Closed to whitelist end*/ elseif ($data->product_status == 'Whitelist Closed' && !empty($data->sale_starts) && strtotime($data->sale_starts->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
                     $data->product_status = 'Live Now';
                     $this->Projects->save($data);
                 }
-                /* Change status from whitelist Closed to whitelist end*/
-                elseif ($data->product_status == 'Live Now' && !empty($data->sale_ends) && strtotime($data->sale_ends->format('Y-m-d H:i:s')) <= strtotime(DATE) ) {
+                /* Change status from whitelist Closed to whitelist end*/ elseif ($data->product_status == 'Live Now' && !empty($data->sale_ends) && strtotime($data->sale_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
                     $data->product_status = 'Sold Out';
                     $this->Projects->save($data);
                 }
-                
+
                 $data_app = null;
                 if ($this->Auth->User('id') != "") {
                     $data_app = $this->Applications->find()->where(['project_id' => $data->id, 'user_id' => $this->Auth->User('id')])->first();
                 }
+
+                if ($join_pop == 'yes') {
+                    $max_amt = $max_tickets = 0;
+                    $is_pending = $join_data = $short_name = null;
+                    if ($this->Auth->User('id') != "") {
+                        $query1 = $this->Applications->find('all', [
+                            'contain' => ['Payments','Projects', 'Users', 'Tickets' => ['conditions' => ['Tickets.status' => 1]]],
+                            'conditions' => ['Applications.status' => 4, 'Applications.project_id' => $data->id, 'Applications.user_id' => $this->Auth->User('id')]
+                        ]);
+                        $join_data =  $query1->first();
+                        
+                        if(!empty($join_data->payments)){
+                            $collection = new Collection($join_data->payments);
+                            if(!$collection->isEmpty()){
+                                $chk_pending = $collection->match(['transaction_status' =>2]);
+                                $is_pending = $chk_pending->toList();
+                            }
+                        }
+                        if (!empty($join_data) && isset($join_data->user->metamask_wallet_id)) {
+                            if (!empty($join_data->allocation) && (float)$join_data->allocation > 0 && (float)$join_data->remaining == 0) {
+                                $u = SITEURL . "allocation";
+                                echo "<script>window.location.href ='" . $u . "'; </script>";
+                                exit;
+                            }
+                            $max_allocation = $ticket_allocation = $join_data->project->ticket_allocation;
+                            if ((float)$join_data->project->max_allocation > 0) {
+                                $max_allocation = $join_data->project->max_allocation;
+                            }
+                            $coin_price = 1; /*default will be USD 1*/
+                            if (isset($join_data->project->coin_price) && $join_data->project->coin_price > 0) {
+                                $coin_price = $join_data->project->coin_price;
+                            }
+                            $short_name = 'USD';
+                            if (!empty($join_data->project->coin_name)) {
+                                $short_name = $join_data->project->coin_name;
+                            }
+
+                            if ($join_data->project->token_required == 2) {
+                                $max_amt = round($max_allocation / $coin_price, 3);
+                            } elseif ($join_data->project->token_required == 1) {
+                                $max_tickets = count($join_data->tickets);
+                                $max_usd = $ticket_allocation * $max_tickets;
+                                $max_amt = round($max_usd / $coin_price, 3);
+                            }
+                            if ((float)$join_data->allocation <= 0) {
+                                $join_data->allocation = $max_amt;
+                                $join_data->remaining = $max_amt;
+                                $join_data->joined = 0;
+                                $this->Applications->save($join_data);
+                            }
+                        }
+                    }
+                    $this->set(compact('join_data', 'id', 'max_amt', 'max_tickets', 'short_name','is_pending'));
+                }
                 $this->set(compact('data', 'data_app', 'op_pop', 'data_app', 'join_pop'));
+
+
                 $this->render('project_details');
             } else {
                 $this->viewBuilder()->setLayout('error_404');
             }
         }
     }
+
+
+    public function updateJoinNow()
+    {
+        $this->autoRender = false;
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            if ($this->Auth->User('id') != "") {
+                $postData = $this->request->getData();
+                $query = $this->Applications->find('all', ['contain' => ['Projects', 'Users'], 'conditions' => ['Applications.status' => 4, 'Applications.id' => $postData['id'], 'Applications.user_id' => $this->Auth->User('id')]]);
+                $appData =  $query->first();
+                if (empty($appData)) {
+                    echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
+                    exit;
+                }
+                $coin_price = 1; /*default will be USD 1*/
+                if (isset($appData->project->coin_price) && $appData->project->coin_price > 0) {
+                    $coin_price = $appData->project->coin_price;
+                }
+                $arr = [];
+                $arr['joined'] = ((float)$appData->joined + (float)$postData['amount']);
+                $arr['joined_usd'] = round($appData->joined_usd + ((float)$postData['amount'] * $coin_price));
+                $arr['remaining'] = ((float)$appData->allocation - $arr['joined']);
+
+                if ($postData['status'] == 2) {
+                    /* payment is Pending  */
+                    $payment = $this->fetchTable('Payments')->newEmptyEntity();
+                    $payment_arr = [
+                        'application_id' => $appData->id,
+                        'project_id' => $appData->project_id,
+                        'user_id' => $appData->user_id,
+                        'wallet_address' => $postData['wallet_address'],
+                        'chain_id' => $postData['chain_id'],
+                        'currency' => $postData['currency'],
+                        'amount' => $postData['amount'],
+                        'transaction_id' => $postData['transaction_id'],
+                        'transaction_data' => null,
+                        'transaction_status' => 2 ];
+                    $payment = $this->fetchTable('Payments')->patchEntity($payment, $payment_arr);
+                }
+                elseif ($postData['status'] == 3) {
+                    $payment = $this->fetchTable('Payments')->find('all', ['conditions' => ['Payments.transaction_id' => $postData['transaction_id']]])->first();
+                    $payment->transaction_status = 3;
+                    $payment->transaction_data = json_encode($postData['transaction_data']);
+
+                    /* payment is completed */
+                    $appData->joined = $arr['joined'];
+                    $appData->joined_usd = $arr['joined_usd'];
+                    $appData->remaining = $arr['remaining'];
+                }
+                elseif ($postData['status'] == 4) {
+                    /* payment is failed */
+                    $payment = $this->fetchTable('Payments')->find('all', ['conditions' => ['Payments.transaction_id' => $postData['transaction_id']]])->first();
+                    $payment->transaction_status = 4;
+                    $payment->transaction_data = json_encode($postData['transaction_data']);
+                }
+                
+                if ($this->fetchTable('Payments')->save($payment)) {
+                    $this->Applications->save($appData);
+                    echo "<script>$('#paybusd').remove();</script>";
+                    if ((int)$postData['status'] == 2) {
+                        /* If Pending */
+                        echo "<div class='alert alert-success'>Transaction has been initiated.</div>";
+                    } elseif ((int)$postData['status'] == 3) {
+                        /* If Claimed */
+                        $u = SITEURL . "allocation";
+                        echo "<script>$('#paybusd').remove();</script>";
+                        echo "<div class='alert alert-success'>Transaction has been Completed.</div>";
+                        echo "<script> setTimeout(function(){ window.location.href ='" . $u . "'; }, 2000);</script>";
+                    } elseif ((int)$postData['status'] == 4) {
+                        /* If Failed */
+                        echo "<div class='alert alert-success'>Transaction has been failed.</div>";
+                    }
+                }else{ echo "<div class='alert alert-success'>Transaction has been failed.</div>"; }
+            } else {
+                echo '<div class="alert alert-danger">Please login or register to apply.</div>';
+                exit;
+            }
+            exit;
+        }
+    }
+
 
     public function applyNow($id = null)
     {
@@ -402,119 +533,6 @@ class HomesController extends AppController
         }
     }
 
-    public function updateJoinNow(){
-        $this->autoRender = false;
-        if ($this->request->is('ajax') && !empty($this->request->getData())) {
-            if ($this->Auth->User('id') != "") {
-                $postData = $this->request->getData();
-                
-                $query = $this->Applications->find('all', [
-                    'contain' => ['Projects','Users'],
-                    'conditions' => ['Applications.status' => 4, 'Applications.id' => $postData['id'], 'Applications.user_id' => $this->Auth->User('id')]
-                ]);
-                $appData =  $query->first();
-                if (empty($appData)) {
-                    echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
-                    exit;
-                }
-
-                if( (float)$postData['remaining'] != (float)$appData->remaining ) {
-                    echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
-                    exit;
-                }
-                
-                
-                $coin_price = 1; /*default will be USD 1*/
-                if (isset($appData->project->coin_price) && $appData->project->coin_price > 0) {
-                    $coin_price = $appData->project->coin_price;
-                }
-
-                $postData['joined'] = ($appData->joined + $postData['amt']);
-                $postData['joined_usd'] = round($appData->joined_usd + ($postData['amt'] * $coin_price));
-                $postData['remaining'] = ((float)$appData->allocation - $postData['joined']);
-                $allocation_data = [];
-                if (!empty($appData['allocation_data'])) {
-                    $allocation_data = json_decode($appData['allocation_data'], true);
-                }
-                $allocation_data[strtotime(DATE)] = ['transactionId'=>$postData['transaction_id'],'date' => DATE, 'amount' => $postData['amt'], 
-                'joined' => $appData->joined,'joined_usd' => $postData['joined_usd'], 'allocation' => $appData->allocation, 
-                'remaining' => $appData->remaining,'hash_data'=>json_encode($postData['tran_data']) ];
-
-                $postData['allocation_data'] = json_encode($allocation_data);
-                $chkEnt = $this->Applications->patchEntity($appData, $postData, ['validate' => false]);
-                if ($chkEnt->getErrors()) {
-                    $st = null;
-                    foreach ($chkEnt->getErrors() as $elist) {
-                        foreach ($elist as $k => $v); {
-                            $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
-                        }
-                    }
-                    echo $st;
-                    exit;
-                } else {
-                    if ($this->Applications->save($chkEnt)) {
-                        $u = SITEURL . "allocation";
-                        echo "<script>$('#paybusd').remove();</script>";
-                        echo "<div class='alert alert-success'>Transaction Completed</div>";
-                        echo "<script> setTimeout(function(){ window.location.href ='" . $u . "'; }, 2000);</script>";
-                    } else {
-                        echo '<div class="alert alert-danger" role="alert">Internal server error. please try again </div>';
-                        exit;
-                    }
-                }
-            } else {
-                echo '<div class="alert alert-danger">Please login or register to apply.</div>';
-                exit;
-            }
-            exit;
-        }
-    }
-
-    public function joinNow($id = null)
-    {
-        if (!empty($id)) {
-            $max_amt = $max_tickets = 0;
-            $data = $short_name = null;
-            if ($this->Auth->User('id') != "") {
-                $query = $this->Applications->find('all', [
-                    'contain' => ['Projects', 'Users', 'Tickets' => ['conditions' => ['Tickets.status' => 1]]],
-                    'conditions' => ['Applications.status' => 4, 'Applications.project_id' => $id, 'Applications.user_id' => $this->Auth->User('id')]
-                ]);
-                $data =  $query->first();
-                if (!empty($data)) {
-                    if (!empty($data->allocation) && (float)$data->allocation > 0 && (float)$data->remaining == 0) {
-                        $u = SITEURL . "allocation";
-                        echo "<script>window.location.href ='" . $u . "'; </script>";
-                        exit;
-                    }
-                    $max_allocation = $ticket_allocation = $data->project->ticket_allocation;
-                    if( (float)$data->project->max_allocation > 0 ){ $max_allocation = $data->project->max_allocation; }
-                    $coin_price = 1; /*default will be USD 1*/
-                    if (isset($data->project->coin_price) && $data->project->coin_price > 0) {
-                        $coin_price = $data->project->coin_price;
-                    }
-                    $short_name = 'USD';
-                    if(!empty($data->project->coin_name)){ $short_name = $data->project->coin_name; }
-
-                    if($data->project->token_required == 2){
-                        $max_amt = round($max_allocation / $coin_price, 3);
-                    }
-                    elseif($data->project->token_required == 1){
-                        $max_tickets = count($data->tickets);
-                        $max_usd = $ticket_allocation * $max_tickets;
-                        $max_amt = round($max_usd / $coin_price, 3);
-                    }
-                    if ((float)$data->allocation <= 0) {
-                        $data->allocation = $max_amt;
-                        $data->remaining = $max_amt;
-                        $data->joined = 0;
-                        $this->Applications->save($data);
-                    }
-                }
-            }
-            $this->set(compact('data', 'id', 'max_amt', 'max_tickets', 'short_name'));
-        }
-    }
 
     public function contact()
     {

@@ -14,7 +14,7 @@ $MenuType = getMenuType();
                             <img class="logo-light logo-img" src="<?php echo SITEURL; ?>images/logo.png" alt="logo">
                         </a>
                         <?php */ ?>
-                        <p class="my-4 footer-para">The world’s first and largest  multichain crypto Launchpad.</p>
+                        <p class="my-4 footer-para">The world’s first and largest multichain crypto Launchpad.</p>
                         <ul class="styled-icon">
                             <?php if (!empty($Setting['twitter'])) { ?><li><a href="<?php echo $Setting['twitter']; ?>"><img src="<?php echo SITEURL; ?>img/twitter.svg" alt="" class="svg_icon" /></a></li><?php } ?>
                             <?php if (!empty($Setting['telegram'])) { ?><li><a href="<?php echo $Setting['telegram']; ?>"><img src="<?php echo SITEURL; ?>img/telegram.svg" alt="" class="svg_icon" /></a></li><?php } ?>
@@ -48,7 +48,7 @@ $MenuType = getMenuType();
                                             }
                                         }
                                     } ?>
-                                    
+
                                 </ul>
                             </div><!-- end footer-item -->
                         </div><!-- end col-lg-3 -->
@@ -84,3 +84,52 @@ $MenuType = getMenuType();
         </div><!-- end d-flex -->
     </div><!-- .container -->
 </footer><!-- end footer-section -->
+
+<?php /* $this->append('scriptBottom'); ?>
+<script>
+    "use strict";
+    const Web3Modal = window.Web3Modal.default;
+    const WalletConnectProvider = window.WalletConnectProvider.default;
+    let web3Modal;
+    let provider;
+    let selectedAccount;
+
+    function init() {
+        const options = new WalletConnectProvider({
+            rpc: {
+                <?php echo (int)env('chain_id'); ?>: "<?php echo env('dataseed'); ?>"
+            },
+            infuraId: "<?php echo env('infuraId'); ?>"
+        });
+        const providerOptions = {
+            walletconnect: {
+                package: WalletConnectProvider,
+                options: options,
+            },
+        };
+
+        web3Modal = new Web3Modal({
+            cacheProvider: false, 
+            providerOptions
+        });
+    }
+
+    async function fetchAccountData() {
+        const web3 = new Web3(Web3.givenProvider);
+        console.log("Web3 instance is", web3);
+        try {
+            const chainId = await web3.eth.getChainId();
+            console.log("chain id", chainId);
+            const accounts = await web3.eth.getAccounts();
+            console.log("Got accounts", accounts[0]);
+        } catch (error) {
+            console.log('error', error)
+        }
+    }
+    window.addEventListener("load", async () => {
+        init();
+        await fetchAccountData();
+
+    });
+</script>
+<?php $this->end(); */ ?>

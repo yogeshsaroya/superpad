@@ -72,9 +72,17 @@ if( $list->product_status != 'TBA'){
         <div class="row align-items-start">
             <div class="col-lg-8">
                 <div class="item-detail-content">
-                    <div class="item-detail-img-container mb-4">
+                    
+<?php if (!empty($join_pop)) { 
+    if(isset($Auth) && isset($list->id)){?>
+    <div class="item-detail-tab textContent">
+    <?php echo $this->element('join_now', ['join_data' => $join_data,'is_pending'=>$is_pending]);?>
+    </div>
+<?php } }else{?>
+    <div class="item-detail-img-container mb-4">
                         <img src="<?php echo SITEURL . "cdn/project_img/" . $list->hero_image; ?>" alt="<?php echo $list->title; ?>" class="w-100 rounded-3">
-                    </div><!-- end item-detail-img-container -->
+                    </div>
+                    
                     <div class="item-detail-tab textContent">
                         <ul class="nav nav-tabs nav-tabs-s1" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation"><button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true"> Description </button></li>
@@ -231,7 +239,8 @@ if( $list->product_status != 'TBA'){
                             </div><!-- end tab-pane -->
                         </div>
                     </div>
-                </div><!-- end item-detail-content -->
+<?php }?>                    
+                </div>
 
             </div><!-- end col -->
             <div class="col-lg-4 mt-lg-0 mt-5 mob_order_1 <?php echo (!$this->request->is('mobile') ?  "sidebarFixed" : null); ?>">
@@ -278,9 +287,10 @@ if( $list->product_status != 'TBA'){
                                 <?php } ?>
 
                                 <?php } else if (strtolower($list->product_status) == 'live now' ) {
-                                if (isset($Auth->role)) { ?>
-                                    <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="joinNow(<?php echo $list->id; ?>);">Join Now</a> </li>
-                                <?php } else { ?>
+                                if (isset($Auth->role)) { 
+                                    if (empty($join_pop)) { ?>
+                                    <li class="flex-grow-1"><?php echo $this->Html->link('Join Now','/explore/'.$list->slug.'/join_now',['class'=>'btn btn-primary w-100']);?></li>
+                                <?php }} else { ?>
                                     <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL; ?>sign-in?redirect=explore/<?php echo $list->slug; ?>/join_now">Login to Join Now</a></li>
                                 <?php } ?>
                             <?php } else if (strtolower($list->product_status) == 'sold out') { ?>
@@ -390,10 +400,11 @@ if (!empty($op_pop) && isset($Auth) && isset($list->id)) { ?>
     apply_sale(<?php echo $list->id; ?>);
     });
 <?php }
+/*
 if (!empty($join_pop) && isset($Auth) && isset($list->id)) { ?>
 
     $(function () {
         joinNow(<?php echo $list->id; ?>);
     });
-<?php }
+<?php } */
 $this->Html->scriptEnd(); ?>

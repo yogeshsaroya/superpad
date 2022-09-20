@@ -1,6 +1,5 @@
 <div id="custom-content" class="white-popup-block offer-pop" style="max-width:500px; margin: 20px auto;">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.1/web3.min.js"></script>
-    <script src="https://unpkg.com/@metamask/legacy-web3@latest/dist/metamask.web3.min.js"></script>
+
     <style>
         .input_box {
             border-radius: 0px !important;
@@ -441,19 +440,128 @@
             }
         ];
 
-        var web3 = null;
-        var instance = null;
-        var chainId = null;
-        async function changeToMain(id) {
-            await ethereum.request({
-                method: "wallet_switchEthereumChain",
-                params: [{
-                    chainId: id
-                }],
+        "use strict";
+        const Web3Modal = window.Web3Modal.default;
+        const WalletConnectProvider = window.WalletConnectProvider.default;
+        let web3Modal;
+        let provider;
+        let selectedAccount;
+
+        function init() {
+            const options = new WalletConnectProvider({
+                rpc: {
+                    <?php echo (int)env('chain_id'); ?>: "<?php echo env('dataseed'); ?>"
+                },
+                infuraId: "<?php echo env('infuraId'); ?>"
+            });
+            const providerOptions = {
+                walletconnect: {
+                    package: WalletConnectProvider,
+                    options: options,
+                },
+            };
+
+            web3Modal = new Web3Modal({
+                cacheProvider: false,
+                providerOptions
             });
         }
 
+        async function changeToMain(id) {
+            try {
+                await ethereum.request({
+                    method: "wallet_switchEthereumChain",
+                    params: [{
+                        chainId: id
+                    }],
+                });
+            } catch (error) {
+                console.log("Wrong network");
+
+            }
+        }
+
+
+        async function payBUSD11111() {
+            try {
+                let amount = document.getElementById("busd_amount").value;
+                if (amount != "") {
+                    if (amount > 0) {
+                        const web3 = new window.Web3(provider);
+                        let chainId = await web3.eth.getChainId();
+                        //if (chainId != 56) { await changeToMain("0x38"); }
+                        if (chainId != 97) {
+                            await changeToMain("0x61");
+                        }
+                        const contract = new web3.eth.Contract(BUSD_ABI, BUSD_CONTRACT);
+
+                        await contract.methods
+                            .transfer(
+                                paymentAddress,
+                                web3.utils.toWei(amount.toString(), "ether")
+                            )
+                            .send({
+                                from: selectedAccount,
+                            })
+                            .on("transactionHash", function(hash) {
+                                console.log("transactionHash", hash);
+                            })
+                            .on("receipt", function(receipt) {
+                                console.log(receipt.transactionHash);
+                            })
+                            .on("confirmation", function(confirmationNumber, receipt) {
+                                //console.log(confirmationNumber); console.log(receipt);
+                            })
+                            .on("error", function(error, receipt) {
+                                console.log(error);
+                                // $("#btn_locader").removeClass('is-active');
+                                // $('#f_err').html('<div class="alert alert-danger">Payment Failed</div>');
+                            });
+                    } else {
+                        alert("Enter amount should be greater than zero");
+                    }
+                } else {
+                    alert("Enter amount please");
+                }
+            } catch (error) {
+                console.error("error while pay bnb or busd", error);
+            }
+        }
+
         async function payBUSD() {
+            console.log("Opening a dialog", web3Modal);
+            try {
+                provider = await web3Modal.connect();
+                console.log("provider", provider);
+            } catch (e) {
+                console.log("Error 123");
+                console.log("Could not get a wallet connection", e);
+                return;
+            }
+
+            // Subscribe to accounts change
+            provider.on("accountsChanged", (accounts) => {
+                console.log("Account Changed");
+                fetchAccountData();
+            });
+
+            // Subscribe to chainId change
+            provider.on("chainChanged", (chainId) => {
+                console.log("ChainID Changed");
+                fetchAccountData();
+            });
+
+            // Subscribe to networkId change
+            provider.on("networkChanged", (networkId) => {
+                console.log("Network Changed");
+                fetchAccountData();
+            });
+
+            await make_pmt();
+        }
+
+        async function make_pmt() {
+            
             $("#btn_locader").addClass('is-active');
             var remaining = parseFloat($("#remaining").val());
             var setAmt = parseFloat($("#setAmt").val());
@@ -464,86 +572,48 @@
             var max_tickets = $("#max_tickets").val();
 
             if (setAmt > 0 && setAmt <= remaining) {
-                web3 = new Web3(Web3.givenProvider);
-                await Web3.givenProvider.enable();
-                chainId = await web3.eth.getChainId();
 
-                await ethereum
-                    .request({
-                        method: "eth_requestAccounts"
+
+                const web3 = new window.Web3(provider);
+                let chainId = await web3.eth.getChainId();
+                //if (chainId != 56) { await changeToMain("0x38"); }
+                if (chainId != 97) {
+                    await changeToMain("0x61");
+                }
+                const contract = new web3.eth.Contract(BUSD_ABI, BUSD_CONTRACT);
+
+                await contract.methods
+                    .transfer(
+                        paymentAddress,
+                        web3.utils.toWei(setAmt.toString(), "ether")
+                    )
+                    .send({
+                        from: selectedAccount,
                     })
-                    .then(async (account) => {
-                        //if (chainId != 56) { await changeToMain("0x38"); }
-                        if (chainId != 97) {
-                            await changeToMain('0x61');
-                        }
-                        console.log(account);
-                        instance = new web3.eth.Contract(BUSD_ABI, BUSD_CONTRACT);
-                        instance.methods
-                            .transfer(paymentAddress, web3.utils.toWei('' + setAmt + '', "ether"))
-                            .send({
-                                from: account[0]
-                            })
-                            .on('transactionHash', function(hash) {
-                                console.log('Hello 1');
-                                console.log(hash);
-                            })
-                            .on('receipt', function(receipt) {
-                                console.log('Hello 2');
-                                console.log(receipt.transactionHash);
-                                update_tran(app_id, max_amt, joined, remaining, max_tickets, setAmt, receipt.transactionHash,receipt);
-                            })
-                            .on('confirmation', function(confirmationNumber, receipt) {
-                                //console.log('Hello 3'); console.log(confirmationNumber); console.log(receipt);
+                    .on('transactionHash', function(hash) {
+                        console.log('Hello 1');
+                        console.log(hash);
+                    })
+                    .on('receipt', function(receipt) {
+                        console.log('Hello 2');
+                        console.log(receipt.transactionHash);
+                        update_tran(app_id, max_amt, joined, remaining, max_tickets, setAmt, receipt.transactionHash, receipt);
+                    })
+                    .on('confirmation', function(confirmationNumber, receipt) {
+                        //console.log('Hello 3'); console.log(confirmationNumber); console.log(receipt);
 
-                            })
-                            .on('error', function(error, receipt) {
-                                console.log(error);
-                                $("#btn_locader").removeClass('is-active');
-                                $('#f_err').html('<div class="alert alert-danger">Payment Failed</div>');
-                            });
+                    })
+                    .on('error', function(error, receipt) {
+                        console.log(error);
+                        $("#btn_locader").removeClass('is-active');
+                        $('#f_err').html('<div class="alert alert-danger">Payment Failed</div>');
                     });
+
             } else {
                 $('#f_err').html('<div class="alert alert-danger">Please enter amount between 0.1 to ' + max_amt + '</div>');
             }
         }
 
-        async function payBNB() {
-            var max_amt = parseFloat($("#remaining").val());
-            var setAmt = parseFloat($("#setAmt").val());
-            if (setAmt > 0 && setAmt <= max_amt) {
-
-                web3 = new Web3(Web3.givenProvider);
-                await Web3.givenProvider.enable();
-
-                chainId = await web3.eth.getChainId();
-
-                await ethereum
-                    .request({
-                        method: "eth_requestAccounts"
-                    })
-                    .then(async (account) => {
-                        if (chainId != 56) {
-                            await changeToMain('0x61');
-                        }
-                        web3.eth.sendTransaction({
-                                from: account[0],
-                                to: paymentAddress,
-                                value: web3.utils.toWei('' + setAmt + '', "ether"),
-                            },
-                            (err, transactionId) => {
-                                if (err) {
-                                    console.log("Payment failed", err);
-
-                                } else {
-                                    console.log("Payment successful", transactionId);
-
-                                }
-                            }
-                        );
-                    });
-            }
-        }
 
         function update_tran(app_id, max_amt, joined, remaining, max_tickets, setAmt, transaction, tran_data) {
             $.ajax({
@@ -614,6 +684,7 @@
                 }
             });
         });
+        init();
     </script>
 
 </div>
