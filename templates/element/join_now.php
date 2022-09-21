@@ -563,14 +563,17 @@
                             })
                             .on('transactionHash', function(hash) {
                                 console.log('tran ini ', hash);
+                                $("#btn_locader").attr('data-curtain-text', 'Transaction initiated...');
+                                $("#btn_locader").addClass('is-active');
                                 update_tran(app_id, 2, wallet_address, chainId, 'busd', setAmt, hash, null);
                             })
                             .on('receipt', function(receipt) {
+                                $("#btn_locader").addClass('is-active');
                                 console.log('transaction completed');
                                 console.log(receipt.status);
                                 console.log(receipt.transactionHash);
                                 if (receipt.status === true) {
-                                    $("#btn_locader").attr('data-curtain-text', 'transaction completed...');
+                                    $("#btn_locader").attr('data-curtain-text', 'Transaction completed...');
                                     update_tran(app_id, 3, wallet_address, chainId, 'busd', setAmt, receipt.transactionHash, receipt);
                                     setTimeout(function() {
                                         $("#btn_locader").removeClass('is-active');
@@ -637,7 +640,6 @@
                 transaction_data: tran_data
             },
             success: function(data) {
-                $("#btn_locader").removeClass('is-active');
                 $("#f_err").html(data);
             },
             error: function(comment) {

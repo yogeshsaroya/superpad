@@ -67,13 +67,13 @@ echo $this->Html->script(['jquery.magnific-popup.min'], ['block' => 'scriptBotto
                                         <?php if ($list->project->product_status == 'Sold Out') {
                                             if ((int)$list->available_token > 0 ) {
                                                 if(!empty($list->project->token_distribution_starts) && strtotime($list->project->token_distribution_starts->format('Y-m-d H:i:s')) <= strtotime(DATE)){
-                                                    echo $this->Html->link('Claim Tokens', 'javascript:void(0);', ['onclick' => 'doClaim(' . $list->id . ');', 'class' => 'btn btn-lg btn-dark']);
+                                                    echo $this->Html->link('Claim Tokens', '/users/do_claim/'.$list->id, ['class' => 'btn btn-lg btn-dark']);
                                                 }else{
                                                     echo $this->Html->link('Token Distribution Starts Soon', 'javascript:void(0);', ['class' => 'btn btn-lg btn-dark']);
                                                 }
                                                 
                                             } elseif ((int)$list->available_token == 0) {
-                                                echo $this->Html->link('Check History', 'javascript:void(0);', ['onclick' => 'doClaim(' . $list->id . ');', 'class' => 'btn btn-lg btn-dark']);
+                                                echo $this->Html->link('Check History', '/users/do_claim/'.$list->id, ['class' => 'btn btn-lg btn-dark']);
                                             }
                                         } ?>
                                     </div>

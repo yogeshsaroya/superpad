@@ -372,6 +372,7 @@ class CronsController extends AppController
     }
 
     /* Setp 5  //  up_appliation
+    Run when whitelist is closed
     update apllocation if sale is not requried staking
     */
     public function upAppliation()
@@ -426,6 +427,9 @@ class CronsController extends AppController
         exit;
     }
 
+    /*
+    Check claim status 
+    */
     public function checkClaims()
     {
         $data = $this->fetchTable('Claims')->find('all')
@@ -454,6 +458,53 @@ class CronsController extends AppController
                     } elseif ($arr['result']['status'] == 0) {
                         $data->transaction_status = 4;
                         $this->fetchTable('Claims')->save($data);
+                        ec('Claim Tran failed for App ID ' . $data->application->id);
+                    }
+                }
+            }
+        } else {
+            echo "Empty <hr>";
+        }
+
+        exit;
+    }
+
+    /*
+    Check payment status 
+    */
+    public function checkPayments()
+    {
+        $data = $this->fetchTable('Payments')->find('all')
+            ->where(['Payments.transaction_status' => 2, 'Payments.transaction_id !=' => ''])
+            ->contain(['Applications', 'Projects'])
+            ->first();
+        if (!empty($data)) {
+            $url = env('bscscanAPI') . 'api?module=transaction&action=gettxreceiptstatus&txhash=' . $data->transaction_id . '&apikey=' . env('bscscanKey');
+            $res = $this->Data->fetch($url);
+            if (!empty($res)) {
+                $arr = json_decode($res, true);
+                if ($arr['status'] == 1) {
+                    if ($arr['result']['status'] == 1) {
+                        $coin_price = 1; /*default will be USD 1*/
+                        if (isset($data->project->coin_price) && $data->project->coin_price > 0) {
+                            $coin_price = $data->project->coin_price;
+                        }
+                        $app_arr = [];
+                        $app_arr['joined'] = ((float)$data->application->joined + (float)$data->amount);
+                        $app_arr['joined_usd'] = round($data->application->joined_usd + ((float)$data->amount * $coin_price));
+                        $app_arr['remaining'] = ((float)$data->application->allocation - $app_arr['joined']);
+
+                        $data->application->joined = $app_arr['joined'];
+                        $data->application->joined_usd = $app_arr['joined_usd'];
+                        $data->application->remaining = $app_arr['remaining'];
+
+                        $data->transaction_status = 3;
+                        $this->fetchTable('Payments')->save($data);
+                        $this->fetchTable('Applications')->save($data->application);
+                        ec('Paytment completed for App ID ' . $data->application->id);
+                    } elseif ($arr['result']['status'] == 0) {
+                        $data->transaction_status = 4;
+                        $this->fetchTable('Payments')->save($data);
                         ec('Claim Tran failed for App ID ' . $data->application->id);
                     }
                 }

@@ -68,7 +68,6 @@
 
 <body class="horizontal-layout horizontal-menu  navbar-floating footer-static  " data-open="hover" data-menu="horizontal-menu" data-col="">
     <?php echo $this->element('backend/top_nav'); ?>
-    <?php echo $this->Flash->render(); ?>
     <?php echo $this->fetch('content'); ?>
     <?php echo $this->element('backend/footer'); ?>
     <?php echo $this->fetch('scriptBottom'); ?>

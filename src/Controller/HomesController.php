@@ -391,7 +391,6 @@ class HomesController extends AppController
         }
     }
 
-
     public function updateJoinNow()
     {
         $this->autoRender = false;
@@ -451,7 +450,7 @@ class HomesController extends AppController
                     echo "<script>$('#paybusd').remove();</script>";
                     if ((int)$postData['status'] == 2) {
                         /* If Pending */
-                        echo "<div class='alert alert-success'>Transaction has been initiated.</div>";
+                        echo "<div class='alert alert-success'>Transaction has been initiated. Please wait....</div>";
                     } elseif ((int)$postData['status'] == 3) {
                         /* If Claimed */
                         $u = SITEURL . "allocation";

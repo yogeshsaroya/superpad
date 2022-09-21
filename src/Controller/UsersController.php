@@ -953,7 +953,6 @@ class UsersController extends AppController
                     if (!empty($arr)) {
                         $claimsEnt = $this->fetchTable('Claims')->newEntities($arr);
                         $result = $this->fetchTable('Claims')->saveMany($claimsEnt);
-
                         $u = SITEURL . "allocation";
                         echo "<script>window.location.href ='" . $u . "'; </script>";
                         exit;
