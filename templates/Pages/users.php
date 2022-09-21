@@ -23,6 +23,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
+                                    <th><?php echo $this->Paginator->sort('metamask_wallet_id','Wallet Address'); ?></th>
                                         <th><?php echo $this->Paginator->sort('first_name'); ?></th>
                                         <th><?php echo $this->Paginator->sort('last_name'); ?></th>
                                         <th><?php echo $this->Paginator->sort('email'); ?></th>
@@ -39,10 +40,11 @@
                                         foreach ($data as $list) {
                                             $token_balance = array_sum(array_column($list->user_stakes, 'balance')); ?>
                                             <tr>
+                                            <td><?php echo $list->metamask_wallet_id; ?></td>
                                                 <td><?php echo $list->first_name; ?></td>
                                                 <td><?php echo $list->last_name; ?></td>
                                                 <td><?php echo $list->email; ?></td>
-                                                <td><?php echo (isset($token_balance) ? number_format($token_balance) : null); ?></td>
+                                                <td><?php echo ($token_balance > 0 ? number_format($token_balance) : null); ?></td>
                                                 <td><?php
                                                     if ($list->kyc_completed == 0) {
                                                     } elseif ($list->kyc_completed == 1) {
