@@ -932,7 +932,7 @@ class UsersController extends AppController
     {
 
         $query = $this->Applications->find('all', [
-            'contain' => ['Claims', 'Projects' => ['TokenDistributions' => ['sort' => ['TokenDistributions.claim_date' => 'ASC']]]],
+            'contain' => ['Users','Claims', 'Projects' => ['TokenDistributions' => ['sort' => ['TokenDistributions.claim_date' => 'ASC']]]],
             'conditions' => [
                 'Applications.id' => $id, 'Applications.status' => 4, 'Applications.total_token > ' => 0,
                 'Applications.user_id' => $this->Auth->User('id')

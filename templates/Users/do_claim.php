@@ -227,6 +227,8 @@ echo $this->Form->end();
             });
         }
 
+        init();
+
         async function changeToMain(id) {
             try {
                 await ethereum.request({
@@ -248,82 +250,99 @@ echo $this->Form->end();
 
         async function token_claim(id, num) {
             $("#sub_data").html('');
-            $("#btn_locader").addClass('is-active');
+            try {
+                provider = await web3Modal.connect();
+                console.log("provider", provider);
+                const web3 = new window.Web3(provider);
+                let chainId = await web3.eth.getChainId();
+                //if (chainId != 56) { await changeToMain("0x38"); }
+                if (chainId != 97) {
+                    await changeToMain("0x61");
+                }
 
+                const accounts = await web3.eth.getAccounts();
+                wallet_address = accounts[0].toLowerCase();
+                console.log("Got accounts", wallet_address);
+                console.log('Chain ID', chainId);
 
-            
-            web3 = new Web3(Web3.givenProvider);
-            await Web3.givenProvider.enable(); // waiting for metamask provider connectivity
-            //   Get your metamask wallet provider Chain ID
-            chainId = await web3.eth.getChainId();
-            //   Request for get wallet address from metamask
-            await ethereum
-                .request({
-                    method: "eth_requestAccounts"
-                })
-                .then(async (account) => {
-                    if (chainId != 97) {
-                        await changeToMain();
+                if (chainId == 97) {
+                    if (wallet_address != '<?php echo strtolower($data->user->metamask_wallet_id) ?>') {
+                        $("#btn_locader").removeClass('is-active');
+                        $('#sub_data').html('<div class="alert alert-danger">Wallet address mismatch (' + wallet_address + '). Your account was created by using wallet address <?php echo strtolower($data->user->metamask_wallet_id); ?>. Please switch to same wallet address to join sale.</div>');
+                    } else {
+                        $("#btn_locader").addClass('is-active');
+                        const contract = new web3.eth.Contract(CLAIM_CONTRACT_ABI, CLAIM_CONTRACT_ADDRESS);
+                        amount = web3.utils.toWei(num.toString());
+                        await contract.methods
+                            .claim(wallet_address, amount)
+                            .send({
+                                from: wallet_address,
+                            })
+                            .on("transactionHash", async (hash) => {
+                                $("#btn_locader").attr('data-curtain-text', 'Processing...');
+                                // get tx hash
+                                console.log('Hello 1');
+                                console.log(hash);
+                                update_claim(id, num, 2, hash, '');
+                                $('#sub_data').html('<div class="alert alert-info">Token claim process has been initiated. <a href="<?php echo env('bscscanHash'); ?>tx/' + hash + '" target="_blank">Click here </a> to check transaction status.</div>');
+                            })
+                            .on("receipt", async (receipt) => {
+                                // receipt.status will return your tx status. true & false
+                                console.log('Hello 2');
+                                console.log(receipt);
+                                if (receipt.status === true) {
+                                    $("#btn_locader").attr('data-curtain-text', 'Tokens Claimed...');
+                                    update_claim(id, num, 3, receipt.transactionHash, receipt);
+                                    setTimeout(function() {
+                                        $("#btn_locader").removeClass('is-active');
+                                        $('#sub_data').html('<div class="alert alert-success">Tokens has been claimed successfully. <a href="<?php echo env('bscscanHash'); ?>tx/' + receipt.transactionHash + '" target="_blank">Click here </a> to check transaction status.</div>');
+                                    }, 1000);
+                                } else {
+                                    $("#btn_locader").attr('data-curtain-text', 'Transaction failed...');
+                                    update_claim(id, num, 4, receipt.transactionHash, receipt);
+                                    setTimeout(function() {
+                                        $("#btn_locader").removeClass('is-active');
+                                        $('#sub_data').html('<div class="alert alert-danger">Token claim process has been failed. <a href="<?php echo env('bscscanHash'); ?>tx/' + receipt.transactionHash + '" target="_blank">Click here </a> to check transaction status.</div>');
+                                    }, 2000);
+                                }
+                            })
+                            .on('confirmation', function(confirmationNumber, receipt) {
+                                // console.log('Hello 3'); console.log(confirmationNumber);  console.log(receipt);
+                            })
+                            .on('error', function(error) {
+                                console.log('Hello 4');
+                                console.log('error', error);
+
+                                if (error.code === 4001) {
+                                    $("#btn_locader").attr('data-curtain-text', 'Transaction Canceled...');
+                                    setTimeout(function() {
+                                        $("#btn_locader").removeClass('is-active');
+                                        $('#sub_data').html('<div class="alert alert-danger">Token claim process has been failed.</div>');
+                                    }, 3000);
+                                } else {
+                                    $("#btn_locader").attr('data-curtain-text', 'Transaction failed...');
+
+                                    setTimeout(function() {
+                                        $("#btn_locader").removeClass('is-active');
+                                        $('#sub_data').html('<div class="alert alert-danger">' + error.message + '</div>');
+                                    }, 3000);
+                                }
+
+                            });
                     }
-                    //   Claim contract web3 instance
-                    instance = new web3.eth.Contract(CLAIM_CONTRACT_ABI, CLAIM_CONTRACT_ADDRESS);
-                    //   sending claim function tx from metamask selected account
-                    instance.methods.claim(account[0], web3.utils.toWei('' + num + '', "ether"))
-                        .send({
-                            from: account[0]
-                        })
-                        .on("transactionHash", async (hash) => {
-                            $("#btn_locader").attr('data-curtain-text', 'Processing...');
-                            // get tx hash
-                            console.log('Hello 1');
-                            console.log(hash);
-                            update_claim(id, num, 2, hash, '');
-                            $('#sub_data').html('<div class="alert alert-info">Token claim process has been initiated. <a href="<?php echo env('bscscanHash'); ?>tx/' + hash + '" target="_blank">Click here </a> to check transaction status.</div>');
-                        })
-                        .on("receipt", async (receipt) => {
-                            // receipt.status will return your tx status. true & false
-                            console.log('Hello 2');
-                            console.log(receipt);
-                            if (receipt.status === true) {
-                                $("#btn_locader").attr('data-curtain-text', 'Token Claimed...');
-                                update_claim(id, num, 3, receipt.transactionHash, receipt);
-                                setTimeout(function() {
-                                    $("#btn_locader").removeClass('is-active');
-                                    $('#sub_data').html('<div class="alert alert-success">Tokens has been claimed successfully. <a href="<?php echo env('bscscanHash'); ?>tx/' + receipt.transactionHash + '" target="_blank">Click here </a> to check transaction status.</div>');
-                                }, 1000);
-                            } else {
-                                $("#btn_locader").attr('data-curtain-text', 'Transaction failed...');
-                                update_claim(id, num, 4, receipt.transactionHash, receipt);
-                                setTimeout(function() {
-                                    $("#btn_locader").removeClass('is-active');
-                                    $('#sub_data').html('<div class="alert alert-danger">Token claim process has been failed. <a href="<?php echo env('bscscanHash'); ?>tx/' + receipt.transactionHash + '" target="_blank">Click here </a> to check transaction status.</div>');
-                                }, 2000);
-                            }
-                        })
-                        .on('confirmation', function(confirmationNumber, receipt) {
-                            // console.log('Hello 3'); console.log(confirmationNumber);  console.log(receipt);
-                        })
-                        .on('error', function(error, receipt) {
-                            console.log('Hello 4');
-                            console.log(error);
-                            console.log(receipt);
-                            if (error.code === 4001) {
-                                $("#btn_locader").attr('data-curtain-text', 'Transaction Canceled...');
-                                setTimeout(function() {
-                                    $("#btn_locader").removeClass('is-active');
-                                    $('#sub_data').html('<div class="alert alert-danger">Token claim process has been failed.</div>');
-                                }, 3000);
-                            } else {
-                                $("#btn_locader").attr('data-curtain-text', 'Transaction failed...');
-                                update_claim(id, num, 4, receipt.transactionHash, receipt);
-                                setTimeout(function() {
-                                    $("#btn_locader").removeClass('is-active');
-                                    $('#sub_data').html('<div class="alert alert-danger">Token claim process has been failed. <a href="<?php echo env('bscscanHash'); ?>tx/' + receipt.transactionHash + '" target="_blank">Click here </a> to check transaction status.</div>');
-                                }, 3000);
-                            }
+                } else {
+                    $("#btn_locader").removeClass('is-active');
+                    $('#sub_data').html('<div class="alert alert-danger">Please switch to chain ID 97 ( Binance Smart Chain ) to join sale.</div>');
+                }
 
-                        });
-                });
+            } catch (error) {
+                $("#btn_locader").removeClass('is-active');
+                console.log("Error catched");
+                $('#sub_data').html('<div class="alert alert-danger">' + error.message + '</div>');
+                return;
+            }
+
+
         }
 
         function update_claim(id, num, status, transaction, tran_data) {
