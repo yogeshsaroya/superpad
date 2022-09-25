@@ -280,7 +280,7 @@ if( $list->product_status != 'TBA'){
                                         <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="<?php echo SITEURL; ?>users/application_status">Application Status</a> </li>
                                     <?php } ?>
                                 <?php } else { ?>
-                                    <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL; ?>sign-in?redirect=explore/<?php echo $list->slug; ?>/apply">Login to Whitelist</a></li>
+                                    <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="userLoginOut();">Login to Whitelist</a></li>
                                 <?php } ?>
 
                                 <?php } else if (strtolower($list->product_status) == 'live now' ) {
