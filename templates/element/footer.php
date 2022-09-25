@@ -81,55 +81,6 @@ $MenuType = getMenuType();
                 <li><a href="<?php echo SITEURL; ?>sign-in">Login</a></li>
                 <li><a href="<?php echo SITEURL; ?>connect-wallet">Wallet</a></li>
             </ul>
-        </div><!-- end d-flex -->
-    </div><!-- .container -->
-</footer><!-- end footer-section -->
-
-<?php /* $this->append('scriptBottom'); ?>
-<script>
-    "use strict";
-    const Web3Modal = window.Web3Modal.default;
-    const WalletConnectProvider = window.WalletConnectProvider.default;
-    let web3Modal;
-    let provider;
-    let selectedAccount;
-
-    function init() {
-        const options = new WalletConnectProvider({
-            rpc: {
-                <?php echo (int)env('chain_id'); ?>: "<?php echo env('dataseed'); ?>"
-            },
-            infuraId: "<?php echo env('infuraId'); ?>"
-        });
-        const providerOptions = {
-            walletconnect: {
-                package: WalletConnectProvider,
-                options: options,
-            },
-        };
-
-        web3Modal = new Web3Modal({
-            cacheProvider: false, 
-            providerOptions
-        });
-    }
-
-    async function fetchAccountData() {
-        const web3 = new Web3(Web3.givenProvider);
-        console.log("Web3 instance is", web3);
-        try {
-            const chainId = await web3.eth.getChainId();
-            console.log("chain id", chainId);
-            const accounts = await web3.eth.getAccounts();
-            console.log("Got accounts", accounts[0]);
-        } catch (error) {
-            console.log('error', error)
-        }
-    }
-    window.addEventListener("load", async () => {
-        init();
-        await fetchAccountData();
-
-    });
-</script>
-<?php $this->end(); */ ?>
+        </div>
+    </div>
+</footer>
