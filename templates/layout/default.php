@@ -19,6 +19,8 @@
 
 <body>
     <div class="page-wrap">
+
+        <div id="main_locader" class="loader loader-bouncing"></div>
         <?php echo $this->element('header'); ?>
         <?= $this->fetch('content') ?>
         <?php echo $this->element('footer'); ?>
@@ -51,6 +53,7 @@
                         walletconnect: {
                             package: WalletConnectProvider,
                             options: {
+                                rpc: {<?php echo $contract->chain_id; ?>: "<?php echo $contract->dataseed_url; ?>"},
                                 infuraId: "<?php echo (!empty($contract->infura_id) ? $contract->infura_id : null); ?>",
                             }
                         },
@@ -114,7 +117,7 @@
                     }
                 }
 
-                
+
                 async function userLoginOut() {
                     console.log(userLoginData);
                     if (userLoginData.state == "loggedOut" || userLoginData.state == "needMetamask") {
@@ -128,7 +131,7 @@
                             console.log('Hello 4');
                             console.log(error);
                             userLoginData.state = 'needLogInToMetaMask';
-                            
+
                             return;
                         }
                     } else {
@@ -138,6 +141,7 @@
                 }
 
                 async function userLogin() {
+                    $("#main_locader").addClass('is-active');
                     // Get connected chain id from Ethereum node
                     const chainId = await web3.eth.getChainId();
                     console.log("chain id", chainId);
@@ -196,6 +200,7 @@
                                         .then(function(response) {
                                             console.log('Hello 5');
                                             console.log(response.data);
+                                            $("#main_locader").removeClass('is-active');
                                             if (response.data[0] == "Success") {
                                                 rd();
                                             } else if (response.data[0] == "Error") {
@@ -229,7 +234,7 @@
                     $('#signTheMessage').html('<div class="alert alert-success">Your MetaMask wallet address been connected.</div>');
                     location.reload();
                     setTimeout(function() {
-                        
+
                     }, 2000);
                 }
 
