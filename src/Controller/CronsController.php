@@ -332,7 +332,7 @@ class CronsController extends AppController
     {
         $data = $this->Applications->find()
             ->contain(['Users'])
-            ->where(['Applications.status' => 4, 'Applications.is_notified' => 1])->all();
+            ->where(['Users.email IS NOT' => null,'Applications.status' => 4, 'Applications.is_notified' => 1])->all();
         if (!$data->isEmpty()) {
             foreach ($data as $list) {
                 $this->Data->AppMail($list->user->email, 13, ['NAME' => $list->user->first_name]);
