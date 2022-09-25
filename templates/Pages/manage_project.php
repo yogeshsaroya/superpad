@@ -130,9 +130,8 @@ $this->assign('title', 'Manage Projects'); ?>
                                         </div>
                                         <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('coin_price', ['label' => ['escape' => false, 'text' => 'Coin Price in dollar'], 'class' => 'form-control amt numeral-mask', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div>
                                         </div>
-                                        <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('max_allocation', ['label' => ['escape' => false, 'text' => 'Max Allocation in dollar <small>only if Token Required is No</small>'], 'class' => 'form-control amt numeral-mask', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div>
-                                        </div>
-
+                                        <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('max_allocation', ['label' => ['escape' => false, 'text' => 'Max Allocation in dollar <small>only if Token Required is No</small>'], 'class' => 'form-control amt numeral-mask', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div></div>
+                                        <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('token_address', ['label' => ['escape' => false, 'text' => 'Token Address <small>Token address will be required during claim</small>'], 'class' => 'form-control','required' => false]); ?><div class="help-block with-errors"></div></div>
                                     </div>
                                     <hr><br>
                                     <div class="row">

@@ -333,15 +333,15 @@ class HomesController extends AppController
                     $is_pending = $join_data = $short_name = null;
                     if ($this->Auth->User('id') != "") {
                         $query1 = $this->Applications->find('all', [
-                            'contain' => ['Payments','Projects', 'Users', 'Tickets' => ['conditions' => ['Tickets.status' => 1]]],
+                            'contain' => ['Payments', 'Projects', 'Users', 'Tickets' => ['conditions' => ['Tickets.status' => 1]]],
                             'conditions' => ['Applications.status' => 4, 'Applications.project_id' => $data->id, 'Applications.user_id' => $this->Auth->User('id')]
                         ]);
                         $join_data =  $query1->first();
-                        
-                        if(!empty($join_data->payments)){
+
+                        if (!empty($join_data->payments)) {
                             $collection = new Collection($join_data->payments);
-                            if(!$collection->isEmpty()){
-                                $chk_pending = $collection->match(['transaction_status' =>2]);
+                            if (!$collection->isEmpty()) {
+                                $chk_pending = $collection->match(['transaction_status' => 2]);
                                 $is_pending = $chk_pending->toList();
                             }
                         }
@@ -379,7 +379,9 @@ class HomesController extends AppController
                             }
                         }
                     }
-                    $this->set(compact('join_data', 'id', 'max_amt', 'max_tickets', 'short_name','is_pending'));
+                    $contract = $this->fetchTable('Contracts')->find('all')->where(['type' => 'main'])->first();
+                    if (empty($contract)) { $this->viewBuilder()->setLayout('error_404'); } 
+                    $this->set(compact('join_data', 'id', 'max_amt', 'max_tickets', 'short_name', 'is_pending','contract'));
                 }
                 $this->set(compact('data', 'data_app', 'op_pop', 'data_app', 'join_pop'));
 
@@ -425,10 +427,10 @@ class HomesController extends AppController
                         'amount' => $postData['amount'],
                         'transaction_id' => $postData['transaction_id'],
                         'transaction_data' => null,
-                        'transaction_status' => 2 ];
+                        'transaction_status' => 2
+                    ];
                     $payment = $this->fetchTable('Payments')->patchEntity($payment, $payment_arr);
-                }
-                elseif ($postData['status'] == 3) {
+                } elseif ($postData['status'] == 3) {
                     $payment = $this->fetchTable('Payments')->find('all', ['conditions' => ['Payments.transaction_id' => $postData['transaction_id']]])->first();
                     $payment->transaction_status = 3;
                     $payment->transaction_data = json_encode($postData['transaction_data']);
@@ -437,14 +439,13 @@ class HomesController extends AppController
                     $appData->joined = $arr['joined'];
                     $appData->joined_usd = $arr['joined_usd'];
                     $appData->remaining = $arr['remaining'];
-                }
-                elseif ($postData['status'] == 4) {
+                } elseif ($postData['status'] == 4) {
                     /* payment is failed */
                     $payment = $this->fetchTable('Payments')->find('all', ['conditions' => ['Payments.transaction_id' => $postData['transaction_id']]])->first();
                     $payment->transaction_status = 4;
                     $payment->transaction_data = json_encode($postData['transaction_data']);
                 }
-                
+
                 if ($this->fetchTable('Payments')->save($payment)) {
                     $this->Applications->save($appData);
                     echo "<script>$('#paybusd').remove();</script>";
@@ -461,7 +462,9 @@ class HomesController extends AppController
                         /* If Failed */
                         echo "<div class='alert alert-success'>Transaction has been failed.</div>";
                     }
-                }else{ echo "<div class='alert alert-success'>Transaction has been failed.</div>"; }
+                } else {
+                    echo "<div class='alert alert-success'>Transaction has been failed.</div>";
+                }
             } else {
                 echo '<div class="alert alert-danger">Please login or register to apply.</div>';
                 exit;

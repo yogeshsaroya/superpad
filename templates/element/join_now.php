@@ -7,6 +7,7 @@
         cursor: pointer;
     }
 </style>
+
 <div class="app-contentcontent">
     <div class="modal-content">
         <div class="modal-header">
@@ -75,373 +76,9 @@
 </div>
 <?php $this->append('scriptBottom'); ?>
 <script>
-    const paymentAddress = "0x819D387045e7853ce0C0126ee4D69ce61047593E";
-    const BUSD_CONTRACT = "0x50adc5ac7ba0c3676ecdb0a2e9cd448325e6f3a2";
-    const BUSD_ABI = [{
-            "inputs": [],
-            "stateMutability": "nonpayable",
-            "type": "constructor"
-        },
-        {
-            "anonymous": false,
-            "inputs": [{
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "owner",
-                    "type": "address"
-                },
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "spender",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "value",
-                    "type": "uint256"
-                }
-            ],
-            "name": "Approval",
-            "type": "event"
-        },
-        {
-            "inputs": [{
-                    "internalType": "address",
-                    "name": "spender",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "approve",
-            "outputs": [{
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            }],
-            "name": "burn",
-            "outputs": [{
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "address",
-                    "name": "spender",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "subtractedValue",
-                    "type": "uint256"
-                }
-            ],
-            "name": "decreaseAllowance",
-            "outputs": [{
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "address",
-                    "name": "spender",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "addedValue",
-                    "type": "uint256"
-                }
-            ],
-            "name": "increaseAllowance",
-            "outputs": [{
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            }],
-            "name": "mint",
-            "outputs": [{
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "anonymous": false,
-            "inputs": [{
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "previousOwner",
-                    "type": "address"
-                },
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "newOwner",
-                    "type": "address"
-                }
-            ],
-            "name": "OwnershipTransferred",
-            "type": "event"
-        },
-        {
-            "inputs": [],
-            "name": "renounceOwnership",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "address",
-                    "name": "recipient",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "transfer",
-            "outputs": [{
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "anonymous": false,
-            "inputs": [{
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "from",
-                    "type": "address"
-                },
-                {
-                    "indexed": true,
-                    "internalType": "address",
-                    "name": "to",
-                    "type": "address"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "value",
-                    "type": "uint256"
-                }
-            ],
-            "name": "Transfer",
-            "type": "event"
-        },
-        {
-            "inputs": [{
-                    "internalType": "address",
-                    "name": "sender",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "recipient",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "transferFrom",
-            "outputs": [{
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-            }],
-            "name": "transferOwnership",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "_decimals",
-            "outputs": [{
-                "internalType": "uint8",
-                "name": "",
-                "type": "uint8"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "_name",
-            "outputs": [{
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "_symbol",
-            "outputs": [{
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                    "internalType": "address",
-                    "name": "owner",
-                    "type": "address"
-                },
-                {
-                    "internalType": "address",
-                    "name": "spender",
-                    "type": "address"
-                }
-            ],
-            "name": "allowance",
-            "outputs": [{
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [{
-                "internalType": "address",
-                "name": "account",
-                "type": "address"
-            }],
-            "name": "balanceOf",
-            "outputs": [{
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "decimals",
-            "outputs": [{
-                "internalType": "uint8",
-                "name": "",
-                "type": "uint8"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "getOwner",
-            "outputs": [{
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "name",
-            "outputs": [{
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "owner",
-            "outputs": [{
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "symbol",
-            "outputs": [{
-                "internalType": "string",
-                "name": "",
-                "type": "string"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "totalSupply",
-            "outputs": [{
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }],
-            "stateMutability": "view",
-            "type": "function"
-        }
-    ];
+    const paymentAddress = "<?php echo $contract->payment_address;?>";
+    const BUSD_CONTRACT = "<?php echo $contract->busd_contract_address;?>";
+    const BUSD_ABI = <?php echo $contract->busd_contract_abi;?>;
 
     "use strict";
     const Web3Modal = window.Web3Modal.default;
@@ -453,9 +90,9 @@
     function init() {
         const options = new WalletConnectProvider({
             rpc: {
-                <?php echo (int)env('chain_id'); ?>: "<?php echo env('dataseed'); ?>"
+                <?php echo $contract->chain_id;?>: "<?php echo $contract->dataseed_url;?>"
             },
-            infuraId: "<?php echo env('infuraId'); ?>"
+            infuraId: "<?php echo $contract->infura_id; ?>"
         });
         const providerOptions = {
             walletconnect: {
@@ -536,9 +173,8 @@
                 console.log("provider", provider);
                 const web3 = new window.Web3(provider);
                 let chainId = await web3.eth.getChainId();
-                //if (chainId != 56) { await changeToMain("0x38"); }
-                if (chainId != 97) {
-                    await changeToMain("0x61");
+                if (chainId != <?php echo $contract->chain_id;?>) {
+                    await changeToMain("0x<?php echo dechex($contract->chain_id);?>");
                 }
 
                 const accounts = await web3.eth.getAccounts();
@@ -546,7 +182,7 @@
                 console.log("Got accounts", wallet_address);
                 console.log('Chain ID', chainId);
 
-                if (chainId == 97) {
+                if (chainId == <?php echo $contract->chain_id;?>) {
                     if (wallet_address != '<?php echo strtolower($join_data->user->metamask_wallet_id) ?>') {
                         $("#btn_locader").removeClass('is-active');
                         $('#f_err').html('<div class="alert alert-danger">Wallet address mismatch (' + wallet_address + '). Your account was created by using wallet address <?php echo strtolower($join_data->user->metamask_wallet_id); ?>. Please switch to same wallet address to join sale.</div>');
@@ -554,13 +190,8 @@
                         $("#btn_locader").addClass('is-active');
                         const contract = new web3.eth.Contract(BUSD_ABI, BUSD_CONTRACT);
                         await contract.methods
-                            .transfer(
-                                paymentAddress,
-                                web3.utils.toWei(setAmt.toString(), "ether")
-                            )
-                            .send({
-                                from: wallet_address
-                            })
+                            .transfer(paymentAddress,web3.utils.toWei(setAmt.toString(), "ether"))
+                            .send({ from: wallet_address })
                             .on('transactionHash', function(hash) {
                                 console.log('tran ini ', hash);
                                 $("#btn_locader").attr('data-curtain-text', 'Transaction initiated...');

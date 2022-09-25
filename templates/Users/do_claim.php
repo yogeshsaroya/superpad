@@ -9,6 +9,7 @@
 <?php
 echo $this->Form->create(null);
 echo $this->Form->end();
+
 ?>
 
 <section class="about-section pt-5 mt-3 cta-section section-space-b bg-pattern">
@@ -82,7 +83,7 @@ echo $this->Form->end();
                                                 <div id="aj_res"></div>
                                             </div>
                                         <?php  } else {
-                                            echo '<h3 class="text-center text-danger">Allocation will be available soon.</h3>';
+                                            echo '<h3 class="text-center text-success">Allocation will be available soon.</h3>';
                                         } ?>
                                     </div>
                                 </section>
@@ -102,105 +103,12 @@ echo $this->Form->end();
     $this->append('scriptBottom');
 ?>
     <script>
-        const CLAIM_CONTRACT_ADDRESS = "<?php echo env('CLAIM_CONTRACT_ADDRESS'); ?>";
-        const CLAIM_CONTRACT_ABI = [{
-                inputs: [{
-                    internalType: "address",
-                    name: "_BEP20Address",
-                    type: "address",
-                }, ],
-                stateMutability: "nonpayable",
-                type: "constructor",
-            },
-            {
-                anonymous: false,
-                inputs: [{
-                        indexed: true,
-                        internalType: "address",
-                        name: "previousOwner",
-                        type: "address",
-                    },
-                    {
-                        indexed: true,
-                        internalType: "address",
-                        name: "newOwner",
-                        type: "address",
-                    },
-                ],
-                name: "OwnershipTransferred",
-                type: "event",
-            },
-            {
-                inputs: [],
-                name: "BEP20Address",
-                outputs: [{
-                    internalType: "contract IBEP20",
-                    name: "",
-                    type: "address",
-                }, ],
-                stateMutability: "view",
-                type: "function",
-            },
-            {
-                inputs: [{
-                    internalType: "address",
-                    name: "_BEP20Address",
-                    type: "address",
-                }, ],
-                name: "ChangeTokenAddress",
-                outputs: [],
-                stateMutability: "nonpayable",
-                type: "function",
-            },
-            {
-                inputs: [{
-                        internalType: "address",
-                        name: "_claimer",
-                        type: "address",
-                    },
-                    {
-                        internalType: "uint256",
-                        name: "_amount",
-                        type: "uint256",
-                    },
-                ],
-                name: "claim",
-                outputs: [],
-                stateMutability: "nonpayable",
-                type: "function",
-            },
-            {
-                inputs: [],
-                name: "owner",
-                outputs: [{
-                    internalType: "address",
-                    name: "",
-                    type: "address",
-                }, ],
-                stateMutability: "view",
-                type: "function",
-            },
-            {
-                inputs: [],
-                name: "renounceOwnership",
-                outputs: [],
-                stateMutability: "nonpayable",
-                type: "function",
-            },
-            {
-                inputs: [{
-                    internalType: "address",
-                    name: "newOwner",
-                    type: "address",
-                }, ],
-                name: "transferOwnership",
-                outputs: [],
-                stateMutability: "nonpayable",
-                type: "function",
-            },
-        ];
-
         "use strict";
+
+        const CLAIM_CONTRACT_ADDRESS = "<?php echo $contract->claim_token_contract_address; ?>";
+        const CLAIM_CONTRACT_ABI = <?php echo $contract->claim_token_contract_abi; ?>;
+
+
         const Web3Modal = window.Web3Modal.default;
         const WalletConnectProvider = window.WalletConnectProvider.default;
         let web3Modal;
@@ -210,10 +118,11 @@ echo $this->Form->end();
         function init() {
             const options = new WalletConnectProvider({
                 rpc: {
-                    <?php echo (int)env('chain_id'); ?>: "<?php echo env('dataseed'); ?>"
+                    <?php echo $contract->chain_id; ?>: "<?php echo $contract->dataseed_url; ?>"
                 },
-                infuraId: "<?php echo env('infuraId'); ?>"
+                infuraId: "<?php echo $contract->infura_id; ?>"
             });
+
             const providerOptions = {
                 walletconnect: {
                     package: WalletConnectProvider,
@@ -243,7 +152,6 @@ echo $this->Form->end();
             }
         }
 
-
         async function fetchAccountData() {
 
         }
@@ -255,9 +163,8 @@ echo $this->Form->end();
                 console.log("provider", provider);
                 const web3 = new window.Web3(provider);
                 let chainId = await web3.eth.getChainId();
-                //if (chainId != 56) { await changeToMain("0x38"); }
-                if (chainId != 97) {
-                    await changeToMain("0x61");
+                if (chainId != <?php echo $contract->chain_id; ?>) {
+                    await changeToMain("0x<?php echo dechex($contract->chain_id); ?>");
                 }
 
                 const accounts = await web3.eth.getAccounts();
@@ -265,18 +172,18 @@ echo $this->Form->end();
                 console.log("Got accounts", wallet_address);
                 console.log('Chain ID', chainId);
 
-                if (chainId == 97) {
+                if (chainId == <?php echo $contract->chain_id; ?>) {
                     if (wallet_address != '<?php echo strtolower($data->user->metamask_wallet_id) ?>') {
                         $("#btn_locader").removeClass('is-active');
                         $('#sub_data').html('<div class="alert alert-danger">Wallet address mismatch (' + wallet_address + '). Your account was created by using wallet address <?php echo strtolower($data->user->metamask_wallet_id); ?>. Please switch to same wallet address to join sale.</div>');
                     } else {
                         $("#btn_locader").addClass('is-active');
                         const contract = new web3.eth.Contract(CLAIM_CONTRACT_ABI, CLAIM_CONTRACT_ADDRESS);
-                        amount = web3.utils.toWei(num.toString());
+                        //amount = web3.utils.toWei(num.toString());
                         await contract.methods
-                            .claim(wallet_address, amount)
+                            .claim('<?php echo $data->project->token_address; ?>')
                             .send({
-                                from: wallet_address,
+                                from: wallet_address
                             })
                             .on("transactionHash", async (hash) => {
                                 $("#btn_locader").attr('data-curtain-text', 'Processing...');

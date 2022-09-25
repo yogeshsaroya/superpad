@@ -18,17 +18,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Google_Client;
-use Google_Service_Oauth2;
-
-use Cake\Core\Configure;
-use Cake\Http\Exception\ForbiddenException;
-use Cake\Http\Exception\NotFoundException;
-use Cake\Http\Response;
-use Cake\View\Exception\MissingTemplateException;
-use Cake\Auth\DefaultPasswordHasher;
-
-
 /**
  * Static content controller
  *
@@ -110,14 +99,20 @@ class UsersController extends AppController
             }
             $session->write('redirect', $qr);
         }
-        
-        if($this->Auth->user('id')){
+
+        if ($this->Auth->user('id')) {
             $user_data = $this->Users->findById($this->Auth->user('id'))->first();
             if (!empty($user_data->metamask_wallet_id)) {
                 return $this->redirect('/dashboard');
                 exit;
             }
-    
+        }
+        $contract = $this->fetchTable('Contracts')->find('all')->where(['type' => 'main'])->first();
+
+        if (empty($contract)) {
+            $this->viewBuilder()->setLayout('error_404');
+        } else {
+            $this->set(compact('contract'));
         }
     }
 
@@ -931,8 +926,13 @@ class UsersController extends AppController
     public function doClaim($id = null)
     {
 
+        
+        $contract = $this->fetchTable('Contracts')->find('all')->where(['type' => 'main'])->first();
+        if (empty($contract)) {
+            $this->viewBuilder()->setLayout('error_404');
+        }
         $query = $this->Applications->find('all', [
-            'contain' => ['Users','Claims', 'Projects' => ['TokenDistributions' => ['sort' => ['TokenDistributions.claim_date' => 'ASC']]]],
+            'contain' => ['Users', 'Claims', 'Projects' => ['TokenDistributions' => ['sort' => ['TokenDistributions.claim_date' => 'ASC']]]],
             'conditions' => [
                 'Applications.id' => $id, 'Applications.status' => 4, 'Applications.total_token > ' => 0,
                 'Applications.user_id' => $this->Auth->User('id')
@@ -940,14 +940,22 @@ class UsersController extends AppController
         ]);
         $data =  $query->first();
         $percentage = 0;
+
         if (!empty($data)) {
+            /*
             if (isset($data->project->token_distributions) && !empty($data->project->token_distributions)) {
                 $percentage = array_sum(array_column($data->project->token_distributions, 'percentage'));
                 if ($percentage == 100 && empty($data->claims)) {
                     $arr = [];
                     foreach ($data->project->token_distributions as $list) {
                         if (!empty($list->claim_date)) {
-                            $arr[] = ['id' => null, 'application_id' => $data->id, 'project_id' => $data->project_id, 'user_id' => $data->user_id, 'token_distribution_id' => $list->id, 'percentage' => $list->percentage, 'total_token' => $data->total_token * $list->percentage / 100, 'claim_from' => $list->claim_date->format("Y-m-d H:i:s")];
+                            $arr[] = [
+                                'id' => null, 'application_id' => $data->id, 'project_id' => $data->project_id, 
+                                'user_id' => $data->user_id, 
+                                'token_distribution_id' => $list->id, 'percentage' => $list->percentage, 
+                                'total_token' => ceil($data->total_token * $list->percentage / 100),
+                                'claim_from' => $list->claim_date->format("Y-m-d H:i:s")
+                            ];
                         }
                     }
                     if (!empty($arr)) {
@@ -958,9 +966,11 @@ class UsersController extends AppController
                         exit;
                     }
                 }
-            }
+            }*/
+            $this->set(compact('data', 'percentage', 'contract'));
+        } else {
+            $this->viewBuilder()->setLayout('error_404');
         }
-        $this->set(compact('data', 'percentage'));
     }
 
     public function checkClaim()

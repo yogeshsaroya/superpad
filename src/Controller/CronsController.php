@@ -20,6 +20,7 @@ namespace App\Controller;
 
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
+use Cake\Utility\Text;
 
 /**
  * Static content controller
@@ -356,7 +357,7 @@ class CronsController extends AppController
             ->all();
         if (!$data->isEmpty()) {
             foreach ($data as $list) {
-                $tokens = $list->joined_usd / $list->project->price_per_token;
+                $tokens = ceil($list->joined_usd / $list->project->price_per_token);
                 if ($tokens > 0) {
                     $list->total_token = $tokens;
                     $list->available_token = $tokens;
@@ -515,4 +516,35 @@ class CronsController extends AppController
 
         exit;
     }
+
+    /*
+    Check tran status 
+    */
+    public function checkTran($id = null)
+    {
+        if (!empty($id)) {
+            $url = env('bscscanAPI') . 'api?module=transaction&action=gettxreceiptstatus&txhash=' . $id . '&apikey=' . env('bscscanKey');
+            $res = $this->Data->fetch($url);
+            $arr = json_decode($res, true);
+            ec($arr);
+        }
+        exit;
+    }
+
+    public function mkClaims()
+    {
+        //ec(Text::uuid());die;
+        $query = $this->Applications->find('all', [
+            'contain' => ['Users', 'Claims', 'Projects' => ['TokenDistributions' => ['sort' => ['TokenDistributions.claim_date' => 'ASC']]]],
+            'conditions' => ['Applications.status' => 4, 'Applications.total_token > ' => 0]
+        ]);
+        $data =  $query->all();
+        if (!$data->isEmpty()) {
+            foreach ($data as $list) {
+                ec($list);die;
+            }
+        }
+        exit;
+    }
+    
 }
