@@ -13,10 +13,7 @@ echo $this->element('profile/header', ['bg_color' => 'bg-gray']); ?>
                     <h5 class="mb-3">MetaMask Wallet Address</h5>
                     <?php if(!empty($user_data->metamask_wallet_id) ){?>
                     <button class="btn btn-outline-dark"><?php echo $user_data->metamask_wallet_id?></button>
-                    <?php }else{
-                        echo $this->Html->link('Connect Wallet','/connect-wallet',['class'=>'btn btn-outline-primary']);
-                    }?>
-                    
+                    <?php }?>
                     <p class="fs-14 mt-2"></p>
 
                 </div>

@@ -3,10 +3,7 @@ $list = $data;
 $this->assign('title', $list->meta_title);
 $this->assign('description', $list->meta_description);
 echo $this->Html->css(['magnific-popup'], ['block' => 'css']);
-echo $this->Html->script(['jquery.magnific-popup.min',
-'https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.1/web3.min.js',
-'https://unpkg.com/@metamask/legacy-web3@latest/dist/metamask.web3.min.js'
-], ['block' => 'scriptBottom']);
+echo $this->Html->script(['jquery.magnific-popup.min'], ['block' => 'scriptBottom']);
 
 
 $today = strtotime(DATE);
@@ -291,7 +288,7 @@ if( $list->product_status != 'TBA'){
                                     if (empty($join_pop)) { ?>
                                     <li class="flex-grow-1"><?php echo $this->Html->link('Join Now','/explore/'.$list->slug.'/join_now',['class'=>'btn btn-primary w-100']);?></li>
                                 <?php }} else { ?>
-                                    <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL; ?>sign-in?redirect=explore/<?php echo $list->slug; ?>/join_now">Login to Join Now</a></li>
+                                    <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="userLoginOut();">Login to Join Now</a></li>
                                 <?php } ?>
                             <?php } else if (strtolower($list->product_status) == 'sold out') { ?>
                                 <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Sold Out</a> </li>

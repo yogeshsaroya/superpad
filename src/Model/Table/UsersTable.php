@@ -58,7 +58,13 @@ class UsersTable extends Table
 
     public function validationOnlyKyc(Validator $validator) {
         $validator
-        ->notEmptyString("kyc_full_name", "Full name is required")
+        ->notEmptyString("first_name", "First name is required")
+        ->notEmptyString("last_name", "First name is required")
+        ->requirePresence("email")
+        ->notEmptyString("email", "Email is required")
+        ->add("email", [
+            'unique' => ['rule' => 'validateUnique', 'provider' => 'table', 'message' => 'Email address is already in use'],
+            "valid_email" => ["rule" => ["email"],"message" => "Email Address is not valid"]])
         ->notEmptyString("kyc_dob", "Date of birth is required")
         ->notEmptyString("kyc_address", "Address is required")
         ->notEmptyString("kyc_city", "City is required")

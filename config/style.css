@@ -4037,7 +4037,7 @@ textarea.form-control {
     padding-bottom: 60px;
 }
 
-.hero-content {
+  {
     padding: 2rem 0;
     position: relative;
     z-index: 2;
@@ -4108,7 +4108,7 @@ textarea.form-control {
         padding-top: 100px;
         padding-bottom: 100px;
     }
-    .hero-content {
+      {
         padding: 4rem 0;
     }
     .hero-title {
@@ -6691,4 +6691,3 @@ form .required label:after {
 
 
 .bg-light {color: #000;}
-.web3modal-modal-lightbox{ z-index: 999 !important;}

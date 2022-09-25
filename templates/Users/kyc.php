@@ -68,12 +68,12 @@ echo $this->element('profile/header', ['bg_color' => 'bg-gray']); ?>
                             </div>
 
                             <div class="row mt-4">
-                                <div class="col-lg-6 mb-3 form-group"><?php echo $this->Form->control('kyc_full_name', ['label' => ['text' => 'Full Name', 'class' => 'form-label'], 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
-                                </div>
-                                <div class="col-lg-6 mb-3 form-group"><?php echo $this->Form->control('kyc_dob', ['label' => ['text' => 'Date of Birth', 'class' => 'form-label'], 'type' => 'date', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
-                                </div>
-                                <div class="col-lg-6 mb-3 form-group"><?php echo $this->Form->control('kyc_address', ['label' => ['text' => 'Address', 'class' => 'form-label'], 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
-                                </div>
+                                <div class="col-lg-6 mb-3 form-group"><?php echo $this->Form->control('first_name', ['label' => ['text' => 'First Name', 'class' => 'form-label'], 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                <div class="col-lg-6 mb-3 form-group"><?php echo $this->Form->control('last_name', ['label' => ['text' => 'Last Name', 'class' => 'form-label'], 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                <div class="col-lg-6 mb-3 form-group"><?php echo $this->Form->control('email', ['label' => ['text' => 'Email Address', 'class' => 'form-label'],  'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+
+                                <div class="col-lg-6 mb-3 form-group"><?php echo $this->Form->control('kyc_dob', ['label' => ['text' => 'Date of Birth', 'class' => 'form-label'], 'type' => 'date', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div></div>
+                                <div class="col-lg-6 mb-3 form-group"><?php echo $this->Form->control('kyc_address', ['label' => ['text' => 'Address', 'class' => 'form-label'], 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                                 <div class="col-lg-6 mb-3 form-group"><?php echo $this->Form->control('kyc_address_other', ['label' => ['text' => 'Address 2', 'class' => 'form-label'], 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => false]); ?><div class="help-block with-errors"></div>
                                 </div>
                                 <div class="col-lg-6 mb-3 form-group"><?php echo $this->Form->control('kyc_city', ['label' => ['text' => 'City', 'class' => 'form-label'], 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>

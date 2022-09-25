@@ -133,4 +133,10 @@ class DataHelper extends Helper
         $query = $tbl->find('list', ['keyField' => 'id', 'valueField' => 'name'])->order(['Countries.name' => 'ASC']);
         return $query->toArray();
     }
+
+    public function getContract(){
+        $tbl = TableRegistry::get('Contracts');
+        return $tbl->find('all')->where(['type' => 'main'])->first();
+
+    }
 }

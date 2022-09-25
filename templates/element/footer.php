@@ -78,8 +78,7 @@ $MenuType = getMenuType();
             <p class="footer-copy-text py-2">Copyright &copy; <?php echo date('Y'); ?> <?php echo WEBTITLE; ?>.</p>
             <ul class="list-item list-item-s1 list-item-inline">
                 <li><a href="<?php echo SITEURL; ?>explore">Explore</a></li>
-                <li><a href="<?php echo SITEURL; ?>sign-in">Login</a></li>
-                <li><a href="<?php echo SITEURL; ?>connect-wallet">Wallet</a></li>
+                <li><a href="<?php echo SITEURL; ?>airdrop">Airdrop</a></li>
             </ul>
         </div>
     </div>

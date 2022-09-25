@@ -55,7 +55,6 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/register/*', ['controller' => 'Users', 'action' => 'register']);
     $builder->connect('/sign-in/*', ['controller' => 'Users', 'action' => 'login']);
     $builder->connect('/forget-password/*', ['controller' => 'Users', 'action' => 'forget_password']);
-    $builder->connect('/connect-wallet/*', ['controller' => 'Users', 'action' => 'connect_wallet']);
        
 
     $builder->connect('/dashboard/*', ['controller' => 'Users', 'action' => 'dashboard']);

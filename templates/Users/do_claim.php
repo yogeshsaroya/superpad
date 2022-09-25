@@ -52,7 +52,7 @@ echo $this->Form->end();
                                                                     <td data-title="Claim After" class="text-center"><?php echo (!empty($list->claim_from) ? $list->claim_from->format("Y-m-d h:i A") : null); ?></td>
                                                                     <td data-title="Claim On" class="text-center" id="on_<?php echo $list->id; ?>"><?php echo (!empty($list->claimed_date) ? $list->claimed_date->format("Y-m-d h:i A") : null); ?></td>
                                                                     <td data-title="%" class="text-center"><?php echo $list->percentage; ?>%</td>
-                                                                    <td data-title="Transaction Hash" class="text-center" id="hash_<?php echo $list->id; ?>"><?php echo (isset($list->transaction_id) ? $this->Html->link('View', env('bscscanHash') . 'tx/' . $list->transaction_id, ['target' => '_blank']) : null); ?></td>
+                                                                    <td data-title="Transaction Hash" class="text-center" id="hash_<?php echo $list->id; ?>"><?php echo (!empty($list->transaction_id) ? $this->Html->link('View', env('bscscanHash') . 'tx/' . $list->transaction_id, ['target' => '_blank']) : null); ?></td>
                                                                     <td data-title="Status" class="text-center" id="st_<?php echo $list->id; ?>">
                                                                         <?php
                                                                         if ($list->transaction_status == 1) {

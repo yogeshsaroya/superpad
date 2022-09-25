@@ -431,7 +431,7 @@ class CronsController extends AppController
     }
 
     /*
-    Check claim status 
+    Check claim status and update status if transaction status is pending
     */
     public function checkClaims()
     {
@@ -473,7 +473,7 @@ class CronsController extends AppController
     }
 
     /*
-    Check payment status 
+    Check payment status and update status if transaction status is pending
     */
     public function checkPayments()
     {
@@ -533,11 +533,14 @@ class CronsController extends AppController
         exit;
     }
 
+    /*
+    create claim records after Token Distribution Start date 
+    */
     public function mkClaims()
     {
         $query = $this->Applications->find('all', [
             'contain' => ['Users', 'Claims', 'Projects' => ['TokenDistributions' => ['sort' => ['TokenDistributions.claim_date' => 'ASC']]]],
-            'conditions' => [
+            'conditions' => ['DATE(Projects.token_distribution_starts) <='=>DATE,
                 'Applications.status' => 4, 'Applications.total_token > ' => 0, 'Applications.claimed_token' => 0,
                 'Users.metamask_wallet_id IS NOT' => null, 'Projects.token_address IS NOT' => null
             ]
@@ -573,7 +576,11 @@ class CronsController extends AppController
         }
         exit;
     }
+
+    /*
+    set claim in contract address when is_restricted is 1
     
+    */
     public function setClaimsByApplications()
     {
         $query = $this->Applications->find('all', [
@@ -624,50 +631,4 @@ class CronsController extends AppController
         exit;
     }
 
-    public function setClaims()
-    {
-        die;
-        $query = $this->fetchTable('Claims')->find('all', [
-            /*'contain' => ['Users', 'Applications', 'Projects' => ['fields' => ['id', 'token_address']]], */
-            'limit' => 4,
-            'conditions' => [
-                'Claims.uuid IS' => null, 'Claims.transaction_status' => 1, 'Claims.claimed_date IS' => null,
-                'Claims.token_address IS NOT' => null,
-                'Claims.wallet_address IS NOT' => null
-            ]
-        ]);
-        $data =  $query->all();
-
-        if (!$data->isEmpty()) {
-            foreach ($data as $list) {
-                $uuid = Text::uuid();
-                $setRes = [
-                    "uids" => [$uuid],
-                    "accounts" => [$list->wallet_address],
-                    "amounts" => [$list->total_token],
-                    "TokenAddress" => $list->token_address
-                ];
-                $setResJson = json_encode($setRes);
-                $res = $this->Data->curlPost(env('TokenAPI'), $setResJson);
-                if (!empty($res)) {
-                    $resArr = json_decode($res, true);
-                    if (isset($resArr['status']) && $resArr['status'] == 'success') {
-                        $list->uuid = $uuid;
-                        $list->restriction_hash = $resArr['receipt']['transactionHash'];
-                        $list->restriction_data = json_encode($resArr['receipt']);
-                        $this->fetchTable('Claims')->save($list);
-                        ec('Claim restriction set for claim id ' . $list->id);
-                    } else {
-                        ec($resArr);
-                        ec('Claim restriction is not set for claim id ' . $list->id);
-                    }
-                } else {
-                    ec('Claim restriction is not set for claim id ' . $list->id);
-                }
-            }
-        } else {
-            ec('Empty');
-        }
-        exit;
-    }
 }

@@ -10,11 +10,14 @@
                 </div><!-- .header-logo -->
                 <div class="header-mobile-action">
 
-                    <div class="header-mobile-wallet me-2">
-                        <a class="icon-btn" href="<?php echo SITEURL; ?>connect-wallet">
-                            <em class="ni ni-wallet"></em>
-                        </a>
-                    </div><!-- end hheader-mobile-wallet -->
+                    <?php if (isset($Auth->role) && !empty($Auth->role)) {
+                    } else { ?>
+                        <div class="header-mobile-wallet me-2">
+                            <a class="icon-btn conn_wallet" href="javascript:void(0);" onclick="userLoginOut();">
+                                <em class="ni ni-wallet"></em>
+                            </a>
+                        </div>
+                    <?php } ?>
                     <div class="header-toggle">
                         <button class="menu-toggler">
                             <em class="menu-on menu-icon ni ni-menu"></em>
@@ -53,24 +56,21 @@
                         } ?>
                     </ul>
                     <?php if (isset($Auth->role) && !empty($Auth->role)) {
-                        $wallet = substr($Auth->metamask_wallet_id,0,2)."...".substr($Auth->metamask_wallet_id,-4);
-                        ?>
+                        $wallet = substr($Auth->metamask_wallet_id, 0, 2) . "..." . substr($Auth->metamask_wallet_id, -4);
+                    ?>
                         <li class="menu-item has-sub">
-                            <a href="#" class="menu-link menu-toggle"><?php echo $wallet;?></a>
+                            <a href="#" class="menu-link menu-toggle"><?php echo $wallet; ?></a>
                             <div class="menu-sub">
                                 <ul class="menu-list">
                                     <li class="menu-item"><a href="<?php echo SITEURL; ?>users/logout" class="menu-link">Disconnect</a></li>
                                 </ul>
                             </div>
                         </li>
-                        <?php } else {
-                        if ($this->request->getParam('action') !== 'connectWallet') {
-                        ?>
-                            <ul class="menu-btns">
-                                <li><a href="<?php echo SITEURL; ?>connect-wallet" class="btn btn-dark">Connect Wallet</a></li>
-                            </ul>
-                    <?php }
-                    } ?>
+                    <?php } else { ?>
+                        <ul class="menu-btns">
+                            <li><a href="javascript:void(0);" onclick="userLoginOut();" class="btn btn-dark conn_wallet">Connect Wallet</a></li>
+                        </ul>
+                    <?php } ?>
                 </nav>
                 <div class="header-overlay"></div>
             </div>

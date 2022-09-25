@@ -21,8 +21,7 @@ echo $this->element('profile/header', ['bg_color' => 'bg-gray']); ?>
                             <div class="col-lg-6 mb-3 form-group"><?php echo $this->Form->control('last_name', ['label' => ['class' => 'form-label'], 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
                             </div>
                         </div>
-                        <div class="mb-3 form-group"><?php echo $this->Form->control('email', ['label' => ['class' => 'form-label'], 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div>
-                        </div>
+                        <div class="mb-3 form-group"><?php echo $this->Form->control('email', ['label' => ['class' => 'form-label'], 'type' => 'text', 'class' => 'form-control form-control-s1', 'required' => true]); ?><div class="help-block with-errors"></div></div>
                         <div class="mb-3">
                             <div id="f_err"></div>
                         </div>
