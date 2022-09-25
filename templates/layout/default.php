@@ -256,9 +256,9 @@
 
                 }
 
-
+                web3ModalInit();
                 window.addEventListener('load', async () => {
-                    web3ModalInit();
+                   
                 });
             </script>
     <?php }
