@@ -13,7 +13,7 @@
                     <?php if (isset($Auth->role) && !empty($Auth->role)) {
                     } else { ?>
                         <div class="header-mobile-wallet me-2">
-                            <a class="icon-btn conn_wallet" href="javascript:void(0);" onclick="userLoginOut();">
+                            <a class="icon-btn conn_wallet" href="javascript:void(0);" id="mob_wal" onclick="userLoginOut();" style="display: none;">
                                 <em class="ni ni-wallet"></em>
                             </a>
                         </div>
@@ -68,7 +68,7 @@
                         </li>
                     <?php } else { ?>
                         <ul class="menu-btns">
-                            <li><a href="javascript:void(0);" onclick="userLoginOut();" class="btn btn-dark conn_wallet">Connect Wallet</a></li>
+                            <li><a href="javascript:void(0);" onclick="userLoginOut();" class="btn btn-dark conn_wallet" id="cn_w" style="display: none;">Connect Wallet</a></li>
                         </ul>
                     <?php } ?>
                 </nav>

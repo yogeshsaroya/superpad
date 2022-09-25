@@ -53,7 +53,9 @@
                         walletconnect: {
                             package: WalletConnectProvider,
                             options: {
-                                rpc: {<?php echo $contract->chain_id; ?>: "<?php echo $contract->dataseed_url; ?>"},
+                                rpc: {
+                                    <?php echo $contract->chain_id; ?>: "<?php echo $contract->dataseed_url; ?>"
+                                },
                                 infuraId: "<?php echo (!empty($contract->infura_id) ? $contract->infura_id : null); ?>",
                             }
                         },
@@ -256,9 +258,15 @@
 
                 }
 
-                web3ModalInit();
+
                 window.addEventListener('load', async () => {
-                   
+                    web3ModalInit();
+                    const el = document.getElementById('cn_w');
+                    const mel = document.getElementById('mob_wal');
+                    
+                    if (el.style.display === 'none') { el.style.display = 'block'; }
+                    if (mel.style.display === 'none') { mel.style.display = 'block'; }
+
                 });
             </script>
     <?php }
