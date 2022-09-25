@@ -4,24 +4,42 @@ namespace App\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\ORM\TableRegistry;
-use PhpParser\Node\Stmt\TryCatch;
+use Cake\Http\Client;
+
 
 class DataComponent extends Component
 {
     public $components = array('Session');
 
+    public function curlPost($url = null, $post_data = null)
+    {
+        $content = null;
+        if (!empty($url) && !empty($post_data)) {
+            try {
+                $http = new Client();
+                $response = $http->post($url, $post_data, ['type' => 'json']);
+                $content = $response->getJson();
+            } catch (\Throwable $th) {
+            }
+        }
+        return $content;
+    }
 
     public function fetch($url)
     {
         $response = null;
         if (function_exists('curl_exec')) {
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36');
-            $response = curl_exec($ch);
+            try {
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+                curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36');
+                $response = curl_exec($ch);
+                curl_close($ch);
+            } catch (\Throwable $th) {
+            }
         }
         if (empty($response)) {
             $response = file_get_contents($url);
@@ -78,14 +96,15 @@ class DataComponent extends Component
             $tbl = TableRegistry::get('EmailServers');
             $body = $this->getTemplateSkeleton($body);
             $body = str_replace('[EMAIL_TITLE]', $sub, $body);
-            $tbl_data = ['id'=>null,'email_to'=>$to,'subject'=>$sub,'message'=>$body,'status'=>0];
+            $tbl_data = ['id' => null, 'email_to' => $to, 'subject' => $sub, 'message' => $body, 'status' => 0];
             $newEnt = $tbl->newEmptyEntity();
             $entity = $tbl->patchEntity($newEnt, $tbl_data);
             try {
                 $tbl->save($entity);
                 $msg = 1;
             } catch (\Throwable $th) {
-                ec($th);die;    
+                ec($th);
+                die;
                 $msg = 0;
             }
         }
@@ -93,16 +112,16 @@ class DataComponent extends Component
     }
 
 
-    public function getUser( $id = null ) {
-        if(!empty($id)){
+    public function getUser($id = null)
+    {
+        if (!empty($id)) {
             $tbl = TableRegistry::get('Users');
             try {
-                $query = $tbl->find('all', [ 'conditions' => ['Users.id'=>$id] ]);
+                $query = $tbl->find('all', ['conditions' => ['Users.id' => $id]]);
                 return $query->first();
             } catch (\Throwable $th) {
                 return false;
             }
         }
-        
     }
 }

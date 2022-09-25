@@ -21,6 +21,8 @@ namespace App\Controller;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\Utility\Text;
+use Cake\Http\Client;
+
 
 /**
  * Static content controller
@@ -533,18 +535,139 @@ class CronsController extends AppController
 
     public function mkClaims()
     {
-        //ec(Text::uuid());die;
         $query = $this->Applications->find('all', [
             'contain' => ['Users', 'Claims', 'Projects' => ['TokenDistributions' => ['sort' => ['TokenDistributions.claim_date' => 'ASC']]]],
-            'conditions' => ['Applications.status' => 4, 'Applications.total_token > ' => 0]
+            'conditions' => [
+                'Applications.status' => 4, 'Applications.total_token > ' => 0, 'Applications.claimed_token' => 0,
+                'Users.metamask_wallet_id IS NOT' => null, 'Projects.token_address IS NOT' => null
+            ]
         ]);
         $data =  $query->all();
         if (!$data->isEmpty()) {
             foreach ($data as $list) {
-                ec($list);die;
+                if (isset($list->project->token_distributions) && !empty($list->project->token_distributions)) {
+                    $percentage = array_sum(array_column($list->project->token_distributions, 'percentage'));
+                    if ((int)$percentage == 100 && empty($list->claims)) {
+                        $arr = [];
+                        foreach ($list->project->token_distributions as $token) {
+                            if (!empty($token->claim_date)) {
+                                $arr[] = [
+                                    'id' => null, 'application_id' => $list->id, 'project_id' => $list->project_id, 'user_id' => $list->user_id,
+                                    'wallet_address' => $list->user->metamask_wallet_id, 'token_address' => $list->project->token_address,
+                                    'token_distribution_id' => $token->id, 'percentage' => $token->percentage,
+                                    'total_token' => ceil($list->total_token * $token->percentage / 100),
+                                    'claim_from' => $token->claim_date->format("Y-m-d H:i:s")
+                                ];
+                            }
+                        }
+                        if (!empty($arr)) {
+                            $claimsEnt = $this->fetchTable('Claims')->newEntities($arr);
+                            $result = $this->fetchTable('Claims')->saveMany($claimsEnt);
+                            ec('Claim created for app id ' . $list->id);
+                        }
+                    }
+                }
             }
+        } else {
+            ec('Empty');
         }
         exit;
     }
     
+    public function setClaimsByApplications()
+    {
+        $query = $this->Applications->find('all', [
+            'contain' => ['Claims', 'Projects' => ['fields' => ['id', 'token_address']]],
+            'limit' => 1,
+            'conditions' => ['Applications.is_restricted'=>1, 'Applications.status' => 4, 'Applications.total_token >' => 0, 'Applications.claimed_token' => 0]
+        ]);
+        $data =  $query->all();
+        if (!$data->isEmpty()) {
+            foreach ($data as $list) {
+                if (!empty($list['claims'])) {
+                    $res_arr = [];
+                    $claims = null;
+                    foreach ($list['claims'] as $cList) {
+                        $cList->uuid = Text::uuid();
+                        $res_arr['uuid'][] = $cList->uuid;
+                        $res_arr['amounts'][] = $cList->total_token;
+                        $res_arr['accounts'][] = $cList->wallet_address;
+                        $claims[] = $cList;
+                    }
+
+                    $setRes = ["uids" => $res_arr['uuid'], "accounts" => $res_arr['accounts'], "amounts" => $res_arr['amounts'], "TokenAddress" => $list->project->token_address];
+                    $setResJson = json_encode($setRes);
+                    $resArr = $this->Data->curlPost(env('TokenAPI'), $setResJson);
+                    if (!empty($resArr)) {
+                        if (isset($resArr['status']) && $resArr['status'] == 'success') {
+                            foreach ($claims as $claim) {
+                                $claim->restriction_hash = $resArr['receipt']['transactionHash'];
+                                $claim->restriction_data = json_encode($resArr['receipt']);
+                                $this->fetchTable('Claims')->save($claim);
+                                ec('Claim restriction set for claim id ' . $claim->id);
+                            }
+                            $list->is_restricted = 2;
+                            $this->Applications->save($list);
+                        } else {
+                            ec('Claim restriction is not set for claim id ' . $list->id);
+                        }
+                    } else {
+                        ec('Claim restriction is not set for claim id ' . $list->id);
+                    }
+                } else {
+                    ec('Claim not found for ' . $list->id);
+                }
+            }
+        } else {
+            ec('Empty');
+        }
+        exit;
+    }
+
+    public function setClaims()
+    {
+        die;
+        $query = $this->fetchTable('Claims')->find('all', [
+            /*'contain' => ['Users', 'Applications', 'Projects' => ['fields' => ['id', 'token_address']]], */
+            'limit' => 4,
+            'conditions' => [
+                'Claims.uuid IS' => null, 'Claims.transaction_status' => 1, 'Claims.claimed_date IS' => null,
+                'Claims.token_address IS NOT' => null,
+                'Claims.wallet_address IS NOT' => null
+            ]
+        ]);
+        $data =  $query->all();
+
+        if (!$data->isEmpty()) {
+            foreach ($data as $list) {
+                $uuid = Text::uuid();
+                $setRes = [
+                    "uids" => [$uuid],
+                    "accounts" => [$list->wallet_address],
+                    "amounts" => [$list->total_token],
+                    "TokenAddress" => $list->token_address
+                ];
+                $setResJson = json_encode($setRes);
+                $res = $this->Data->curlPost(env('TokenAPI'), $setResJson);
+                if (!empty($res)) {
+                    $resArr = json_decode($res, true);
+                    if (isset($resArr['status']) && $resArr['status'] == 'success') {
+                        $list->uuid = $uuid;
+                        $list->restriction_hash = $resArr['receipt']['transactionHash'];
+                        $list->restriction_data = json_encode($resArr['receipt']);
+                        $this->fetchTable('Claims')->save($list);
+                        ec('Claim restriction set for claim id ' . $list->id);
+                    } else {
+                        ec($resArr);
+                        ec('Claim restriction is not set for claim id ' . $list->id);
+                    }
+                } else {
+                    ec('Claim restriction is not set for claim id ' . $list->id);
+                }
+            }
+        } else {
+            ec('Empty');
+        }
+        exit;
+    }
 }

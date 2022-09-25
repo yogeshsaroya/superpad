@@ -939,35 +939,8 @@ class UsersController extends AppController
             ]
         ]);
         $data =  $query->first();
-        $percentage = 0;
-
         if (!empty($data)) {
-            /*
-            if (isset($data->project->token_distributions) && !empty($data->project->token_distributions)) {
-                $percentage = array_sum(array_column($data->project->token_distributions, 'percentage'));
-                if ($percentage == 100 && empty($data->claims)) {
-                    $arr = [];
-                    foreach ($data->project->token_distributions as $list) {
-                        if (!empty($list->claim_date)) {
-                            $arr[] = [
-                                'id' => null, 'application_id' => $data->id, 'project_id' => $data->project_id, 
-                                'user_id' => $data->user_id, 
-                                'token_distribution_id' => $list->id, 'percentage' => $list->percentage, 
-                                'total_token' => ceil($data->total_token * $list->percentage / 100),
-                                'claim_from' => $list->claim_date->format("Y-m-d H:i:s")
-                            ];
-                        }
-                    }
-                    if (!empty($arr)) {
-                        $claimsEnt = $this->fetchTable('Claims')->newEntities($arr);
-                        $result = $this->fetchTable('Claims')->saveMany($claimsEnt);
-                        $u = SITEURL . "allocation";
-                        echo "<script>window.location.href ='" . $u . "'; </script>";
-                        exit;
-                    }
-                }
-            }*/
-            $this->set(compact('data', 'percentage', 'contract'));
+            $this->set(compact('data','contract'));
         } else {
             $this->viewBuilder()->setLayout('error_404');
         }
@@ -979,13 +952,16 @@ class UsersController extends AppController
         if ($this->request->is('ajax') && !empty($this->request->getData())) {
             if ($this->Auth->User('id') != "") {
                 $postData = $this->request->getData();
-                $arr = $this->fetchTable('Claims')->find('all')->contain(['Applications'])->where(['Claims.id' => $postData['id']])->first();
+                $arr = $this->fetchTable('Claims')->find('all')->contain(['Applications'])
+                ->where(['Claims.id' => $postData['id'],'Claims.uuid IS NOT'=>null,'Claims.token_address IS NOT'=>null])
+                ->first();
+               
                 if (!empty($arr)) {
                     if (in_array($arr->transaction_status, [1, 4])) {
                         //$arr->total_token
                         if (strtotime(DATE) > strtotime($arr->claim_from->format("Y-m-d H:i:s"))) {
                             if (($arr->application->available_token + $arr->application->claimed_token) ==  $arr->application->total_token) {
-                                echo "<script>token_claim(" . $arr->id . "," . $arr->total_token . ");</script>";
+                                echo "<script>token_claim(" . $arr->id . ",'" . $arr->uuid . "','".$arr->token_address."','".$arr->wallet_address."');</script>";
                             } else {
                                 echo "<div class='alert alert-danger'>Sorry, something went wrong. Please contact support.</div>";
                                 exit;
@@ -995,10 +971,10 @@ class UsersController extends AppController
                             exit;
                         }
                     } elseif ($arr->transaction_status == 2) {
-                        echo "<div class='alert alert-danger'>This transaction is pending. Please check Transaction Hash	for details.</div>";
+                        echo "<div class='alert alert-danger'>This transaction is pending. Please check Transaction Hash for details.</div>";
                         exit;
                     } elseif ($arr->transaction_status == 3) {
-                        echo "<div class='alert alert-success'>Tokens already claimed. Please check Transaction Hash	for more details.</div>";
+                        echo "<div class='alert alert-success'>Tokens already claimed. Please check Transaction Hash for more details.</div>";
                         exit;
                     }
                 }
@@ -1018,7 +994,10 @@ class UsersController extends AppController
                 $query->contain(['Applications']);
                 $data =  $query->first();
                 if (!empty($data)) {
-                    $data->transaction_id = $postData['transaction_id'];
+                    if(isset($postData['transaction_id'])){
+                        $data->transaction_id = $postData['transaction_id'];
+                    }
+                    
                     if (!empty($postData['tran_data'])) {
                         $data->transaction_data = json_encode($postData['tran_data']);
                     } else {
@@ -1047,7 +1026,7 @@ class UsersController extends AppController
                         echo "<script>$('#btn_" . $postData['id'] . "').remove(); $('#on_" . $postData['id'] . "').html('" . DATE . "'); $('#st_" . $postData['id'] . "').html('<span class=\'badge bg-success\'>Completed</span>');  $('#hash_" . $postData['id'] . "').html('<a href=\'" . env('bscscanHash') . "tx/" . $postData['transaction_id'] . "\' target=\'_blank\'>View</a>'); </script>";
                     } elseif ((int)$postData['status'] == 4) {
                         /* If Failed */
-                        echo "<script>$('#btn_" . $postData['id'] . "').remove(); $('#on_" . $postData['id'] . "').html(''); $('#st_" . $postData['id'] . "').html('<span class=\'badge bg-danger\'>Failed</span>');  $('#hash_" . $postData['id'] . "').html('<a href=\'" . env('bscscanHash') . "tx/" . $postData['transaction_id'] . "\' target=\'_blank\'>View</a>'); </script>";
+                        echo "<script>$('#btn_" . $postData['id'] . "').remove(); $('#on_" . $postData['id'] . "').html(''); $('#st_" . $postData['id'] . "').html('<span class=\'badge bg-danger\'>Failed</span>');  $('#hash_" . $postData['id'] . "').html(''); </script>";
                     }
                 }
             }
