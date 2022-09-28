@@ -243,7 +243,7 @@
                     }
                 } else {
                     $("#btn_locader").removeClass('is-active');
-                    $('#f_err').html('<div class="alert alert-danger">Please switch to chain ID 97 ( Binance Smart Chain ) to join sale.</div>');
+                    $('#f_err').html('<div class="alert alert-danger">Please switch to chain ID <?php echo $contract->chain_id;?> ( Binance Smart Chain ) to join sale.</div>');
                 }
             } catch (e) {
                 $("#btn_locader").removeClass('is-active');

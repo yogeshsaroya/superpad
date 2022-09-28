@@ -248,7 +248,7 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                     }
                 } else {
                     $("#btn_locader").removeClass('is-active');
-                    $('#sub_data').html('<div class="alert alert-danger">Please switch to chain ID 97 ( Binance Smart Chain ) to join sale.</div>');
+                    $('#sub_data').html('<div class="alert alert-danger">Please switch to chain ID <?php echo $contract->chain_id;?> ( Binance Smart Chain ) to join sale.</div>');
                 }
 
             } catch (error) {
