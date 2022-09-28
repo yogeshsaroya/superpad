@@ -56,17 +56,19 @@
                         } ?>
                     </ul>
                     <?php if (isset($Auth->role) && !empty($Auth->role)) {
-                        $wallet = substr($Auth->metamask_wallet_id, 0, 2) . "..." . substr($Auth->metamask_wallet_id, -4);
+                        if ($Auth->role == 2) {
+                            $wallet = substr($Auth->metamask_wallet_id, 0, 2) . "..." . substr($Auth->metamask_wallet_id, -4);
                     ?>
-                        <li class="menu-item has-sub">
-                            <a href="#" class="menu-link menu-toggle"><?php echo $wallet; ?></a>
-                            <div class="menu-sub">
-                                <ul class="menu-list">
-                                    <li class="menu-item"><a href="<?php echo SITEURL; ?>users/logout" class="menu-link">Disconnect</a></li>
-                                </ul>
-                            </div>
-                        </li>
-                    <?php } else { ?>
+                            <li class="menu-item has-sub">
+                                <a href="#" class="menu-link menu-toggle"><?php echo $wallet; ?></a>
+                                <div class="menu-sub">
+                                    <ul class="menu-list">
+                                        <li class="menu-item"><a href="<?php echo SITEURL; ?>users/logout" class="menu-link">Disconnect</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        <?php }
+                    } else { ?>
                         <ul class="menu-btns">
                             <li><a href="javascript:void(0);" onclick="userLoginOut();" class="btn btn-dark conn_wallet" id="cn_w" style="display: none;">Connect Wallet</a></li>
                         </ul>

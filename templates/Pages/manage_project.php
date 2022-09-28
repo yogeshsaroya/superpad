@@ -8,7 +8,8 @@ $getStatus = getStatus();
 $type = getProjectType();
 $status = ['TBA' => 'TBA', 'Coming Soon' => 'Coming Soon'];
 $appStatus = getAppStatus();
-$this->assign('title', 'Manage Projects'); ?>
+$this->assign('title', 'Manage Projects'); 
+?>
 <style>
     .input-group-text {
         border-radius: 0px;
@@ -35,7 +36,7 @@ $this->assign('title', 'Manage Projects'); ?>
             <div class="content-header-left col-md-6 col-12 mb-2">
                 <div class="row breadcrumbs-top">
                     <div class="col-12">
-                        <h2 class="content-header-title float-left mb-0"><?php echo (isset($get_data->title) ? $get_data->title :  "Add New Project") ?> </h2>
+                        <h2 class="content-header-title float-left mb-0"><?php echo (isset($get_data->title) ? $get_data->title." <div class='badge badge-pill badge-light-primary'>$get_data->product_status</div>" :  "Add New Project") ?> </h2>
                     </div>
                 </div>
             </div>
@@ -58,12 +59,13 @@ $this->assign('title', 'Manage Projects'); ?>
             <?php if (isset($get_data->id) && !empty($get_data->id)) { ?>
                 <div>
                     <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item"><a class="nav-link <?php echo ($tab == 'home' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id; ?>">Product</a></li>
+                        <li class="nav-item"><a class="nav-link <?php echo ($tab == 'home' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id; ?>">Details</a></li>
                         <li class="nav-item"><a class="nav-link <?php echo ($tab == 'team' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=team"; ?>">Team</a></li>
                         <li class="nav-item"><a class="nav-link <?php echo ($tab == 'partner' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=partner"; ?>">Partner and Investor</a></li>
                         <li class="nav-item"><a class="nav-link <?php echo ($tab == 'media' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=media"; ?>">Social Media Accounts</a></li>
                         <li class="nav-item"><a class="nav-link <?php echo ($tab == 'applications' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=applications"; ?>">Applications</a></li>
                         <li class="nav-item"><a class="nav-link <?php echo ($tab == 'token_distributions' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=token_distributions"; ?>">Token Distributions</a></li>
+                        <li class="nav-item"><a class="nav-link <?php echo ($tab == 'sale' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=sale"; ?>">Sale</a></li>
 
 
                     </ul>
@@ -75,7 +77,69 @@ $this->assign('title', 'Manage Projects'); ?>
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
-                            <?php if ($tab == 'home') { ?>
+                            <?php 
+                            if ($tab == 'sale') { ?>
+                            <div class="card-body">
+                                    <?php
+                                    echo $this->Form->create($get_data, [
+                                        'url'=>['action'=>'update_sale'],
+                                        'autocomplete' => 'off', 'id' => 'e_frm', 'class' => 'mt-2', 'data-toggle' => 'validator']);
+                                    echo $this->Form->hidden('id');
+                                    ?>
+                                    <div class="row">
+                                        <?php if($get_data->allow_whitelist == 1){?>
+                                        <div class="col-md-3 col-12 form-group mb-2">
+                                            <label for="basic-url" class="form-label">Whitelist Starts In <small>(status will be coming soon)</small></label>
+                                            <div class="input-group "><?php echo $this->Form->control('whitelist_starts', ['id' => 'ste_1_date', 'type' => 'text', 'value' => $get_data->whitelist_starts ? $get_data->whitelist_starts->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
+                                                <span class="input-group-text" id="step_1">Clear</span>
+                                            </div>
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+
+                                        <div class="col-md-3 col-12 form-group mb-2">
+                                            <label for="basic-url" class="form-label">Whitelist Ends In <small>(status will be coming soon)</small></label>
+                                            <div class="input-group "><?php echo $this->Form->control('whitelist_ends', ['id' => 'ste_2_date', 'type' => 'text', 'value' => $get_data->whitelist_ends ? $get_data->whitelist_ends->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
+                                                <span class="input-group-text" id="step_2">Clear</span>
+                                            </div>
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                        <?php }?>
+
+                                        <div class="col-md-3 col-12 form-group mb-2">
+                                            <label for="basic-url" class="form-label">Sale Starts In <small>(status will be Whitelist Closed)</small></label>
+                                            <div class="input-group "><?php echo $this->Form->control('sale_starts', ['id' => 'ste_3_date', 'type' => 'text', 'value' => $get_data->sale_starts ? $get_data->sale_starts->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
+                                                <span class="input-group-text" id="step_3">Clear</span>
+                                            </div>
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+
+                                        <div class="col-md-3 col-12 form-group mb-2">
+                                            <label for="basic-url" class="form-label">Sale Ends In <small>(status will be Live Now)</small></label>
+                                            <div class="input-group "><?php echo $this->Form->control('sale_ends', ['id' => 'ste_4_date', 'type' => 'text', 'value' => $get_data->sale_ends ? $get_data->sale_ends->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
+                                                <span class="input-group-text" id="step_4">Clear</span>
+                                            </div>
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                        <div class="col-md-3 col-12 form-group mb-2">
+                                            <label for="basic-url" class="form-label">Token Distribution Starts In <small>(status will sold out)</small></label>
+                                            <div class="input-group "><?php echo $this->Form->control('token_distribution_starts', ['id' => 'ste_5_date', 'type' => 'text', 'value' => $get_data->token_distribution_starts ? $get_data->token_distribution_starts->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
+                                                <span class="input-group-text" id="step_5">Clear</span>
+                                            </div>
+                                            <div class="help-block with-errors"></div>
+                                        </div>
+                                        <div class="col-12 mt-50">
+                                            <div id="f_err"></div>
+                                        </div>
+                                        <div class="col-12 mt-50">
+                                            <input type="button" class="btn btn-primary mr-1" value="Save Changes" id="save_frm" />
+
+                                        </div>
+                                    </div>
+                                   <?php echo $this->Form->end();?>
+                                   
+                                </div>
+                            <?php }
+                            elseif ($tab == 'home') { ?>
                                 <div class="card-body">
                                     <?php
                                     echo $this->Form->create($get_data, ['autocomplete' => 'off', 'id' => 'e_frm', 'class' => 'mt-2', 'data-toggle' => 'validator']);
@@ -84,10 +148,7 @@ $this->assign('title', 'Manage Projects'); ?>
                                     if (isset($get_data->id) && !empty($get_data->id)) {
                                         $file_req = false;
                                     }
-                                    $pro_st = true;
-                                    if (!in_array($get_data->product_status, ['TBA', 'Coming Soon'])) {
-                                        $pro_st = false;
-                                    } ?>
+                                    ?>
 
                                     <div class="row">
                                         <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('title', ['label' => ['escape' => false, 'text' => 'Title <small>(unique project title)</small>'], 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div>
@@ -122,7 +183,7 @@ $this->assign('title', 'Manage Projects'); ?>
                                         </div>
                                         <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('total_supply', ['class' => 'form-control amt numeral-mask', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div>
                                         </div>
-                                        <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('product_status', ['options' => ($pro_st === true ? $status : null), 'empty' => 'Select Status', 'class' => 'form-control', 'required' => $pro_st, 'disabled' => ($pro_st === true ? false : true)]); ?><div class="help-block with-errors"></div>
+                                        <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('allow_whitelist', ['options' => ['1' => 'Yes', '2' => 'No'], 'empty' => 'Select', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div>
                                         </div>
                                         <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('token_required', ['options' => ['1' => 'Yes', '2' => 'No'], 'empty' => 'Select', 'class' => 'form-control', 'required' => true]); ?><div class="help-block with-errors"></div>
                                         </div>
@@ -130,51 +191,8 @@ $this->assign('title', 'Manage Projects'); ?>
                                         </div>
                                         <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('coin_price', ['label' => ['escape' => false, 'text' => 'Coin Price in dollar'], 'class' => 'form-control amt numeral-mask', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div>
                                         </div>
-                                        <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('max_allocation', ['label' => ['escape' => false, 'text' => 'Max Allocation in dollar <small>only if Token Required is No</small>'], 'class' => 'form-control amt numeral-mask', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div></div>
-                                        <div class="col-md-2 col-12 form-group mb-2"><?php echo $this->Form->control('token_address', ['label' => ['escape' => false, 'text' => 'Token Address <small>Token address will be required during claim</small>'], 'class' => 'form-control','required' => false]); ?><div class="help-block with-errors"></div></div>
-                                    </div>
-                                    <hr><br>
-                                    <div class="row">
-
-                                        <div class="col-md-2 col-12 form-group mb-2">
-                                            <label for="basic-url" class="form-label">Whitelist Starts In <small>(status will be coming soon)</small></label>
-                                            <div class="input-group "><?php echo $this->Form->control('whitelist_starts', ['id' => 'ste_1_date', 'type' => 'text', 'value' => $get_data->whitelist_starts ? $get_data->whitelist_starts->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
-                                                <span class="input-group-text" id="step_1">Clear</span>
-                                            </div>
-                                            <div class="help-block with-errors"></div>
-                                        </div>
-
-                                        <div class="col-md-2 col-12 form-group mb-2">
-                                            <label for="basic-url" class="form-label">Whitelist Ends In <small>(status will be coming soon)</small></label>
-                                            <div class="input-group "><?php echo $this->Form->control('whitelist_ends', ['id' => 'ste_2_date', 'type' => 'text', 'value' => $get_data->whitelist_ends ? $get_data->whitelist_ends->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
-                                                <span class="input-group-text" id="step_2">Clear</span>
-                                            </div>
-                                            <div class="help-block with-errors"></div>
-                                        </div>
-
-                                        <div class="col-md-2 col-12 form-group mb-2">
-                                            <label for="basic-url" class="form-label">Sale Starts In <small>(status will be Whitelist Closed)</small></label>
-                                            <div class="input-group "><?php echo $this->Form->control('sale_starts', ['id' => 'ste_3_date', 'type' => 'text', 'value' => $get_data->sale_starts ? $get_data->sale_starts->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
-                                                <span class="input-group-text" id="step_3">Clear</span>
-                                            </div>
-                                            <div class="help-block with-errors"></div>
-                                        </div>
-
-                                        <div class="col-md-2 col-12 form-group mb-2">
-                                            <label for="basic-url" class="form-label">Sale Ends In <small>(status will be Live Now)</small></label>
-                                            <div class="input-group "><?php echo $this->Form->control('sale_ends', ['id' => 'ste_4_date', 'type' => 'text', 'value' => $get_data->sale_ends ? $get_data->sale_ends->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
-                                                <span class="input-group-text" id="step_4">Clear</span>
-                                            </div>
-                                            <div class="help-block with-errors"></div>
-                                        </div>
-                                        <div class="col-md-2 col-12 form-group mb-2">
-                                            <label for="basic-url" class="form-label">Token Distribution Starts In <small>(status will sold out)</small></label>
-                                            <div class="input-group "><?php echo $this->Form->control('token_distribution_starts', ['id' => 'ste_5_date', 'type' => 'text', 'value' => $get_data->token_distribution_starts ? $get_data->token_distribution_starts->format('Y-m-d H:i') : '', 'label' => false, 'class' => 'form-control datetimepicker', 'required' => false]); ?>
-                                                <span class="input-group-text" id="step_5">Clear</span>
-                                            </div>
-                                            <div class="help-block with-errors"></div>
-                                        </div>
-
+                                        <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('max_allocation', ['label' => ['escape' => false, 'text' => 'Max Allocation in dollar <small>only if Token Required is No</small>'], 'class' => 'form-control amt numeral-mask', 'placeholder' => '00.00', 'required' => false]); ?><div class="help-block with-errors"></div></div>
+                                        <div class="col-md-3 col-12 form-group mb-2"><?php echo $this->Form->control('token_address', ['label' => ['escape' => false, 'text' => 'Token Address <small>Token address will be required during claim</small>'], 'class' => 'form-control','required' => false]); ?><div class="help-block with-errors"></div></div>
                                     </div>
                                     <hr><br>
                                     <div class="row">
