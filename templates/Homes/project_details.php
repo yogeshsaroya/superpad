@@ -9,18 +9,38 @@ echo $this->Html->script(['jquery.magnific-popup.min'], ['block' => 'scriptBotto
 $today = strtotime(DATE);
 $steps = $step_1 = $step_2 = $step_3 = $step_4 = $step_5 = null;
 $date_1 = $date_2 = $date_3 = $date_4 = $date_5 = null;
-if( $list->product_status != 'TBA'){
-    if (!empty($list->whitelist_starts)) { $date_1 = strtotime($list->whitelist_starts->format('Y-m-d H:i:s')); }
-    if (!empty($list->whitelist_ends)) { $date_2 = strtotime($list->whitelist_ends->format('Y-m-d H:i:s')); }
-    if (!empty($list->sale_starts)) { $date_3 = strtotime($list->sale_starts->format('Y-m-d H:i:s')); }
-    if (!empty($list->sale_ends)) { $date_4 = strtotime($list->sale_ends->format('Y-m-d H:i:s')); }
-    if (!empty($list->token_distribution_starts)) { $date_5 = strtotime($list->token_distribution_starts->format('Y-m-d H:i:s')); }
+if ($list->product_status != 'TBA') {
+    if (!empty($list->whitelist_starts)) {
+        $date_1 = strtotime($list->whitelist_starts->format('Y-m-d H:i:s'));
+    }
+    if (!empty($list->whitelist_ends)) {
+        $date_2 = strtotime($list->whitelist_ends->format('Y-m-d H:i:s'));
+    }
+    if (!empty($list->sale_starts)) {
+        $date_3 = strtotime($list->sale_starts->format('Y-m-d H:i:s'));
+    }
+    if (!empty($list->sale_ends)) {
+        $date_4 = strtotime($list->sale_ends->format('Y-m-d H:i:s'));
+    }
+    if (!empty($list->token_distribution_starts)) {
+        $date_5 = strtotime($list->token_distribution_starts->format('Y-m-d H:i:s'));
+    }
 
-    if (!empty($date_1) && $date_1 > $today) { $steps = $step_1 = $date_1; }
-    if (!empty($date_2) && $date_2 > $today) { $steps = $step_2 = $date_2; }
-    if (!empty($date_3) && $date_3 > $today) { $steps = $step_3 = $date_3; }
-    if (!empty($date_4) && $date_4 > $today) { $steps = $step_4 = $date_4; }
-    if (!empty($date_5) && $date_5 > $today) { $steps = $step_5 = $date_5; }
+    if (!empty($date_1) && $date_1 > $today) {
+        $steps = $step_1 = $date_1;
+    }
+    if (!empty($date_2) && $date_2 > $today) {
+        $steps = $step_2 = $date_2;
+    }
+    if (!empty($date_3) && $date_3 > $today) {
+        $steps = $step_3 = $date_3;
+    }
+    if (!empty($date_4) && $date_4 > $today) {
+        $steps = $step_4 = $date_4;
+    }
+    if (!empty($date_5) && $date_5 > $today) {
+        $steps = $step_5 = $date_5;
+    }
 }
 ?>
 <?php echo $this->Html->css(['/assets/css/pro_dt']); ?>
@@ -69,174 +89,178 @@ if( $list->product_status != 'TBA'){
         <div class="row align-items-start">
             <div class="col-lg-8">
                 <div class="item-detail-content">
-                    
-<?php if (!empty($join_pop)) { 
-    if(isset($Auth) && isset($list->id)){?>
-    <div class="item-detail-tab textContent">
-    <?php echo $this->element('join_now', ['join_data' => $join_data,'is_pending'=>$is_pending]);?>
-    </div>
-<?php } }else{?>
-    <div class="item-detail-img-container mb-4">
-                        <img src="<?php echo SITEURL . "cdn/project_img/" . $list->hero_image; ?>" alt="<?php echo $list->title; ?>" class="w-100 rounded-3">
-                    </div>
-                    
-                    <div class="item-detail-tab textContent">
-                        <ul class="nav nav-tabs nav-tabs-s1" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation"><button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true"> Description </button></li>
-                            <li class="nav-item" role="presentation"><button class="nav-link" id="token_sale-tab" data-bs-toggle="tab" data-bs-target="#token_sale" type="button" role="tab" aria-controls="token_sale" aria-selected="false"> Token Sale </button></li>
-                            <li class="nav-item" role="presentation"><button class="nav-link" id="tokenomics-tab" data-bs-toggle="tab" data-bs-target="#tokenomics" type="button" role="tab" aria-controls="tokenomics" aria-selected="false"> Tokenomics </button></li>
-                            <li class="nav-item" role="presentation"><button class="nav-link" id="token_distribution-tab" data-bs-toggle="tab" data-bs-target="#token_distribution" type="button" role="tab" aria-controls="token_distribution" aria-selected="false"> Token Distribution </button></li>
-                            <li class="nav-item" role="presentation"><button class="nav-link" id="team-tab" data-bs-toggle="tab" data-bs-target="#team" type="button" role="tab" aria-controls="team" aria-selected="false"> Team </button></li>
-                            <li class="nav-item" role="presentation"><button class="nav-link" id="partner-tab" data-bs-toggle="tab" data-bs-target="#partner" type="button" role="tab" aria-controls="partner" aria-selected="false"> Partner and Investor </button></li>
-                        </ul>
-                        <div class="tab-content mt-3" id="myTabContent">
-                            <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
-                                <div class="item-detail-tab-wrap"><?php if (!empty($list->description)) {
-                                                                        echo $list->description;
-                                                                    } else {
-                                                                        echo "<h3>Not Available</h3>";
-                                                                    } ?>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade show" id="tokenomics" role="tabpanel" aria-labelledby="tokenomics-tab">
-                                <div class="item-detail-tab-wrap"><?php if (!empty($list->tokenomics)) {
-                                                                        echo $list->tokenomics;
-                                                                    } else {
-                                                                        echo "<h3>Not Available</h3>";
-                                                                    } ?></div>
-                            </div>
 
-                            <div class="tab-pane fade show" id="token_distribution" role="tabpanel" aria-labelledby="token_distribution-tab">
-                                <div class="item-detail-tab-wrap">
-                                    <?php 
-                                    if (!empty($list->token_distributions)) { ?>
-                                    <div class="table-responsive1" id="no-more-tables">
-                            <table class="table mb-0 table-s1">
-                                <thead>
-                                    <tr>
-                                        <th class="text-left" scope="col">Claimable</th>
-                                        <th class="text-center" scope="col"> %</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php 
-                                        foreach ($list->token_distributions as $tList) {
-                                    ?>
-                                            <tr>
-                                                <td data-title="Claimable" class="text-left"><?php echo (!empty($tList->claim_date) ? $tList->claim_date->format("Y-m-d H:i A") : 'TBA'); ?></td>
-                                                <td data-title="%" class="text-center"><?php echo $tList->percentage; ?>%</td>
-                                            </tr>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
+                    <?php if (!empty($join_pop)) {
+                        if (isset($Auth) && isset($list->id)) { ?>
+                            <div class="item-detail-tab textContent">
+                                <?php echo $this->element('join_now', ['join_data' => $join_data, 'is_pending' => $is_pending]); ?>
+                            </div>
+                        <?php }
+                    } else { ?>
+                        <div class="item-detail-img-container mb-4">
+                            <img src="<?php echo SITEURL . "cdn/project_img/" . $list->hero_image; ?>" alt="<?php echo $list->title; ?>" class="w-100 rounded-3">
                         </div>
-                         <?php } else { echo "<h3>Not Available</h3>"; } ?></div>
-                            </div>
 
-                            <div class="tab-pane fade show" id="team" role="tabpanel" aria-labelledby="team-tab">
-                                <div class="item-detail-tab-wrap">
-                                    <?php if (!empty($list->teams)) { ?>
-                                        <div class="col text-center">
-                                            <h2>Meet Our Team</h2>
-                                        </div>
-                                        <br><br>
-                                        <div class="row">
-                                            <?php foreach ($list->teams as $tList) { ?>
-                                                <div class="col-xl-4 col-md-6 mb-4">
-                                                    <div class="card border-0 shadow">
-                                                        <?php echo $this->Html->image(SITEURL . 'cdn/team/' . $tList->img, ['alt' => 'logo', 'class' => 'card-img-top']); ?>
-                                                        <div class="card-body text-center">
-                                                            <h5 class="card-title mb-0"><?php echo $tList->title; ?></h5>
-                                                            <div class="card-text text-black-50"><?php echo $tList->heading; ?></div>
+                        <div class="item-detail-tab textContent">
+                            <ul class="nav nav-tabs nav-tabs-s1" id="myTab" role="tablist">
+                                <li class="nav-item" role="presentation"><button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true"> Description </button></li>
+                                <li class="nav-item" role="presentation"><button class="nav-link" id="token_sale-tab" data-bs-toggle="tab" data-bs-target="#token_sale" type="button" role="tab" aria-controls="token_sale" aria-selected="false"> Token Sale </button></li>
+                                <li class="nav-item" role="presentation"><button class="nav-link" id="tokenomics-tab" data-bs-toggle="tab" data-bs-target="#tokenomics" type="button" role="tab" aria-controls="tokenomics" aria-selected="false"> Tokenomics </button></li>
+                                <li class="nav-item" role="presentation"><button class="nav-link" id="token_distribution-tab" data-bs-toggle="tab" data-bs-target="#token_distribution" type="button" role="tab" aria-controls="token_distribution" aria-selected="false"> Token Distribution </button></li>
+                                <li class="nav-item" role="presentation"><button class="nav-link" id="team-tab" data-bs-toggle="tab" data-bs-target="#team" type="button" role="tab" aria-controls="team" aria-selected="false"> Team </button></li>
+                                <li class="nav-item" role="presentation"><button class="nav-link" id="partner-tab" data-bs-toggle="tab" data-bs-target="#partner" type="button" role="tab" aria-controls="partner" aria-selected="false"> Partner and Investor </button></li>
+                            </ul>
+                            <div class="tab-content mt-3" id="myTabContent">
+                                <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+                                    <div class="item-detail-tab-wrap"><?php if (!empty($list->description)) {
+                                                                            echo $list->description;
+                                                                        } else {
+                                                                            echo "<h3>Not Available</h3>";
+                                                                        } ?>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade show" id="tokenomics" role="tabpanel" aria-labelledby="tokenomics-tab">
+                                    <div class="item-detail-tab-wrap"><?php if (!empty($list->tokenomics)) {
+                                                                            echo $list->tokenomics;
+                                                                        } else {
+                                                                            echo "<h3>Not Available</h3>";
+                                                                        } ?></div>
+                                </div>
+
+                                <div class="tab-pane fade show" id="token_distribution" role="tabpanel" aria-labelledby="token_distribution-tab">
+                                    <div class="item-detail-tab-wrap">
+                                        <?php
+                                        if (!empty($list->token_distributions)) { ?>
+                                            <div class="table-responsive1" id="no-more-tables">
+                                                <table class="table mb-0 table-s1">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-left" scope="col">Claimable</th>
+                                                            <th class="text-center" scope="col"> %</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php
+                                                        foreach ($list->token_distributions as $tList) {
+                                                        ?>
+                                                            <tr>
+                                                                <td data-title="Claimable" class="text-left"><?php echo (!empty($tList->claim_date) ? $tList->claim_date->format("Y-m-d H:i A") : 'TBA'); ?></td>
+                                                                <td data-title="%" class="text-center"><?php echo $tList->percentage; ?>%</td>
+                                                            </tr>
+                                                        <?php } ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        <?php } else {
+                                            echo "<h3>Not Available</h3>";
+                                        } ?>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade show" id="team" role="tabpanel" aria-labelledby="team-tab">
+                                    <div class="item-detail-tab-wrap">
+                                        <?php if (!empty($list->teams)) { ?>
+                                            <div class="col text-center">
+                                                <h2>Meet Our Team</h2>
+                                            </div>
+                                            <br><br>
+                                            <div class="row">
+                                                <?php foreach ($list->teams as $tList) { ?>
+                                                    <div class="col-xl-4 col-md-6 mb-4">
+                                                        <div class="card border-0 shadow">
+                                                            <?php echo $this->Html->image(SITEURL . 'cdn/team/' . $tList->img, ['alt' => 'logo', 'class' => 'card-img-top']); ?>
+                                                            <div class="card-body text-center">
+                                                                <h5 class="card-title mb-0"><?php echo $tList->title; ?></h5>
+                                                                <div class="card-text text-black-50"><?php echo $tList->heading; ?></div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            <?php } ?>
-                                        </div>
-                                    <?php } else {
-                                        echo "<h3>Not Available</h3>";
-                                    } ?>
-                                </div>
-                            </div>
-
-                            <div class="tab-pane fade show" id="partner" role="tabpanel" aria-labelledby="partner-tab">
-                                <div class="item-detail-tab-wrap">
-                                    <?php if (!empty($list->partners)) { ?>
-                                        <div class="row">
-                                            <div class="col text-center">
-                                                <h2 class=""> &nbsp; </h2>
+                                                <?php } ?>
                                             </div>
-                                        </div>
-                                        <div class="row mt-5">
-                                            <?php
-                                            foreach ($list->partners as $plist) {
-                                                if (!empty($plist->url)) { ?>
-                                                    <div class="col-md-3 col-xl-3 mb-4">
-                                                        <a href="<?php echo $plist->url; ?>" title="<?php echo $plist->title; ?>" target="_blank">
-                                                            <img src="<?php echo SITEURL . "cdn/partners/" . $plist->logo; ?>" alt="" height="45">
-                                                        </a>
-                                                    </div>
-                                                <?php } else { ?>
-                                                    <div class="col-md-3 col-xl-3 mb-4">
-                                                        <img src="<?php echo SITEURL . "cdn/partners/" . $plist->logo; ?>" alt="" height="45">
-                                                    </div>
-                                            <?php }
-                                            } ?>
-                                        </div>
-                                    <?php } else {
-                                        echo "<h3>Not Available</h3>";
-                                    } ?>
+                                        <?php } else {
+                                            echo "<h3>Not Available</h3>";
+                                        } ?>
+                                    </div>
                                 </div>
+
+                                <div class="tab-pane fade show" id="partner" role="tabpanel" aria-labelledby="partner-tab">
+                                    <div class="item-detail-tab-wrap">
+                                        <?php if (!empty($list->partners)) { ?>
+                                            <div class="row">
+                                                <div class="col text-center">
+                                                    <h2 class=""> &nbsp; </h2>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-5">
+                                                <?php
+                                                foreach ($list->partners as $plist) {
+                                                    if (!empty($plist->url)) { ?>
+                                                        <div class="col-md-3 col-xl-3 mb-4">
+                                                            <a href="<?php echo $plist->url; ?>" title="<?php echo $plist->title; ?>" target="_blank">
+                                                                <img src="<?php echo SITEURL . "cdn/partners/" . $plist->logo; ?>" alt="" height="45">
+                                                            </a>
+                                                        </div>
+                                                    <?php } else { ?>
+                                                        <div class="col-md-3 col-xl-3 mb-4">
+                                                            <img src="<?php echo SITEURL . "cdn/partners/" . $plist->logo; ?>" alt="" height="45">
+                                                        </div>
+                                                <?php }
+                                                } ?>
+                                            </div>
+                                        <?php } else {
+                                            echo "<h3>Not Available</h3>";
+                                        } ?>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="token_sale" role="tabpanel" aria-labelledby="token_sale-tab">
+                                    <div class="item-detail-tab-wrap">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="1">Project Key Metrics </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Sale Price</td>
+                                                    <td><?php
+                                                        if ($list->price_per_token > 0) {
+                                                            echo "1 " . $list->ticker . " = $" . $list->price_per_token;
+                                                        } else {
+                                                            echo "TBA";
+                                                        } ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Sale Start Time (UTC) </td>
+                                                    <td><?php echo (!empty($list->sale_starts) ? $list->sale_starts->format('Y-m-d H:i A') : 'TBA'); ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Sale End Time (UTC) </td>
+                                                    <td><?php echo (!empty($list->sale_ends) ? $list->sale_ends->format('Y-m-d H:i A') : 'TBA'); ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Token Distribution (UTC) </td>
+                                                    <td><?php echo (!empty($list->token_distribution_starts) ? $list->token_distribution_starts->format('Y-m-d H:i A') : 'TBA'); ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Initial Market Cap </td>
+                                                    <td><?php echo ($list->initial_market_cap > 0 ? "$" . number_format($list->initial_market_cap) : 'TBA'); ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Total Supply </td>
+                                                    <td><?php echo ($list->total_supply > 0 ? number_format($list->total_supply) : 'TBA'); ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Initial Token Circulation </td>
+                                                    <td><?php echo ($list->initial_token_circulation > 0 ?  number_format($list->initial_token_circulation) : 'TBA'); ?></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div><!-- end item-detail-tab-wrap -->
+                                </div><!-- end tab-pane -->
                             </div>
-                            <div class="tab-pane fade" id="token_sale" role="tabpanel" aria-labelledby="token_sale-tab">
-                                <div class="item-detail-tab-wrap">
-                                    <table class="table table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="1">Project Key Metrics </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Sale Price</td>
-                                                <td><?php
-                                                    if ($list->price_per_token > 0) {
-                                                        echo "1 " . $list->ticker . " = $" . $list->price_per_token;
-                                                    } else {
-                                                        echo "TBA";
-                                                    } ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Sale Start Time (UTC) </td>
-                                                <td><?php echo (!empty($list->start_date) ? $list->start_date->format('Y-m-d H:i A') : 'TBA'); ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Sale End Time (UTC) </td>
-                                                <td><?php echo (!empty($list->end_date) ? $list->end_date->format('Y-m-d H:i A') : 'TBA'); ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Token Distribution (UTC) </td>
-                                                <td><?php echo (!empty($list->token_distribution_date) ? $list->token_distribution_date->format('Y-m-d H:i A') : 'TBA'); ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Initial Market Cap </td>
-                                                <td><?php echo ($list->initial_market_cap > 0 ? "$" . number_format($list->initial_market_cap) : 'TBA'); ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Total Supply </td>
-                                                <td><?php echo ($list->total_supply > 0 ? number_format($list->total_supply) : 'TBA'); ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Initial Token Circulation </td>
-                                                <td><?php echo ($list->initial_token_circulation > 0 ?  number_format($list->initial_token_circulation) : 'TBA'); ?></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div><!-- end item-detail-tab-wrap -->
-                            </div><!-- end tab-pane -->
                         </div>
-                    </div>
-<?php }?>                    
+                    <?php } ?>
                 </div>
 
             </div><!-- end col -->
@@ -254,7 +278,12 @@ if( $list->product_status != 'TBA'){
                         <div class="card-price-wrap  mb-3">
                             <div class="d-flex justify-content-between align-items-center col-12">
                                 <span class="card-price-title">IDO Date</span>
-                                <span class="card-price-number text-end"><?php echo (!empty($list->start_date) ? $list->start_date->format('Y-m-d H:i A') : 'TBA'); ?></span>
+                                <span class="card-price-number text-end"><?php
+                                                                            if ($list->allow_whitelist == 1) {
+                                                                                echo (!empty($list->whitelist_starts) ? $list->whitelist_starts->format('Y-m-d H:i A') : 'TBA');
+                                                                            } else {
+                                                                                echo (!empty($list->sale_starts) ? $list->sale_starts->format('Y-m-d H:i A') : 'TBA');
+                                                                            } ?></span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center col-12">
                                 <span class="card-price-title">Fund Raise</span>
@@ -262,7 +291,7 @@ if( $list->product_status != 'TBA'){
                             </div>
                             <div class="d-flex justify-content-between align-items-center col-12">
                                 <span class="card-price-title">Token Price</span>
-                                <span class="card-price-number text-end"><?php echo ($list->price_per_token > 0 ?  "$".$list->price_per_token: 'TBA'); ?></span>
+                                <span class="card-price-number text-end"><?php echo ($list->price_per_token > 0 ?  "$" . $list->price_per_token : 'TBA'); ?></span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center col-12">
                                 <span class="card-price-title">Ticket Allocation</span>
@@ -283,33 +312,59 @@ if( $list->product_status != 'TBA'){
                                     <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="userLoginOut();">Login to Whitelist</a></li>
                                 <?php } ?>
 
-                                <?php } else if (strtolower($list->product_status) == 'live now' ) {
-                                if (isset($Auth->role)) { 
+                                <?php } else if (strtolower($list->product_status) == 'live now') {
+                                if (isset($Auth->role)) {
                                     if (empty($join_pop)) { ?>
-                                    <li class="flex-grow-1"><?php echo $this->Html->link('Join Now','/explore/'.$list->slug.'/join_now',['class'=>'btn btn-primary w-100']);?></li>
-                                <?php }} else { ?>
+                                        <li class="flex-grow-1"><?php echo $this->Html->link('Join Now', '/explore/' . $list->slug . '/join_now', ['class' => 'btn btn-primary w-100']); ?></li>
+                                    <?php }
+                                } else { ?>
                                     <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="javascript:void(0);" onclick="userLoginOut();">Login to Join Now</a></li>
                                 <?php } ?>
                             <?php } else if (strtolower($list->product_status) == 'sold out') { ?>
                                 <li class="flex-grow-1"> <a class="btn btn-primary w-100 bg-transparent" href="javascript:void(0);">Sold Out</a> </li>
-                                <?php if(empty($step_5)){?>
-                                <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL;?>allocation">Claim Now</a> </li>  
-                                <?php }?>
+                                <?php if (empty($step_5)) { ?>
+                                    <li class="flex-grow-1"> <a class="btn btn-primary w-100" href="<?php echo SITEURL; ?>allocation">Claim Now</a> </li>
+                                <?php } ?>
                             <?php } ?>
                         </ul>
                     </div>
                 </div>
                 <?php if (!empty($step_1)) { ?>
-                <div class="timers"><div class="rounded"><p class="mb-2 text-uppercase">Whitelist Starts In</p><div id="clock" class="countdown step_1"></div></div></div>
-                <?php }elseif (!empty($step_2)) { ?>
-                <div class="timers"><div class="rounded"><p class="mb-2 text-uppercase">Whitelist Ends In</p><div id="clock" class="countdown step_2"></div></div></div>
-                <?php }elseif (!empty($step_3)) { ?>
-                <div class="timers"><div class="rounded"><p class="mb-2 text-uppercase">Sales Starts In</p><div id="clock" class="countdown step_3"></div></div></div>
-                <?php }elseif (!empty($step_4)) { ?>
-                <div class="timers"><div class="rounded"><p class="mb-2 text-uppercase">Sales Ends In</p><div id="clock" class="countdown step_4"></div></div></div>
-                <?php }elseif (!empty($step_5)) { ?>
-                <div class="timers"><div class="rounded"><p class="mb-2 text-uppercase">Token Distribution Starts in</p><div id="clock" class="countdown step_5"></div></div></div>
-                <?php }?>
+                    <div class="timers">
+                        <div class="rounded">
+                            <p class="mb-2 text-uppercase">Whitelist Starts In</p>
+                            <div id="clock" class="countdown step_1"></div>
+                        </div>
+                    </div>
+                <?php } elseif (!empty($step_2)) { ?>
+                    <div class="timers">
+                        <div class="rounded">
+                            <p class="mb-2 text-uppercase">Whitelist Ends In</p>
+                            <div id="clock" class="countdown step_2"></div>
+                        </div>
+                    </div>
+                <?php } elseif (!empty($step_3)) { ?>
+                    <div class="timers">
+                        <div class="rounded">
+                            <p class="mb-2 text-uppercase">Sales Starts In</p>
+                            <div id="clock" class="countdown step_3"></div>
+                        </div>
+                    </div>
+                <?php } elseif (!empty($step_4)) { ?>
+                    <div class="timers">
+                        <div class="rounded">
+                            <p class="mb-2 text-uppercase">Sales Ends In</p>
+                            <div id="clock" class="countdown step_4"></div>
+                        </div>
+                    </div>
+                <?php } elseif (!empty($step_5)) { ?>
+                    <div class="timers">
+                        <div class="rounded">
+                            <p class="mb-2 text-uppercase">Token Distribution Starts in</p>
+                            <div id="clock" class="countdown step_5"></div>
+                        </div>
+                    </div>
+                <?php } ?>
             </div>
         </div>
     </div>
@@ -326,82 +381,86 @@ if (!$this->request->is('mobile')) {
     echo $this->Html->script(['sticky-sidebar'], ['block' => 'scriptBottom']);
 }
 ?>
-<?php $this->Html->scriptStart(array('block' => 'scriptBottom')); ?>
-function apply_sale(id) {
-var d = "<?php echo urlencode(SITEURL . "homes/apply_now/"); ?>"+id;
-$.ajax({
-type: 'POST',
-url: '<?php echo SITEURL; ?>homes/open_pop/1',
-data: {url:d},
-success: function(data) {
-$("#cover").html(data);
-},
-error: function(comment) {
-$("#cover").html(comment);
-}
-});
-}
-
-function joinNow(id) {
-var d = "<?php echo urlencode(SITEURL . "homes/join_now/"); ?>"+id;
-$.ajax({
-type: 'POST',
-url: '<?php echo SITEURL; ?>homes/open_pop/1',
-data: {url:d},
-success: function(data) {
-$("#cover").html(data);
-},
-error: function(comment) {
-$("#cover").html(comment);
-}
-});
-}
-
-$(function () {
-
-    function set_timer(className, datetime, str){
-        $('.'+className+'').countdown(datetime).on('update.countdown', function(event) {
-        var $this = $(this).html(event.strftime(''
-        + '<span class="clockbx"><span class="font-weight-bold h1">%D</span> Day%!d</span> '
-        + '<span class=" clockbx"><span class="h1 font-weight-bold h1">%H</span> Hr</span> '
-        + '<span class="clockbx"><span class="h1 font-weight-bold h1">%M</span> Min</span>'
-        + '<span class="clockbx"><span class="h1 font-weight-bold h1">%S</span>Sec</span>'));
-        })
-        .on('finish.countdown', function(event) { 
-            $("#cssLoader").html('<div id="loader" class="loader loader-curtain " data-curtain-text="'+str+'"></div>');
-            setTimeout(function(){ 
-                location.reload(); 
-            }, 2000);
+<?php $this->append('scriptBottom'); ?>
+<script>
+    function apply_sale(id) {
+        var d = "<?php echo urlencode(SITEURL . "homes/apply_now/"); ?>" + id;
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo SITEURL; ?>homes/open_pop/1',
+            data: {
+                url: d
+            },
+            success: function(data) {
+                $("#cover").html(data);
+            },
+            error: function(comment) {
+                $("#cover").html(comment);
+            }
         });
     }
-<?php 
-    if (!empty($step_1)) { echo "set_timer('step_1', '".date("Y-m-d H:i:s", $step_1)."', 'Whitelist Started');"; }  
-    elseif (!empty($step_2)) { echo "set_timer('step_2', '".date("Y-m-d H:i:s", $step_2)."', 'Whitelist Ended');"; }
-    elseif (!empty($step_3)) { echo "set_timer('step_3', '".date("Y-m-d H:i:s", $step_3)."', 'Sale Started');"; }  
-    elseif (!empty($step_4)) { echo "set_timer('step_4', '".date("Y-m-d H:i:s", $step_4)."', 'Sale Ended');"; }    
-    elseif (!empty($step_5)) { echo "set_timer('step_5', '".date("Y-m-d H:i:s", $step_5)."', 'Token Distribution Started');"; }  
-?>
-});
 
-<?php if (!$this->request->is('mobile')) { ?>
-    var a = new StickySidebar('.sidebarFixed', {
-    topSpacing: 25,
-    containerSelector: '.container',
-    innerWrapperSelector: '.sidebar__inner'
+    function joinNow(id) {
+        var d = "<?php echo urlencode(SITEURL . "homes/join_now/"); ?>" + id;
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo SITEURL; ?>homes/open_pop/1',
+            data: {
+                url: d
+            },
+            success: function(data) {
+                $("#cover").html(data);
+            },
+            error: function(comment) {
+                $("#cover").html(comment);
+            }
+        });
+    }
+
+    $(function() {
+
+        function set_timer(className, datetime, str) {
+            $('.' + className + '').countdown(datetime).on('update.countdown', function(event) {
+                    var $this = $(this).html(event.strftime('' +
+                        '<span class="clockbx"><span class="font-weight-bold h1">%D</span> Day%!d</span> ' +
+                        '<span class=" clockbx"><span class="h1 font-weight-bold h1">%H</span> Hr</span> ' +
+                        '<span class="clockbx"><span class="h1 font-weight-bold h1">%M</span> Min</span>' +
+                        '<span class="clockbx"><span class="h1 font-weight-bold h1">%S</span>Sec</span>'));
+                })
+                .on('finish.countdown', function(event) {
+                    $("#cssLoader").html('<div id="loader" class="loader loader-curtain is-active" data-curtain-text="' + str + '"></div>');
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
+                });
+        }
+        <?php
+        if (!empty($step_1)) {
+            echo "set_timer('step_1', '" . date("Y-m-d H:i:s", $step_1) . "', 'Whitelist Started');";
+        } elseif (!empty($step_2)) {
+            echo "set_timer('step_2', '" . date("Y-m-d H:i:s", $step_2) . "', 'Whitelist Ended');";
+        } elseif (!empty($step_3)) {
+            echo "set_timer('step_3', '" . date("Y-m-d H:i:s", $step_3) . "', 'Sale Started');";
+        } elseif (!empty($step_4)) {
+            echo "set_timer('step_4', '" . date("Y-m-d H:i:s", $step_4) . "', 'Sale Ended');";
+        } elseif (!empty($step_5)) {
+            echo "set_timer('step_5', '" . date("Y-m-d H:i:s", $step_5) . "', 'Token Distribution Started');";
+        }
+        ?>
     });
-<?php }
 
-if (!empty($op_pop) && isset($Auth) && isset($list->id)) { ?>
+    <?php if (!$this->request->is('mobile')) { ?>
+        var a = new StickySidebar('.sidebarFixed', {
+            topSpacing: 25,
+            containerSelector: '.container',
+            innerWrapperSelector: '.sidebar__inner'
+        });
+    <?php }
 
-    $(function () {
-    apply_sale(<?php echo $list->id; ?>);
-    });
-<?php }
-/*
-if (!empty($join_pop) && isset($Auth) && isset($list->id)) { ?>
-
-    $(function () {
-        joinNow(<?php echo $list->id; ?>);
-    });
-<?php } */
-$this->Html->scriptEnd(); ?>
+    if (!empty($op_pop) && isset($Auth) && isset($list->id)) { ?>
+        $(function() {
+            apply_sale(<?php echo $list->id; ?>);
+        });
+    <?php }  ?> 
+</script>
+<?php $this->end(); ?>

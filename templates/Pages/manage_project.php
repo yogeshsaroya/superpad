@@ -66,9 +66,7 @@ $this->assign('title', 'Manage Projects');
                         <li class="nav-item"><a class="nav-link <?php echo ($tab == 'applications' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=applications"; ?>">Applications</a></li>
                         <li class="nav-item"><a class="nav-link <?php echo ($tab == 'token_distributions' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=token_distributions"; ?>">Token Distributions</a></li>
                         <li class="nav-item"><a class="nav-link <?php echo ($tab == 'sale' ? 'active' : null); ?>" href="<?php echo SITEURL . "pages/manage_project/" . $get_data->id . "?type=sale"; ?>">Sale</a></li>
-
-
-                    </ul>
+                   </ul>
                 </div>
             <?php } ?>
 
@@ -85,6 +83,7 @@ $this->assign('title', 'Manage Projects');
                                         'url'=>['action'=>'update_sale'],
                                         'autocomplete' => 'off', 'id' => 'e_frm', 'class' => 'mt-2', 'data-toggle' => 'validator']);
                                     echo $this->Form->hidden('id');
+                                    echo $this->Form->hidden('allow_whitelist');
                                     ?>
                                     <div class="row">
                                         <?php if($get_data->allow_whitelist == 1){?>

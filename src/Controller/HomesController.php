@@ -305,22 +305,38 @@ class HomesController extends AppController
             $data =  $query->first();
 
             if (!empty($data)) {
-                /* Change status from comming soon to whitelist Open*/
-                if ($data->product_status == 'Coming Soon' && !empty($data->whitelist_starts) && strtotime($data->whitelist_starts->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
-                    $data->product_status = 'Whitelist Open';
-                    $this->Projects->save($data);
-                }
-                /* Change status from whitelist open to whitelist Closed*/ elseif ($data->product_status == 'Whitelist Open' && !empty($data->whitelist_ends) && strtotime($data->whitelist_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
-                    $data->product_status = 'Whitelist Closed';
-                    $this->Projects->save($data);
-                }
-                /* Change status from whitelist Closed to whitelist end*/ elseif ($data->product_status == 'Whitelist Closed' && !empty($data->sale_starts) && strtotime($data->sale_starts->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
-                    $data->product_status = 'Live Now';
-                    $this->Projects->save($data);
-                }
-                /* Change status from whitelist Closed to whitelist end*/ elseif ($data->product_status == 'Live Now' && !empty($data->sale_ends) && strtotime($data->sale_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
-                    $data->product_status = 'Sold Out';
-                    $this->Projects->save($data);
+                if ($data->allow_whitelist == 1) {
+                    /* Change status from comming soon to whitelist Open*/
+                    if ($data->product_status == 'Coming Soon' && !empty($data->whitelist_starts) && strtotime($data->whitelist_starts->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
+                        $data->product_status = 'Whitelist Open';
+                        $this->Projects->save($data);
+                    }
+                    /* Change status from whitelist open to whitelist Closed*/ 
+                    elseif ($data->product_status == 'Whitelist Open' && !empty($data->whitelist_ends) && strtotime($data->whitelist_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
+                        $data->product_status = 'Whitelist Closed';
+                        $this->Projects->save($data);
+                    }
+                    /* Change status from whitelist Closed to whitelist end*/
+                    elseif ($data->product_status == 'Whitelist Closed' && !empty($data->sale_starts) && strtotime($data->sale_starts->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
+                        $data->product_status = 'Live Now';
+                        $this->Projects->save($data);
+                    }
+                    /* Change status from whitelist Closed to whitelist end*/ 
+                    elseif ($data->product_status == 'Live Now' && !empty($data->sale_ends) && strtotime($data->sale_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
+                        $data->product_status = 'Sold Out';
+                        $this->Projects->save($data);
+                    }
+                } elseif ($data->allow_whitelist == 2) {
+                    /* Change status from whitelist Closed to whitelist end*/
+                    if ($data->product_status == 'Coming Soon' && !empty($data->sale_starts) && strtotime($data->sale_starts->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
+                        $data->product_status = 'Live Now';
+                        $this->Projects->save($data);
+                    }
+                    /* Change status from whitelist Closed to whitelist end*/ 
+                    elseif ($data->product_status == 'Live Now' && !empty($data->sale_ends) && strtotime($data->sale_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
+                        $data->product_status = 'Sold Out';
+                        $this->Projects->save($data);
+                    }
                 }
 
                 $data_app = null;
@@ -332,12 +348,23 @@ class HomesController extends AppController
                     $max_amt = $max_tickets = 0;
                     $is_pending = $join_data = $short_name = null;
                     if ($this->Auth->User('id') != "") {
+
+                        if ($data->allow_whitelist == 2) {
+                            $chk = $this->Applications->find()->where(['Applications.status' => 4, 'Applications.project_id' => $data->id, 'Applications.user_id' => $this->Auth->User('id')])->first();
+                            if (empty($chk)) {
+                                $application = ['id' => null, 'project_id' => $data->id, 'user_id' => $this->Auth->User('id'), 'subscribe' => '1', 'status' => '4','is_notified' => '2'];
+                                $getEnt = $this->Applications->newEmptyEntity(); 
+                                $saveEnt = $this->Applications->patchEntity($getEnt, $application, ['validate' => false]);
+                                $this->Applications->save($saveEnt);
+                            }
+                        }
+                        
                         $query1 = $this->Applications->find('all', [
                             'contain' => ['Payments', 'Projects', 'Users', 'Tickets' => ['conditions' => ['Tickets.status' => 1]]],
                             'conditions' => ['Applications.status' => 4, 'Applications.project_id' => $data->id, 'Applications.user_id' => $this->Auth->User('id')]
                         ]);
                         $join_data =  $query1->first();
-
+                        
                         if (!empty($join_data->payments)) {
                             $collection = new Collection($join_data->payments);
                             if (!$collection->isEmpty()) {
@@ -355,6 +382,7 @@ class HomesController extends AppController
                             if ((float)$join_data->project->max_allocation > 0) {
                                 $max_allocation = $join_data->project->max_allocation;
                             }
+                            
                             $coin_price = 1; /*default will be USD 1*/
                             if (isset($join_data->project->coin_price) && $join_data->project->coin_price > 0) {
                                 $coin_price = $join_data->project->coin_price;
@@ -363,7 +391,7 @@ class HomesController extends AppController
                             if (!empty($join_data->project->coin_name)) {
                                 $short_name = $join_data->project->coin_name;
                             }
-
+                           
                             if ($join_data->project->token_required == 2) {
                                 $max_amt = round($max_allocation / $coin_price, 3);
                             } elseif ($join_data->project->token_required == 1) {
@@ -380,8 +408,10 @@ class HomesController extends AppController
                         }
                     }
                     $contract = $this->fetchTable('Contracts')->find('all')->where(['type' => 'main'])->first();
-                    if (empty($contract)) { $this->viewBuilder()->setLayout('error_404'); } 
-                    $this->set(compact('join_data', 'id', 'max_amt', 'max_tickets', 'short_name', 'is_pending','contract'));
+                    if (empty($contract)) {
+                        $this->viewBuilder()->setLayout('error_404');
+                    }
+                    $this->set(compact('join_data', 'id', 'max_amt', 'max_tickets', 'short_name', 'is_pending', 'contract'));
                 }
                 $this->set(compact('data', 'data_app', 'op_pop', 'data_app', 'join_pop'));
 

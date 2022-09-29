@@ -710,8 +710,81 @@ class PagesController extends AppController
     public function updateSale()
     {
         $this->autoRender = false;
-        if ($this->request->is('post')) {
+        if ($this->request->is('ajax') && !empty($this->request->getData())) {
+            $postData = $this->request->getData();
+            
+            $getData = $this->Projects->find()->where(['id'=>$postData['id']])->first();
+            if(!empty($getData)){
+                $postData['product_status'] = $getData->product_status;
+                if ($postData['allow_whitelist'] == 1) {
+                    if (empty($postData['whitelist_starts']) && !empty($postData['whitelist_ends'])) {
+                        exit('<div class="alert alert-danger">Please enter whitelist starts in date</div>');
+                    }
+                    if (empty($postData['whitelist_ends']) && !empty($postData['sale_starts'])) {
+                        exit('<div class="alert alert-danger">Please enter whitelist ends in date</div>');
+                    }
+                } else {
+                    $postData['whitelist_starts'] = null;
+                    $postData['whitelist_ends'] = null;
+                }
+    
+                if (empty($postData['sale_starts']) && !empty($postData['sale_ends'])) {
+                    exit('<div class="alert alert-danger">Please enter sale starts in date</div>');
+                }
+                if (empty($postData['sale_ends']) && !empty($postData['token_distribution_starts'])) {
+                    exit('<div class="alert alert-danger">Please enter sale ends in date</div>');
+                }
+    
+                if (!empty($postData['whitelist_starts']) && !empty($postData['whitelist_ends']) && strtotime($postData['whitelist_starts']) >= strtotime($postData['whitelist_ends'])) {
+                    exit('<div class="alert alert-danger">Whitelist ends in DATE/TIME should be greater than to whitelist starts in</div>');
+                }
+                if (!empty($postData['whitelist_ends']) && !empty($postData['sale_starts']) && strtotime($postData['whitelist_ends']) >= strtotime($postData['sale_starts'])) {
+                    exit('<div class="alert alert-danger">Sale starts in DATE/TIME should be greater than to whitelist ends in</div>');
+                }
+                if (!empty($postData['sale_starts']) && !empty($postData['sale_ends']) && strtotime($postData['sale_starts']) >= strtotime($postData['sale_ends'])) {
+                    exit('<div class="alert alert-danger">Sale ends in DATE/TIME should be greater than to sale starts in</div>');
+                }
+                if (!empty($postData['sale_ends']) && !empty($postData['token_distribution_starts']) && strtotime($postData['sale_ends']) >= strtotime($postData['token_distribution_starts'])) {
+                    exit('<div class="alert alert-danger">Token distribution starts ends in DATE/TIME should be greater than to sale ends in</div>');
+                }
+    
+                if ($postData['allow_whitelist'] == 1) {
+                    if ( empty($postData['whitelist_starts']) && empty($postData['whitelist_ends']) && empty($postData['sale_starts']) && empty($postData['sale_ends']) && empty($postData['token_distribution_starts']) ) {
+                        $postData['product_status'] = 'TBA';
+                        
+                    }
+                    elseif( !empty($postData['whitelist_starts']) && strtotime($postData['whitelist_starts']) > strtotime(DATE) ){
+                        $postData['product_status'] = 'Coming Soon';
+                    }
+                }else{
+                    if (empty($postData['sale_starts']) && empty($postData['sale_ends']) && empty($postData['token_distribution_starts']) ) {
+                        $postData['product_status'] = 'TBA';
+                    }
+                    elseif( !empty($postData['sale_starts']) && strtotime($postData['sale_starts']) > strtotime(DATE) ){
+                        $postData['product_status'] = 'Coming Soon';
+                    } 
+                }
+                $chkData = $this->Projects->patchEntity($getData, $postData, ['validate' => false]);
+                if ($chkData->getErrors()) {
+                    $st = null;
+                    foreach ($chkData->getErrors() as $elist) {
+                        foreach ($elist as $k => $v); {
+                            $st .= "<div class='alert alert-danger'>" . ucwords($v) . "</div>";
+                        }
+                    }
+                    echo $st;
+                    exit;
+                } else {
+                    if ($this->Projects->save($chkData)) {
+                        echo '<div class="alert alert-success" role="alert"> Saved.</div>';
+                        echo "<script>$('#save_frm').remove(); setTimeout(function(){ location.reload(); }, 1000);</script>";
+                    } else { echo '<div class="alert alert-danger" role="alert"> Not saved.</div>'; }
+                }
+            }else{
+                echo '<div class="alert alert-danger" role="alert"> Not saved.</div>';exit;
+            }
         }
+        exit;
     }
 
     public function manageProject($id = null)
@@ -797,41 +870,6 @@ class PagesController extends AppController
             if ($postData['token_required'] == 2 && (float)$postData['max_allocation'] == 0) {
                 exit('<div class="alert alert-danger">Please enter max allocation amount</div>');
             }
-
-            /*
-            $dateArr = [
-                'whitelist_starts' => $postData['whitelist_starts'], 'whitelist_ends' => $postData['whitelist_ends'],
-                'sale_starts' => $postData['sale_starts'], 'sale_ends' => $postData['sale_ends'], 'token_distribution_starts ' => $postData['token_distribution_starts']
-            ];
-
-            if (empty($postData['whitelist_starts']) && !empty($postData['whitelist_ends'])) { exit('<div class="alert alert-danger">Please enter whitelist starts in date</div>'); }
-            if (empty($postData['whitelist_ends']) && !empty($postData['sale_starts'])) { exit('<div class="alert alert-danger">Please enter whitelist ends in date</div>'); }
-            if (empty($postData['sale_starts']) && !empty($postData['sale_ends'])) { exit('<div class="alert alert-danger">Please enter sale starts in date</div>'); }
-            if (empty($postData['sale_ends']) && !empty($postData['token_distribution_starts'])) { exit('<div class="alert alert-danger">Please enter sale ends in date</div>'); }
-            
-            if (!empty($postData['whitelist_starts']) && !empty($postData['whitelist_ends']) && strtotime($postData['whitelist_starts']) >= strtotime($postData['whitelist_ends']) ) {
-                exit('<div class="alert alert-danger">Whitelist ends in DATE/TIME should be greater than to whitelist starts in</div>');
-            }
-            if (!empty($postData['whitelist_ends']) && !empty($postData['sale_starts']) && strtotime($postData['whitelist_ends']) >= strtotime($postData['sale_starts']) ) {
-                exit('<div class="alert alert-danger">Sale starts in DATE/TIME should be greater than to whitelist ends in</div>');
-            }
-            if (!empty($postData['sale_starts']) && !empty($postData['sale_ends']) && strtotime($postData['sale_starts']) >= strtotime($postData['sale_ends']) ) {
-                exit('<div class="alert alert-danger">Sale ends in DATE/TIME should be greater than to sale starts in</div>');
-            }
-            if (!empty($postData['sale_ends']) && !empty($postData['token_distribution_starts']) && strtotime($postData['sale_ends']) >= strtotime($postData['token_distribution_starts']) ) {
-                exit('<div class="alert alert-danger">Token distribution starts ends in DATE/TIME should be greater than to sale ends in</div>');
-            }
-            
-            if (empty($postData['whitelist_starts']) && 
-            empty($postData['whitelist_ends']) &&
-            empty($postData['sale_starts']) &&
-            empty($postData['sale_ends']) &&
-            empty($postData['token_distribution_starts']) ){
-                if(!in_array($postData['product_status'],['TBA','Coming Soon'])){ $postData['product_status'] = 'TBA'; }
-            }
-            */
-
-
             $uploadPath = 'cdn/project_logo/';
             $uploadImg = 'cdn/project_img/';
             $uploadBanner = 'cdn/project_banner/';

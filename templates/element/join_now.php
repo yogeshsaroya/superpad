@@ -21,7 +21,14 @@
                     </svg>
                     <p class="fs-14">You have not applied for this sale or lottery ticket not allocated yet. check your email for lottery status</p>
                 </div>
-            <?php } 
+            <?php } elseif (empty($join_data->user->metamask_wallet_id)) { ?>
+                <div class="alert alert-danger d-flex mb-4" role="alert">
+                    <svg class="flex-shrink-0 me-3" width="30" height="30" viewBox="0 0 24 24" fill="#ff6a8e">
+                        <path d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20, 12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10, 10 0 0,0 12,2M11,17H13V11H11V17Z"></path>
+                    </svg>
+                    <p class="fs-14">Your wallet address is not found. Please contact to us.</p>
+                </div>
+            <?php }
             /*elseif ($join_data->user->kyc_completed != 2) { ?>
                 <div class="alert alert-danger d-flex mb-4" role="alert">
                     <svg class="flex-shrink-0 me-3" width="30" height="30" viewBox="0 0 24 24" fill="#ff6a8e">
@@ -29,8 +36,7 @@
                     </svg>
                     <p class="fs-14">Please complete your KYC to join this sale. <br><a href="<?php echo SITEURL; ?>users/kyc">Click Here</a> to complete KYC.</p>
                 </div>
-            <?php }  */
-            else {  
+            <?php }  */ else {
 
                 echo $this->Form->create($join_data, [/*'url' => ['action' => 'updateJoinNow'],*/'autocomplete' => 'off', 'id' => 'e_frm',]);
                 echo $this->Form->hidden('id', ['id' => 'app_id',]);
@@ -38,7 +44,7 @@
                 echo $this->Form->hidden('joined', ['id' => 'joined', 'value' => $join_data->joined]);
                 echo $this->Form->hidden('remaining', ['id' => 'remaining', 'value' => $join_data->remaining]);
                 echo $this->Form->hidden('max_tickets', ['id' => 'max_tickets', 'value' => $max_tickets]);
-                ?>
+            ?>
 
                 <?php if (empty($is_pending)) { ?>
                     <label class="form-label">Enter Amount</label>
@@ -77,9 +83,9 @@
 </div>
 <?php $this->append('scriptBottom'); ?>
 <script>
-    const paymentAddress = "<?php echo $contract->payment_address;?>";
-    const BUSD_CONTRACT = "<?php echo $contract->busd_contract_address;?>";
-    const BUSD_ABI = <?php echo $contract->busd_contract_abi;?>;
+    const paymentAddress = "<?php echo $contract->payment_address; ?>";
+    const BUSD_CONTRACT = "<?php echo $contract->busd_contract_address; ?>";
+    const BUSD_ABI = <?php echo $contract->busd_contract_abi; ?>;
 
     "use strict";
     const Web3Modal = window.Web3Modal.default;
@@ -91,7 +97,7 @@
     function init() {
         const options = new WalletConnectProvider({
             rpc: {
-                <?php echo $contract->chain_id;?>: "<?php echo $contract->dataseed_url;?>"
+                <?php echo $contract->chain_id; ?>: "<?php echo $contract->dataseed_url; ?>"
             },
             infuraId: "<?php echo $contract->infura_id; ?>"
         });
@@ -174,8 +180,8 @@
                 console.log("provider", provider);
                 const web3 = new window.Web3(provider);
                 let chainId = await web3.eth.getChainId();
-                if (chainId != <?php echo $contract->chain_id;?>) {
-                    await changeToMain("0x<?php echo dechex($contract->chain_id);?>");
+                if (chainId != <?php echo $contract->chain_id; ?>) {
+                    await changeToMain("0x<?php echo dechex($contract->chain_id); ?>");
                 }
 
                 const accounts = await web3.eth.getAccounts();
@@ -183,7 +189,7 @@
                 console.log("Got accounts", wallet_address);
                 console.log('Chain ID', chainId);
 
-                if (chainId == <?php echo $contract->chain_id;?>) {
+                if (chainId == <?php echo $contract->chain_id; ?>) {
                     if (wallet_address != '<?php echo strtolower($join_data->user->metamask_wallet_id) ?>') {
                         $("#btn_locader").removeClass('is-active');
                         $('#f_err').html('<div class="alert alert-danger">Wallet address mismatch (' + wallet_address + '). Your account was created by using wallet address <?php echo strtolower($join_data->user->metamask_wallet_id); ?>. Please switch to same wallet address to join sale.</div>');
@@ -191,8 +197,10 @@
                         $("#btn_locader").addClass('is-active');
                         const contract = new web3.eth.Contract(BUSD_ABI, BUSD_CONTRACT);
                         await contract.methods
-                            .transfer(paymentAddress,web3.utils.toWei(setAmt.toString(), "ether"))
-                            .send({ from: wallet_address })
+                            .transfer(paymentAddress, web3.utils.toWei(setAmt.toString(), "ether"))
+                            .send({
+                                from: wallet_address
+                            })
                             .on('transactionHash', function(hash) {
                                 console.log('tran ini ', hash);
                                 $("#btn_locader").attr('data-curtain-text', 'Transaction initiated...');
@@ -243,7 +251,7 @@
                     }
                 } else {
                     $("#btn_locader").removeClass('is-active');
-                    $('#f_err').html('<div class="alert alert-danger">Please switch to chain ID <?php echo $contract->chain_id;?> ( Binance Smart Chain ) to join sale.</div>');
+                    $('#f_err').html('<div class="alert alert-danger">Please switch to chain ID <?php echo $contract->chain_id; ?> ( Binance Smart Chain ) to join sale.</div>');
                 }
             } catch (e) {
                 $("#btn_locader").removeClass('is-active');

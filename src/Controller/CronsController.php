@@ -95,7 +95,7 @@ class CronsController extends AppController
     public function updateSalesStatus()
     {
         ec(DATE);
-        $query = $this->Projects->find()->where(['product_status IN' => ['Coming Soon', 'Whitelist Open', 'Whitelist Closed', 'Live Now', 'Sold Out']]);
+        $query = $this->Projects->find()->where(['product_status IN' => ['Coming Soon', 'Whitelist Open', 'Whitelist Closed', 'Live Now']]);
         $data = $query->all();
         if (!$data->isEmpty()) {
             foreach ($data as $list) {
@@ -103,28 +103,48 @@ class CronsController extends AppController
                     'whitelist_starts' => $list->whitelist_starts, 'whitelist_ends' => $list->whitelist_ends,
                     'sale_starts' => $list->sale_starts, 'sale_ends' => $list->sale_ends, 'token_distribution_starts' => $list->token_distribution_starts
                 ];
-                ec($dateArr);
-                /* Change status from comming soon to whitelist Open*/
-                if ($list->product_status == 'Coming Soon' && !empty($list->whitelist_starts) && strtotime($list->whitelist_starts->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
-                    $list->product_status = 'Whitelist Open';
-                    $this->Projects->save($list);
-                    ec("Sale " . $list->title . " status has been changed to Whitelist Open");
+                //ec($dateArr);
+                ec($list->title." - ".$list->product_status);
+                if ($list->allow_whitelist == 1) {
+                    /* Change status from comming soon to whitelist Open*/
+                    if ($list->product_status == 'Coming Soon' && !empty($list->whitelist_starts) && strtotime($list->whitelist_starts->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
+                        $list->product_status = 'Whitelist Open';
+                        $this->Projects->save($list);
+                        ec("Sale " . $list->title . " status has been changed to Whitelist Open");
+                    }
+                    /* Change status from whitelist open to whitelist Closed*/ 
+                    elseif ($list->product_status == 'Whitelist Open' && !empty($list->whitelist_ends) && strtotime($list->whitelist_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
+                        $list->product_status = 'Whitelist Closed';
+                        $this->Projects->save($list);
+                        ec("Sale " . $list->title . " status has been changed to Whitelist Closed");
+                    }
+                    /* Change status from whitelist Closed to whitelist end*/
+                    elseif ($list->product_status == 'Whitelist Closed' && !empty($list->sale_starts) && strtotime($list->sale_starts->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
+                        $list->product_status = 'Live Now';
+                        $this->Projects->save($list);
+                        ec("Sale " . $list->title . " status has been changed to Live Now");
+                    }
+                    /* Change status from whitelist Closed to whitelist end*/ 
+                    elseif ($list->product_status == 'Live Now' && !empty($list->sale_ends) && strtotime($list->sale_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
+                        $list->product_status = 'Sold Out';
+                        $this->Projects->save($list);
+                        ec("Sale " . $list->title . " status has been changed to Sold Out");
+                    }
+                } elseif ($list->allow_whitelist == 2) {
+                    /* Change status from whitelist Closed to whitelist end*/
+                    if ($list->product_status == 'Coming Soon' && !empty($list->sale_starts) && strtotime($list->sale_starts->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
+                        $list->product_status = 'Live Now';
+                        $this->Projects->save($list);
+                        ec("Sale " . $list->title . " status has been changed to Live Now");
+                    }
+                    /* Change status from whitelist Closed to whitelist end*/ 
+                    elseif ($list->product_status == 'Live Now' && !empty($list->sale_ends) && strtotime($list->sale_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
+                        $list->product_status = 'Sold Out';
+                        $this->Projects->save($list);
+                        ec("Sale " . $list->title . " status has been changed to Sold Out");
+                    }
                 }
-                /* Change status from whitelist open to whitelist Closed*/ elseif ($list->product_status == 'Whitelist Open' && !empty($list->whitelist_ends) && strtotime($list->whitelist_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
-                    $list->product_status = 'Whitelist Closed';
-                    $this->Projects->save($list);
-                    ec("Sale " . $list->title . " status has been changed to Whitelist Closed");
-                }
-                /* Change status from whitelist Closed to whitelist end*/ elseif ($list->product_status == 'Whitelist Closed' && !empty($list->sale_starts) && strtotime($list->sale_starts->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
-                    $list->product_status = 'Live Now';
-                    $this->Projects->save($list);
-                    ec("Sale " . $list->title . " status has been changed to Live Now");
-                }
-                /* Change status from whitelist Closed to whitelist end*/ elseif ($list->product_status == 'Live Now' && !empty($list->sale_ends) && strtotime($list->sale_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
-                    $list->product_status = 'Sold Out';
-                    $this->Projects->save($list);
-                    ec("Sale " . $list->title . " status has been changed to Sold Out");
-                }
+                echo "<hr>";
             }
         } else {
             ec("Sales not found");
@@ -332,7 +352,7 @@ class CronsController extends AppController
     {
         $data = $this->Applications->find()
             ->contain(['Users'])
-            ->where(['Users.email IS NOT' => null,'Applications.status' => 4, 'Applications.is_notified' => 1])->all();
+            ->where(['Users.email IS NOT' => null, 'Applications.status' => 4, 'Applications.is_notified' => 1])->all();
         if (!$data->isEmpty()) {
             foreach ($data as $list) {
                 $this->Data->AppMail($list->user->email, 13, ['NAME' => $list->user->first_name]);
@@ -383,7 +403,7 @@ class CronsController extends AppController
         $data = $this->Projects->find()
             ->contain(['Applications' => ['conditions' => ['Applications.status' => 1]]])
             ->select(['id', 'title', 'product_status', 'status', 'sale_starts', 'sale_ends', 'total_raise', 'ticket_allocation', 'price_per_token', 'max_allocation', 'token_required', 'max_allocation'])
-            ->where(['Projects.token_required' => 2, 'Projects.max_allocation >' => 0, 'Projects.product_status' => 'Whitelist Closed'])->all();
+            ->where(['Projects.allow_whitelist' => 1, 'Projects.token_required' => 2, 'Projects.max_allocation >' => 0, 'Projects.product_status' => 'Whitelist Closed'])->all();
         if (!$data->isEmpty()) {
             foreach ($data as $projects) {
                 if (!empty($projects->applications)) {
@@ -540,7 +560,8 @@ class CronsController extends AppController
     {
         $query = $this->Applications->find('all', [
             'contain' => ['Users', 'Claims', 'Projects' => ['TokenDistributions' => ['sort' => ['TokenDistributions.claim_date' => 'ASC']]]],
-            'conditions' => ['DATE(Projects.token_distribution_starts) <='=>DATE,
+            'conditions' => [
+                'DATE(Projects.token_distribution_starts) <=' => DATE,
                 'Applications.status' => 4, 'Applications.total_token > ' => 0, 'Applications.claimed_token' => 0,
                 'Users.metamask_wallet_id IS NOT' => null, 'Projects.token_address IS NOT' => null
             ]
@@ -586,7 +607,7 @@ class CronsController extends AppController
         $query = $this->Applications->find('all', [
             'contain' => ['Claims', 'Projects' => ['fields' => ['id', 'token_address']]],
             'limit' => 1,
-            'conditions' => ['Applications.is_restricted'=>1, 'Applications.status' => 4, 'Applications.total_token >' => 0, 'Applications.claimed_token' => 0]
+            'conditions' => ['Applications.is_restricted' => 1, 'Applications.status' => 4, 'Applications.total_token >' => 0, 'Applications.claimed_token' => 0]
         ]);
         $data =  $query->all();
         if (!$data->isEmpty()) {
@@ -630,5 +651,4 @@ class CronsController extends AppController
         }
         exit;
     }
-
 }
