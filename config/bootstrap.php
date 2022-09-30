@@ -224,7 +224,7 @@ TypeFactory::map('time', StringType::class);
 //Inflector::rules('uninflected', ['dontinflectme']);
 
 //date_default_timezone_set('US/Eastern');
-date_default_timezone_set('asia/kolkata');
+date_default_timezone_set('UTC');
 define('SITEURL', env('APP_SITEURL'));
 define('WEBTITLE', env('APP_NAME'));
 define("DATE", date("Y-m-d H:i:s"));
