@@ -232,15 +232,15 @@ if ($list->product_status != 'TBA') {
                                                 </tr>
                                                 <tr>
                                                     <td>Sale Start Time (UTC) </td>
-                                                    <td><?php echo (!empty($list->sale_starts) ? $list->sale_starts->format('Y-m-d H:i A') : 'TBA'); ?></td>
+                                                    <td><?php echo (!empty($list->sale_starts) ? $list->sale_starts->format('Y-m-d h:i') : 'TBA'); ?></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Sale End Time (UTC) </td>
-                                                    <td><?php echo (!empty($list->sale_ends) ? $list->sale_ends->format('Y-m-d H:i A') : 'TBA'); ?></td>
+                                                    <td><?php echo (!empty($list->sale_ends) ? $list->sale_ends->format('Y-m-d h:i') : 'TBA'); ?></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Token Distribution (UTC) </td>
-                                                    <td><?php echo (!empty($list->token_distribution_starts) ? $list->token_distribution_starts->format('Y-m-d H:i A') : 'TBA'); ?></td>
+                                                    <td><?php echo (!empty($list->token_distribution_starts) ? $list->token_distribution_starts->format('Y-m-d h:i') : 'TBA'); ?></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Initial Market Cap </td>
