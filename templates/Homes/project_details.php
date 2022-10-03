@@ -372,9 +372,10 @@ if ($list->product_status != 'TBA') {
 <section class="item-detail-section ">
     <div class="container"></div>
 </section>
+
 <?php
 if (!empty($steps)) {
-    echo $this->Html->script(['jquery.countdown.min'], ['block' => 'scriptBottom']);
+    echo $this->Html->script(['moment/moment-with-locales.min','moment/moment-timezone.min','jquery.countdown.min'], ['block' => 'scriptBottom']);
 }
 
 if (!$this->request->is('mobile')) {
@@ -420,7 +421,10 @@ if (!$this->request->is('mobile')) {
     $(function() {
 
         function set_timer(className, datetime, str) {
-            $('.' + className + '').countdown(datetime).on('update.countdown', function(event) {
+            console.log(datetime);
+            var datetimeUTC = moment.tz(datetime, "UTC");
+            console.log(datetimeUTC.toDate());
+            $('.' + className + '').countdown(datetimeUTC.toDate()).on('update.countdown', function(event) {
                     var $this = $(this).html(event.strftime('' +
                         '<span class="clockbx"><span class="font-weight-bold h1">%D</span> Day%!d</span> ' +
                         '<span class=" clockbx"><span class="h1 font-weight-bold h1">%H</span> Hr</span> ' +
