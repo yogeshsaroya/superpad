@@ -114,6 +114,15 @@ if (!empty($data)) {
                </h5>
 
                         <div class="card-price-wrap  mb-3">
+                        <div class="d-flex justify-content-between align-items-center col-12">
+                                <span class="card-price-title">IDO Date</span>
+                                <span class="card-price-number text-end"><?php
+                                                                            if ($list->allow_whitelist == 1) {
+                                                                                echo (!empty($list->whitelist_starts) ? $list->whitelist_starts->format('Y-m-d') : 'TBA');
+                                                                            } else {
+                                                                                echo (!empty($list->sale_starts) ? $list->sale_starts->format('Y-m-d') : 'TBA');
+                                                                            } ?></span>
+                            </div>
                             <div class="d-flex justify-content-between align-items-center col-12">
                                 <span class="card-price-title">Ticket Allocation</span>
                                 <span class="card-price-number text-end"><?php echo ( $list->ticket_allocation > 0? $this->Number->currency($list->ticket_allocation, 'USD'): "TBA"); ?></span>
