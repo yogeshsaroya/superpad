@@ -294,8 +294,8 @@ if ($list->product_status != 'TBA') {
                                 <span class="card-price-number text-end"><?php echo ($list->price_per_token > 0 ?  "$" . $list->price_per_token : 'TBA'); ?></span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center col-12">
-                                <span class="card-price-title">Ticket Allocation</span>
-                                <span class="card-price-number text-end"><?php echo ($list->ticket_allocation > 0 ? $this->Number->currency($list->ticket_allocation, 'USD') : 'TBA'); ?></span>
+                                <span class="card-price-title">Max Allocation</span>
+                                <span class="card-price-number text-end"><?php echo ($list->max_allocation > 0 ? $this->Number->currency($list->max_allocation, 'USD') : 'TBA'); ?></span>
                             </div>
                         </div>
                     </div>
