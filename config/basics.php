@@ -134,6 +134,8 @@ function getProjectStatus()
         'Whitelist Closed' => 'Whitelist Closed',
         'Live Now' => 'Live now',
         'Sold Out' => 'Sold Out',
+        'Closed' => 'Closed',
+        'Refunded' => 'Refunded',
     ];
 }
 

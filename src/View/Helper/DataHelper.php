@@ -40,7 +40,7 @@ class DataHelper extends Helper
                 ->find()
                 ->contain(['Blockchains'])
                 ->where(['Projects.status' => 1])
-                ->order(['Projects.id' => 'desc'])
+                ->order(['Projects.pos' => 'asc'])
                 ->all();
         } catch (\Throwable $th) {
             return false;
