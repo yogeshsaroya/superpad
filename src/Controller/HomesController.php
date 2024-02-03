@@ -132,6 +132,7 @@ class HomesController extends AppController
     public function airdrop()
     {
 
+return $this->redirect('/'); die;
         $Setting = $this->request->getSession()->read('Setting');
 
         if (

@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# Used as a default to seed config/.env which
+# enables you to use environment variables to configure
+# the aspects of your application that vary by
+# environment.
+#
+# Having this file in production is considered a **SECURITY RISK** and also decreases
+# the boostrap performance of your application.
+#
+# To use this file, first copy it into `config/.env`. Also ensure the related
+# code block for loading this file is uncommented in `config/boostrap.php`
+#
+# In development .env files are parsed by PHP
+# and set into the environment. This provides a simpler
+# development workflow over standard environment variables.
+
+export APP_NAME="SuperPad"
+export DEBUG="true"
+export APP_ENCODING="UTF-8"
+export APP_DEFAULT_LOCALE="en_US"
+export APP_DEFAULT_TIMEZONE="UTC"
+
+export APP_SITEURL="http://localhost:8888/cake/superpad/"
+#database 
+export db_username="root"
+export db_password="root"
+export db_database="superpad"
+
+
+#export etherscanKey="AQ6HCCUPH2XYSP2U4UIUM4F6J9I7HCG34I"
+export bscscanKey="MZW93YZ8JXUDXJ8MWVG1BQWZDR8C7FRGI9"
+export bscscannet="test"
+#export bscscanMainnet="https://api.bscscan.com/"
+export bscscanAPI="https://api-testnet.bscscan.com/"
+#export bscscanMainnet="https://bscscan.com/"
+export bscscanHash="https://testnet.bscscan.com/"
+
+
+#Main net BSC
+#export chain_id="56"
+#export dataseed="https://bsc-dataseed1.binance.org"
+
+#Testnet BSC
+export chain_id="97"
+export dataseed="https://data-seed-prebsc-1-s1.binance.org:8545/"
+export TokenAPI = "https://redmoontech.herokuapp.com"

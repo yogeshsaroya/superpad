@@ -100,12 +100,11 @@ class AppController extends Controller
 
         if (in_array($_SERVER['SERVER_NAME'], ['superpad.finance', 'www.superpad.finance'])) {
             if ($this->request->getParam('controller') != 'crons') {
-                $pos = strpos($url, 'www');
-                if ($pos === true) {
-                    $this->redirect('https://' . env('SERVER_NAME') . Router::url(null, false), 301);
+                if (str_contains($url, 'www')) {
+                    return $this->redirect('https://superpad.finance'.Router::url(null, false), 301); exit;
                 } else {
                     if (!isset($_SERVER['HTTPS'])) {
-                        $this->redirect('https://' . env('SERVER_NAME') . Router::url(null, false), 301);
+                    return $this->redirect('https://superpad.finance'.Router::url(null, false), 301); exit;
                     }
                 }
             }

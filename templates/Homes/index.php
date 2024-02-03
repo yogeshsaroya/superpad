@@ -16,7 +16,7 @@ $this->assign('description', $Setting['meta_description']);
                     <!-- button group -->
                     <ul class="btns-group hero-btns">
                         <li><a href="javascript:void(0);" id="to_project" class="btn btn-lg btn-dark">Upcoming Project</a></li>
-                        <?php if (isset($Setting['whitepaper'])) { ?><li><a href="<?php echo $Setting['whitepaper']; ?>" class="btn btn-lg btn-outline-dark">WhitePaper</a></li><?php } ?>
+                        <?php /* if (isset($Setting['whitepaper'])) { ?><li><a href="<?php echo $Setting['whitepaper']; ?>" class="btn btn-lg btn-outline-dark">WhitePaper</a></li><?php } */ ?>
                     </ul>
                 </div><!-- hero-content -->
             </div><!-- col-lg-6 -->
@@ -27,7 +27,7 @@ $this->assign('description', $Setting['meta_description']);
 <?php echo $this->element('home/sales',['bg_color' => 'bg-white' ]); ?>
 <?php echo $this->element('home/features',['bg_color' => 'bg-gray' ]); ?>
 <?php echo $this->element('home/timeline',['bg_color' => 'bg-white' ]); ?>
-<?php echo $this->element('home/teams',['bg_color' => 'bg-gray' ]); ?>
+<?php //echo $this->element('home/teams',['bg_color' => 'bg-gray' ]); ?>
 <?php echo $this->element('home/partner',['bg_color' => 'bg-white' ]); ?>
 <?php echo $this->element('home/influencers',['bg_color' => 'bg-gray' ]); ?>
 <?php echo $this->element('home/banner',['bg_color' => 'bg-white' ]); ?>

@@ -63,8 +63,11 @@ $MenuType = getMenuType();
                                             }
                                         }
                                     } ?>
+                                    
                                     <li><a href="<?php echo SITEURL; ?>team">Team</a></li>
+                                    
                                     <li><a href="<?php echo SITEURL; ?>contact">Contact Us</a></li>
+                                    <?php if (isset($Setting['whitepaper'])) { ?><li><a href="<?php echo $Setting['whitepaper']; ?>">WhitePaper</a></li><?php } ?>
 
                                 </ul>
                             </div><!-- end footer-item -->
@@ -78,7 +81,9 @@ $MenuType = getMenuType();
             <p class="footer-copy-text py-2">Copyright &copy; <?php echo date('Y'); ?> <?php echo WEBTITLE; ?>.</p>
             <ul class="list-item list-item-s1 list-item-inline">
                 <li><a href="<?php echo SITEURL; ?>explore">Explore</a></li>
+                <?php /* ?>
                 <li><a href="<?php echo SITEURL; ?>airdrop">Airdrop</a></li>
+                <?php */ ?>
             </ul>
         </div>
     </div>
