@@ -27,6 +27,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
+                                    <th><?php echo $this->Paginator->sort('pos'); ?></th>
                                         <th><?php echo $this->Paginator->sort('logo'); ?></th>
                                         <th><?php echo $this->Paginator->sort('title'); ?></th>
                                         <th><?php echo $this->Paginator->sort('type'); ?></th>
@@ -47,6 +48,7 @@
                                     if (!empty($data)) {
                                         foreach ($data as $list) { ?>
                                             <tr>
+                                            <td><?php echo $list->pos; ?></td>
                                                 <td><?php echo $this->Html->image(SITEURL . 'cdn/project_logo/' . $list->logo, ['alt' => 'logo', 'width' => 64]); ?></td>
                                                 <td><?php echo $this->Html->Link($list->title, SITEURL . "explore/" . $list->slug, ['target' => '_blank']); ?></td>
                                                 <td><?php echo $list->type; ?></td>
