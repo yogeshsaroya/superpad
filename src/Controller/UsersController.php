@@ -234,6 +234,7 @@ class UsersController extends AppController
                     try {
                         $fileobject1->moveTo($destination1);
                     } catch (Exception $e) {
+                        
                         echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
                         exit;
                     }
