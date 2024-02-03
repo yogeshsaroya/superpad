@@ -701,7 +701,7 @@ class PagesController extends AppController
             $this->redirect('/pages/projects');
         }
 
-        $this->paginate = ['contain' => ['Blockchains'], 'limit' => 100, 'order' => ['id' => 'desc']];
+        $this->paginate = ['contain' => ['Blockchains'], 'limit' => 100, 'order' => ['pos' => 'asc']];
         $data = $this->paginate($this->Projects->find('all'));
         $paging = $this->request->getAttribute('paging');
         $this->set(compact('data', 'paging'));
