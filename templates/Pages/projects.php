@@ -27,7 +27,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                    <th><?php echo $this->Paginator->sort('pos'); ?></th>
+                                    <th><?php echo $this->Paginator->sort('pos','#'); ?></th>
                                         <th><?php echo $this->Paginator->sort('logo'); ?></th>
                                         <th><?php echo $this->Paginator->sort('title'); ?></th>
                                         <th><?php echo $this->Paginator->sort('type'); ?></th>
