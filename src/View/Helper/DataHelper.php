@@ -47,6 +47,22 @@ class DataHelper extends Helper
         }
     }
 
+    public function getClosedSales($limit = 6)
+    {
+        $tbl = TableRegistry::get('Projects');
+        try {
+
+            return $data = $tbl
+                ->find()
+                ->contain(['Blockchains'])
+                ->where(['Projects.status' => 2])
+                ->order(['Projects.pos' => 'asc'])
+                ->all();
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
+
     public function getFeaturedSale()
     {
         $tbl = TableRegistry::get('Projects');

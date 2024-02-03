@@ -62,6 +62,10 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->connect('/buy-spad/*', ['controller' => 'Homes', 'action' => 'spad']);
     $builder->connect('/allocation/*', ['controller' => 'Homes', 'action' => 'allocation']);
     $builder->connect('/explore/*', ['controller' => 'Homes', 'action' => 'explore']);
+
+    $builder->connect('/closed-sales/*', ['controller' => 'Homes', 'action' => 'closed_sales']);
+    
+
     $builder->connect('/project-details/*', ['controller' => 'Homes', 'action' => 'project_details']);
 
     $builder->connect('/new-project/*', ['controller' => 'Homes', 'action' => 'newProject']);

@@ -1,9 +1,9 @@
-<?php $this->assign('title', 'Upcoming Sale'); ?>
+<?php $this->assign('title', 'Closed Sale'); ?>
 
 <div class="hero-wrap sub-header">
     <div class="container">
         <div class="hero-content text-center py-0">
-            <h1 class="hero-title">Upcoming Sale</h1>
+            <h1 class="hero-title">Closed Sale</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-s1 justify-content-center mt-3 mb-0">
                     <li class="breadcrumb-item"><a href="<?php echo SITEURL; ?>">Home</a></li>
@@ -19,7 +19,7 @@
 
         <div class="filter-container row g-gs">
             <?php
-            $data = $this->Data->getProjects(50);
+            $data = $this->Data->getClosedSales(50);
             if ( !$data->isEmpty() ) {
                 echo $this->element('home/product_box', ['data' => $data]);
             }else{ ?>

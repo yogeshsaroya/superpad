@@ -25,6 +25,7 @@ $this->assign('description', $Setting['meta_description']);
 </div><!-- end hero-wrap -->
 <?php echo $this->element('home/featured_sale',['bg_color' => 'bg-gray' ]); ?>
 <?php echo $this->element('home/sales',['bg_color' => 'bg-white' ]); ?>
+<?php echo $this->element('home/sales_end',['bg_color' => 'bg-white' ]); ?>
 <?php echo $this->element('home/features',['bg_color' => 'bg-gray' ]); ?>
 <?php echo $this->element('home/timeline',['bg_color' => 'bg-white' ]); ?>
 <?php //echo $this->element('home/teams',['bg_color' => 'bg-gray' ]); ?>

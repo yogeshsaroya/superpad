@@ -132,7 +132,8 @@ class HomesController extends AppController
     public function airdrop()
     {
 
-return $this->redirect('/'); die;
+        return $this->redirect('/');
+        die;
         $Setting = $this->request->getSession()->read('Setting');
 
         if (
@@ -280,6 +281,12 @@ return $this->redirect('/'); die;
         $this->set(compact('data'));
     }
 
+    
+    public function closedSales($id = null, $is_pop = null)
+    {
+
+    }
+
     public function explore($id = null, $is_pop = null)
     {
         $q = $this->request->getQuery();
@@ -312,18 +319,15 @@ return $this->redirect('/'); die;
                         $data->product_status = 'Whitelist Open';
                         $this->Projects->save($data);
                     }
-                    /* Change status from whitelist open to whitelist Closed*/ 
-                    elseif ($data->product_status == 'Whitelist Open' && !empty($data->whitelist_ends) && strtotime($data->whitelist_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
+                    /* Change status from whitelist open to whitelist Closed*/ elseif ($data->product_status == 'Whitelist Open' && !empty($data->whitelist_ends) && strtotime($data->whitelist_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
                         $data->product_status = 'Whitelist Closed';
                         $this->Projects->save($data);
                     }
-                    /* Change status from whitelist Closed to whitelist end*/
-                    elseif ($data->product_status == 'Whitelist Closed' && !empty($data->sale_starts) && strtotime($data->sale_starts->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
+                    /* Change status from whitelist Closed to whitelist end*/ elseif ($data->product_status == 'Whitelist Closed' && !empty($data->sale_starts) && strtotime($data->sale_starts->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
                         $data->product_status = 'Live Now';
                         $this->Projects->save($data);
                     }
-                    /* Change status from whitelist Closed to whitelist end*/ 
-                    elseif ($data->product_status == 'Live Now' && !empty($data->sale_ends) && strtotime($data->sale_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
+                    /* Change status from whitelist Closed to whitelist end*/ elseif ($data->product_status == 'Live Now' && !empty($data->sale_ends) && strtotime($data->sale_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
                         $data->product_status = 'Sold Out';
                         $this->Projects->save($data);
                     }
@@ -333,8 +337,7 @@ return $this->redirect('/'); die;
                         $data->product_status = 'Live Now';
                         $this->Projects->save($data);
                     }
-                    /* Change status from whitelist Closed to whitelist end*/ 
-                    elseif ($data->product_status == 'Live Now' && !empty($data->sale_ends) && strtotime($data->sale_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
+                    /* Change status from whitelist Closed to whitelist end*/ elseif ($data->product_status == 'Live Now' && !empty($data->sale_ends) && strtotime($data->sale_ends->format('Y-m-d H:i:s')) <= strtotime(DATE)) {
                         $data->product_status = 'Sold Out';
                         $this->Projects->save($data);
                     }
@@ -353,19 +356,19 @@ return $this->redirect('/'); die;
                         if ($data->allow_whitelist == 2) {
                             $chk = $this->Applications->find()->where(['Applications.status' => 4, 'Applications.project_id' => $data->id, 'Applications.user_id' => $this->Auth->User('id')])->first();
                             if (empty($chk)) {
-                                $application = ['id' => null, 'project_id' => $data->id, 'user_id' => $this->Auth->User('id'), 'subscribe' => '1', 'status' => '4','is_notified' => '2'];
-                                $getEnt = $this->Applications->newEmptyEntity(); 
+                                $application = ['id' => null, 'project_id' => $data->id, 'user_id' => $this->Auth->User('id'), 'subscribe' => '1', 'status' => '4', 'is_notified' => '2'];
+                                $getEnt = $this->Applications->newEmptyEntity();
                                 $saveEnt = $this->Applications->patchEntity($getEnt, $application, ['validate' => false]);
                                 $this->Applications->save($saveEnt);
                             }
                         }
-                        
+
                         $query1 = $this->Applications->find('all', [
                             'contain' => ['Payments', 'Projects', 'Users', 'Tickets' => ['conditions' => ['Tickets.status' => 1]]],
                             'conditions' => ['Applications.status' => 4, 'Applications.project_id' => $data->id, 'Applications.user_id' => $this->Auth->User('id')]
                         ]);
                         $join_data =  $query1->first();
-                        
+
                         if (!empty($join_data->payments)) {
                             $collection = new Collection($join_data->payments);
                             if (!$collection->isEmpty()) {
@@ -383,7 +386,7 @@ return $this->redirect('/'); die;
                             if ((float)$join_data->project->max_allocation > 0) {
                                 $max_allocation = $join_data->project->max_allocation;
                             }
-                            
+
                             $coin_price = 1; /*default will be USD 1*/
                             if (isset($join_data->project->coin_price) && $join_data->project->coin_price > 0) {
                                 $coin_price = $join_data->project->coin_price;
@@ -392,7 +395,7 @@ return $this->redirect('/'); die;
                             if (!empty($join_data->project->coin_name)) {
                                 $short_name = $join_data->project->coin_name;
                             }
-                           
+
                             if ($join_data->project->token_required == 2) {
                                 $max_amt = round($max_allocation / $coin_price, 3);
                             } elseif ($join_data->project->token_required == 1) {
