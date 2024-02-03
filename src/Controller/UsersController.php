@@ -225,6 +225,7 @@ class UsersController extends AppController
                 mkdir($uploadPath, 0777, true);
             }
             /*For profile iamge */
+            
             if (!empty($postData['kyc_user_pic1'])) {
                 if (in_array($postData['kyc_user_pic1']->getClientMediaType(), ['image/x-png', 'image/png', 'image/jpeg'])) {
                     $fileobject1 = $postData['kyc_user_pic1'];
@@ -234,7 +235,7 @@ class UsersController extends AppController
                     try {
                         $fileobject1->moveTo($destination1);
                     } catch (Exception $e) {
-                        
+
                         echo '<div class="alert alert-danger" role="alert">Image not uploaded.</div>';
                         exit;
                     }
